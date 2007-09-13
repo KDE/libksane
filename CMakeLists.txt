@@ -42,7 +42,7 @@ SUBDIRS(libksane)
 
 # Detect Exiv2 library properlly with CMake script from 'cmake/modules'
 SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}  ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules )
-FIND_PACKAGE(Exiv2 REQUIRED)
+FIND_PACKAGE(Sane REQUIRED)
 
 IF(NOT WIN32)
   CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/libksane.pc.cmake ${CMAKE_CURRENT_BINARY_DIR}/libksane.pc)
