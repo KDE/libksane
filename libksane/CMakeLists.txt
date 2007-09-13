@@ -19,8 +19,9 @@ SET(ksane_LIB_SRCS gamma_disp.cpp
 KDE4_ADD_LIBRARY(ksane SHARED ${ksane_LIB_SRCS})
 
 TARGET_LINK_LIBRARIES(ksane ${KDE4_KDECORE_LIBS}
-                             ${KDE4_KDEUI_LIBS}
-                             ${QT_QT3SUPPORT_LIBRARY}
+                            ${KDE4_KDEUI_LIBS}
+                            ${QT_QT3SUPPORT_LIBRARY}
+                            ${SANE_LIBRARIES}
                      )
 
 SET_TARGET_PROPERTIES(ksane PROPERTIES VERSION ${KSANE_LIB_SO_VERSION_STRING} SOVERSION ${KSANE_LIB_SO_CUR_VERSION})
