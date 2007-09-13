@@ -62,7 +62,7 @@ class PreviewImage : public QWidget
         QImage *getImage(void) {return &orig_img;}
         void updateScaledImg(void);
 
-    public slots:
+    public Q_SLOTS:
         void setTLX(float percent);
         void setTLY(float percent);
         void setBRX(float percent);
@@ -79,7 +79,7 @@ class PreviewImage : public QWidget
         void mouseMoveEvent(QMouseEvent *event);
         void mouseReleaseEvent(QMouseEvent *event);
 
-    signals:
+    Q_SIGNALS:
         void newSelection(float tl_x, float tl_y, float br_x, float br_y);
         void requestVisibility(int tl_x, int tl_y);
 

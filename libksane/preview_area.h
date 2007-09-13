@@ -51,7 +51,7 @@ class PreviewArea : public QScrollArea
         bool setIconZoomSel(const QIcon &icon);
         bool setIconZoomFit(const QIcon &icon);
 
-    public slots:
+    public Q_SLOTS:
         void setTLX(float percent);
         void setTLY(float percent);
         void setBRX(float percent);
@@ -62,10 +62,10 @@ class PreviewArea : public QScrollArea
         void zoomSel(void);
         void zoom2Fit(void);
 
-    private slots:
+    private Q_SLOTS:
         void requestVisibility(int tl_x, int tl_y);
 
-    signals:
+    Q_SIGNALS:
         void newSelection(float tl_x, float tl_y, float br_x, float br_y);
 
     private:

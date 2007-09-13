@@ -57,7 +57,7 @@ public:
     void setColumnWidths(int lab_w, int spi_w);
     int value(void) const {return( slider->value());}
 
-public slots:
+public Q_SLOTS:
   /** Set the slider value */
     void setValue(int);
     void setRange(int min, int max);
@@ -65,13 +65,13 @@ public slots:
     /** Set the unit */
     void setSuffix(const QString &text);
 
-private slots:
+private Q_SLOTS:
     /** Sync the values and emit valueChanged() */
     void syncValues(int);
     /** Ensure step value is followed */
     void fixValue(void);
 
-signals:
+Q_SIGNALS:
     /**
      * Emit the slider value changes
      */

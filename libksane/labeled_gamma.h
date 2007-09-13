@@ -52,13 +52,13 @@ public:
     void widgetSizeHints(int *lab_w, int *spi_w);
     void setColumnWidhts(int lab_w, int spi_w);
 
-public slots:
+public Q_SLOTS:
     void setValues(int bri, int con, int gam);
 
-private slots:
+private Q_SLOTS:
     void calculateGT(void);
 
-signals:
+Q_SIGNALS:
     void gammaChanged(int bri, int con, int gam);
     void gammaTableChanged(const QVector<int> &gamma_tbl);
 

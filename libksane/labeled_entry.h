@@ -48,11 +48,11 @@ public:
 
     void setText(const QString& text);
 
-private slots:
+private Q_SLOTS:
     void setClicked(void);
     void resetClicked(void);
 
-signals:
+Q_SIGNALS:
     void entryEdited(const QString& text);
 
 private:

@@ -58,7 +58,7 @@ class LabeledCombo : public QFrame
     void wigetSizeHints(int *lab_w, int *cmb_w);
     void setColumnWidths(int lab_w, int cmb_w);
 
-public slots:
+public Q_SLOTS:
     /**
      * Add string entries to the combobox
      */
@@ -88,11 +88,11 @@ public slots:
     bool setIcon(const QIcon& icon, const QString& str);
 
 
-private slots:
+private Q_SLOTS:
     void prActivated(const QString &);
     void prActivated(int);
 
-signals:
+Q_SIGNALS:
     void activated(int);
     void activated(const QString&);
 

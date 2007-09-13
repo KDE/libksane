@@ -44,10 +44,10 @@ public:
     ~LabeledCheckbox();
     void setChecked(bool);
 
-private slots:
+private Q_SLOTS:
     void prToggled(bool);
 
-signals:
+Q_SIGNALS:
     void toggled(bool);
 
 private:

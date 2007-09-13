@@ -98,14 +98,14 @@ public:
     LabeledSlider *lslider;
     LabeledFSlider *lfslider;
 
-signals:
+Q_SIGNALS:
     void optsNeedReload(void);
     void valsNeedReload(void);
     void fValueRead(float val);
     void iValueRead(int val);
     void cbValueRead(bool val);
 
-private slots:
+private Q_SLOTS:
     void comboboxChanged(int i);
     void checkboxChanged(bool toggled);
     bool comboboxChanged(const QString &value);

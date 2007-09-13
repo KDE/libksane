@@ -69,17 +69,17 @@ public:
     bool setIconZoomFit(const QIcon &icon);
 
 
-public slots:
+public Q_SLOTS:
     void scanCancel(void);
 
-signals:
+Q_SIGNALS:
     void scanStart(void);
     void scanProgress(int);
     void scanDone(void);
     void imageReady(void);
     void scanFaild(void);
 
-private slots:
+private Q_SLOTS:
     void opt_level_change(int level);
     void scheduleValReload(void);
     void optReload(void);

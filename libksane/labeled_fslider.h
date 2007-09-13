@@ -62,7 +62,7 @@ public:
     float value() const {return (float)spinb->value();}
     float step() const {return fstep;}
 
-public slots:
+public Q_SLOTS:
     /** Set the slider/spinbox value */
     void setValue(float);
     void setRange(float, float);
@@ -70,7 +70,7 @@ public slots:
     /** Set the unit */
     void setSuffix(const QString &text);
 
-private slots:
+private Q_SLOTS:
     /**
      * Sync the values and emit valueChanged()
      */
@@ -79,7 +79,7 @@ private slots:
     void syncValues(double);
     void fixValue(void);
 
-signals:
+Q_SIGNALS:
     /**
      * Emit the slider value changes
      */
