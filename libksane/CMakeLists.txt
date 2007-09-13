@@ -21,7 +21,7 @@ KDE4_ADD_LIBRARY(ksane SHARED ${ksane_LIB_SRCS})
 TARGET_LINK_LIBRARIES(ksane ${KDE4_KDECORE_LIBS}
                             ${KDE4_KDEUI_LIBS}
                             ${QT_QT3SUPPORT_LIBRARY}
-                            ${SANE_LIBRARIES}
+                            ${SANE_LIBRARY}
                      )
 
 SET_TARGET_PROPERTIES(ksane PROPERTIES VERSION ${KSANE_LIB_SO_VERSION_STRING} SOVERSION ${KSANE_LIB_SO_CUR_VERSION})
