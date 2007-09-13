@@ -16,10 +16,19 @@
    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.
 */
+
+// Qt includes.
+
 //#include <QButtonGroup>
 #include <QRadioButton>
 #include <QPushButton>
 #include <QLayout>
+
+// KDE includes.
+
+#include <kdebug.h>
+
+// Local includes.
 
 #include "radio_select.h"
 
@@ -88,7 +97,7 @@ int RadioSelect::getSelectedIndex(QWidget *parent,
             if (btn_list.at(i)->isChecked()) break;
         }
         if (i == btn_list.size()) {
-            printf("This is a bad index :(\n");
+            kDebug() << "This is a bad index..." << endl;
             return -1;
         }
         return i;
