@@ -17,8 +17,11 @@
    Boston, MA 02110-1301, USA.
 */
 
-#include <stdio.h>
-#include <math.h>
+#define MIN_SCALE 0.4
+#define MAX_SCALE 4.0
+
+#include <cstdio>
+#include <cmath>
 #include <iostream>
 
 #include <QPainter>
@@ -26,11 +29,11 @@
 
 #include "preview_image.h"
 
-#define MIN_SCALE 0.4
-#define MAX_SCALE 4.0
+namespace KSaneIface
+{
 
 PreviewImage::PreviewImage(QWidget *parent)
-: QWidget(parent)
+            : QWidget(parent)
 {
     orig_img = QImage(400, 700, QImage::Format_RGB32);
     for (int i = 0; i < 255; i++) {
@@ -407,3 +410,4 @@ void PreviewImage::setBRY(float ratio)
     if (br_y > image.height()) br_y = image.height();
 }
 
+}  // NameSpace KSaneIface

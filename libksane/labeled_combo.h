@@ -25,6 +25,9 @@
 #include <QLabel>
 #include <QGridLayout>
 
+namespace KSaneIface
+{
+
 /**
  * A label and a combobox.
  */
@@ -32,7 +35,7 @@ class LabeledCombo : public QFrame
 {
     Q_OBJECT
 
-        public:
+public:
    /**
     * create a label and combobox combination.
     * \param parent parent widget
@@ -59,21 +62,22 @@ class LabeledCombo : public QFrame
     void setColumnWidths(int lab_w, int cmb_w);
 
 public Q_SLOTS:
+
     /**
      * Add string entries to the combobox
      */
-    void addItems(const QStringList &list) {
-        combo->addItems(list);
-    }
+    void addItems(const QStringList &list) { combo->addItems(list); }
+    
     /**
      * Remove all string entries
      */
-    void clear(void) {combo->clear();}
+    void clear(void) { combo->clear(); }
+
    /**
     * If the given string can be found in the comobox, activate that entry.
     * If not, the entry is not changed.
     */
-    void setCurrentText( const QString &);
+    void setCurrentText(const QString &);
 
    /**
     * set the current item of the combobox.
@@ -87,19 +91,23 @@ public Q_SLOTS:
     */
     bool setIcon(const QIcon& icon, const QString& str);
 
-
 private Q_SLOTS:
+
     void prActivated(const QString &);
     void prActivated(int);
 
 Q_SIGNALS:
+
     void activated(int);
     void activated(const QString&);
 
 private:
+
     QLabel *label;
     QComboBox *combo;
     QGridLayout *layout;
 };
 
-#endif
+}  // NameSpace KSaneIface
+
+#endif // LABELED_COMBO_H

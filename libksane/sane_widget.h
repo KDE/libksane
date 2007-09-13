@@ -20,6 +20,11 @@
 #ifndef SANE_WIDGET_H
 #define SANE_WIDGET_H
 
+#define MAX_NUM_OPTIONS 100
+#define IMG_DATA_R_SIZE 1000
+#define PROGRESS_MAX 100
+#define PROGRESS_MIN 0
+
 #include <QScrollArea>
 #include <QWidget>
 #include <QString>
@@ -27,17 +32,16 @@
 #include <QToolBar>
 #include <QTimer>
 
-class SaneOption;
-class PreviewArea;
-
-extern "C" {
+extern "C" 
+{
 #include <sane/sane.h>
 }
 
-#define MAX_NUM_OPTIONS 100
-#define IMG_DATA_R_SIZE 1000
-#define PROGRESS_MAX 100
-#define PROGRESS_MIN 0
+namespace KSaneIface
+{
+
+class SaneOption;
+class PreviewArea;
 
 typedef enum
 {
@@ -53,8 +57,10 @@ class SaneWidget : public QWidget
     Q_OBJECT
 
 public:
+
     SaneWidget(QWidget* parent=0);
     ~SaneWidget(void);
+
     QString selectDevice(QWidget* parent=0);
     bool openDevice(const QString &device_name);
     QImage *getFinalImage(void);
@@ -68,11 +74,12 @@ public:
     bool setIconZoomSel(const QIcon &icon);
     bool setIconZoomFit(const QIcon &icon);
 
-
 public Q_SLOTS:
+
     void scanCancel(void);
 
 Q_SIGNALS:
+
     void scanStart(void);
     void scanProgress(int);
     void scanDone(void);
@@ -80,6 +87,7 @@ Q_SIGNALS:
     void scanFaild(void);
 
 private Q_SLOTS:
+
     void opt_level_change(int level);
     void scheduleValReload(void);
     void optReload(void);
@@ -93,11 +101,14 @@ private Q_SLOTS:
     void setBRY(float y);
 
 private:
+
     SaneOption *getOption(const QString &name);
     void createOptInterface(void);
     void updatePreviewSize(void);
     void processData(void);
     void setDefaultValues(void);
+
+private:
 
     // device info
     SANE_Device const **dev_list;
@@ -125,7 +136,6 @@ private:
     SaneOption *opt_gam_b;
     QTimer r_val_tmr;
 
-
     QPushButton *scan_btn;
     QPushButton *prev_btn;
 
@@ -150,7 +160,8 @@ private:
     ReadStatus read_status;
     QImage *scan_img;
     QImage the_img;
-
 };
 
-#endif
+}  // NameSpace KSaneIface
+
+#endif // SANE_WIDGET_H

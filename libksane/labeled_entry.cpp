@@ -21,8 +21,11 @@
 
 #include "labeled_entry.h"
 
+namespace KSaneIface
+{
+
 LabeledEntry::LabeledEntry(QWidget *parent, const QString& ltext)
-   : QFrame(parent)
+            : QFrame(parent)
 {
     QHBoxLayout *hb = new QHBoxLayout(this);
     hb->setSpacing(2);
@@ -40,8 +43,11 @@ LabeledEntry::LabeledEntry(QWidget *parent, const QString& ltext)
     hb->addWidget(set);
     hb->activate();
 
-    connect(reset, SIGNAL(clicked(void)), this, SLOT(resetClicked(void)));
-    connect(set, SIGNAL(clicked(void)), this, SLOT(setClicked(void)));
+    connect(reset, SIGNAL(clicked(void)), 
+            this, SLOT(resetClicked(void)));
+
+    connect(set, SIGNAL(clicked(void)), 
+            this, SLOT(setClicked(void)));
 }
 
 LabeledEntry::~LabeledEntry()
@@ -65,3 +71,4 @@ void LabeledEntry::setClicked(void)
     emit entryEdited(e_text);
 }
 
+}  // NameSpace KSaneIface

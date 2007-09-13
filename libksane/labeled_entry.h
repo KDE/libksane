@@ -29,6 +29,9 @@
  *@author Kåre Särs
  */
 
+namespace KSaneIface
+{
+
 /**
  * A text entry field with a set and reset button
  */
@@ -37,6 +40,7 @@ class LabeledEntry : public QFrame
     Q_OBJECT
 
 public:
+
    /**
     * Create the entry.
     *
@@ -49,13 +53,16 @@ public:
     void setText(const QString& text);
 
 private Q_SLOTS:
+
     void setClicked(void);
     void resetClicked(void);
 
 Q_SIGNALS:
+
     void entryEdited(const QString& text);
 
 private:
+
     QLabel *label;
     QLineEdit *entry;
     QPushButton *set;
@@ -63,5 +70,6 @@ private:
     QString e_text;
 };
 
+}  // NameSpace KSaneIface
 
-#endif
+#endif // LABELED_ENTRY_H

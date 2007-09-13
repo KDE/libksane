@@ -22,9 +22,11 @@
 
 #include "preview_area.h"
 
-//************************************************************
+namespace KSaneIface
+{
+
 PreviewArea::PreviewArea(QWidget *parent)
-    : QScrollArea(parent)
+           : QScrollArea(parent)
 {
     image = new PreviewImage(this);
     setWidget(image);
@@ -34,13 +36,17 @@ PreviewArea::PreviewArea(QWidget *parent)
 
     connect(image, SIGNAL(newSelection(float,float,float,float)),
             this, SIGNAL(newSelection(float,float,float,float)));
+
     connect(image, SIGNAL(requestVisibility(int,int)),
             this, SLOT(requestVisibility(int,int)));
 
     createContextMenu();
 }
 
-//************************************************************
+PreviewArea::~PreviewArea()
+{
+}
+
 void PreviewArea::createContextMenu(void)
 {
     //Action->setIcon(QIcon(""));
@@ -66,18 +72,11 @@ void PreviewArea::createContextMenu(void)
     setContextMenuPolicy(Qt::ActionsContextMenu);
 }
 
-//************************************************************
-PreviewArea::~PreviewArea()
-{
-}
-
-//************************************************************
 QSize PreviewArea::sizeHint() const
 {
     return QSize(500, 600);
 }
 
-//************************************************************
 QImage *PreviewArea::getImage(void)
 {
     if (image) {
@@ -86,7 +85,6 @@ QImage *PreviewArea::getImage(void)
     return 0;
 }
 
-//************************************************************
 void PreviewArea::clearSelection(void)
 {
     if (image) {
@@ -94,7 +92,6 @@ void PreviewArea::clearSelection(void)
     }
 }
 
-//************************************************************
 void PreviewArea::updateScaledImg(void)
 {
     if (image) {
@@ -103,7 +100,6 @@ void PreviewArea::updateScaledImg(void)
     }
 }
 
-//************************************************************
 void PreviewArea::zoomIn(void)
 {
     if (image) {
@@ -111,7 +107,6 @@ void PreviewArea::zoomIn(void)
     }
 }
 
-//************************************************************
 void PreviewArea::zoomOut(void)
 {
     if (image) {
@@ -119,7 +114,6 @@ void PreviewArea::zoomOut(void)
     }
 }
 
-//************************************************************
 void PreviewArea::zoomSel(void)
 {
     if (image) {
@@ -127,7 +121,6 @@ void PreviewArea::zoomSel(void)
     }
 }
 
-//************************************************************
 void PreviewArea::zoom2Fit(void)
 {
     if (image) {
@@ -135,7 +128,6 @@ void PreviewArea::zoom2Fit(void)
     }
 }
 
-//************************************************************
 void PreviewArea::setTLX(float ratio)
 {
     if (image) {
@@ -144,7 +136,6 @@ void PreviewArea::setTLX(float ratio)
     }
 }
 
-//************************************************************
 void PreviewArea::setTLY(float ratio)
 {
     if (image) {
@@ -153,7 +144,6 @@ void PreviewArea::setTLY(float ratio)
     }
 }
 
-//************************************************************
 void PreviewArea::setBRX(float ratio)
 {
     if (image) {
@@ -162,7 +152,6 @@ void PreviewArea::setBRX(float ratio)
     }
 }
 
-//************************************************************
 void PreviewArea::setBRY(float ratio)
 {
     if (image) {
@@ -172,7 +161,6 @@ void PreviewArea::setBRY(float ratio)
 }
 
 
-//************************************************************
 void PreviewArea::requestVisibility(int tl_x, int tl_y)
 {
     //printf("requestVisibility %d, %d\n", tl_x, tl_y);
@@ -182,31 +170,28 @@ void PreviewArea::requestVisibility(int tl_x, int tl_y)
     ensureVisible(tl_x, tl_y, 20, 20);
 }
 
-//************************************************************
 bool PreviewArea::setIconZoomIn(const QIcon &icon)
 {
     zoomInAction->setIcon(icon);
     return true;
 }
 
-//************************************************************
 bool PreviewArea::setIconZoomOut(const QIcon &icon)
 {
     zoomOutAction->setIcon(icon);
     return true;
 }
 
-//************************************************************
 bool PreviewArea::setIconZoomSel(const QIcon &icon)
 {
     zoomSelAction->setIcon(icon);
     return true;
 }
 
-//************************************************************
 bool PreviewArea::setIconZoomFit(const QIcon &icon)
 {
     zoom2FitAction->setIcon(icon);
     return true;
 }
 
+}  // NameSpace KSaneIface

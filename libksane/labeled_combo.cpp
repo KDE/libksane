@@ -22,27 +22,31 @@
 
 #include "labeled_combo.h"
 
-LabeledCombo::LabeledCombo(QWidget *parent, const QString& ltext, const QStringList& list)
-: QFrame(parent)
+namespace KSaneIface
+{
+
+LabeledCombo::LabeledCombo(QWidget *parent, const QString& ltext, 
+                           const QStringList& list)
+            : QFrame(parent)
 {
     layout = new QGridLayout(this);
-    layout->setSpacing(3);
-    layout->setMargin(0);
-    label = new QLabel(ltext, this);
-    combo = new QComboBox(this);
+    label  = new QLabel(ltext, this);
+    combo  = new QComboBox(this);
     combo->addItems(list);
 
     connect(combo, SIGNAL(activated(const QString &)),
             this, SLOT(prActivated(const QString &)));
+
     connect(combo, SIGNAL(activated(int)),
             this, SLOT(prActivated(int)));
 
+    layout->setSpacing(3);
+    layout->setMargin(0);
     layout->addWidget(label, 0, 0);
     layout->addWidget(combo, 0, 1);
     layout->setColumnStretch(0, 50);
     layout->setColumnStretch(1, 0);
 }
-
 
 void LabeledCombo::setCurrentText(const QString &t)
 {
@@ -71,7 +75,6 @@ QString LabeledCombo::currentText(void) const
 {
     return(combo->currentText());
 }
-
 
 QString LabeledCombo::text(int i) const
 {
@@ -112,3 +115,4 @@ void LabeledCombo::prActivated(int i)
     emit activated(i);
 }
 
+}  // NameSpace KSaneIface

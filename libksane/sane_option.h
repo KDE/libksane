@@ -20,11 +20,18 @@
 #ifndef SANE_OPTIONS_H
 #define SANE_OPTIONS_H
 
+#define SW_INT_MAX (2147483647)
+#define SW_INT_MIN (-2147483647-1)
+
+#define SW_FIXED_MAX (32767.0)
+#define SW_FIXED_MIN (-32768.0)
+
 #include <qframe.h>
 #include <qcheckbox.h>
 #include <qlayout.h>
 
-extern "C" {
+extern "C" 
+{
 #include <sane/sane.h>
 #include <sane/saneopts.h>
 }
@@ -36,6 +43,9 @@ extern "C" {
 #include "labeled_checkbox.h"
 #include "labeled_entry.h"
 #include "labeled_gamma.h"
+
+namespace KSaneIface
+{
 
 typedef enum
 {
@@ -51,12 +61,6 @@ typedef enum
     SW_GAMMA
 } SaneOptWidget_t;
 
-#define SW_INT_MAX (2147483647)
-#define SW_INT_MIN (-2147483647-1)
-
-#define SW_FIXED_MAX (32767.0)
-#define SW_FIXED_MIN (-32768.0)
-
 typedef enum
 {
     SW_STATE_HIDDEN,
@@ -70,6 +74,7 @@ class SaneOption : public QObject
     Q_OBJECT
 
 public:
+
     SaneOption(const SANE_Handle, const int);
     ~SaneOption();
 
@@ -99,6 +104,7 @@ public:
     LabeledFSlider *lfslider;
 
 Q_SIGNALS:
+
     void optsNeedReload(void);
     void valsNeedReload(void);
     void fValueRead(float val);
@@ -106,6 +112,7 @@ Q_SIGNALS:
     void cbValueRead(bool val);
 
 private Q_SLOTS:
+
     void comboboxChanged(int i);
     void checkboxChanged(bool toggled);
     bool comboboxChanged(const QString &value);
@@ -115,7 +122,7 @@ private Q_SLOTS:
     void gammaTableChanged(const QVector<int> &gam_tbl);
 
 private:
-    // functions
+
     SaneOptWidget_t getWidgetType(void);
     QStringList *genComboStringList(void);
     QString getSaneComboString(unsigned char *data);
@@ -124,6 +131,8 @@ private:
     QString unitString(void);
     bool writeData(unsigned char *data);
     bool comboboxChanged(float value);
+
+private:
 
     // gui object variables
     QFrame *frame;
@@ -148,4 +157,6 @@ private:
     bool bVal;
 };
 
-#endif
+}  // NameSpace KSaneIface
+
+#endif // SANE_OPTIONS_H

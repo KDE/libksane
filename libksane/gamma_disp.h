@@ -28,31 +28,39 @@
  * This is the widget that displays the gamma table.
  */
 
+namespace KSaneIface
+{
+
 class GammaDisp : public QWidget
 {
     Q_OBJECT
 
-    public:
-       /**
-        * Create a gamma display.
-        * \param parent parent widget
-        */
-        GammaDisp(QWidget *parent, QVector<int> *tbl);
-        ~GammaDisp() {};
+public:
 
-        QSize sizeHint(void) const;
-        QSize minimumSizeHint() const;
+    /**
+    * Create a gamma display.
+    * \param parent parent widget
+    */
+    GammaDisp(QWidget *parent, QVector<int> *tbl);
+    ~GammaDisp() {};
 
-        void setColor(QColor color);
+    QSize sizeHint(void) const;
+    QSize minimumSizeHint() const;
 
-    protected:
-        void paintEvent (QPaintEvent *);
-        void resizeEvent(QResizeEvent *);
+    void setColor(QColor color);
 
-    private:
-        QVector<int> *gam_tbl;
-        QColor gam_color;
+protected:
+
+    void paintEvent (QPaintEvent *);
+    void resizeEvent(QResizeEvent *);
+
+private:
+
+    QVector<int> *gam_tbl;
+    QColor gam_color;
 };
 
-#endif
+}  // NameSpace KSaneIface
+
+#endif // GAMMA_DISP_H
 

@@ -30,6 +30,9 @@
 class QSpinBox;
 class QLabel;
 
+namespace KSaneIface
+{
+
 /**
  * A combination of a label a slider and a spinbox.
  * The slider is connected to the spinbox so that they have the same value.
@@ -39,6 +42,7 @@ class LabeledSlider : public QFrame
     Q_OBJECT
 
 public:
+
    /**
     * Create the slider.
     *
@@ -55,9 +59,10 @@ public:
 
     void wigetSizeHints(int *lab_w, int *spi_w);
     void setColumnWidths(int lab_w, int spi_w);
-    int value(void) const {return( slider->value());}
+    int value(void) const { return( slider->value()); }
 
 public Q_SLOTS:
+
   /** Set the slider value */
     void setValue(int);
     void setRange(int min, int max);
@@ -66,18 +71,21 @@ public Q_SLOTS:
     void setSuffix(const QString &text);
 
 private Q_SLOTS:
+
     /** Sync the values and emit valueChanged() */
     void syncValues(int);
     /** Ensure step value is followed */
     void fixValue(void);
 
 Q_SIGNALS:
+
     /**
      * Emit the slider value changes
      */
     void valueChanged(int);
 
 private:
+
     QLabel      *label;
     QSlider     *slider;
     QSpinBox    *spinb;
@@ -85,5 +93,6 @@ private:
     QGridLayout *layout;
 };
 
+}  // NameSpace KSaneIface
 
-#endif
+#endif // LABELED_SLIDER_H

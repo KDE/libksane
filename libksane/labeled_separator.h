@@ -20,11 +20,14 @@
 #ifndef LABELD_SEPARATOR_H
 #define LABELD_SEPARATOR_H
 
-#include <qframe.h>
+#include <QFrame>
 
 /**
   *@author Kåre Särs
   */
+
+namespace KSaneIface
+{
 
 class QLabel;
 
@@ -36,6 +39,7 @@ class LabeledSeparator : public QFrame
     Q_OBJECT
 
 public:
+
    /**
     * Create the separator.
     *
@@ -46,5 +50,6 @@ public:
     ~LabeledSeparator();
 };
 
+}  // NameSpace KSaneIface
 
-#endif
+#endif // LABELD_SEPARATOR_H

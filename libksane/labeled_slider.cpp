@@ -24,13 +24,14 @@
 
 #include "labeled_slider.h"
 
+namespace KSaneIface
+{
+
 LabeledSlider::LabeledSlider(QWidget *parent, const QString& ltext,
-                        int min, int max, int ste)
-   : QFrame(parent)
+                             int min, int max, int ste)
+             : QFrame(parent)
 {
     layout = new QGridLayout(this);
-    layout->setSpacing(3);
-    layout->setMargin(0);
     label = new QLabel(ltext, this);
     step = ste; if (step == 0) step = 1;
 
@@ -52,16 +53,27 @@ LabeledSlider::LabeledSlider(QWidget *parent, const QString& ltext,
     spinb->setValue(min);
     label->setBuddy(slider);
 
-    connect(spinb, SIGNAL(valueChanged(int)), this, SLOT(syncValues(int)));
-    connect(slider, SIGNAL(valueChanged(int)), this, SLOT(syncValues(int)));
-    connect(slider, SIGNAL(sliderReleased()), this, SLOT(fixValue()));
+    connect(spinb, SIGNAL(valueChanged(int)), 
+            this, SLOT(syncValues(int)));
 
+    connect(slider, SIGNAL(valueChanged(int)), 
+            this, SLOT(syncValues(int)));
+
+    connect(slider, SIGNAL(sliderReleased()), 
+            this, SLOT(fixValue()));
+
+    layout->setSpacing(3);
+    layout->setMargin(0);
     layout->addWidget(label, 0, 0);
     layout->addWidget(slider, 0, 1);
     layout->addWidget(spinb, 0, 2);
     layout->setColumnStretch(0, 0);
     layout->setColumnStretch(1, 50);
     layout->setColumnStretch(2, 0);
+}
+
+LabeledSlider::~LabeledSlider()
+{
 }
 
 void LabeledSlider::setSuffix(const QString &text)
@@ -137,6 +149,4 @@ void LabeledSlider::fixValue(void)
     }
 }
 
-LabeledSlider::~LabeledSlider()
-{
-}
+}  // NameSpace KSaneIface

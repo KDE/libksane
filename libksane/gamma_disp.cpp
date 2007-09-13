@@ -21,8 +21,11 @@
 
 #include "gamma_disp.h"
 
+namespace KSaneIface
+{
+
 GammaDisp::GammaDisp(QWidget *parent, QVector<int> *tbl)
-    : QWidget(parent)
+         : QWidget(parent)
 {
     gam_tbl = tbl;
     gam_color.setRgb(0,0,0);
@@ -74,6 +77,4 @@ void GammaDisp::paintEvent(QPaintEvent *)
     }
 }
 
-
-
-
+}  // NameSpace KSaneIface

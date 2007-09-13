@@ -22,6 +22,10 @@
 
 #include <qframe.h>
 #include <qcheckbox.h>
+
+namespace KSaneIface
+{
+
 /**
   *@author Kåre Särs
   */
@@ -34,6 +38,7 @@ class LabeledCheckbox : public QFrame
     Q_OBJECT
 
 public:
+
    /**
     * Create the checkbox.
     *
@@ -45,14 +50,18 @@ public:
     void setChecked(bool);
 
 private Q_SLOTS:
+
     void prToggled(bool);
 
 Q_SIGNALS:
+
     void toggled(bool);
 
 private:
+
     QCheckBox *chbx;
 };
 
+}  // NameSpace KSaneIface
 
-#endif
+#endif // LABELED_CHECKBOX_H

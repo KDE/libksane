@@ -16,15 +16,19 @@
    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.
 */
-#include <math.h> //pow
+
+#include <cmath> //pow
 
 #include <qlayout.h>
 #include <QGroupBox>
 
 #include "labeled_gamma.h"
 
+namespace KSaneIface
+{
+
 LabeledGamma::LabeledGamma(QWidget *parent, const QString& text, int size)
-    : QFrame(parent)
+            : QFrame(parent)
 {
     bri_slider = new LabeledSlider(this, tr("Brightness"), -50, 50, 1);
     bri_slider->setValue(0);
@@ -76,9 +80,14 @@ LabeledGamma::LabeledGamma(QWidget *parent, const QString& text, int size)
     gbl->setMargin(0);
     gbl->activate();
 
-    connect(bri_slider, SIGNAL(valueChanged(int)), this, SLOT(calculateGT()));
-    connect(con_slider, SIGNAL(valueChanged(int)), this, SLOT(calculateGT()));
-    connect(gam_slider, SIGNAL(valueChanged(int)), this, SLOT(calculateGT()));
+    connect(bri_slider, SIGNAL(valueChanged(int)), 
+            this, SLOT(calculateGT()));
+
+    connect(con_slider, SIGNAL(valueChanged(int)), 
+            this, SLOT(calculateGT()));
+
+    connect(gam_slider, SIGNAL(valueChanged(int)), 
+            this, SLOT(calculateGT()));
 }
 
 LabeledGamma::~LabeledGamma()
@@ -156,4 +165,4 @@ void LabeledGamma::calculateGT(void)
     emit gammaTableChanged(gam_tbl);
 }
 
-
+}  // NameSpace KSaneIface

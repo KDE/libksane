@@ -17,15 +17,18 @@
    Boston, MA 02110-1301, USA.
 */
 
-
 #include "labeled_fslider.h"
 
 #define FLOAT_MULTIP 32768.0
 #define TO_FLOAT(v) ((float)v / FLOAT_MULTIP)
 #define TO_FIX(v) ((int)(v * FLOAT_MULTIP))
+
+namespace KSaneIface
+{
+
 LabeledFSlider::LabeledFSlider(QWidget *parent, const QString& ltext,
-                        float min, float max, float step)
-   : QFrame(parent)
+                               float min, float max, float step)
+              : QFrame(parent)
 {
     layout = new QGridLayout(this);
     layout->setSpacing(3);
@@ -69,9 +72,14 @@ LabeledFSlider::LabeledFSlider(QWidget *parent, const QString& ltext,
 
     label->setBuddy(slider);
 
-    connect(spinb, SIGNAL(valueChanged(double)), this, SLOT(syncValues(double)));
-    connect(slider, SIGNAL(valueChanged(int)), this, SLOT(syncValues(int)));
-    connect(slider, SIGNAL(sliderReleased()), this, SLOT(fixValue()));
+    connect(spinb, SIGNAL(valueChanged(double)), 
+            this, SLOT(syncValues(double)));
+
+    connect(slider, SIGNAL(valueChanged(int)), 
+            this, SLOT(syncValues(int)));
+
+    connect(slider, SIGNAL(sliderReleased()), 
+            this, SLOT(fixValue()));
 
     layout->addWidget(label, 0, 0);
     layout->addWidget(slider, 0,1);
@@ -80,7 +88,10 @@ LabeledFSlider::LabeledFSlider(QWidget *parent, const QString& ltext,
     layout->setColumnStretch(1, 50);
     layout->setColumnStretch(2, 0);
     layout->activate();
+}
 
+LabeledFSlider::~LabeledFSlider()
+{
 }
 
 void LabeledFSlider::wigetSizeHints(int *lab_w, int *spi_w)
@@ -110,7 +121,6 @@ void LabeledFSlider::setRange(float min, float max)
     //std::cout << "fixedmin=" << imin << " fixedmax=" << imax << std::endl;
 
     spinb->setRange(min, max);
-
 }
 
 void LabeledFSlider::setStep(float step)
@@ -180,6 +190,4 @@ void LabeledFSlider::fixValue(void)
     }
 }
 
-LabeledFSlider::~LabeledFSlider()
-{
-}
+}  // NameSpace KSaneIface

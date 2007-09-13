@@ -26,9 +26,13 @@
 #include <QScrollArea>
 
 #include "preview_image.h"
+
 /**
  *@author Kåre Särs
  */
+
+namespace KSaneIface
+{
 
 /**
  * This is the ScrollArea that will contain the preview image
@@ -37,46 +41,53 @@ class PreviewArea : public QScrollArea
 {
     Q_OBJECT
 
-    public:
-        PreviewArea(QWidget *parent);
-        ~PreviewArea();
-        QSize sizeHint(void) const;
+public:
 
-        void clearSelection(void);
-        QImage *getImage(void);
-        void updateScaledImg(void);
-        bool setIconFinal(const QIcon &icon);
-        bool setIconZoomIn(const QIcon &icon);
-        bool setIconZoomOut(const QIcon &icon);
-        bool setIconZoomSel(const QIcon &icon);
-        bool setIconZoomFit(const QIcon &icon);
+    PreviewArea(QWidget *parent);
+    ~PreviewArea();
 
-    public Q_SLOTS:
-        void setTLX(float percent);
-        void setTLY(float percent);
-        void setBRX(float percent);
-        void setBRY(float percent);
+    QSize sizeHint(void) const;
 
-        void zoomIn(void);
-        void zoomOut(void);
-        void zoomSel(void);
-        void zoom2Fit(void);
+    void clearSelection(void);
+    QImage *getImage(void);
+    void updateScaledImg(void);
+    bool setIconFinal(const QIcon &icon);
+    bool setIconZoomIn(const QIcon &icon);
+    bool setIconZoomOut(const QIcon &icon);
+    bool setIconZoomSel(const QIcon &icon);
+    bool setIconZoomFit(const QIcon &icon);
 
-    private Q_SLOTS:
-        void requestVisibility(int tl_x, int tl_y);
+public Q_SLOTS:
 
-    Q_SIGNALS:
-        void newSelection(float tl_x, float tl_y, float br_x, float br_y);
+    void setTLX(float percent);
+    void setTLY(float percent);
+    void setBRX(float percent);
+    void setBRY(float percent);
 
-    private:
-        void createContextMenu(void);
+    void zoomIn(void);
+    void zoomOut(void);
+    void zoomSel(void);
+    void zoom2Fit(void);
 
-        PreviewImage *image;
-        QAction *zoomInAction;
-        QAction *zoomOutAction;
-        QAction *zoomSelAction;
-        QAction *zoom2FitAction;
+private Q_SLOTS:
+
+    void requestVisibility(int tl_x, int tl_y);
+
+Q_SIGNALS:
+
+    void newSelection(float tl_x, float tl_y, float br_x, float br_y);
+
+private:
+
+    void createContextMenu(void);
+
+    PreviewImage *image;
+    QAction *zoomInAction;
+    QAction *zoomOutAction;
+    QAction *zoomSelAction;
+    QAction *zoom2FitAction;
 };
 
+}  // NameSpace KSaneIface
 
-#endif
+#endif // PREVIEW_AREA_H

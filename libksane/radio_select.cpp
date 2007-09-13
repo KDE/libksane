@@ -19,7 +19,6 @@
 
 // Qt includes.
 
-//#include <QButtonGroup>
 #include <QRadioButton>
 #include <QPushButton>
 #include <QLayout>
@@ -32,8 +31,11 @@
 
 #include "radio_select.h"
 
-//************************************************************
-RadioSelect::RadioSelect(QWidget *parent) : QDialog(parent)
+namespace KSaneIface
+{
+
+RadioSelect::RadioSelect(QWidget *parent) 
+           : QDialog(parent)
 {
     QVBoxLayout *layout = new QVBoxLayout;
     this->setLayout(layout);
@@ -53,11 +55,13 @@ RadioSelect::RadioSelect(QWidget *parent) : QDialog(parent)
     cancel->setText("Cancel");
     btn_layout->addWidget(cancel);
 
-    connect (ok, SIGNAL(clicked()), this, SLOT(accept()));
-    connect (cancel, SIGNAL(clicked()), this, SLOT(reject()));
+    connect (ok, SIGNAL(clicked()), 
+             this, SLOT(accept()));
+
+    connect (cancel, SIGNAL(clicked()), 
+             this, SLOT(reject()));
 }
 
-//************************************************************
 int RadioSelect::getSelectedIndex(QWidget *parent,
                                   const QString& group_name,
                                   const QStringList& items,
@@ -108,4 +112,4 @@ int RadioSelect::getSelectedIndex(QWidget *parent,
     return -1;
 }
 
-
+}  // NameSpace KSaneIface

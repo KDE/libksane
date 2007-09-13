@@ -17,16 +17,18 @@
         Boston, MA 02110-1301, USA.
 */
 
-#include <stdio.h>
+#define MIN_FOAT_STEP 0.001
+
+#include <cstdio>
 #include <iostream>
 
 #include "sane_option.h"
 
-#define MIN_FOAT_STEP 0.001
+namespace KSaneIface
+{
 
-//************************************************************
-SaneOption::SaneOption(const SANE_Handle s_handle, const int opt_num):
-        sane_handle(s_handle), opt_number(opt_num)
+SaneOption::SaneOption(const SANE_Handle s_handle, const int opt_num)
+          : sane_handle(s_handle), opt_number(opt_num)
 {
     lchebx = 0;
     lcombx = 0;
@@ -68,7 +70,10 @@ SaneOption::SaneOption(const SANE_Handle s_handle, const int opt_num):
     readValue();
 }
 
-//************************************************************
+SaneOption::~SaneOption(void)
+{
+}
+
 void SaneOption::createWidget(QWidget *parent)
 {
     float tmp_step;
@@ -163,9 +168,8 @@ void SaneOption::createWidget(QWidget *parent)
         frame->show();
         frame->setEnabled(sw_state == SW_STATE_SHOWN);
     }
-
 }
-//************************************************************
+
 SaneOptWidget_t SaneOption::getWidgetType(void)
 {
     switch (sane_option->constraint_type)
@@ -223,14 +227,12 @@ SaneOptWidget_t SaneOption::getWidgetType(void)
     return SW_DETECT_FAIL;
 }
 
-//************************************************************
 QString SaneOption::name(void)
 {
     if (sane_option == 0) return QString("");
     return QString(sane_option->name);
 }
 
-//************************************************************
 QString SaneOption::unitString(void)
 {
     switch(sane_option->unit)
@@ -246,14 +248,6 @@ QString SaneOption::unitString(void)
     return QString("");
 }
 
-
-//************************************************************
-SaneOption::~SaneOption(void)
-{
-}
-
-
-//************************************************************
 QStringList *SaneOption::genComboStringList(void)
 {
     int i;
@@ -290,7 +284,6 @@ QStringList *SaneOption::genComboStringList(void)
     return cstrl;
 }
 
-//************************************************************
 QString SaneOption::getSaneComboString(unsigned char *data)
 {
     QString tmp;
@@ -321,7 +314,6 @@ QString SaneOption::getSaneComboString(unsigned char *data)
     return QString("");
 }
 
-//************************************************************
 bool SaneOption::writeData(unsigned char *data)
 {
     SANE_Status status;
@@ -357,7 +349,6 @@ bool SaneOption::writeData(unsigned char *data)
     return true;
 }
 
-//************************************************************
 void SaneOption::checkboxChanged(bool toggled)
 {
     unsigned char data[4];
@@ -367,7 +358,6 @@ void SaneOption::checkboxChanged(bool toggled)
 
 }
 
-//************************************************************
 void SaneOption::comboboxChanged(int i)
 {
     unsigned char data[sane_option->size];
@@ -389,7 +379,6 @@ void SaneOption::comboboxChanged(int i)
     writeData(data);
 }
 
-//************************************************************
 bool SaneOption::comboboxChanged(float value)
 {
     unsigned char data[sane_option->size];
@@ -413,7 +402,6 @@ bool SaneOption::comboboxChanged(float value)
     return true;
 }
 
-//************************************************************
 bool SaneOption::comboboxChanged(const QString &value)
 {
     unsigned char data[sane_option->size];
@@ -458,7 +446,6 @@ bool SaneOption::comboboxChanged(const QString &value)
     return true;
 }
 
-//************************************************************
 void SaneOption::sliderChanged(int val)
 {
     unsigned char data[4];
@@ -469,7 +456,6 @@ void SaneOption::sliderChanged(int val)
     writeData(data);
 }
 
-//************************************************************
 void SaneOption::fsliderChanged(float val)
 {
     unsigned char data[4];
@@ -484,7 +470,6 @@ void SaneOption::fsliderChanged(float val)
     }
 }
 
-//************************************************************
 void SaneOption::entryChanged(const QString& text)
 {
     char data[sane_option->size];
@@ -497,14 +482,12 @@ void SaneOption::entryChanged(const QString& text)
 
 }
 
-//************************************************************
 void SaneOption::gammaTableChanged(const QVector<int> &gam_tbl)
 {
     //printf("Gamma table (%s) changed\n", sane_option->name);
     writeData((unsigned char *)gam_tbl.data());
 }
 
-//************************************************************
 void SaneOption::readOption(void)
 {
     float tmp_step;
@@ -609,10 +592,8 @@ void SaneOption::readOption(void)
         frame->show();
         frame->setEnabled(sw_state == SW_STATE_SHOWN);
     }
-
 }
 
-//************************************************************
 void SaneOption::readValue(void)
 {
     // check if we can read the value
@@ -693,10 +674,8 @@ void SaneOption::readValue(void)
             //printf("Unhandeled\n");
             break;
     }
-
 }
 
-//************************************************************
 SANE_Word SaneOption::toSANE_Word(unsigned char *data)
 {
     SANE_Word tmp;
@@ -708,7 +687,6 @@ SANE_Word SaneOption::toSANE_Word(unsigned char *data)
     return tmp;
 }
 
-//************************************************************
 void SaneOption::fromSANE_Word(unsigned char *data, SANE_Word from)
 {
     data[0] = (from & 0x000000FF);
@@ -718,7 +696,6 @@ void SaneOption::fromSANE_Word(unsigned char *data, SANE_Word from)
     data[3] = (from & 0xFF000000)>>24;
 }
 
-//************************************************************
 bool SaneOption::getMaxValue(float *max)
 {
     int last;
@@ -769,7 +746,6 @@ bool SaneOption::getMaxValue(float *max)
     return false;
 }
 
-//************************************************************
 bool SaneOption::getValue(float *val)
 {
     // check if we can read the value
@@ -801,7 +777,6 @@ bool SaneOption::getValue(float *val)
     return false;
 }
 
-//************************************************************
 bool SaneOption::setValue(float value)
 {
     //printf("setValue(float): '%s' value: %f\n", sane_option->name, value);
@@ -834,7 +809,6 @@ bool SaneOption::setValue(float value)
     return false;
 }
 
-//************************************************************
 bool SaneOption::setChecked(bool check)
 {
     //std::cout << "-> SetChecked = " << check << std::endl;
@@ -852,7 +826,6 @@ bool SaneOption::setChecked(bool check)
     return false;
 }
 
-//************************************************************
 bool SaneOption::storeCurrentData(void)
 {
     SANE_Status status;
@@ -873,8 +846,6 @@ bool SaneOption::storeCurrentData(void)
     return true;
 }
 
-
-//************************************************************
 bool SaneOption::restoreSavedData(void)
 {
     // check if we have saved any data
@@ -888,10 +859,8 @@ bool SaneOption::restoreSavedData(void)
     writeData(sane_data);
 
     return true;
-
 }
 
-//************************************************************
 bool SaneOption::getValue(QString *val)
 {
     // check if we can read the value
@@ -934,7 +903,6 @@ bool SaneOption::getValue(QString *val)
     return true;
 }
 
-//************************************************************
 bool SaneOption::setValue(const QString &val)
 {
     QString tmp;
@@ -996,8 +964,6 @@ bool SaneOption::setValue(const QString &val)
     return true;
 }
 
-
-//************************************************************
 bool SaneOption::setIconColorMode(const QIcon &icon)
 {
     if (icon_color != 0) {
@@ -1012,7 +978,6 @@ bool SaneOption::setIconColorMode(const QIcon &icon)
     return lcombx->setIcon(icon, getSaneComboString((unsigned char*)SANE_VALUE_SCAN_MODE_COLOR));
 }
 
-//************************************************************
 bool SaneOption::setIconGrayMode(const QIcon &icon)
 {
     if (icon_gray != 0) {
@@ -1027,7 +992,6 @@ bool SaneOption::setIconGrayMode(const QIcon &icon)
     return lcombx->setIcon(icon, getSaneComboString((unsigned char*)SANE_VALUE_SCAN_MODE_GRAY));
 }
 
-//************************************************************
 bool SaneOption::setIconBWMode(const QIcon &icon)
 {
     if (icon_bw != 0) {
@@ -1042,3 +1006,4 @@ bool SaneOption::setIconBWMode(const QIcon &icon)
     return lcombx->setIcon(icon, getSaneComboString((unsigned char*)SANE_VALUE_SCAN_MODE_LINEART));
 }
 
+}  // NameSpace KSaneIface

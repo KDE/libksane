@@ -21,12 +21,16 @@
 #define LABELED_GAMMA_H
 
 #include <QFrame>
+
 #include "labeled_slider.h"
 #include "gamma_disp.h"
 
 /**
   *@author Kåre Särs
   */
+
+namespace KSaneIface
+{
 
 /**
  * A wrapper for a checkbox
@@ -36,6 +40,7 @@ class LabeledGamma : public QFrame
     Q_OBJECT
 
 public:
+
    /**
     * Create the checkbox.
     *
@@ -53,12 +58,15 @@ public:
     void setColumnWidhts(int lab_w, int spi_w);
 
 public Q_SLOTS:
+
     void setValues(int bri, int con, int gam);
 
 private Q_SLOTS:
+
     void calculateGT(void);
 
 Q_SIGNALS:
+
     void gammaChanged(int bri, int con, int gam);
     void gammaTableChanged(const QVector<int> &gamma_tbl);
 
@@ -68,11 +76,12 @@ private:
     LabeledSlider *con_slider;
     LabeledSlider *gam_slider;
 
-    QVector<int> gam_tbl;
-    double max_val;
+    QVector<int>   gam_tbl;
+    double         max_val;
 
-    GammaDisp *gamma_disp;
+    GammaDisp     *gamma_disp;
 };
 
+}  // NameSpace KSaneIface
 
-#endif
+#endif // LABELED_GAMMA_H

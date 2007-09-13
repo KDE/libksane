@@ -30,6 +30,9 @@
  *@author Kåre Särs
  */
 
+namespace KSaneIface
+{
+
 /**
  * A combination of a label a slider and a spinbox.
  * The slider is connected to the spinbox so that they have the same value.
@@ -39,6 +42,7 @@ class LabeledFSlider : public QFrame
     Q_OBJECT
 
 public:
+
    /**
     * Create the slider.
     *
@@ -50,7 +54,7 @@ public:
     * \param quant is the step between values.
     */
     LabeledFSlider(QWidget *parent, const QString& text,
-                float min, float max, float st);
+                   float min, float max, float st);
     ~LabeledFSlider();
 
     void wigetSizeHints(int *lab_w, int *spi_w);
@@ -63,6 +67,7 @@ public:
     float step() const {return fstep;}
 
 public Q_SLOTS:
+    
     /** Set the slider/spinbox value */
     void setValue(float);
     void setRange(float, float);
@@ -71,6 +76,7 @@ public Q_SLOTS:
     void setSuffix(const QString &text);
 
 private Q_SLOTS:
+
     /**
      * Sync the values and emit valueChanged()
      */
@@ -80,12 +86,14 @@ private Q_SLOTS:
     void fixValue(void);
 
 Q_SIGNALS:
+
     /**
      * Emit the slider value changes
      */
     void valueChanged(float);
 
 private:
+
     QLabel         *label;
     QSlider        *slider;
     QDoubleSpinBox *spinb;
@@ -94,5 +102,6 @@ private:
     int             istep;
 };
 
+}  // NameSpace KSaneIface
 
-#endif
+#endif // LABELED_SFSLIDER_H

@@ -24,6 +24,9 @@
 #include <QFrame>
 #include <QImage>
 
+namespace KSaneIface
+{
+
 enum sel_change
 {
     MOVE_NONE,
@@ -48,57 +51,63 @@ class PreviewImage : public QWidget
 {
     Q_OBJECT
 
-    public:
-   /**
-     * Create the frame.
-     * \param parent parent widget
+public:
+
+    /**
+    * Create the frame.
+    * \param parent parent widget
     */
-        PreviewImage(QWidget *parent);
-        ~PreviewImage();
+    PreviewImage(QWidget *parent);
+    ~PreviewImage();
 
-        QSize sizeHint(void) const;
+    QSize sizeHint(void) const;
 
-        void clearSelection(void);
-        QImage *getImage(void) {return &orig_img;}
-        void updateScaledImg(void);
+    void clearSelection(void);
+    QImage *getImage(void) {return &orig_img;}
+    void updateScaledImg(void);
 
-    public Q_SLOTS:
-        void setTLX(float percent);
-        void setTLY(float percent);
-        void setBRX(float percent);
-        void setBRY(float percent);
+public Q_SLOTS:
 
-        void zoomIn(void);
-        void zoomOut(void);
-        void zoomSel(void);
-        void zoom2Fit(void);
+    void setTLX(float percent);
+    void setTLY(float percent);
+    void setBRX(float percent);
+    void setBRY(float percent);
 
-    protected:
-        void paintEvent(QPaintEvent *event);
-        void mousePressEvent(QMouseEvent *event);
-        void mouseMoveEvent(QMouseEvent *event);
-        void mouseReleaseEvent(QMouseEvent *event);
+    void zoomIn(void);
+    void zoomOut(void);
+    void zoomSel(void);
+    void zoom2Fit(void);
 
-    Q_SIGNALS:
-        void newSelection(float tl_x, float tl_y, float br_x, float br_y);
-        void requestVisibility(int tl_x, int tl_y);
+protected:
 
-    private:
-        QImage image;
-        QImage orig_img;
+    void paintEvent(QPaintEvent *event);
+    void mousePressEvent(QMouseEvent *event);
+    void mouseMoveEvent(QMouseEvent *event);
+    void mouseReleaseEvent(QMouseEvent *event);
 
-        int x1, y1;
-        // tl == Top Left, br == Botom Right
-        int tl_x, tl_y, br_x, br_y;
-        int dtlx, dtly, dbrx, dbry;
-        // tl_x_r = tl_x / image.width()
-        float tl_x_r, tl_y_r, br_x_r, br_y_r;
+Q_SIGNALS:
 
-        bool lmb;
-        bool have_selection;
-        sel_change change;
-        float scalefactor;
+    void newSelection(float tl_x, float tl_y, float br_x, float br_y);
+    void requestVisibility(int tl_x, int tl_y);
+
+private:
+
+    QImage image;
+    QImage orig_img;
+
+    int x1, y1;
+    // tl == Top Left, br == Botom Right
+    int tl_x, tl_y, br_x, br_y;
+    int dtlx, dtly, dbrx, dbry;
+    // tl_x_r = tl_x / image.width()
+    float tl_x_r, tl_y_r, br_x_r, br_y_r;
+
+    bool lmb;
+    bool have_selection;
+    sel_change change;
+    float scalefactor;
 };
 
+}  // NameSpace KSaneIface
 
-#endif
+#endif // PREVIEW_IMAGE_H

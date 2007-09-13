@@ -16,14 +16,18 @@
    the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
    Boston, MA 02110-1301, USA.
 */
-extern "C" {
-#include <stdio.h>
+
+#define ENABLE_DEBUG
+
+#include <cstdio>
+#include <iostream>
+
+extern "C"
+{
 #include <sys/ioctl.h>
 #include <sane/saneopts.h>
 }
-#include <iostream>
 
-//#include <qlayout.h>
 #include <qeventloop.h>
 #include <qapplication.h>
 #include <QComboBox>
@@ -36,11 +40,11 @@ extern "C" {
 #include "radio_select.h"
 #include "labeled_gamma.h"
 
-#define ENABLE_DEBUG
+namespace KSaneIface
+{
 
-//************************************************************
 SaneWidget::SaneWidget(QWidget* parent)
-: QWidget(parent)
+          : QWidget(parent)
 {
     SANE_Int version;
 
@@ -79,14 +83,12 @@ SaneWidget::SaneWidget(QWidget* parent)
     connect (&r_val_tmr, SIGNAL(timeout(void)), this, SLOT(valReload()));
 }
 
-//************************************************************
 SaneWidget::~SaneWidget(void)
 {
     optList.clear();
     sane_exit();
 }
 
-//************************************************************
 QString SaneWidget::selectDevice(QWidget* parent)
 {
     int i=0;
@@ -135,7 +137,6 @@ QString SaneWidget::selectDevice(QWidget* parent)
     return QString(dev_list[i]->name);
 }
 
-//************************************************************
 bool SaneWidget::openDevice(const QString &device_name)
 {
     SANE_Status status;
@@ -227,7 +228,6 @@ bool SaneWidget::openDevice(const QString &device_name)
              this, SLOT(handleSelection(float,float,float,float)));
     pr_img = preview->getImage();
 
-
     z_in_btn = new QPushButton(tr("Zoom In"));
     z_out_btn = new QPushButton(tr("Zoom Out"));
     z_sel_btn = new QPushButton(tr("Zoom to Selection"));
@@ -241,7 +241,6 @@ bool SaneWidget::openDevice(const QString &device_name)
     connect(z_fit_btn, SIGNAL(clicked(void)), preview, SLOT(zoom2Fit(void)));
     connect (scan_btn, SIGNAL(clicked(void)), this, SLOT(scanFinal(void)));
     connect (prev_btn, SIGNAL(clicked(void)), this, SLOT(scanPreview(void)));
-
 
     QHBoxLayout *zoom_layout = new QHBoxLayout;
 
@@ -278,7 +277,6 @@ bool SaneWidget::openDevice(const QString &device_name)
     return true;
 }
 
-//************************************************************
 void SaneWidget::createOptInterface(void)
 {
     // create the container widget
@@ -495,7 +493,6 @@ void SaneWidget::createOptInterface(void)
     remain_opts->setVisible(false);
 }
 
-//************************************************************
 void SaneWidget::opt_level_change(int level)
 {
     if (color_opts == 0) return;
@@ -517,7 +514,6 @@ void SaneWidget::opt_level_change(int level)
     }
 }
 
-//************************************************************
 void SaneWidget::setDefaultValues(void)
 {
     SaneOption *option;
@@ -538,13 +534,11 @@ void SaneWidget::setDefaultValues(void)
     }
 }
 
-//************************************************************
 void SaneWidget::scheduleValReload(void)
 {
     r_val_tmr.start(5);
 }
 
-//************************************************************
 void SaneWidget::optReload(void)
 {
     int i;
@@ -562,7 +556,6 @@ void SaneWidget::optReload(void)
     updatePreviewSize();
 }
 
-//************************************************************
 void SaneWidget::valReload(void)
 {
     int i;
@@ -582,21 +575,20 @@ void SaneWidget::valReload(void)
     }
 }
 
-//************************************************************
 SaneOption *SaneWidget::getOption(const QString &name)
 {
     int i;
 
     for (i=0; i<optList.size(); i++)
     {
-        if (optList.at(i)->name() == name) {
+        if (optList.at(i)->name() == name) 
+        {
             return optList.at(i);
         }
     }
     return 0;
 }
 
-//************************************************************
 void SaneWidget::handleSelection(float tl_x, float tl_y, float br_x, float br_y) {
     float max_x, max_y;
 
@@ -618,8 +610,8 @@ void SaneWidget::handleSelection(float tl_x, float tl_y, float br_x, float br_y)
     if (opt_br_y != 0) opt_br_y->setValue(fbr_y);
 }
 
-//************************************************************
-void SaneWidget::setTLX(float ftlx) {
+void SaneWidget::setTLX(float ftlx) 
+{
     float max, ratio;
 
     //std::cout << "setTLX " << ftlx;
@@ -629,8 +621,8 @@ void SaneWidget::setTLX(float ftlx) {
     preview->setTLX(ratio);
 }
 
-//************************************************************
-void SaneWidget::setTLY(float ftly) {
+void SaneWidget::setTLY(float ftly) 
+{
     float max, ratio;
 
     //std::cout << "setTLY " << ftly;
@@ -640,8 +632,8 @@ void SaneWidget::setTLY(float ftly) {
     preview->setTLY(ratio);
 }
 
-//************************************************************
-void SaneWidget::setBRX(float fbrx) {
+void SaneWidget::setBRX(float fbrx) 
+{
     float max, ratio;
 
     //std::cout << "setBRX " << fbrx;
@@ -651,8 +643,8 @@ void SaneWidget::setBRX(float fbrx) {
     preview->setBRX(ratio);
 }
 
-//************************************************************
-void SaneWidget::setBRY(float fbry) {
+void SaneWidget::setBRY(float fbry) 
+{
     float max, ratio;
 
     //std::cout << "setBRY " << fbry;
@@ -662,7 +654,6 @@ void SaneWidget::setBRY(float fbry) {
     preview->setBRY(ratio);
 }
 
-//************************************************************
 void SaneWidget::updatePreviewSize(void)
 {
     SANE_Status status;
@@ -738,7 +729,6 @@ void SaneWidget::updatePreviewSize(void)
     }
 }
 
-//************************************************************
 void SaneWidget::scanPreview(void)
 {
     SANE_Status status;
@@ -874,7 +864,6 @@ void SaneWidget::scanPreview(void)
     this->setDisabled(false);
 }
 
-//************************************************************
 void SaneWidget::scanFinal(void)
 {
     SANE_Status status;
@@ -956,7 +945,6 @@ void SaneWidget::scanFinal(void)
     this->setDisabled(false);
 }
 
-//************************************************************
 void SaneWidget::processData(void)
 {
     SANE_Status status = SANE_STATUS_GOOD;
@@ -1155,21 +1143,17 @@ void SaneWidget::processData(void)
     }
 }
 
-//************************************************************
 QImage *SaneWidget::getFinalImage(void)
 {
     return &the_img;
 }
 
-//************************************************************
 void SaneWidget::scanCancel(void)
 {
     sane_cancel(s_handle);
     read_status = READ_CANCEL;
 }
 
-
-//************************************************************
 bool SaneWidget::setIconColorMode(const QIcon &icon)
 {
     if ((opt_mode != 0) && (opt_mode->widget() != 0)) {
@@ -1179,7 +1163,6 @@ bool SaneWidget::setIconColorMode(const QIcon &icon)
     return false;
 }
 
-//************************************************************
 bool SaneWidget::setIconGrayMode(const QIcon &icon)
 {
     if ((opt_mode != 0) && (opt_mode->widget() != 0)) {
@@ -1189,7 +1172,6 @@ bool SaneWidget::setIconGrayMode(const QIcon &icon)
     return false;
 }
 
-//************************************************************
 bool SaneWidget::setIconBWMode(const QIcon &icon)
 {
     if ((opt_mode != 0) && (opt_mode->widget() != 0)) {
@@ -1199,7 +1181,6 @@ bool SaneWidget::setIconBWMode(const QIcon &icon)
     return false;
 }
 
-//************************************************************
 bool SaneWidget::setIconPreview(const QIcon &icon)
 {
     if (prev_btn != 0) {
@@ -1209,7 +1190,6 @@ bool SaneWidget::setIconPreview(const QIcon &icon)
     return false;
 }
 
-//************************************************************
 bool SaneWidget::setIconFinal(const QIcon &icon)
 {
     if (scan_btn != 0) {
@@ -1219,7 +1199,6 @@ bool SaneWidget::setIconFinal(const QIcon &icon)
     return true;
 }
 
-//************************************************************
 bool SaneWidget::setIconZoomIn(const QIcon &icon)
 {
     if (preview != 0) {
@@ -1232,7 +1211,6 @@ bool SaneWidget::setIconZoomIn(const QIcon &icon)
     return false;
 }
 
-//************************************************************
 bool SaneWidget::setIconZoomOut(const QIcon &icon)
 {
     if (preview != 0) {
@@ -1245,7 +1223,6 @@ bool SaneWidget::setIconZoomOut(const QIcon &icon)
     return false;
 }
 
-//************************************************************
 bool SaneWidget::setIconZoomSel(const QIcon &icon)
 {
     if (preview != 0) {
@@ -1258,7 +1235,6 @@ bool SaneWidget::setIconZoomSel(const QIcon &icon)
     return false;
 }
 
-//************************************************************
 bool SaneWidget::setIconZoomFit(const QIcon &icon)
 {
     if (preview != 0) {
@@ -1271,3 +1247,4 @@ bool SaneWidget::setIconZoomFit(const QIcon &icon)
     return false;
 }
 
+}  // NameSpace KSaneIface

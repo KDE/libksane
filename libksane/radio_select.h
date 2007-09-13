@@ -24,22 +24,29 @@
 #include <QDialog>
 #include <QStringList>
 
+namespace KSaneIface
+{
+
 class RadioSelect : public QDialog
 {
     Q_OBJECT
 
-    public:
-        RadioSelect(QWidget *parent=0);
-        ~RadioSelect(void) {};
+public:
 
-        int getSelectedIndex(QWidget *parent,
-                             const QString& group_name,
-                             const QStringList& items,
-                             int default_index=0);
+    RadioSelect(QWidget *parent=0);
+    ~RadioSelect(void) {};
 
-    private:
-        QGroupBox *radio_group;
+    int getSelectedIndex(QWidget *parent,
+                         const QString& group_name,
+                         const QStringList& items,
+                         int default_index=0);
+
+private:
+
+    QGroupBox *radio_group;
 };
 
-#endif
+}  // NameSpace KSaneIface
+
+#endif // RADIO_SELECT_H
 

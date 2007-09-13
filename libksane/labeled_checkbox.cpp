@@ -21,8 +21,11 @@
 
 #include "labeled_checkbox.h"
 
+namespace KSaneIface
+{
+
 LabeledCheckbox::LabeledCheckbox(QWidget *parent, const QString& ltext)
-   : QFrame(parent)
+               : QFrame(parent)
 {
     QHBoxLayout *hb = new QHBoxLayout(this);
     hb->setSpacing(2);
@@ -49,3 +52,4 @@ void LabeledCheckbox::prToggled(bool on)
     emit toggled(on);
 }
 
+}  // NameSpace KSaneIface

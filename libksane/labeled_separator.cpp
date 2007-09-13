@@ -17,13 +17,16 @@
    Boston, MA 02110-1301, USA.
 */
 
-#include <qlayout.h>
-#include <qlabel.h>
+#include <QLayout>
+#include <QLabel>
 
 #include "labeled_separator.h"
 
+namespace KSaneIface
+{
+
 LabeledSeparator::LabeledSeparator(QWidget *parent, const QString& ltext)
-   : QFrame( parent )
+                : QFrame( parent )
 {
     QHBoxLayout *hb = new QHBoxLayout(this);
     hb->setSpacing(2);
@@ -41,9 +44,10 @@ LabeledSeparator::LabeledSeparator(QWidget *parent, const QString& ltext)
     hb->addWidget(label);
     hb->addWidget(line2,50);
     //hb->activate();
-
 }
 
 LabeledSeparator::~LabeledSeparator()
 {
 }
+
+}  // NameSpace KSaneIface
