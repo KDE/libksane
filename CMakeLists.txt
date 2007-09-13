@@ -38,7 +38,7 @@ SET(KSANE_LIB_SO_VERSION_STRING "${KSANE_LIB_SO_CUR_VERSION}.${KSANE_LIB_SO_REV_
 # =======================================================
 
 
-# Detect Exiv2 library properlly with CMake script from 'cmake/modules'
+# Detect Sane library properlly with CMake script from 'cmake/modules'
 SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}  ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules )
 FIND_PACKAGE(Sane REQUIRED)
 
