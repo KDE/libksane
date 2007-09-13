@@ -20,14 +20,15 @@
 #ifndef LABELED_GAMMA_H
 #define LABELED_GAMMA_H
 
-#include <QFrame>
+// Qt includes.
 
-#include "labeled_slider.h"
-#include "gamma_disp.h"
+#include <QFrame>
 
 // Local includes.
 
 #include "libksane_export.h"
+#include "labeled_slider.h"
+#include "gamma_disp.h"
 
 /**
   *@author Kåre Särs

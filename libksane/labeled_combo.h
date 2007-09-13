@@ -20,6 +20,8 @@
 #ifndef LABELED_COMBO_H
 #define LABELED_COMBO_H
 
+// Qt includes.
+
 #include <QFrame>
 #include <QComboBox>
 #include <QLabel>

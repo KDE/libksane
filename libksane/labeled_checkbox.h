@@ -20,8 +20,10 @@
 #ifndef LABELED_CHECKBOX_H
 #define LABELED_CHECKBOX_H
 
-#include <qframe.h>
-#include <qcheckbox.h>
+// Qt includes.
+
+#include <QFrame>
+#include <QCheckBox>
 
 // Local includes.
 

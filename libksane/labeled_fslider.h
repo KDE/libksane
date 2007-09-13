@@ -20,6 +20,8 @@
 #ifndef LABELED_SFSLIDER_H
 #define LABELED_SFSLIDER_H
 
+// Qt includes.
+
 #include <QFrame>
 #include <QSlider>
 #include <QDoubleSpinBox>

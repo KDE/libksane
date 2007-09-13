@@ -20,6 +20,8 @@
 #ifndef GAMMA_DISP_H
 #define GAMMA_DISP_H
 
+// Qt includes.
+
 #include <QWidget>
 
 // Local includes.

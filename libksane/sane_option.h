@@ -26,9 +26,13 @@
 #define SW_FIXED_MAX (32767.0)
 #define SW_FIXED_MIN (-32768.0)
 
-#include <qframe.h>
-#include <qcheckbox.h>
-#include <qlayout.h>
+// Qt includes.
+
+#include <QFrame>
+#include <QCheckBox>
+#include <QLayout>
+
+// Sane includes.
 
 extern "C" 
 {

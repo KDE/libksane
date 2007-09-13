@@ -20,6 +20,8 @@
 #ifndef LABELD_SEPARATOR_H
 #define LABELD_SEPARATOR_H
 
+// Qt includes.
+
 #include <QFrame>
 
 // Local includes.

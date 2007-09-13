@@ -20,6 +20,8 @@
 #ifndef LABELED_SLIDER_H
 #define LABELED_SLIDER_H
 
+// Qt includes.
+
 #include <QFrame>
 #include <QSlider>
 #include <QGridLayout>

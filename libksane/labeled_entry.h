@@ -20,10 +20,12 @@
 #ifndef LABELED_ENTRY_H
 #define LABELED_ENTRY_H
 
-#include <qframe.h>
-#include <qlineedit.h>
-#include <qpushbutton.h>
-#include <qlabel.h>
+// Qt includes.
+
+#include <QFrame>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QLabel>
 
 // Local includes.
 

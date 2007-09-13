@@ -20,6 +20,8 @@
 #ifndef PREVIEW_IMAGE_H
 #define PREVIEW_IMAGE_H
 
+// Qt includes.
+
 #include <QAction>
 #include <QFrame>
 #include <QImage>

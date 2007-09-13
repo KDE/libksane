@@ -25,12 +25,16 @@
 #define PROGRESS_MAX 100
 #define PROGRESS_MIN 0
 
+// Qt includes.
+
 #include <QScrollArea>
 #include <QWidget>
 #include <QString>
 #include <QPushButton>
 #include <QToolBar>
 #include <QTimer>
+
+// Sane includes.
 
 extern "C" 
 {
