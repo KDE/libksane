@@ -3,9 +3,9 @@ exec_prefix=${BIN_INSTALL_DIR}
 libdir=${LIB_INSTALL_DIR}
 includedir=${INCLUDE_INSTALL_DIR}
 
-Name: libkexiv2
-Description: KDE wrapper library for Exiv2 library with some extras
+Name: libksane
+Description: libksane is a KDE interface for SANE library to control flat scanners.
 Requires:
-Version: ${KEXIV2_LIB_VERSION_STRING}
-Libs: -L${LIB_INSTALL_DIR} -lkexiv2
+Version: ${KSANE_LIB_VERSION_STRING}
+Libs: -L${LIB_INSTALL_DIR} -lksane
 Cflags: -I${INCLUDE_INSTALL_DIR}
