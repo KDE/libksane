@@ -29,8 +29,6 @@
 namespace KSaneIface
 {
 
-class QLabel;
-
 /**
  * A separator with a text label
  */
