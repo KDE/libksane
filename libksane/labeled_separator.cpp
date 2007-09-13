@@ -17,8 +17,12 @@
    Boston, MA 02110-1301, USA.
 */
 
+// Qt includes.
+
 #include <QLayout>
 #include <QLabel>
+
+// Local includes.
 
 #include "labeled_separator.h"
 

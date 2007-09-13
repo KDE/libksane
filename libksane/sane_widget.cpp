@@ -19,8 +19,12 @@
 
 #define ENABLE_DEBUG
 
+// C++ includes.
+
 #include <cstdio>
 #include <iostream>
+
+// Sane includes.
 
 extern "C"
 {
@@ -28,9 +32,13 @@ extern "C"
 #include <sane/saneopts.h>
 }
 
+// Qt includes.
+
 #include <qeventloop.h>
 #include <qapplication.h>
 #include <QComboBox>
+
+// Local includes.
 
 #include "sane_option.h"
 #include "preview_area.h"

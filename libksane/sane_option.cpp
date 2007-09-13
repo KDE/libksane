@@ -19,8 +19,12 @@
 
 #define MIN_FOAT_STEP 0.001
 
+// C++ includes.
+
 #include <cstdio>
 #include <iostream>
+
+// Local includes.
 
 #include "sane_option.h"
 

@@ -17,7 +17,11 @@
         Boston, MA 02110-1301, USA.
 */
 
+// Qt includes.
+
 #include <QPainter>
+
+// Local includes.
 
 #include "gamma_disp.h"
 

@@ -17,10 +17,14 @@
    Boston, MA 02110-1301, USA.
 */
 
-#include <qspinbox.h>
-#include <qtooltip.h>
-#include <qlabel.h>
-#include <qslider.h>
+// Qt includes.
+
+#include <QSpinBox>
+#include <QToolTip>
+#include <QLabel>
+#include <QSlider>
+
+// Local includes.
 
 #include "labeled_slider.h"
 

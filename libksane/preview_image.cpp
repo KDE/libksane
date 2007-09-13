@@ -20,12 +20,18 @@
 #define MIN_SCALE 0.4
 #define MAX_SCALE 4.0
 
+// C++ includes.
+
 #include <cstdio>
 #include <cmath>
 #include <iostream>
 
+// Qt includes.
+
 #include <QPainter>
 #include <QMouseEvent>
+
+// Local includes.
 
 #include "preview_image.h"
 

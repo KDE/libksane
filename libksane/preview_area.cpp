@@ -17,8 +17,12 @@
    Boston, MA 02110-1301, USA.
 */
 
+// C++ includes.
+
 #include <stdio.h>
 #include <iostream>
+
+// Local includes.
 
 #include "preview_area.h"
 

@@ -17,10 +17,16 @@
    Boston, MA 02110-1301, USA.
 */
 
-#include <cmath> //pow
+// C++ includes.
 
-#include <qlayout.h>
+#include <cmath> 
+
+// Qt includes.
+
+#include <QLayout>
 #include <QGroupBox>
+
+// Local includes.
 
 #include "labeled_gamma.h"
 

@@ -17,7 +17,11 @@
    Boston, MA 02110-1301, USA.
 */
 
-#include <qlayout.h>
+// Qt includes.
+
+#include <QLayout>
+
+// Local includes.
 
 #include "labeled_checkbox.h"
 

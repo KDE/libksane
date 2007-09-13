@@ -17,7 +17,9 @@
    Boston, MA 02110-1301, USA.
 */
 
-#include <qlayout.h>
+// Qt includes.
+
+#include <QLayout>
 
 #include "labeled_entry.h"
 

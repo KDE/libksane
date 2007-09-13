@@ -17,11 +17,13 @@
    Boston, MA 02110-1301, USA.
 */
 
-#include "labeled_fslider.h"
-
 #define FLOAT_MULTIP 32768.0
 #define TO_FLOAT(v) ((float)v / FLOAT_MULTIP)
 #define TO_FIX(v) ((int)(v * FLOAT_MULTIP))
+
+// Local includes.
+
+#include "labeled_fslider.h"
 
 namespace KSaneIface
 {
