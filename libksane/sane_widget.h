@@ -37,6 +37,10 @@ extern "C"
 #include <sane/sane.h>
 }
 
+// Local includes.
+
+#include "libksane_export.h"
+
 namespace KSaneIface
 {
 
@@ -52,7 +56,7 @@ typedef enum
     READ_FINISHED
 } ReadStatus;
 
-class SaneWidget : public QWidget
+class LIBKSANE_EXPORT SaneWidget : public QWidget
 {
     Q_OBJECT
 

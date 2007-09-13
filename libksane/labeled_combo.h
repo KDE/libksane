@@ -25,13 +25,17 @@
 #include <QLabel>
 #include <QGridLayout>
 
+// Local includes.
+
+#include "libksane_export.h"
+
 namespace KSaneIface
 {
 
 /**
  * A label and a combobox.
  */
-class LabeledCombo : public QFrame
+class LIBKSANE_EXPORT LabeledCombo : public QFrame
 {
     Q_OBJECT
 

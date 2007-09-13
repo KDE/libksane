@@ -36,6 +36,9 @@ extern "C"
 #include <sane/saneopts.h>
 }
 
+// Local includes.
+
+#include "libksane_export.h"
 #include "labeled_separator.h"
 #include "labeled_slider.h"
 #include "labeled_fslider.h"
@@ -69,7 +72,7 @@ typedef enum
     SW_STATE_NO_CHANGE
 } SaneOptWState;
 
-class SaneOption : public QObject
+class LIBKSANE_EXPORT SaneOption : public QObject
 {
     Q_OBJECT
 

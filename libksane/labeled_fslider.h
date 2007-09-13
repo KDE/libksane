@@ -26,6 +26,10 @@
 #include <QLabel>
 #include <QGridLayout>
 
+// Local includes.
+
+#include "libksane_export.h"
+
 /**
  *@author Kåre Särs
  */
@@ -37,7 +41,7 @@ namespace KSaneIface
  * A combination of a label a slider and a spinbox.
  * The slider is connected to the spinbox so that they have the same value.
  */
-class LabeledFSlider : public QFrame
+class LIBKSANE_EXPORT LabeledFSlider : public QFrame
 {
     Q_OBJECT
 

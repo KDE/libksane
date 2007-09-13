@@ -24,10 +24,14 @@
 #include <QDialog>
 #include <QStringList>
 
+// Local includes.
+
+#include "libksane_export.h"
+
 namespace KSaneIface
 {
 
-class RadioSelect : public QDialog
+class LIBKSANE_EXPORT RadioSelect : public QDialog
 {
     Q_OBJECT
 

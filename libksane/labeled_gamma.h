@@ -25,6 +25,10 @@
 #include "labeled_slider.h"
 #include "gamma_disp.h"
 
+// Local includes.
+
+#include "libksane_export.h"
+
 /**
   *@author Kåre Särs
   */
@@ -35,7 +39,7 @@ namespace KSaneIface
 /**
  * A wrapper for a checkbox
  */
-class LabeledGamma : public QFrame
+class LIBKSANE_EXPORT LabeledGamma : public QFrame
 {
     Q_OBJECT
 

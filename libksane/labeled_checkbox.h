@@ -23,6 +23,10 @@
 #include <qframe.h>
 #include <qcheckbox.h>
 
+// Local includes.
+
+#include "libksane_export.h"
+
 namespace KSaneIface
 {
 
@@ -33,7 +37,7 @@ namespace KSaneIface
 /**
  * A wrapper for a checkbox
  */
-class LabeledCheckbox : public QFrame
+class LIBKSANE_EXPORT LabeledCheckbox : public QFrame
 {
     Q_OBJECT
 

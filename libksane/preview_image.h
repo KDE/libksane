@@ -24,6 +24,10 @@
 #include <QFrame>
 #include <QImage>
 
+// Local includes.
+
+#include "libksane_export.h"
+
 namespace KSaneIface
 {
 
@@ -47,7 +51,7 @@ enum sel_change
 /**
  * This is the frame that will contain the preview image
  */
-class PreviewImage : public QWidget
+class LIBKSANE_EXPORT PreviewImage : public QWidget
 {
     Q_OBJECT
 

@@ -25,6 +25,9 @@
 #include <QImage>
 #include <QScrollArea>
 
+// Local includes.
+
+#include "libksane_export.h"
 #include "preview_image.h"
 
 /**
@@ -37,7 +40,7 @@ namespace KSaneIface
 /**
  * This is the ScrollArea that will contain the preview image
  */
-class PreviewArea : public QScrollArea
+class LIBKSANE_EXPORT PreviewArea : public QScrollArea
 {
     Q_OBJECT
 
