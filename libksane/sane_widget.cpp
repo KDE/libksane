@@ -45,11 +45,12 @@ extern "C"
 
 #include "sane_option.h"
 #include "preview_area.h"
-#include "sane_widget.h"
 #include "sane_option.h"
 #include "labeled_separator.h"
 #include "radio_select.h"
 #include "labeled_gamma.h"
+#include "sane_widget.h"
+#include "sane_widget.moc"
 
 namespace KSaneIface
 {

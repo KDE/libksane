@@ -28,6 +28,7 @@
 // Local includes.
 
 #include "labeled_separator.h"
+#include "labeled_separator.moc"
 
 namespace KSaneIface
 {

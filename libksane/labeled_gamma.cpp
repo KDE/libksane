@@ -32,6 +32,7 @@
 // Local includes.
 
 #include "labeled_gamma.h"
+#include "labeled_gamma.moc"
 
 namespace KSaneIface
 {

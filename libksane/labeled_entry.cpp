@@ -25,6 +25,7 @@
 #include <QLayout>
 
 #include "labeled_entry.h"
+#include "labeled_entry.moc"
 
 namespace KSaneIface
 {

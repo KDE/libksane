@@ -27,6 +27,7 @@
 // Local includes.
 
 #include "labeled_fslider.h"
+#include "labeled_fslider.moc"
 
 namespace KSaneIface
 {

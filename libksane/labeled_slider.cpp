@@ -30,6 +30,7 @@
 // Local includes.
 
 #include "labeled_slider.h"
+#include "labeled_slider.moc"
 
 namespace KSaneIface
 {

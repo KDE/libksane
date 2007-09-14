@@ -30,6 +30,7 @@
 // Local includes.
 
 #include "sane_option.h"
+#include "sane_option.moc"
 
 namespace KSaneIface
 {

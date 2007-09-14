@@ -33,6 +33,7 @@
 // Local includes.
 
 #include "radio_select.h"
+#include "radio_select.moc"
 
 namespace KSaneIface
 {

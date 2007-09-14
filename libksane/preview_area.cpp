@@ -28,6 +28,7 @@
 // Local includes.
 
 #include "preview_area.h"
+#include "preview_area.moc"
 
 namespace KSaneIface
 {

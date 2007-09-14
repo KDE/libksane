@@ -37,6 +37,7 @@
 // Local includes.
 
 #include "preview_image.h"
+#include "preview_image.moc"
 
 namespace KSaneIface
 {
