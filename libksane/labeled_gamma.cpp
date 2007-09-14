@@ -29,6 +29,10 @@
 #include <QLayout>
 #include <QGroupBox>
 
+// KDE includes.
+
+#include <klocale.h>
+
 // Local includes.
 
 #include "labeled_gamma.h"
@@ -40,13 +44,13 @@ namespace KSaneIface
 LabeledGamma::LabeledGamma(QWidget *parent, const QString& text, int size)
             : QFrame(parent)
 {
-    bri_slider = new LabeledSlider(this, tr("Brightness"), -50, 50, 1);
+    bri_slider = new LabeledSlider(this, i18n("Brightness"), -50, 50, 1);
     bri_slider->setValue(0);
 
-    con_slider = new LabeledSlider(this, tr("Contrast"), -50, 50, 1);
+    con_slider = new LabeledSlider(this, i18n("Contrast"), -50, 50, 1);
     con_slider->setValue(0);
 
-    gam_slider = new LabeledSlider(this, tr("Gamma"), 30, 300, 1);
+    gam_slider = new LabeledSlider(this, i18n("Gamma"), 30, 300, 1);
     gam_slider->setValue(100);
 
     // Calculate the size of the widgets in the sliders
@@ -66,14 +70,15 @@ LabeledGamma::LabeledGamma(QWidget *parent, const QString& text, int size)
     gam_slider->setColumnWidths(lw_max, spw_max);
 
     gam_tbl.resize(size);
-    for (int i=0; i<gam_tbl.size(); i++) {
+    for (int i=0; i<gam_tbl.size(); i++) 
+    {
         gam_tbl[i] = i;
     }
     max_val = size-1; // assume a gamma table 0 -> max
 
     gamma_disp = new GammaDisp(this, &gam_tbl);
 
-    QHBoxLayout *gbl = new QHBoxLayout(this);
+    QHBoxLayout *gbl    = new QHBoxLayout(this);
     QGroupBox *groupBox = new QGroupBox(text, this);
     QGridLayout *gr_lay = new QGridLayout(groupBox);
     gr_lay->setSpacing(2);
@@ -106,7 +111,8 @@ LabeledGamma::~LabeledGamma()
 
 void LabeledGamma::setColor(QColor color)
 {
-    if (gamma_disp != 0) {
+    if (gamma_disp != 0)
+    {
         gamma_disp->setColor(color);
     }
 }
@@ -131,7 +137,8 @@ void LabeledGamma::setValues(int bri, int con, int gam)
 void LabeledGamma::setSize(int size)
 {
     gam_tbl.resize(size);
-    for (int i=0; i<gam_tbl.size(); i++) {
+    for (int i=0; i<gam_tbl.size(); i++) 
+    {
         gam_tbl[i] = i;
     }
     bri_slider->setValue(0);
@@ -142,13 +149,14 @@ void LabeledGamma::setSize(int size)
 
 void LabeledGamma::calculateGT(void)
 {
-    double gam = 100.0/gam_slider->value();
-    double con = (200.0/(100.0 - con_slider->value()))-1;
+    double gam      = 100.0/gam_slider->value();
+    double con      = (200.0/(100.0 - con_slider->value()))-1;
     double half_max = max_val/2.0;
-    double bri = (bri_slider->value()/half_max) * max_val;
+    double bri      = (bri_slider->value()/half_max) * max_val;
     double x;
 
-    for (int i = 0; i<gam_tbl.size(); i++) {
+    for (int i = 0; i<gam_tbl.size(); i++) 
+    {
         // apply gamma
         x = pow(i/max_val, gam) * max_val;
 

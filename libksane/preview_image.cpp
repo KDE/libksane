@@ -46,8 +46,10 @@ PreviewImage::PreviewImage(QWidget *parent)
             : QWidget(parent)
 {
     orig_img = QImage(400, 700, QImage::Format_RGB32);
-    for (int i = 0; i < 255; i++) {
-        for (int j = 0; j < 255; j++) {
+    for (int i = 0; i < 255; i++) 
+    {
+        for (int j = 0; j < 255; j++) 
+        {
             orig_img.setPixel(j, i, qRgb((int)sqrt(i*j),(int)sqrt(i*j),(int)sqrt(i*j)));
         }
     }
@@ -67,7 +69,6 @@ PreviewImage::PreviewImage(QWidget *parent)
 PreviewImage::~PreviewImage()
 {
 }
-
 
 QSize PreviewImage::sizeHint() const
 {
@@ -118,28 +119,33 @@ void PreviewImage::zoomOut(void)
 void PreviewImage::zoomSel(void)
 {
     QWidget *parent = parentWidget();
-    if (parent != 0) {
+    if (parent != 0) 
+    {
         float parent_size;
         float select_size;
         float w_scale;
         float h_scale;
 
         parent_size = (float)(parent->size().width()) - 40;
-        if (parent_size < 40) {
+        if (parent_size < 40) 
+        {
             return;
         }
         select_size = (br_x_r - tl_x_r) * (float)(orig_img.width());
-        if (select_size <= 50.0) {
+        if (select_size <= 50.0) 
+        {
             return;
         }
         w_scale = parent_size / select_size;
 
         parent_size = (float)(parent->size().height());
-        if (parent_size < 40) {
+        if (parent_size < 40) 
+        {
             return;
         }
         select_size = (br_y_r - tl_y_r) * (float)(orig_img.height());
-        if (select_size <= 50.0) {
+        if (select_size <= 50.0) 
+        {
             return;
         }
         h_scale = parent_size / select_size;
@@ -160,11 +166,13 @@ void PreviewImage::zoomSel(void)
 
 void PreviewImage::zoom2Fit(void)
 {
-    if (orig_img.width() <= 10) {
+    if (orig_img.width() <= 10) 
+    {
         return;
     }
     QWidget *parent = parentWidget();
-    if (parent != 0) {
+    if (parent != 0) 
+    {
         float w_scale = (float)(parent->size().width()-4) / (float)(orig_img.width());;
         float h_scale = (float)(parent->size().height()-4) / (float)(orig_img.height());
         scalefactor = (w_scale < h_scale) ? w_scale:h_scale;
@@ -177,22 +185,22 @@ void PreviewImage::zoom2Fit(void)
     emit requestVisibility(tl_x, tl_y);
 }
 
-
 void PreviewImage::mousePressEvent(QMouseEvent *event)
 {
     //std::cout << "Button pressed=" << event->button() << std::endl;
-    if (event->button() == Qt::LeftButton) {
+    if (event->button() == Qt::LeftButton) 
+    {
         lmb=true;
         x1=event->x();
         y1=event->y();
-        if ((have_selection == true) && (change == MOVE_ALL)) {
+        if ((have_selection == true) && (change == MOVE_ALL)) 
+        {
             dtlx = x1 - tl_x; dtly = y1 - tl_y;
             dbrx = br_x - x1; dbry = br_y - y1;
         }
         mouseMoveEvent(event);
     }
 }
-
 
 void PreviewImage::mouseMoveEvent(QMouseEvent *event)
 {
@@ -208,7 +216,8 @@ void PreviewImage::mouseMoveEvent(QMouseEvent *event)
     if (tmp_x >= image.width()) tmp_x = image.width() - 1;
     if (tmp_y >= image.height()) tmp_y = image.height() - 1;
     //std::cout << "Move to x=" << tmp_x << " y=" << tmp_y << std::endl;
-    if (lmb) {
+    if (lmb) 
+    {
         switch (change)
         {
             case MOVE_NONE:
@@ -259,28 +268,35 @@ void PreviewImage::mouseMoveEvent(QMouseEvent *event)
                 br_y = tmp_y + dbry;
                 break;
         }
-        if (tl_x != br_x) {
+        if (tl_x != br_x) 
+        {
             if (tl_x < min_tlx) min_tlx = tl_x;
             if (tl_y < min_tly) min_tly = tl_y;
             if (br_x > max_brx) max_brx = br_x;
             if (br_y > max_bry) max_bry = br_y;
 
             update(min_tlx-1, min_tly-1, max_brx-min_tlx+3, max_bry-min_tly+3);
-        } else {
+        }
+        else 
+        {
             update();
         }
     }
     // change cursor if needed
-    else if (have_selection) {
+    else if (have_selection) 
+    {
         //std::cout << " tl_x=" << tl_x << " tl_y=" << tl_y;
         //std::cout << " br_x=" << br_x << " br_y=" << br_y << std::endl;
         // left border
-        if (abs(tmp_x-tl_x) < 2) {
-            if (abs(tmp_y - br_y) < 2) {
+        if (abs(tmp_x-tl_x) < 2) 
+        {
+            if (abs(tmp_y - br_y) < 2) 
+            {
                 setCursor(Qt::SizeBDiagCursor);
                 change = MOVE_BOTTOM_LEFT;
             }
-            else if (abs(tmp_y - tl_y) < 2) {
+            else if (abs(tmp_y - tl_y) < 2) 
+            {
                 setCursor(Qt::SizeFDiagCursor);
                 change = MOVE_TOP_LEFT;
             }
@@ -289,51 +305,63 @@ void PreviewImage::mouseMoveEvent(QMouseEvent *event)
                 setCursor(Qt::SizeHorCursor);
                 change = MOVE_LEFT;
             }
-            else {
+            else 
+            {
                 setCursor(Qt::CrossCursor);
                 change = MOVE_NONE;
             }
         }
         // right border
-        else if (abs(tmp_x-br_x) < 2) {
-            if (abs(tmp_y - br_y) < 2) {
+        else if (abs(tmp_x-br_x) < 2) 
+        {
+            if (abs(tmp_y - br_y) < 2) 
+            {
                 setCursor(Qt::SizeFDiagCursor);
                 change = MOVE_BOTTOM_RIGHT;
             }
-            else if (abs(tmp_y - tl_y) < 2) {
+            else if (abs(tmp_y - tl_y) < 2) 
+            {
                 setCursor(Qt::SizeBDiagCursor);
                 change = MOVE_TOP_RIGHT;
             }
-            else if ((tmp_y < br_y) && (tmp_y > tl_y)) {
+            else if ((tmp_y < br_y) && (tmp_y > tl_y)) 
+            {
                 setCursor(Qt::SizeHorCursor);
                 change = MOVE_RIGHT;
             }
-            else {
+            else 
+            {
                 setCursor(Qt::CrossCursor);
                 change = MOVE_NONE;
             }
         }
         // middle
-        else if ((tmp_x > tl_x) && (tmp_x < br_x)) {
-            if (abs(tmp_y - br_y) < 2) {
+        else if ((tmp_x > tl_x) && (tmp_x < br_x)) 
+        {
+            if (abs(tmp_y - br_y) < 2) 
+            {
                 setCursor(Qt::SizeVerCursor);
                 change = MOVE_BOTTOM;
             }
-            else if (abs(tmp_y - tl_y) < 2) {
+            else if (abs(tmp_y - tl_y) < 2) 
+            {
                 setCursor(Qt::SizeVerCursor);
                 change = MOVE_TOP;
             }
-            else if ((tmp_y < br_y) && (tmp_y > tl_y)) {
+            else if ((tmp_y < br_y) && (tmp_y > tl_y)) 
+            {
                 setCursor(Qt::SizeAllCursor);
                 change = MOVE_ALL;
             }
-            else {
+            else 
+            {
                 setCursor(Qt::CrossCursor);
                 change = MOVE_NONE;
             }
         }
         // else out side
-        else {
+        else 
+        {
             setCursor(Qt::CrossCursor);
             change = MOVE_NONE;
         }
@@ -343,7 +371,8 @@ void PreviewImage::mouseMoveEvent(QMouseEvent *event)
 void PreviewImage::mouseReleaseEvent(QMouseEvent *event)
 {
     //std::cout << "Button released=" << event->button() << std::endl;
-    if (lmb) {
+    if (lmb) 
+    {
         lmb=false;
         if ((tl_x==br_x) && (tl_y==br_y)) have_selection = false;
         // fix the order of tl and br
@@ -357,7 +386,8 @@ void PreviewImage::mouseReleaseEvent(QMouseEvent *event)
         br_x_r = (float)(br_x+1) / (float)image.width();
         br_y_r = (float)(br_y+1) / (float)image.height();
 
-        if (have_selection == true) {
+        if (have_selection == true) 
+        {
             //printf("mouseReleaseEvent tl %d,%d br %d,%d\n", tl_x, tl_y, br_x, br_y);
             emit newSelection(tl_x_r, tl_y_r, br_x_r, br_y_r);
         }
@@ -369,11 +399,12 @@ void PreviewImage::paintEvent(QPaintEvent *event)
 {
     QPainter painter(this);
 
-    if (!event->region().boundingRect().isNull()) {
-
+    if (!event->region().boundingRect().isNull()) 
+    {
         painter.drawImage(event->region().boundingRect(), image, event->region().boundingRect());
 
-        if ((tl_x != br_x) && (tl_y != br_y) && (have_selection == true)) {
+        if ((tl_x != br_x) && (tl_y != br_y) && (have_selection == true)) 
+        {
             painter.setPen(QPen( QColor(0,0,0), 1, Qt::SolidLine));
             painter.drawLine(tl_x,tl_y,br_x,tl_y);
             painter.drawLine(br_x,tl_y,br_x,br_y);

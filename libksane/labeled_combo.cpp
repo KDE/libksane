@@ -57,8 +57,10 @@ LabeledCombo::LabeledCombo(QWidget *parent, const QString& ltext,
 void LabeledCombo::setCurrentText(const QString &t)
 {
     int i;
-    for (i=0; i<combo->count(); i++) {
-        if (combo->itemText(i) == t) {
+    for (i=0; i<combo->count(); i++) 
+    {
+        if (combo->itemText(i) == t) 
+        {
             combo->setCurrentIndex(i);
         }
     }

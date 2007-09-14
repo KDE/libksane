@@ -67,14 +67,14 @@ void GammaDisp::paintEvent(QPaintEvent *)
     }*/
     QPointF p1, p2;
     QPainter painter(this);
-
     painter.fillRect(rect(), QBrush(Qt::white));
 
-    double xscale = (double)(size().width()-1) / (double)gam_tbl->size();
+    double xscale = (double)(size().width()-1)  / (double)gam_tbl->size();
     double yscale = (double)(size().height()-1) / (double)gam_tbl->size();
 
     painter.setPen(gam_color);
-    for (int i=0; i<gam_tbl->size()-1; i++) {
+    for (int i=0; i<gam_tbl->size()-1; i++) 
+    {
         p1.setX(i*xscale);
         p1.setY(size().height()- 1 - (gam_tbl->at(i) * yscale));
 

@@ -40,8 +40,9 @@ LabeledSlider::LabeledSlider(QWidget *parent, const QString& ltext,
              : QFrame(parent)
 {
     layout = new QGridLayout(this);
-    label = new QLabel(ltext, this);
-    step = ste; if (step == 0) step = 1;
+    label  = new QLabel(ltext, this);
+    step   = ste; 
+    if (step == 0) step = 1;
 
     slider = new QSlider(this);
     slider->setOrientation(Qt::Horizontal);
@@ -107,7 +108,6 @@ void LabeledSlider::setValue(int value)
     else if (value != spinb->value()) spinb->setValue(value);
 }
 
-
 void LabeledSlider::setRange(int min, int max)
 {
     //std::cout << "min=" << min << ", max=" << max << std::endl;
@@ -123,22 +123,26 @@ void LabeledSlider::setStep(int st)
     spinb->setSingleStep(step);
 }
 
-
 void LabeledSlider::syncValues(int value)
 {
     if      (value != spinb->value()) spinb->setValue(value);
-    else if (value != slider->value()) {
+    else if (value != slider->value()) 
+    {
         //ensure that the value step is followed also for the slider
-        if ((value - slider->minimum())%step != 0) {
-            if (value > spinb->value()) {
+        if ((value - slider->minimum())%step != 0) 
+        {
+            if (value > spinb->value()) 
+            {
                 slider->setValue(slider->value()+(step-(value - spinb->value())));
             }
-            else {
+            else 
+            {
                 slider->setValue(slider->value()-(step-(spinb->value() - value)));
             }
             // this function will be reentered with the signal fom the slider
         }
-        else {
+        else 
+        {
             slider->setValue(value);
         }
     }
@@ -150,7 +154,8 @@ void LabeledSlider::fixValue(void)
     //ensure that the value step is followed also for the slider
     int rest = (slider->value() - slider->minimum())%step;
 
-    if (rest != 0) {
+    if (rest != 0) 
+    {
         if (rest > (step/2)) slider->setValue(slider->value()+(step-rest));
         else                 slider->setValue(slider->value()-rest);
         spinb->setValue(slider->value());

@@ -29,6 +29,7 @@
 // KDE includes.
 
 #include <kdebug.h>
+#include <klocale.h>
 
 // Local includes.
 
@@ -53,10 +54,10 @@ RadioSelect::RadioSelect(QWidget *parent)
     // add the OK and Cancel buttons to the bottom
     btn_layout->addStretch();
     QPushButton *ok = new QPushButton;
-    ok->setText("OK");
+    ok->setText(i18n("OK"));
     btn_layout->addWidget(ok);
     QPushButton *cancel = new QPushButton;
-    cancel->setText("Cancel");
+    cancel->setText(i18n("Cancel"));
     btn_layout->addWidget(cancel);
 
     connect (ok, SIGNAL(clicked()), 
@@ -72,7 +73,8 @@ int RadioSelect::getSelectedIndex(QWidget *parent,
                                   int default_index)
 {
     int i;
-    if (items.size() == 0) {
+    if (items.size() == 0) 
+    {
         return -1;
     }
 
@@ -81,14 +83,16 @@ int RadioSelect::getSelectedIndex(QWidget *parent,
 
     // Create the RadioButton list
     QList<QRadioButton *> btn_list;
-    for (i=0; i < items.size(); i++) {
+    for (i=0; i < items.size(); i++) 
+    {
         //printf("device[i] = %s\n", qPrintable(items.at(i)));
         btn_list.append(new QRadioButton(items.at(i), radio_group));
     }
 
     // Add the device list to the layout
     QVBoxLayout *radio_layout = new QVBoxLayout(radio_group);
-    for (i=0; i < btn_list.size(); i++) {
+    for (i=0; i < btn_list.size(); i++) 
+    {
         radio_layout->addWidget(btn_list.at(i));
     }
 
@@ -99,18 +103,22 @@ int RadioSelect::getSelectedIndex(QWidget *parent,
     btn_list.at(radio_index)->toggle();
 
     // show the dialog and get the selection
-    if (this->exec()) {
+    if (this->exec()) 
+    {
         // check which one is selected
-        for (i=0; i < btn_list.size(); i++) {
+        for (i=0; i < btn_list.size(); i++) 
+        {
             if (btn_list.at(i)->isChecked()) break;
         }
-        if (i == btn_list.size()) {
+        if (i == btn_list.size()) 
+        {
             kDebug() << "This is a bad index..." << endl;
             return -1;
         }
         return i;
     }
-    else {
+    else 
+    {
         return -1;
     }
     return -1;

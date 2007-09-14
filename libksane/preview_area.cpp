@@ -87,7 +87,8 @@ QSize PreviewArea::sizeHint() const
 
 QImage *PreviewArea::getImage(void)
 {
-    if (image) {
+    if (image) 
+    {
         return image->getImage();
     }
     return 0;
@@ -95,14 +96,16 @@ QImage *PreviewArea::getImage(void)
 
 void PreviewArea::clearSelection(void)
 {
-    if (image) {
+    if (image) 
+    {
         image->clearSelection();
     }
 }
 
 void PreviewArea::updateScaledImg(void)
 {
-    if (image) {
+    if (image) 
+    {
         image->updateScaledImg();
         image->update();
     }
@@ -110,35 +113,40 @@ void PreviewArea::updateScaledImg(void)
 
 void PreviewArea::zoomIn(void)
 {
-    if (image) {
+    if (image) 
+    {
         image->zoomIn();
     }
 }
 
 void PreviewArea::zoomOut(void)
 {
-    if (image) {
+    if (image) 
+    {
         image->zoomOut();
     }
 }
 
 void PreviewArea::zoomSel(void)
 {
-    if (image) {
+    if (image) 
+    {
         image->zoomSel();
     }
 }
 
 void PreviewArea::zoom2Fit(void)
 {
-    if (image) {
+    if (image) 
+    {
         image->zoom2Fit();
     }
 }
 
 void PreviewArea::setTLX(float ratio)
 {
-    if (image) {
+    if (image) 
+    {
         image->setTLX(ratio);
         image->update();
     }
@@ -146,7 +154,8 @@ void PreviewArea::setTLX(float ratio)
 
 void PreviewArea::setTLY(float ratio)
 {
-    if (image) {
+    if (image) 
+    {
         image->setTLY(ratio);
         image->update();
     }
@@ -154,7 +163,8 @@ void PreviewArea::setTLY(float ratio)
 
 void PreviewArea::setBRX(float ratio)
 {
-    if (image) {
+    if (image) 
+    {
         image->setBRX(ratio);
         image->update();
     }
@@ -162,7 +172,8 @@ void PreviewArea::setBRX(float ratio)
 
 void PreviewArea::setBRY(float ratio)
 {
-    if (image) {
+    if (image) 
+    {
         image->setBRY(ratio);
         image->update();
     }

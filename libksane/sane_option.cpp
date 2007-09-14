@@ -27,6 +27,10 @@
 #include <cstdio>
 #include <iostream>
 
+// KDE includes
+
+#include <klocale.h>
+
 // Local includes.
 
 #include "sane_option.h"
@@ -56,7 +60,8 @@ SaneOption::SaneOption(const SANE_Handle s_handle, const int opt_num)
     cstrl = new QStringList("ComboStringList");
 
     sane_option = sane_get_option_descriptor(sane_handle, opt_number);
-    if (sane_option == 0) {
+    if (sane_option == 0) 
+    {
         printf("sane_option == 0!! ");
         return;
     }
@@ -70,7 +75,8 @@ SaneOption::SaneOption(const SANE_Handle s_handle, const int opt_num)
     {
         sw_state = SW_STATE_HIDDEN;
     }
-    else if ((sane_option->cap & SANE_CAP_SOFT_SELECT) == 0) {
+    else if ((sane_option->cap & SANE_CAP_SOFT_SELECT) == 0) 
+    {
         sw_state = SW_STATE_DISABLED;
     }
     if (type == SW_GROUP) sw_state = SW_STATE_NO_CHANGE;
@@ -86,7 +92,8 @@ void SaneOption::createWidget(QWidget *parent)
 {
     float tmp_step;
     //printf("createWidget for opt(%d)\n", opt_number);
-    if (sane_option == 0) {
+    if (sane_option == 0) 
+    {
         printf("createWidget:sane_option == 0!!\n");
         return;
     }
@@ -172,7 +179,8 @@ void SaneOption::createWidget(QWidget *parent)
     }
 
     if (sw_state == SW_STATE_HIDDEN) frame->hide();
-    else {
+    else 
+    {
         frame->show();
         frame->setEnabled(sw_state == SW_STATE_SHOWN);
     }
@@ -245,13 +253,13 @@ QString SaneOption::unitString(void)
 {
     switch(sane_option->unit)
     {
-        case SANE_UNIT_NONE:    return QString("");
-        case SANE_UNIT_PIXEL:   return QString(" Pixel");
-        case SANE_UNIT_BIT:     return QString(" Bit");
-        case SANE_UNIT_MM:      return QString(" mm");
-        case SANE_UNIT_DPI:     return QString(" DPI");
-        case SANE_UNIT_PERCENT: return QString(" %");
-        case SANE_UNIT_MICROSECOND: return QString(" usec");
+        case SANE_UNIT_NONE:        return QString("");
+        case SANE_UNIT_PIXEL:       return i18n(" Pixel");
+        case SANE_UNIT_BIT:         return i18n(" Bit");
+        case SANE_UNIT_MM:          return i18n(" mm");
+        case SANE_UNIT_DPI:         return i18n(" DPI");
+        case SANE_UNIT_PERCENT:     return QString(" %");
+        case SANE_UNIT_MICROSECOND: return i18n(" usec");
     }
     return QString("");
 }
@@ -296,7 +304,8 @@ QString SaneOption::getSaneComboString(unsigned char *data)
 {
     QString tmp;
 
-    if (type != SW_COMBO) {
+    if (type != SW_COMBO) 
+    {
         //printf("getSaneComboString: type != SW_COMBO\n");
         return QString("");
     }
@@ -310,7 +319,8 @@ QString SaneOption::getSaneComboString(unsigned char *data)
         case SANE_TYPE_STRING:
             tmp = QString((char*)data);
             // FIXME clean the end of the string !!
-            if (tmp.length() > 25) {
+            if (tmp.length() > 25) 
+            {
                 tmp = tmp.left(22);
                 tmp += "...";
             }
@@ -336,20 +346,24 @@ bool SaneOption::writeData(unsigned char *data)
     status = sane_control_option (sane_handle, opt_number, SANE_ACTION_SET_VALUE, data, &res);
     //printf("'%20.20s'(%2d) status=%d, res=%d", sane_option->name, opt_number, status, res);
     //printf("data=0x%02x%02x%02x%02x\n", data[0], data[1], data[2], data[3]);
-    if (status != SANE_STATUS_GOOD) {
+    if (status != SANE_STATUS_GOOD) 
+    {
         printf("writeData: '%s' sane_control_option returned %d\n", sane_option->name, status);
         return false;
     }
-    if ((res & SANE_INFO_INEXACT) && (frame != 0)) {
+    if ((res & SANE_INFO_INEXACT) && (frame != 0)) 
+    {
         //printf("writeData: write was inexact. Reload value just in case...\n");
         readValue();
     }
 
-    if (res & SANE_INFO_RELOAD_OPTIONS) {
+    if (res & SANE_INFO_RELOAD_OPTIONS) 
+    {
         emit optsNeedReload();
         // optReload reloads also the values
     }
-    else if (res & SANE_INFO_RELOAD_PARAMS) {
+    else if (res & SANE_INFO_RELOAD_PARAMS) 
+    {
         // 'else if' because with optReload we force also valReload :)
         emit valsNeedReload();
     }
@@ -363,7 +377,6 @@ void SaneOption::checkboxChanged(bool toggled)
 
     fromSANE_Word(data, (toggled) ? 1:0);
     writeData(data);
-
 }
 
 void SaneOption::comboboxChanged(int i)
@@ -435,9 +448,11 @@ bool SaneOption::comboboxChanged(const QString &value)
             break;
         case SANE_TYPE_STRING:
             i = 0;
-            while (sane_option->constraint.string_list[i] != 0) {
+            while (sane_option->constraint.string_list[i] != 0) 
+            {
                 tmp = getSaneComboString((unsigned char *)sane_option->constraint.string_list[i]);
-                if (value == tmp) {
+                if (value == tmp) 
+                {
                     strncpy((char*)data, sane_option->constraint.string_list[i], sane_option->size);
                     //std::cout << "->>" << qPrintable(tmp) << std::endl;
                     break;
@@ -469,7 +484,8 @@ void SaneOption::fsliderChanged(float val)
     unsigned char data[4];
     SANE_Word fixed;
 
-    if (((val-fVal) >= min_change) || ((fVal-val) >= min_change)) {
+    if (((val-fVal) >= min_change) || ((fVal-val) >= min_change)) 
+    {
         //printf("opt(%s): fsliderChanged(%f - %f)\n", sane_option->name, fVal, val);
         fVal = val;
         fixed = SANE_FIX(val);
@@ -487,7 +503,6 @@ void SaneOption::entryChanged(const QString& text)
     if (tmp != text) lentry->setText(tmp);
     strcpy(data, tmp.toLatin1());
     writeData((unsigned char *)data);
-
 }
 
 void SaneOption::gammaTableChanged(const QVector<int> &gam_tbl)
