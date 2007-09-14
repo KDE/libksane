@@ -1,6 +1,7 @@
 TODO list to be more KDE compliant:
 
 * Internationalization : tr() ==> i18n().
+* Internationalization : check if libsane strings are i18n using gettext and handle it properlly.
 * Improve Binary Compatibility : use d private internal class to host all private class members.
 * Debug messages : printf() ==> kDebug().
 * Icons : use everywhere Oxygen icons.
