@@ -1,0 +1,14 @@
+TODO list to be more KDE compliant:
+
+* Internationalization : tr() ==> i18n().
+* Improve Binary Compatibility : use d private internal class to host all private class members.
+* Debug messages : printf() ==> kDebug().
+* Icons : use everywhere Oxygen icons.
+* API : use reference instead pointers when it's possible.
+* Doc : add API documentation using Doxygen forms.
+
+TODO list of new features:
+
+* Added methods to get strings info from scanner device to be hosted later in 
+  image metadata (make, model, dpi, color mode, etc)
+* Support 16 bits color depth images.
