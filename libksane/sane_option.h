@@ -93,7 +93,7 @@ public:
     void readOption(void);
     void readValue(void);
 
-    QFrame *widget(void) {return (QFrame *)frame;}
+    QFrame *widget(void) {return frame;}
     SaneOptWidget_t sw_type(void) {return type;}
     QString name(void);
     bool getMaxValue(float *max);
