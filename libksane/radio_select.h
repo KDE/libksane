@@ -43,7 +43,7 @@ class LIBKSANE_EXPORT RadioSelect : public QDialog
 public:
 
     RadioSelect(QWidget *parent=0);
-    ~RadioSelect(void) {};
+    ~RadioSelect() {};
 
     int getSelectedIndex(QWidget *parent,
                          const QString& group_name,

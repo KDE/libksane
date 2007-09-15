@@ -92,7 +92,7 @@ private Q_SLOTS:
     // FIXME this has to be changes later
     void syncValues(int);
     void syncValues(double);
-    void fixValue(void);
+    void fixValue();
 
 Q_SIGNALS:
 

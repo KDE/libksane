@@ -60,8 +60,8 @@ public:
 
     void setColor(QColor color);
     void setSize(int size);
-    const QVector<int> &gammaTablePtr(void) { return gam_tbl; }
-    int size(void) {return (int)(max_val+1);}
+    const QVector<int> &gammaTablePtr() { return gam_tbl; }
+    int size() {return (int)(max_val+1);}
     void widgetSizeHints(int *lab_w, int *spi_w);
     void setColumnWidhts(int lab_w, int spi_w);
 
@@ -71,7 +71,7 @@ public Q_SLOTS:
 
 private Q_SLOTS:
 
-    void calculateGT(void);
+    void calculateGT();
 
 Q_SIGNALS:
 

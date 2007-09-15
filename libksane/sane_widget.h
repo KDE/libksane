@@ -70,11 +70,11 @@ class LIBKSANE_EXPORT SaneWidget : public QWidget
 public:
 
     SaneWidget(QWidget* parent=0);
-    ~SaneWidget(void);
+    ~SaneWidget();
 
     QString selectDevice(QWidget* parent=0);
     bool openDevice(const QString &device_name);
-    QImage *getFinalImage(void);
+    QImage *getFinalImage();
     bool setIconColorMode(const QIcon &icon);
     bool setIconGrayMode(const QIcon &icon);
     bool setIconBWMode(const QIcon &icon);
@@ -87,25 +87,25 @@ public:
 
 public Q_SLOTS:
 
-    void scanCancel(void);
+    void scanCancel();
 
 Q_SIGNALS:
 
-    void scanStart(void);
+    void scanStart();
     void scanProgress(int);
-    void scanDone(void);
-    void imageReady(void);
-    void scanFaild(void);
+    void scanDone();
+    void imageReady();
+    void scanFaild();
 
 private Q_SLOTS:
 
     void opt_level_change(int level);
-    void scheduleValReload(void);
-    void optReload(void);
-    void valReload(void);
+    void scheduleValReload();
+    void optReload();
+    void valReload();
     void handleSelection(float tl_x, float tl_y, float br_x, float br_y);
-    void scanPreview(void);
-    void scanFinal(void);
+    void scanPreview();
+    void scanFinal();
     void setTLX(float x);
     void setTLY(float y);
     void setBRX(float x);
@@ -114,10 +114,10 @@ private Q_SLOTS:
 private:
 
     SaneOption *getOption(const QString &name);
-    void createOptInterface(void);
-    void updatePreviewSize(void);
-    void processData(void);
-    void setDefaultValues(void);
+    void createOptInterface();
+    void updatePreviewSize();
+    void processData();
+    void setDefaultValues();
 
 private:
 

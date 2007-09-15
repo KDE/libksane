@@ -190,7 +190,7 @@ void LabeledFSlider::syncValues(double value)
     else emit valueChanged((float)value);
 }
 
-void LabeledFSlider::fixValue(void)
+void LabeledFSlider::fixValue()
 {
     //ensure that the value step is followed also for the slider
     //printf("fixValue\n");

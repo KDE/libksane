@@ -80,7 +80,7 @@ public Q_SLOTS:
     /**
      * Remove all string entries
      */
-    void clear(void) { combo->clear(); }
+    void clear() { combo->clear(); }
 
    /**
     * If the given string can be found in the comobox, activate that entry.

@@ -97,10 +97,10 @@ SaneWidget::SaneWidget(QWidget* parent)
                SANE_VERSION_BUILD(version));
     }
     r_val_tmr.setSingleShot(true);
-    connect (&r_val_tmr, SIGNAL(timeout(void)), this, SLOT(valReload()));
+    connect (&r_val_tmr, SIGNAL(timeout()), this, SLOT(valReload()));
 }
 
-SaneWidget::~SaneWidget(void)
+SaneWidget::~SaneWidget()
 {
     optList.clear();
     sane_exit();
@@ -262,12 +262,12 @@ bool SaneWidget::openDevice(const QString &device_name)
     prev_btn  = new QPushButton(i18n("Preview"));;
     scan_btn  = new QPushButton(i18n("Final Scan"));
 
-    connect(z_in_btn, SIGNAL(clicked(void)), preview, SLOT(zoomIn(void)));
-    connect(z_out_btn, SIGNAL(clicked(void)), preview, SLOT(zoomOut(void)));
-    connect(z_sel_btn, SIGNAL(clicked(void)), preview, SLOT(zoomSel(void)));
-    connect(z_fit_btn, SIGNAL(clicked(void)), preview, SLOT(zoom2Fit(void)));
-    connect (scan_btn, SIGNAL(clicked(void)), this, SLOT(scanFinal(void)));
-    connect (prev_btn, SIGNAL(clicked(void)), this, SLOT(scanPreview(void)));
+    connect(z_in_btn, SIGNAL(clicked()), preview, SLOT(zoomIn()));
+    connect(z_out_btn, SIGNAL(clicked()), preview, SLOT(zoomOut()));
+    connect(z_sel_btn, SIGNAL(clicked()), preview, SLOT(zoomSel()));
+    connect(z_fit_btn, SIGNAL(clicked()), preview, SLOT(zoom2Fit()));
+    connect (scan_btn, SIGNAL(clicked()), this, SLOT(scanFinal()));
+    connect (prev_btn, SIGNAL(clicked()), this, SLOT(scanPreview()));
 
     QHBoxLayout *zoom_layout = new QHBoxLayout;
 
@@ -302,7 +302,7 @@ bool SaneWidget::openDevice(const QString &device_name)
     return true;
 }
 
-void SaneWidget::createOptInterface(void)
+void SaneWidget::createOptInterface()
 {
     // create the container widget
     QWidget *opt_container = new QWidget(opt_area);
@@ -557,7 +557,7 @@ void SaneWidget::opt_level_change(int level)
     }
 }
 
-void SaneWidget::setDefaultValues(void)
+void SaneWidget::setDefaultValues()
 {
     SaneOption *option;
 
@@ -580,12 +580,12 @@ void SaneWidget::setDefaultValues(void)
     }
 }
 
-void SaneWidget::scheduleValReload(void)
+void SaneWidget::scheduleValReload()
 {
     r_val_tmr.start(5);
 }
 
-void SaneWidget::optReload(void)
+void SaneWidget::optReload()
 {
     int i;
     //printf("Reload Options\n");
@@ -602,7 +602,7 @@ void SaneWidget::optReload(void)
     updatePreviewSize();
 }
 
-void SaneWidget::valReload(void)
+void SaneWidget::valReload()
 {
     int i;
     QString tmp;
@@ -700,7 +700,7 @@ void SaneWidget::setBRY(float fbry)
     preview->setBRY(ratio);
 }
 
-void SaneWidget::updatePreviewSize(void)
+void SaneWidget::updatePreviewSize()
 {
     SANE_Status status;
     int i, j, dpi;
@@ -788,7 +788,7 @@ void SaneWidget::updatePreviewSize(void)
     }
 }
 
-void SaneWidget::scanPreview(void)
+void SaneWidget::scanPreview()
 {
     SANE_Status status;
     float max;
@@ -937,7 +937,7 @@ void SaneWidget::scanPreview(void)
     this->setDisabled(false);
 }
 
-void SaneWidget::scanFinal(void)
+void SaneWidget::scanFinal()
 {
     SANE_Status status;
     float v1,v2;
@@ -1027,7 +1027,7 @@ void SaneWidget::scanFinal(void)
     this->setDisabled(false);
 }
 
-void SaneWidget::processData(void)
+void SaneWidget::processData()
 {
     SANE_Status status = SANE_STATUS_GOOD;
     SANE_Int read_bytes = 0;
@@ -1254,12 +1254,12 @@ void SaneWidget::processData(void)
     }
 }
 
-QImage *SaneWidget::getFinalImage(void)
+QImage *SaneWidget::getFinalImage()
 {
     return &the_img;
 }
 
-void SaneWidget::scanCancel(void)
+void SaneWidget::scanCancel()
 {
     sane_cancel(s_handle);
     read_status = READ_CANCEL;

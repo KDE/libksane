@@ -63,8 +63,8 @@ public:
 
 private Q_SLOTS:
 
-    void setClicked(void);
-    void resetClicked(void);
+    void setClicked();
+    void resetClicked();
 
 Q_SIGNALS:
 

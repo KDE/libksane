@@ -53,7 +53,7 @@ public:
     GammaDisp(QWidget *parent, QVector<int> *tbl);
     ~GammaDisp() {};
 
-    QSize sizeHint(void) const;
+    QSize sizeHint() const;
     QSize minimumSizeHint() const;
 
     void setColor(QColor color);

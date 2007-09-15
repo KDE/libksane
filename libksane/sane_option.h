@@ -90,20 +90,20 @@ public:
 
     void createWidget(QWidget *parent);
 
-    void readOption(void);
-    void readValue(void);
+    void readOption();
+    void readValue();
 
-    QFrame *widget(void) {return frame;}
-    SaneOptWidget_t sw_type(void) {return type;}
-    QString name(void);
+    QFrame *widget() {return frame;}
+    SaneOptWidget_t sw_type() {return type;}
+    QString name();
     bool getMaxValue(float *max);
     bool getValue(float *val);
     bool setValue(float percent);
     bool getValue(QString *val);
     bool setValue(const QString &val);
     bool setChecked(bool check);
-    bool storeCurrentData(void);
-    bool restoreSavedData(void);
+    bool storeCurrentData();
+    bool restoreSavedData();
     bool setIconColorMode(const QIcon &icon);
     bool setIconGrayMode(const QIcon &icon);
     bool setIconBWMode(const QIcon &icon);
@@ -115,8 +115,8 @@ public:
 
 Q_SIGNALS:
 
-    void optsNeedReload(void);
-    void valsNeedReload(void);
+    void optsNeedReload();
+    void valsNeedReload();
     void fValueRead(float val);
     void iValueRead(int val);
     void cbValueRead(bool val);
@@ -133,12 +133,12 @@ private Q_SLOTS:
 
 private:
 
-    SaneOptWidget_t getWidgetType(void);
-    QStringList *genComboStringList(void);
+    SaneOptWidget_t getWidgetType();
+    QStringList *genComboStringList();
     QString getSaneComboString(unsigned char *data);
     SANE_Word toSANE_Word(unsigned char *data);
     void fromSANE_Word(unsigned char *data, SANE_Word from);
-    QString unitString(void);
+    QString unitString();
     bool writeData(unsigned char *data);
     bool comboboxChanged(float value);
 

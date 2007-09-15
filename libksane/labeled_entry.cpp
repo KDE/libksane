@@ -51,11 +51,11 @@ LabeledEntry::LabeledEntry(QWidget *parent, const QString& ltext)
     hb->addWidget(set);
     hb->activate();
 
-    connect(reset, SIGNAL(clicked(void)), 
-            this, SLOT(resetClicked(void)));
+    connect(reset, SIGNAL(clicked()), 
+            this, SLOT(resetClicked()));
 
-    connect(set, SIGNAL(clicked(void)), 
-            this, SLOT(setClicked(void)));
+    connect(set, SIGNAL(clicked()), 
+            this, SLOT(setClicked()));
 }
 
 LabeledEntry::~LabeledEntry()
@@ -68,12 +68,12 @@ void LabeledEntry::setText(const QString& text)
     entry->setText(text);
 }
 
-void LabeledEntry::resetClicked(void)
+void LabeledEntry::resetClicked()
 {
     entry->setText(e_text);
 }
 
-void LabeledEntry::setClicked(void)
+void LabeledEntry::setClicked()
 {
     e_text = entry->text();
     emit entryEdited(e_text);

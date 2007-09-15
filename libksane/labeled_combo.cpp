@@ -79,7 +79,7 @@ bool LabeledCombo::setIcon(const QIcon &icon, const QString& str)
     return false;
 }
 
-QString LabeledCombo::currentText(void) const
+QString LabeledCombo::currentText() const
 {
     return(combo->currentText());
 }
@@ -108,7 +108,7 @@ void LabeledCombo::setColumnWidths(int lab_w, int cmb_w)
     layout->setColumnMinimumWidth(1, cmb_w);
 }
 
-int LabeledCombo::count(void) const
+int LabeledCombo::count() const
 {
     return(combo->count());
 }

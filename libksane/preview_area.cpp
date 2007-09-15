@@ -55,23 +55,23 @@ PreviewArea::~PreviewArea()
 {
 }
 
-void PreviewArea::createContextMenu(void)
+void PreviewArea::createContextMenu()
 {
     //Action->setIcon(QIcon(""));
     //Action->setShortcut(tr(""));
     //Action->setStatusTip(tr(""));
 
     zoomInAction = new QAction(tr("Zoom In"), this);
-    connect(zoomInAction, SIGNAL(triggered(void)), image, SLOT(zoomIn(void)));
+    connect(zoomInAction, SIGNAL(triggered()), image, SLOT(zoomIn()));
 
     zoomOutAction = new QAction(tr("Zoom Out"), this);
-    connect(zoomOutAction, SIGNAL(triggered(void)), image, SLOT(zoomOut(void)));
+    connect(zoomOutAction, SIGNAL(triggered()), image, SLOT(zoomOut()));
 
     zoomSelAction = new QAction(tr("Zoom to Selection"), this);
-    connect(zoomSelAction, SIGNAL(triggered(void)), image, SLOT(zoomSel(void)));
+    connect(zoomSelAction, SIGNAL(triggered()), image, SLOT(zoomSel()));
 
     zoom2FitAction = new QAction(tr("Zoom to Fit"), this);
-    connect(zoom2FitAction, SIGNAL(triggered(void)), image, SLOT(zoom2Fit(void)));
+    connect(zoom2FitAction, SIGNAL(triggered()), image, SLOT(zoom2Fit()));
 
     addAction(zoomInAction);
     addAction(zoomOutAction);
@@ -85,7 +85,7 @@ QSize PreviewArea::sizeHint() const
     return QSize(500, 600);
 }
 
-QImage *PreviewArea::getImage(void)
+QImage *PreviewArea::getImage()
 {
     if (image) 
     {
@@ -94,7 +94,7 @@ QImage *PreviewArea::getImage(void)
     return 0;
 }
 
-void PreviewArea::clearSelection(void)
+void PreviewArea::clearSelection()
 {
     if (image) 
     {
@@ -102,7 +102,7 @@ void PreviewArea::clearSelection(void)
     }
 }
 
-void PreviewArea::updateScaledImg(void)
+void PreviewArea::updateScaledImg()
 {
     if (image) 
     {
@@ -111,7 +111,7 @@ void PreviewArea::updateScaledImg(void)
     }
 }
 
-void PreviewArea::zoomIn(void)
+void PreviewArea::zoomIn()
 {
     if (image) 
     {
@@ -119,7 +119,7 @@ void PreviewArea::zoomIn(void)
     }
 }
 
-void PreviewArea::zoomOut(void)
+void PreviewArea::zoomOut()
 {
     if (image) 
     {
@@ -127,7 +127,7 @@ void PreviewArea::zoomOut(void)
     }
 }
 
-void PreviewArea::zoomSel(void)
+void PreviewArea::zoomSel()
 {
     if (image) 
     {
@@ -135,7 +135,7 @@ void PreviewArea::zoomSel(void)
     }
 }
 
-void PreviewArea::zoom2Fit(void)
+void PreviewArea::zoom2Fit()
 {
     if (image) 
     {

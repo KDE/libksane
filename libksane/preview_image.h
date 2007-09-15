@@ -69,11 +69,11 @@ public:
     PreviewImage(QWidget *parent);
     ~PreviewImage();
 
-    QSize sizeHint(void) const;
+    QSize sizeHint() const;
 
-    void clearSelection(void);
-    QImage *getImage(void) {return &orig_img;}
-    void updateScaledImg(void);
+    void clearSelection();
+    QImage *getImage() {return &orig_img;}
+    void updateScaledImg();
 
 public Q_SLOTS:
 
@@ -82,10 +82,10 @@ public Q_SLOTS:
     void setBRX(float percent);
     void setBRY(float percent);
 
-    void zoomIn(void);
-    void zoomOut(void);
-    void zoomSel(void);
-    void zoom2Fit(void);
+    void zoomIn();
+    void zoomOut();
+    void zoomSel();
+    void zoom2Fit();
 
 protected:
 

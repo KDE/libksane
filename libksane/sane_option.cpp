@@ -87,7 +87,7 @@ SaneOption::SaneOption(const SANE_Handle s_handle, const int opt_num)
     readValue();
 }
 
-SaneOption::~SaneOption(void)
+SaneOption::~SaneOption()
 {
 }
 
@@ -189,7 +189,7 @@ void SaneOption::createWidget(QWidget *parent)
     }
 }
 
-SaneOptWidget_t SaneOption::getWidgetType(void)
+SaneOptWidget_t SaneOption::getWidgetType()
 {
     switch (sane_option->constraint_type)
     {
@@ -246,13 +246,13 @@ SaneOptWidget_t SaneOption::getWidgetType(void)
     return SW_DETECT_FAIL;
 }
 
-QString SaneOption::name(void)
+QString SaneOption::name()
 {
     if (sane_option == 0) return QString("");
     return QString(sane_option->name);
 }
 
-QString SaneOption::unitString(void)
+QString SaneOption::unitString()
 {
     switch(sane_option->unit)
     {
@@ -267,7 +267,7 @@ QString SaneOption::unitString(void)
     return QString("");
 }
 
-QStringList *SaneOption::genComboStringList(void)
+QStringList *SaneOption::genComboStringList()
 {
     int i;
 
@@ -515,7 +515,7 @@ void SaneOption::gammaTableChanged(const QVector<int> &gam_tbl)
     writeData(reinterpret_cast<unsigned char *>(copy.data()));
 }
 
-void SaneOption::readOption(void)
+void SaneOption::readOption()
 {
     float tmp_step;
     int tmp_size;
@@ -621,7 +621,7 @@ void SaneOption::readOption(void)
     }
 }
 
-void SaneOption::readValue(void)
+void SaneOption::readValue()
 {
     // check if we can read the value
     if (type == SW_GROUP) return;
@@ -853,7 +853,7 @@ bool SaneOption::setChecked(bool check)
     return false;
 }
 
-bool SaneOption::storeCurrentData(void)
+bool SaneOption::storeCurrentData()
 {
     SANE_Status status;
     SANE_Int res;
@@ -873,7 +873,7 @@ bool SaneOption::storeCurrentData(void)
     return true;
 }
 
-bool SaneOption::restoreSavedData(void)
+bool SaneOption::restoreSavedData()
 {
     // check if we have saved any data
     if (sane_data == 0) return false;

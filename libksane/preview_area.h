@@ -54,11 +54,11 @@ public:
     PreviewArea(QWidget *parent);
     ~PreviewArea();
 
-    QSize sizeHint(void) const;
+    QSize sizeHint() const;
 
-    void clearSelection(void);
-    QImage *getImage(void);
-    void updateScaledImg(void);
+    void clearSelection();
+    QImage *getImage();
+    void updateScaledImg();
     bool setIconFinal(const QIcon &icon);
     bool setIconZoomIn(const QIcon &icon);
     bool setIconZoomOut(const QIcon &icon);
@@ -72,10 +72,10 @@ public Q_SLOTS:
     void setBRX(float percent);
     void setBRY(float percent);
 
-    void zoomIn(void);
-    void zoomOut(void);
-    void zoomSel(void);
-    void zoom2Fit(void);
+    void zoomIn();
+    void zoomOut();
+    void zoomSel();
+    void zoom2Fit();
 
 private Q_SLOTS:
 
@@ -87,7 +87,7 @@ Q_SIGNALS:
 
 private:
 
-    void createContextMenu(void);
+    void createContextMenu();
 
     PreviewImage *image;
     QAction *zoomInAction;

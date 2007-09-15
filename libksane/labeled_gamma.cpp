@@ -147,7 +147,7 @@ void LabeledGamma::setSize(int size)
 }
 
 
-void LabeledGamma::calculateGT(void)
+void LabeledGamma::calculateGT()
 {
     double gam      = 100.0/gam_slider->value();
     double con      = (200.0/(100.0 - con_slider->value()))-1;

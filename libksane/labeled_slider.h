@@ -69,7 +69,7 @@ public:
 
     void wigetSizeHints(int *lab_w, int *spi_w);
     void setColumnWidths(int lab_w, int spi_w);
-    int value(void) const { return( slider->value()); }
+    int value() const { return( slider->value()); }
 
 public Q_SLOTS:
 
@@ -85,7 +85,7 @@ private Q_SLOTS:
     /** Sync the values and emit valueChanged() */
     void syncValues(int);
     /** Ensure step value is followed */
-    void fixValue(void);
+    void fixValue();
 
 Q_SIGNALS:
 

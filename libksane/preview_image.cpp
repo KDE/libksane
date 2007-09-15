@@ -75,7 +75,7 @@ QSize PreviewImage::sizeHint() const
     return image.size();
 }
 
-void PreviewImage::clearSelection(void)
+void PreviewImage::clearSelection()
 {
     have_selection = false;
     //tl_x = tl_y = br_x = br_y = 0;
@@ -84,13 +84,13 @@ void PreviewImage::clearSelection(void)
 
 }
 
-void PreviewImage::updateScaledImg(void)
+void PreviewImage::updateScaledImg()
 {
     image = orig_img.scaledToWidth((int)(scalefactor*orig_img.width() +1));
     resize(image.size());
 }
 
-void PreviewImage::zoomIn(void)
+void PreviewImage::zoomIn()
 {
     scalefactor *= 1.2;
     if (scalefactor > MAX_SCALE) scalefactor = MAX_SCALE;
@@ -103,7 +103,7 @@ void PreviewImage::zoomIn(void)
     emit requestVisibility(tl_x, tl_y);
 }
 
-void PreviewImage::zoomOut(void)
+void PreviewImage::zoomOut()
 {
     scalefactor /= 1.2;
     if (scalefactor < MIN_SCALE) scalefactor = MIN_SCALE;
@@ -116,7 +116,7 @@ void PreviewImage::zoomOut(void)
     emit requestVisibility(tl_x, tl_y);
 }
 
-void PreviewImage::zoomSel(void)
+void PreviewImage::zoomSel()
 {
     QWidget *parent = parentWidget();
     if (parent != 0) 
@@ -164,7 +164,7 @@ void PreviewImage::zoomSel(void)
     emit requestVisibility(tl_x, tl_y);
 }
 
-void PreviewImage::zoom2Fit(void)
+void PreviewImage::zoom2Fit()
 {
     if (orig_img.width() <= 10) 
     {

@@ -149,7 +149,7 @@ void LabeledSlider::syncValues(int value)
     else emit valueChanged(value);
 }
 
-void LabeledSlider::fixValue(void)
+void LabeledSlider::fixValue()
 {
     //ensure that the value step is followed also for the slider
     int rest = (slider->value() - slider->minimum())%step;
