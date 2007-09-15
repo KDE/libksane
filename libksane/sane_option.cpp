@@ -27,6 +27,9 @@
 #include <cstdio>
 #include <iostream>
 
+// Qt includes
+#include <QtCore/QVarLengthArray>
+
 // KDE includes
 
 #include <klocale.h>
@@ -307,7 +310,7 @@ QString SaneOption::getSaneComboString(unsigned char *data)
     if (type != SW_COMBO) 
     {
         //printf("getSaneComboString: type != SW_COMBO\n");
-        return QString("");
+        return QString();
     }
 
     switch (sane_option->type)
@@ -317,7 +320,7 @@ QString SaneOption::getSaneComboString(unsigned char *data)
         case SANE_TYPE_FIXED:
             return QString().sprintf("%f", SANE_UNFIX(toSANE_Word(data))) + unitString();
         case SANE_TYPE_STRING:
-            tmp = QString((char*)data);
+            tmp = QLatin1String(reinterpret_cast<char*>(data));
             // FIXME clean the end of the string !!
             if (tmp.length() > 25) 
             {
@@ -329,7 +332,7 @@ QString SaneOption::getSaneComboString(unsigned char *data)
         default :
             break;
     }
-    return QString("");
+    return QString();
 }
 
 bool SaneOption::writeData(unsigned char *data)
@@ -381,51 +384,51 @@ void SaneOption::checkboxChanged(bool toggled)
 
 void SaneOption::comboboxChanged(int i)
 {
-    unsigned char data[sane_option->size];
+    QVarLengthArray<unsigned char> data(sane_option->size);
 
     //printf("comboboxChanged: ");
     switch (sane_option->type)
     {
         case SANE_TYPE_INT:
         case SANE_TYPE_FIXED:
-            fromSANE_Word(data, sane_option->constraint.word_list[i+1]);
+            fromSANE_Word(data.data(), sane_option->constraint.word_list[i+1]);
             break;
         case SANE_TYPE_STRING:
-            strncpy((char*)data, sane_option->constraint.string_list[i], sane_option->size);
+            strncpy(reinterpret_cast<char*>(data.data()), sane_option->constraint.string_list[i], sane_option->size);
             break;
         default:
             printf("comboboxChanged(index): can not handle type(%d)\n", sane_option->type);
             break;
     }
-    writeData(data);
+    writeData(data.data());
 }
 
 bool SaneOption::comboboxChanged(float value)
 {
-    unsigned char data[sane_option->size];
+    QVarLengthArray<unsigned char> data(sane_option->size);
     SANE_Word fixed;
 
     //printf("comboboxChanged: ");
     switch (sane_option->type)
     {
         case SANE_TYPE_INT:
-            fromSANE_Word(data, (int)value);
+            fromSANE_Word(data.data(), (int)value);
             break;
         case SANE_TYPE_FIXED:
             fixed = SANE_FIX(value);
-            fromSANE_Word(data, fixed);
+            fromSANE_Word(data.data(), fixed);
             break;
         default:
             printf("comboboxChanged(float): can only handle SANE_TYPE_INT and SANE_TYPE_FIXED\n");
             return false;
     }
-    writeData(data);
+    writeData(data.data());
     return true;
 }
 
 bool SaneOption::comboboxChanged(const QString &value)
 {
-    unsigned char data[sane_option->size];
+    QVarLengthArray<unsigned char> data(sane_option->size);
     SANE_Word fixed;
     int i;
     float f;
@@ -438,13 +441,13 @@ bool SaneOption::comboboxChanged(const QString &value)
         case SANE_TYPE_INT:
             i = value.toInt(&ok);
             if (ok == false) return false;
-            fromSANE_Word(data, i);
+            fromSANE_Word(data.data(), i);
             break;
         case SANE_TYPE_FIXED:
             f = value.toFloat(&ok);
             if (ok == false) return false;
             fixed = SANE_FIX(f);
-            fromSANE_Word(data, fixed);
+            fromSANE_Word(data.data(), fixed);
             break;
         case SANE_TYPE_STRING:
             i = 0;
@@ -453,7 +456,7 @@ bool SaneOption::comboboxChanged(const QString &value)
                 tmp = getSaneComboString((unsigned char *)sane_option->constraint.string_list[i]);
                 if (value == tmp) 
                 {
-                    strncpy((char*)data, sane_option->constraint.string_list[i], sane_option->size);
+                    strncpy(reinterpret_cast<char*>(data.data()), sane_option->constraint.string_list[i], sane_option->size);
                     //std::cout << "->>" << qPrintable(tmp) << std::endl;
                     break;
                 }
@@ -465,7 +468,7 @@ bool SaneOption::comboboxChanged(const QString &value)
             printf("comboboxChanged: can only handle SANE_TYPE_INT and SANE_TYPE_FIXED\n");
             return false;
     }
-    writeData(data);
+    writeData(data.data());
     return true;
 }
 
@@ -496,19 +499,20 @@ void SaneOption::fsliderChanged(float val)
 
 void SaneOption::entryChanged(const QString& text)
 {
-    char data[sane_option->size];
+    QVarLengthArray<unsigned char> data(sane_option->size);
 
-    QString tmp("");
+    QString tmp;
     tmp += text.left(sane_option->size);
     if (tmp != text) lentry->setText(tmp);
-    strcpy(data, tmp.toLatin1());
-    writeData((unsigned char *)data);
+    strcpy(reinterpret_cast<char*>(data.data()), tmp.toLatin1());
+    writeData(data.data());
 }
 
 void SaneOption::gammaTableChanged(const QVector<int> &gam_tbl)
 {
     //printf("Gamma table (%s) changed\n", sane_option->name);
-    writeData((unsigned char *)gam_tbl.data());
+    QVector<int> copy = gam_tbl;
+    writeData(reinterpret_cast<unsigned char *>(copy.data()));
 }
 
 void SaneOption::readOption(void)
@@ -624,10 +628,10 @@ void SaneOption::readValue(void)
     if (sw_state == SW_STATE_HIDDEN) return;
 
     // read that current value
-    unsigned char data[sane_option->size];
+    QVarLengthArray<unsigned char> data(sane_option->size);
     SANE_Status status;
     SANE_Int res;
-    status = sane_control_option (sane_handle, opt_number, SANE_ACTION_GET_VALUE, data, &res);
+    status = sane_control_option (sane_handle, opt_number, SANE_ACTION_GET_VALUE, data.data(), &res);
 
     //printf("opt(%2d):'%15.15s', ", opt_number, sane_option->name);
     //printf("st=%d, res=%d ", status, res);
@@ -643,7 +647,7 @@ void SaneOption::readValue(void)
             break;
         case SW_CHECKBOX:
             //printf("checked = %d\n", (int)toSANE_Word(data));
-            bVal = (toSANE_Word(data) != 0) ? true:false;
+            bVal = (toSANE_Word(data.data()) != 0) ? true:false;
             if (lchebx != 0) {
                 lchebx->setChecked(bVal);
             }
@@ -652,12 +656,12 @@ void SaneOption::readValue(void)
         case SW_COMBO:
             //printf("Combo = '%s'\n", qPrintable(getSaneComboString(data)));
             if (lcombx != 0) {
-                lcombx->setCurrentText(getSaneComboString(data));
+                lcombx->setCurrentText(getSaneComboString(data.data()));
             }
             break;
         case SW_SLIDER:
         case SW_SLIDER_INT:
-            iVal = toSANE_Word(data);
+            iVal = toSANE_Word(data.data());
             //printf("Slider V = %d\n",(int)iVal);
             if ((lslider != 0) &&  (lslider->value() != (int)iVal)) {
                 lslider->setValue((int)iVal);
@@ -666,7 +670,7 @@ void SaneOption::readValue(void)
             break;
         case SW_F_SLIDER:
         case SW_F_SLIDER_FIX:
-            fVal = SANE_UNFIX(toSANE_Word(data));
+            fVal = SANE_UNFIX(toSANE_Word(data.data()));
             //printf("Slider F V = %f\n", fVal);
             if (lfslider != 0) {
                 if (((lfslider->value() - fVal) >= min_change) ||
@@ -680,7 +684,7 @@ void SaneOption::readValue(void)
         case SW_ENTRY:
             //printf("Text Entry '%s'\n", qPrintable(QString((char*)data)));
             if (lentry != 0) {
-                lentry->setText(QString((char*)data));
+                lentry->setText(reinterpret_cast<char*>(data.data()));
             }
             break;
         case SW_GAMMA:
@@ -776,10 +780,10 @@ bool SaneOption::getValue(float *val)
     if (sw_state == SW_STATE_HIDDEN) return false;
 
     // read that current value
-    unsigned char data[sane_option->size];
+    QVarLengthArray<unsigned char> data(sane_option->size);
     SANE_Status status;
     SANE_Int res;
-    status = sane_control_option (sane_handle, opt_number, SANE_ACTION_GET_VALUE, data, &res);
+    status = sane_control_option (sane_handle, opt_number, SANE_ACTION_GET_VALUE, data.data(), &res);
     if (status != SANE_STATUS_GOOD) {
         printf("getValue(float): '%s' sane_control_option returned %d\n", sane_option->name, status);
         return false;
@@ -789,10 +793,10 @@ bool SaneOption::getValue(float *val)
     switch (sane_option->type)
     {
         case SANE_TYPE_INT:
-            *val = (float)toSANE_Word(data);
+            *val = (float)toSANE_Word(data.data());
             return true;
         case SANE_TYPE_FIXED:
-            *val = SANE_UNFIX(toSANE_Word(data));
+            *val = SANE_UNFIX(toSANE_Word(data.data()));
             return true;
         default:
             printf("getValue(float): Type %d not supported!\n", sane_option->type);
@@ -891,10 +895,10 @@ bool SaneOption::getValue(QString *val)
     if (sw_state == SW_STATE_HIDDEN) return false;
 
     // read that current value
-    unsigned char data[sane_option->size];
+    QVarLengthArray<unsigned char> data(sane_option->size);
     SANE_Status status;
     SANE_Int res;
-    status = sane_control_option (sane_handle, opt_number, SANE_ACTION_GET_VALUE, data, &res);
+    status = sane_control_option (sane_handle, opt_number, SANE_ACTION_GET_VALUE, data.data(), &res);
     if (status != SANE_STATUS_GOOD) {
         printf("getValue(QString): '%s' sane_control_option returned %d\n",
                sane_option->name, status);
@@ -905,19 +909,19 @@ bool SaneOption::getValue(QString *val)
     switch(type)
     {
         case SW_CHECKBOX:
-            *val = (toSANE_Word(data) != 0) ? QString("true") :QString("false");
+            *val = (toSANE_Word(data.data()) != 0) ? QString("true") :QString("false");
             break;
         case SW_COMBO:
-            *val = getSaneComboString(data);
+            *val = getSaneComboString(data.data());
             break;
         case SW_SLIDER:
-            *val = QString().sprintf("%d", (int)toSANE_Word(data));
+            *val = QString().sprintf("%d", (int)toSANE_Word(data.data()));
             break;
         case SW_F_SLIDER:
-            *val = QString().sprintf("%f", SANE_UNFIX( toSANE_Word(data)));
+            *val = QString().sprintf("%f", SANE_UNFIX( toSANE_Word(data.data())));
             break;
         case SW_ENTRY:
-            *val = QString((char*)data);
+            *val = QLatin1String(reinterpret_cast<char*>(data.data()));
             break;
         default:
             printf("getValue(QString):'%s' type(%d) is not supported\n", sane_option->name, type);
@@ -947,7 +951,7 @@ bool SaneOption::setValue(const QString &val)
     switch(type)
     {
         case SW_CHECKBOX:
-            checkboxChanged(val == QString("true"));
+            checkboxChanged(val == QLatin1String("true"));
             if (lchebx != 0) {
                 readValue();
             }
