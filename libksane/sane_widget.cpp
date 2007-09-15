@@ -39,6 +39,7 @@ extern "C"
 
 #include <qeventloop.h>
 #include <qapplication.h>
+#include <qvarlengtharray.h>
 #include <QComboBox>
 
 // KDE includes
@@ -203,13 +204,13 @@ bool SaneWidget::openDevice(const QString &device_name)
     {
         return false;
     }
-    char data[num_option_d->size];
-    status = sane_control_option(s_handle, 0, SANE_ACTION_GET_VALUE, data, &res);
+    QVarLengthArray<char> data(num_option_d->size);
+    status = sane_control_option(s_handle, 0, SANE_ACTION_GET_VALUE, data.data(), &res);
     if (status != SANE_STATUS_GOOD) 
     {
         return false;
     }
-    num_sane_options = *(SANE_Word*)data;
+    num_sane_options = *reinterpret_cast<SANE_Word*>(data.data());
 
     // read the rest of the options
     for (i=1; i<num_sane_options; i++) 
