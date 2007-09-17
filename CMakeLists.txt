@@ -4,7 +4,8 @@ PROJECT(libksane)
 FIND_PACKAGE(KDE4 REQUIRED)
 INCLUDE (KDE4Defaults)
 INCLUDE (MacroLibrary)
-
+set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules )
+FIND_PACKAGE(Sane REQUIRED)
 # =======================================================
 # Informations to update before to release this library.
 
@@ -42,10 +43,6 @@ SET(KSANE_LIB_SO_VERSION_STRING "${KSANE_LIB_SO_CUR_VERSION}.${KSANE_LIB_SO_REV_
 
 # =======================================================
 
-
-# Detect Sane library properlly with CMake script from 'cmake/modules'
-SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH}  ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules )
-FIND_PACKAGE(Sane REQUIRED)
 
 SUBDIRS(libksane)
 
