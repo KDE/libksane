@@ -74,17 +74,12 @@ public:
     ~SaneWidget();
 
     QString selectDevice(QWidget* parent=0);
-    bool openDevice(const QString &device_name);
+    bool    openDevice(const QString &device_name);
     QImage *getFinalImage();
+
     bool setIconColorMode(const QIcon &icon);
     bool setIconGrayMode(const QIcon &icon);
     bool setIconBWMode(const QIcon &icon);
-    bool setIconPreview(const QIcon &icon);
-    bool setIconFinal(const QIcon &icon);
-    bool setIconZoomIn(const QIcon &icon);
-    bool setIconZoomOut(const QIcon &icon);
-    bool setIconZoomSel(const QIcon &icon);
-    bool setIconZoomFit(const QIcon &icon);
 
 public Q_SLOTS:
 
