@@ -123,54 +123,56 @@ private:
 
     // device info
     SANE_Device const **dev_list;
-    SANE_Device const *device;
-    SANE_Handle s_handle;
-    QString devname;
-    QString modelname;
+    SANE_Device const  *device;
+    SANE_Handle         s_handle;
+    QString             devname;
+    QString             modelname;
 
     // Option variables
-    QScrollArea *opt_area;
-    bool options_read;
+    QScrollArea        *opt_area;
+    bool                options_read;
     QList<SaneOption *> optList;
-    SaneOption *opt_mode;
-    SaneOption *opt_depth;
-    SaneOption *opt_res;
-    SaneOption *opt_res_y;
-    SaneOption *opt_tl_x;
-    SaneOption *opt_tl_y;
-    SaneOption *opt_br_x;
-    SaneOption *opt_br_y;
-    QWidget *color_opts;
-    QWidget *remain_opts;
-    SaneOption *opt_gam_r;
-    SaneOption *opt_gam_g;
-    SaneOption *opt_gam_b;
-    QTimer r_val_tmr;
+    SaneOption         *opt_mode;
+    SaneOption         *opt_depth;
+    SaneOption         *opt_res;
+    SaneOption         *opt_res_y;
+    SaneOption         *opt_tl_x;
+    SaneOption         *opt_tl_y;
+    SaneOption         *opt_br_x;
+    SaneOption         *opt_br_y;
+    QWidget            *color_opts;
+    QWidget            *remain_opts;
+    SaneOption         *opt_gam_r;
+    SaneOption         *opt_gam_g;
+    SaneOption         *opt_gam_b;
+    QTimer              r_val_tmr;
 
-    QPushButton *scan_btn;
-    QPushButton *prev_btn;
+    QPushButton        *scan_btn;
+    QPushButton        *prev_btn;
 
-    QPushButton *z_in_btn;
-    QPushButton *z_out_btn;
-    QPushButton *z_sel_btn;
-    QPushButton *z_fit_btn;
+    QPushButton        *z_in_btn;
+    QPushButton        *z_out_btn;
+    QPushButton        *z_sel_btn;
+    QPushButton        *z_fit_btn;
+
     // preview variables
-    PreviewArea *preview;
-    QImage *pr_img;
-    float previewWidth;
-    float previewHeight;
+    PreviewArea        *preview;
+    QImage             *pr_img;
+    float               previewWidth;
+    float               previewHeight;
 
     // general scanning
-    SANE_Parameters params;
+    SANE_Parameters     params;
+
     //QSocketNotifier *sn;
-    int progress;
-    SANE_Byte img_data[IMG_DATA_R_SIZE];
-    SANE_Byte px_colors[3];
-    unsigned int px_c_index;
-    int pixel_x, pixel_y;
-    ReadStatus read_status;
-    QImage *scan_img;
-    QImage the_img;
+    int                 progress;
+    SANE_Byte           img_data[IMG_DATA_R_SIZE];
+    SANE_Byte           px_colors[3];
+    unsigned int        px_c_index;
+    int                 pixel_x, pixel_y;
+    ReadStatus          read_status;
+    QImage             *scan_img;
+    QImage              the_img;
 };
 
 }  // NameSpace KSaneIface
