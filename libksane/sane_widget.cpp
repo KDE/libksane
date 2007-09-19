@@ -24,7 +24,6 @@
 
 // C++ includes.
 
-#include <cstdio>
 #include <iostream>
 
 // Sane includes.
@@ -37,14 +36,15 @@ extern "C"
 
 // Qt includes.
 
-#include <qeventloop.h>
-#include <qapplication.h>
-#include <qvarlengtharray.h>
+#include <QEventLoop>
+#include <QApplication>
+#include <QVarLengthArray>
 #include <QComboBox>
 
 // KDE includes
 
 #include <klocale.h>
+#include <kdebug.h>
 
 // Local includes.
 
@@ -65,39 +65,44 @@ SaneWidget::SaneWidget(QWidget* parent)
 {
     SANE_Int version;
 
-    device=0;
-    previewWidth = 0;
+    device        = 0;
+    previewWidth  = 0;
     previewHeight = 0;
-    read_status = READ_NOT_READING;
-    px_c_index = 0;
-    opt_area = 0;
-    opt_tl_x = 0;
-    opt_tl_y = 0;
-    opt_br_x = 0;
-    opt_br_y = 0;
-    opt_res = 0;
-    opt_res_y = 0;
-    opt_gam_r = 0;
-    opt_gam_g = 0;
-    opt_gam_b = 0;
-    color_opts = 0;
-    remain_opts = 0;
-    pr_img = 0;
-    the_img = QImage(10, 10, QImage::Format_RGB32);
+    read_status   = READ_NOT_READING;
+    px_c_index    = 0;
+    opt_area      = 0;
+    opt_tl_x      = 0;
+    opt_tl_y      = 0;
+    opt_br_x      = 0;
+    opt_br_y      = 0;
+    opt_res       = 0;
+    opt_res_y     = 0;
+    opt_gam_r     = 0;
+    opt_gam_g     = 0;
+    opt_gam_b     = 0;
+    color_opts    = 0;
+    remain_opts   = 0;
+    pr_img        = 0;
+    the_img       = QImage(10, 10, QImage::Format_RGB32);
 
     SANE_Status status;
     status = sane_init(&version, 0);
-    if (status != SANE_STATUS_GOOD) {
-        printf("SaneWidget: sane_init() failed(%s)\n", sane_strstatus(status));
+    if (status != SANE_STATUS_GOOD) 
+    {
+        kDebug() << "libksane: sane_init() failed(" 
+                 << sane_strstatus(status) << ")" << endl;
     }
-    else {
-        printf("Sane Version = %d.%d.%d\n",
-               SANE_VERSION_MAJOR(version),
-               SANE_VERSION_MINOR(version),
-               SANE_VERSION_BUILD(version));
+    else 
+    {
+        kDebug() << "Sane Version = " 
+                 << SANE_VERSION_MAJOR(version) << "."
+                 << SANE_VERSION_MINOR(version) << "."
+                 << SANE_VERSION_BUILD(version) << endl;
     }
     r_val_tmr.setSingleShot(true);
-    connect (&r_val_tmr, SIGNAL(timeout()), this, SLOT(valReload()));
+
+    connect (&r_val_tmr, SIGNAL(timeout()), 
+             this, SLOT(valReload()));
 }
 
 SaneWidget::~SaneWidget()
@@ -119,9 +124,11 @@ QString SaneWidget::selectDevice(QWidget* parent)
 
     while(dev_list[i] != 0) 
     {
-        printf("i=%d name='%s' vendor='%s' model='%s' type='%s'\n",
-               i, dev_list[i]->name,  dev_list[i]->vendor,
-               dev_list[i]->model, dev_list[i]->type);
+        kDebug() << "i="       << i << " "
+                 << "name='"   << dev_list[i]->name << "' "
+                 << "vendor='" << dev_list[i]->vendor << "' "
+                 << "model='"  << dev_list[i]->model << "' "
+                 << "type='"   << dev_list[i]->type << "' " << endl;
         tmp = QString(dev_list[i]->name);
         tmp += "\n" + QString(dev_list[i]->vendor);
         tmp += " : " + QString(dev_list[i]->model);
@@ -141,7 +148,7 @@ QString SaneWidget::selectDevice(QWidget* parent)
     RadioSelect sel;
     sel.setWindowTitle(qApp->applicationName());
     i = sel.getSelectedIndex(parent, QString("Select Scanner"), dev_name_list, 0);
-    printf("i=%d\n", i);
+    kDebug() << "i=" << i << endl;
 
     if (i == num_scaners) 
     {
@@ -183,7 +190,8 @@ bool SaneWidget::openDevice(const QString &device_name)
 #ifdef ENABLE_DEBUG
         modelname = i18n("Test Scanner");
 #else
-        printf("openDevice: device '%s' not found\n", qPrintable(device_name));
+        kDebug() << "openDevice: device '" << qPrintable(device_name) 
+                 << "' not found" << endl;
         return false;
 #endif
     }
@@ -191,7 +199,8 @@ bool SaneWidget::openDevice(const QString &device_name)
     // Try to open the device
     if (sane_open(device_name.toLatin1(), &s_handle) != SANE_STATUS_GOOD) 
     {
-        printf("openDevice: sane_open(\"%s\", &handle) failed!\n", qPrintable(device_name));
+        kDebug() << "openDevice: sane_open(\"" << qPrintable(device_name) 
+                 << "\", &handle) failed!" << endl;
         return false;
     }
     //printf("openDevice: sane_open(\"%s\", &handle) == SANE_STATUS_GOOD\n", qPrintable(device_name));
@@ -474,7 +483,8 @@ void SaneWidget::createOptInterface()
         connect(lgamma, SIGNAL(gammaChanged(int,int,int)),
                 opt_gam_b->lgamma, SLOT(setValues(int,int,int)));
 
-        QCheckBox *split_gam_btn = new QCheckBox(i18n("Separate color intensity tables"), opt_container);
+        QCheckBox *split_gam_btn = new QCheckBox(i18n("Separate color intensity tables"),
+                                                 opt_container);
         color_lay->addWidget(split_gam_btn);
         connect (split_gam_btn, SIGNAL(toggled(bool)), gamma_frm, SLOT(setVisible(bool)));
         connect (split_gam_btn, SIGNAL(toggled(bool)), lgamma, SLOT(setHidden(bool)));
@@ -743,7 +753,8 @@ void SaneWidget::updatePreviewSize()
 
     // set the resopution to 100 dpi and increase if necessary
     dpi = 0;
-    do {
+    do 
+    {
         // Increase the dpi value
         dpi += 100;
         if (opt_res != 0) 
@@ -765,7 +776,8 @@ void SaneWidget::updatePreviewSize()
         //printf("lines = %d\n", params.lines);
         //printf("pixels_per_line = %d\n", params.pixels_per_line);
         if (dpi > 800) break;
-    } while ((params.pixels_per_line < 300) || (params.lines < 300));
+    } 
+    while ((params.pixels_per_line < 300) || (params.lines < 300));
 
 
     if ((pr_img->width() != params.pixels_per_line) || (pr_img->height() != params.lines)) 
@@ -834,7 +846,8 @@ void SaneWidget::scanPreview()
 
     // set the resopution to 100 dpi and increase if necessary
     dpi = 0;
-    do {
+    do 
+    {
         // Increase the dpi value
         dpi += 100;
         if (opt_res != 0) 
@@ -856,7 +869,8 @@ void SaneWidget::scanPreview()
         //printf("lines = %d\n", params.lines);
         //printf("pixels_per_line = %d\n", params.pixels_per_line);
         if (dpi > 800) break;
-    } while ((params.pixels_per_line < 300) || (params.lines < 300));
+    } 
+    while ((params.pixels_per_line < 300) || (params.lines < 300));
 
     // execute valReload if there is a pending value reload
     while (r_val_tmr.isActive()) 
@@ -916,7 +930,7 @@ void SaneWidget::scanPreview()
     pixel_y = 0;
     px_c_index = 0;
 
-    this->setDisabled(true);
+    setDisabled(true);
 
     while (read_status == READ_ON_GOING) 
     {
@@ -934,7 +948,7 @@ void SaneWidget::scanPreview()
     if (opt_br_x != 0) opt_br_x->restoreSavedData();
     if (opt_br_y != 0) opt_br_y->restoreSavedData();
 
-    this->setDisabled(false);
+    setDisabled(false);
 }
 
 void SaneWidget::scanFinal()
@@ -980,7 +994,8 @@ void SaneWidget::scanFinal()
     status = sane_start(s_handle);
     if (status != SANE_STATUS_GOOD) 
     {
-        printf("sane_start ERROR: status=%s\n", sane_strstatus(status));
+        kDebug() << "sane_start ERROR: status="
+                 << sane_strstatus(status) << endl;
         sane_cancel(s_handle);
         return;
     }
@@ -989,7 +1004,8 @@ void SaneWidget::scanFinal()
     status = sane_get_parameters(s_handle, &params);
     if (status != SANE_STATUS_GOOD) 
     {
-        printf("sane_get_parameters ERROR: status=%s\n", sane_strstatus(status));
+        kDebug() << "sane_get_parameters ERROR: status=" 
+                 << sane_strstatus(status) << endl;
         sane_cancel(s_handle);
         return;
     }
@@ -1004,7 +1020,7 @@ void SaneWidget::scanFinal()
     // create a new image
     //(This image should be small so who cares about waisted memory :)
     // FIXME optimize size
-    scan_img = &the_img;
+    scan_img  = &the_img;
     *scan_img = QImage(params.pixels_per_line, params.lines, QImage::Format_RGB32);
 
     // Signal for a progress dialog
@@ -1015,7 +1031,7 @@ void SaneWidget::scanFinal()
     pixel_y = 0;
     px_c_index = 0;
 
-    this->setDisabled(true);
+    setDisabled(true);
     while (read_status == READ_ON_GOING) 
     {
         processData();
@@ -1024,7 +1040,7 @@ void SaneWidget::scanFinal()
     {
         emit scanFaild();
     }
-    this->setDisabled(false);
+    setDisabled(false);
 }
 
 void SaneWidget::processData()
@@ -1042,7 +1058,8 @@ void SaneWidget::processData()
         //printf("Read finished read_bytes=%d\n", read_bytes);
         if (pixel_y < params.lines) 
         {
-            printf("pixel_y(%d) < params.lines(%d)\n", pixel_y, params.lines);
+            kDebug() << "pixel_y(" << pixel_y
+                     << ") < params.lines(" << params.lines << ")" << endl;
             sleep(1);
             //sane_cancel(s_handle);
         }
@@ -1062,7 +1079,8 @@ void SaneWidget::processData()
             sane_start(s_handle);
             if (status != SANE_STATUS_GOOD) 
             {
-                printf("sane_start ERROR: status=%s\n", sane_strstatus(status));
+                kDebug() << "sane_start ERROR: status=" 
+                         << sane_strstatus(status) << endl;
                 sane_cancel(s_handle);
                 read_status = READ_ERROR;
                 return;
@@ -1071,7 +1089,8 @@ void SaneWidget::processData()
     }
     else if (status != SANE_STATUS_GOOD) 
     {
-        printf("Reading error, status=%s\n", sane_strstatus(status));
+        kDebug() << "Reading error, status=" 
+                 << sane_strstatus(status) << endl;
         sane_cancel(s_handle);
         read_status = READ_ERROR;
         return;
@@ -1087,7 +1106,8 @@ void SaneWidget::processData()
                 {
                     if (pixel_y >= params.lines) 
                     {
-                        printf("processData: reached image height before EOF\n");
+                        kDebug() << "processData: reached image height before EOF" 
+                                 << endl;
                         sane_cancel(s_handle);
                         read_status = READ_ERROR;
                         return;
@@ -1113,7 +1133,8 @@ void SaneWidget::processData()
             }
             else 
             {
-                printf("Only 8-bit colors are supported!\n");
+                kDebug() << "Only 8-bit colors are currently supported!" 
+                         << endl;
                 sane_cancel(s_handle);
                 read_status = READ_ERROR;
                 return;
@@ -1127,15 +1148,15 @@ void SaneWidget::processData()
                 {
                     if (pixel_y >= params.lines) 
                     {
-                        printf("reached image height before EOF\n");
+                        kDebug() << "reached image height before EOF" << endl;
                         sane_cancel(s_handle);
                         read_status = READ_ERROR;
                         return;
                     }
                     scan_img->setPixel(pixel_x, pixel_y,
-                                     qRgb(img_data[i],
-                                          img_data[i],
-                                          img_data[i]));
+                                       qRgb(img_data[i],
+                                            img_data[i],
+                                            img_data[i]));
                     pixel_x++;
                     if (pixel_x >= params.pixels_per_line) 
                     {
@@ -1150,7 +1171,7 @@ void SaneWidget::processData()
                 {
                     if (pixel_y >= params.lines) 
                     {
-                        printf("reached image height before EOF\n");
+                        kDebug() << "reached image height before EOF" << endl;
                         sane_cancel(s_handle);
                         read_status = READ_ERROR;
                         return;
@@ -1178,7 +1199,8 @@ void SaneWidget::processData()
             }
             else 
             {
-                printf("Only 1 and 8-bit colors are supported for grayscale!\n");
+                kDebug() << "Only 1 and 8-bit colors are supported "
+                            "for grayscale!" << endl;
                 sane_cancel(s_handle);
                 read_status = READ_ERROR;
                 return;
@@ -1230,7 +1252,8 @@ void SaneWidget::processData()
             break;
         */
         default :
-            printf("This frame format (%d) is not yet suppoeted!\n", params.format);
+            kDebug() << "This frame format ( " << params.format
+                     << ") is not yet suppoeted!" << endl;
             sane_cancel(s_handle);
             read_status = READ_ERROR;
             return;
