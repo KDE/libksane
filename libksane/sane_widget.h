@@ -33,7 +33,6 @@
 #include <QScrollArea>
 #include <QWidget>
 #include <QString>
-#include <QPushButton>
 #include <QToolBar>
 #include <QTimer>
 
@@ -47,6 +46,8 @@ extern "C"
 // Local includes.
 
 #include "libksane_export.h"
+
+class QPushButton;
 
 namespace KSaneIface
 {

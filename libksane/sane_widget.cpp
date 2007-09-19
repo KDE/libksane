@@ -40,11 +40,13 @@ extern "C"
 #include <QApplication>
 #include <QVarLengthArray>
 #include <QComboBox>
+#include <QPushButton>
 
 // KDE includes
 
 #include <klocale.h>
 #include <kdebug.h>
+#include <kiconloader.h>
 
 // Local includes.
 
@@ -264,19 +266,42 @@ bool SaneWidget::openDevice(const QString &device_name)
              this, SLOT(handleSelection(float,float,float,float)));
     pr_img = preview->getImage();
 
-    z_in_btn  = new QPushButton(i18n("Zoom In"));
-    z_out_btn = new QPushButton(i18n("Zoom Out"));
-    z_sel_btn = new QPushButton(i18n("Zoom to Selection"));
-    z_fit_btn = new QPushButton(i18n("Zoom to Fit"));
-    prev_btn  = new QPushButton(i18n("Preview"));;
-    scan_btn  = new QPushButton(i18n("Final Scan"));
+    z_in_btn  = new QPushButton();
+    z_in_btn->setIcon(SmallIcon("zoom-in"));
+    z_in_btn->setToolTip(i18n("Zoom in preview image"));
+    z_out_btn = new QPushButton();
+    z_out_btn->setIcon(SmallIcon("zoom-out"));
+    z_out_btn->setToolTip(i18n("Zoom out preview image"));
+    z_sel_btn = new QPushButton();
+    z_sel_btn->setIcon(SmallIcon("file-find"));
+    z_sel_btn->setToolTip(i18n("Zoom to selection of preview image"));
+    z_fit_btn = new QPushButton();
+    z_fit_btn->setIcon(SmallIcon("zoom-best-fit"));
+    z_fit_btn->setToolTip(i18n("Zoom to fit preview image"));
+    prev_btn  = new QPushButton();
+    prev_btn->setIcon(SmallIcon("stamp"));
+    prev_btn->setToolTip(i18n("Scan preview image from device"));
+    scan_btn  = new QPushButton();
+    scan_btn->setIcon(SmallIcon("scanner"));
+    scan_btn->setToolTip(i18n("Scan final image from device"));
 
-    connect(z_in_btn, SIGNAL(clicked()), preview, SLOT(zoomIn()));
-    connect(z_out_btn, SIGNAL(clicked()), preview, SLOT(zoomOut()));
-    connect(z_sel_btn, SIGNAL(clicked()), preview, SLOT(zoomSel()));
-    connect(z_fit_btn, SIGNAL(clicked()), preview, SLOT(zoom2Fit()));
-    connect (scan_btn, SIGNAL(clicked()), this, SLOT(scanFinal()));
-    connect (prev_btn, SIGNAL(clicked()), this, SLOT(scanPreview()));
+    connect(z_in_btn, SIGNAL(clicked()), 
+            preview, SLOT(zoomIn()));
+
+    connect(z_out_btn, SIGNAL(clicked()), 
+            preview, SLOT(zoomOut()));
+
+    connect(z_sel_btn, SIGNAL(clicked()), 
+            preview, SLOT(zoomSel()));
+
+    connect(z_fit_btn, SIGNAL(clicked()), 
+            preview, SLOT(zoom2Fit()));
+
+    connect (scan_btn, SIGNAL(clicked()), 
+             this, SLOT(scanFinal()));
+
+    connect (prev_btn, SIGNAL(clicked()), 
+             this, SLOT(scanPreview()));
 
     QHBoxLayout *zoom_layout = new QHBoxLayout;
 
