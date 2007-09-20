@@ -77,6 +77,9 @@ public:
     bool    openDevice(const QString &device_name);
     QImage *getFinalImage();
 
+    QString make() const;
+    QString model() const;
+
     bool setIconColorMode(const QIcon &icon);
     bool setIconGrayMode(const QIcon &icon);
     bool setIconBWMode(const QIcon &icon);
@@ -123,6 +126,8 @@ private:
     SANE_Handle         s_handle;
     QString             devname;
     QString             modelname;
+    QString             m_make;
+    QString             m_model;
 
     // Option variables
     QScrollArea        *opt_area;

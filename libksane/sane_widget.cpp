@@ -113,6 +113,16 @@ SaneWidget::~SaneWidget()
     sane_exit();
 }
 
+QString SaneWidget::make() const
+{
+    return m_make;
+}
+
+QString SaneWidget::model() const
+{
+    return m_model;
+}
+
 QString SaneWidget::selectDevice(QWidget* parent)
 {
     int i=0;
@@ -182,6 +192,8 @@ bool SaneWidget::openDevice(const QString &device_name)
         if (QString(dev_list[i]->name) == device_name) 
         {
             modelname = QString(dev_list[i]->vendor) + " " + QString(dev_list[i]->model);
+            m_make    = QString(dev_list[i]->vendor);
+            m_model   = QString(dev_list[i]->model);
             break;
         }
         i++;
