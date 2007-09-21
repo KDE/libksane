@@ -183,12 +183,12 @@ QString SaneWidget::selectDevice(QWidget* parent)
 
 bool SaneWidget::openDevice(const QString &device_name)
 {
-    SANE_Status status;
-    int i=0;
-    const SANE_Option_Descriptor *num_option_d;
-    SANE_Word num_sane_options;
-    SANE_Int res;
-    SANE_Device const **dev_list;
+    int                            i=0;
+    const SANE_Option_Descriptor  *num_option_d;
+    SANE_Status                    status;
+    SANE_Word                      num_sane_options;
+    SANE_Int                       res;
+    SANE_Device const            **dev_list;
 
     // get the device list to get the vendor and model info
     status = sane_get_devices(&dev_list, SANE_TRUE);
@@ -250,8 +250,11 @@ bool SaneWidget::openDevice(const QString &device_name)
     // do the connections of the option parameters
     for (i=1; i<optList.size(); i++) 
     {
-        connect (optList.at(i), SIGNAL(optsNeedReload()), this, SLOT(optReload()));
-        connect (optList.at(i), SIGNAL(valsNeedReload()), this, SLOT(scheduleValReload()));
+        connect (optList.at(i), SIGNAL(optsNeedReload()), 
+                 this, SLOT(optReload()));
+
+        connect (optList.at(i), SIGNAL(valsNeedReload()), 
+                 this, SLOT(scheduleValReload()));
     }
 
     // create the layout
@@ -443,22 +446,26 @@ void SaneWidget::createOptInterface()
     if ((option = getOption(SANE_NAME_SCAN_TL_X)) != 0) 
     {
         opt_tl_x = option;
-        connect (option, SIGNAL(fValueRead(float)), this, SLOT(setTLX(float)));
+        connect (option, SIGNAL(fValueRead(float)), 
+                 this, SLOT(setTLX(float)));
     }
     if ((option = getOption(SANE_NAME_SCAN_TL_Y)) != 0) 
     {
         opt_tl_y = option;
-        connect (option, SIGNAL(fValueRead(float)), this, SLOT(setTLY(float)));
+        connect (option, SIGNAL(fValueRead(float)), 
+                 this, SLOT(setTLY(float)));
     }
     if ((option = getOption(SANE_NAME_SCAN_BR_X)) != 0) 
     {
         opt_br_x = option;
-        connect (option, SIGNAL(fValueRead(float)), this, SLOT(setBRX(float)));
+        connect (option, SIGNAL(fValueRead(float)), 
+                 this, SLOT(setBRX(float)));
     }
     if ((option = getOption(SANE_NAME_SCAN_BR_Y)) != 0) 
     {
         opt_br_y = option;
-        connect (option, SIGNAL(fValueRead(float)), this, SLOT(setBRY(float)));
+        connect (option, SIGNAL(fValueRead(float)), 
+                 this, SLOT(setBRY(float)));
     }
 
     // Color Options Frame
@@ -519,18 +526,26 @@ void SaneWidget::createOptInterface()
                                   QString(SANE_TITLE_GAMMA_VECTOR),
                                   opt_gam_r->lgamma->size());
         color_lay->addWidget(lgamma);
+
         connect(lgamma, SIGNAL(gammaChanged(int,int,int)),
                 opt_gam_r->lgamma, SLOT(setValues(int,int,int)));
+
         connect(lgamma, SIGNAL(gammaChanged(int,int,int)),
                 opt_gam_g->lgamma, SLOT(setValues(int,int,int)));
+
         connect(lgamma, SIGNAL(gammaChanged(int,int,int)),
                 opt_gam_b->lgamma, SLOT(setValues(int,int,int)));
 
         QCheckBox *split_gam_btn = new QCheckBox(i18n("Separate color intensity tables"),
                                                  opt_container);
         color_lay->addWidget(split_gam_btn);
-        connect (split_gam_btn, SIGNAL(toggled(bool)), gamma_frm, SLOT(setVisible(bool)));
-        connect (split_gam_btn, SIGNAL(toggled(bool)), lgamma, SLOT(setHidden(bool)));
+
+        connect (split_gam_btn, SIGNAL(toggled(bool)), 
+                 gamma_frm, SLOT(setVisible(bool)));
+
+        connect (split_gam_btn, SIGNAL(toggled(bool)), 
+                 lgamma, SLOT(setHidden(bool)));
+
         gamma_frm->hide();
     }
 
@@ -576,7 +591,8 @@ void SaneWidget::createOptInterface()
     }
 
     // connect showing/hiding finctionality
-    connect (opt_level, SIGNAL(activated(int)), this, SLOT(opt_level_change(int)));
+    connect (opt_level, SIGNAL(activated(int)), 
+             this, SLOT(opt_level_change(int)));
 
     // add a stretch to the end to ceep the parameters at the top
     opt_layout->addStretch();
@@ -812,7 +828,8 @@ void SaneWidget::updatePreviewSize()
         status = sane_get_parameters(s_handle, &params);
         if (status != SANE_STATUS_GOOD) 
         {
-            printf("ERROR status=%s\n", sane_strstatus(status));
+            kDebug() << "ERROR: status="
+                     << sane_strstatus(status) << endl;
             return;
         }
         //printf("dpi = %d\n", dpi);
@@ -905,7 +922,8 @@ void SaneWidget::scanPreview()
         status = sane_get_parameters(s_handle, &params);
         if (status != SANE_STATUS_GOOD) 
         {
-            printf("ERROR status=%s\n", sane_strstatus(status));
+            kDebug() << "ERROR: status="
+                     << sane_strstatus(status) << endl;
             return;
         }
         //printf("dpi = %d\n", dpi);
@@ -926,7 +944,9 @@ void SaneWidget::scanPreview()
     status = sane_start(s_handle);
     if (status != SANE_STATUS_GOOD) 
     {
-        printf("sane_start ERROR: status=%s\n", sane_strstatus(status));
+        kDebug() << "sane_start ERROR: status="
+                 << sane_strstatus(status) << endl;
+
         sane_cancel(s_handle);
         return;
     }
@@ -934,7 +954,8 @@ void SaneWidget::scanPreview()
     status = sane_get_parameters(s_handle, &params);
     if (status != SANE_STATUS_GOOD) 
     {
-        printf("sane_get_parameters ERROR: status=%s\n", sane_strstatus(status));
+        kDebug() << "sane_get_parameters ERROR: status="
+                 << sane_strstatus(status) << endl;
         sane_cancel(s_handle);
         return;
     }
