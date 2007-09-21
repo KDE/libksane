@@ -5,7 +5,9 @@ FIND_PACKAGE(KDE4 REQUIRED)
 INCLUDE (KDE4Defaults)
 INCLUDE (MacroLibrary)
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules )
+if(NOT SANE_FOUND)
 FIND_PACKAGE(Sane REQUIRED)
+endif(NOT SANE_FOUND)
 # =======================================================
 # Informations to update before to release this library.
 
