@@ -169,7 +169,7 @@ QString SaneWidget::selectDevice(QWidget* parent)
 
     if ((i < 0) || (i >= num_scaners)) 
     {
-        return QString("");
+        return QString();
     }
 
     return QString(dev_list[i]->name);
