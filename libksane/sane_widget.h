@@ -54,6 +54,7 @@ namespace KSaneIface
 
 class SaneOption;
 class PreviewArea;
+class SaneWidgetPriv;
 
 typedef enum
 {
@@ -120,55 +121,7 @@ private:
 
 private:
 
-    // device info
-    SANE_Handle         m_saneHandle;
-    QString             m_modelName;
-    QString             m_make;
-    QString             m_model;
-
-    // Option variables
-    QScrollArea        *m_optArea;
-    QList<SaneOption*>  m_optList;
-    SaneOption         *m_optMode;
-    SaneOption         *m_optDepth;
-    SaneOption         *m_optRes;
-    SaneOption         *m_optResY;
-    SaneOption         *m_optTl;
-    SaneOption         *m_optTlY;
-    SaneOption         *m_optBrX;
-    SaneOption         *m_optBrY;
-    SaneOption         *m_optGamR;
-    SaneOption         *m_optGamG;
-    SaneOption         *m_optGamB;
-    QWidget            *m_colorOpts;
-    QWidget            *m_remainOpts;
-    QTimer              m_rValTmr;
-
-    QPushButton        *m_scanBtn;
-    QPushButton        *m_prevBtn;
-
-    QPushButton        *m_zInBtn;
-    QPushButton        *m_zOutBtn;
-    QPushButton        *m_zSelBtn;
-    QPushButton        *m_zFitBtn;
-
-    // preview variables
-    PreviewArea        *m_preview;
-    QImage             *m_prImg;
-    float               m_previewWidth;
-    float               m_previewHeight;
-
-    // general scanning
-    unsigned int        m_pxCIndex;
-    int                 m_progress;
-    int                 m_pixelX;
-    int                 m_pixelY;
-    SANE_Parameters     m_params;
-    SANE_Byte           m_imgData[IMG_DATA_R_SIZE];
-    SANE_Byte           m_pxColors[3];
-    ReadStatus          m_readStatus;
-    QImage             *m_scanImg;
-    QImage              m_theImg;
+    SaneWidgetPriv* d;
 };
 
 }  // NameSpace KSaneIface
