@@ -127,31 +127,30 @@ private:
     QString             m_model;
 
     // Option variables
-    QScrollArea        *opt_area;
-    bool                options_read;
-    QList<SaneOption *> optList;
-    SaneOption         *opt_mode;
-    SaneOption         *opt_depth;
-    SaneOption         *opt_res;
-    SaneOption         *opt_res_y;
-    SaneOption         *opt_tl_x;
-    SaneOption         *opt_tl_y;
-    SaneOption         *opt_br_x;
-    SaneOption         *opt_br_y;
-    QWidget            *color_opts;
-    QWidget            *remain_opts;
-    SaneOption         *opt_gam_r;
-    SaneOption         *opt_gam_g;
-    SaneOption         *opt_gam_b;
-    QTimer              r_val_tmr;
+    QScrollArea        *m_optArea;
+    QList<SaneOption*>  m_optList;
+    SaneOption         *m_optMode;
+    SaneOption         *m_optDepth;
+    SaneOption         *m_optRes;
+    SaneOption         *m_optResY;
+    SaneOption         *m_optTl;
+    SaneOption         *m_optTlY;
+    SaneOption         *m_optBrX;
+    SaneOption         *m_optBrY;
+    SaneOption         *m_optGamR;
+    SaneOption         *m_optGamG;
+    SaneOption         *m_optGamB;
+    QWidget            *m_colorOpts;
+    QWidget            *m_remainOpts;
+    QTimer              m_rValTmr;
 
-    QPushButton        *scan_btn;
-    QPushButton        *prev_btn;
+    QPushButton        *m_scanBtn;
+    QPushButton        *m_prevBtn;
 
-    QPushButton        *z_in_btn;
-    QPushButton        *z_out_btn;
-    QPushButton        *z_sel_btn;
-    QPushButton        *z_fit_btn;
+    QPushButton        *m_zInBtn;
+    QPushButton        *m_zOutBtn;
+    QPushButton        *m_zSelBtn;
+    QPushButton        *m_zFitBtn;
 
     // preview variables
     PreviewArea        *preview;

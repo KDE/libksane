@@ -66,27 +66,35 @@ namespace KSaneIface
 SaneWidget::SaneWidget(QWidget* parent)
           : QWidget(parent)
 {
-    SANE_Int version;
+    m_optArea     = 0;
+    m_optMode     = 0;
+    m_optDepth    = 0;
+    m_optRes      = 0;
+    m_optResY     = 0;
+    m_optTl       = 0;
+    m_optTlY      = 0;
+    m_optBrX      = 0;
+    m_optBrY      = 0;
+    m_optGamR     = 0;
+    m_optGamG     = 0;
+    m_optGamB     = 0;
+    m_colorOpts   = 0;
+    m_remainOpts  = 0;
+    m_scanBtn     = 0;
+    m_prevBtn     = 0;
+    m_zInBtn      = 0;
+    m_zOutBtn     = 0;
+    m_zSelBtn     = 0;
+    m_zFitBtn     = 0;
 
     previewWidth  = 0;
     previewHeight = 0;
     read_status   = READ_NOT_READING;
     px_c_index    = 0;
-    opt_area      = 0;
-    opt_tl_x      = 0;
-    opt_tl_y      = 0;
-    opt_br_x      = 0;
-    opt_br_y      = 0;
-    opt_res       = 0;
-    opt_res_y     = 0;
-    opt_gam_r     = 0;
-    opt_gam_g     = 0;
-    opt_gam_b     = 0;
-    color_opts    = 0;
-    remain_opts   = 0;
     pr_img        = 0;
     the_img       = QImage(10, 10, QImage::Format_RGB32);
 
+    SANE_Int    version;
     SANE_Status status;
     status = sane_init(&version, 0);
     if (status != SANE_STATUS_GOOD) 
@@ -101,15 +109,15 @@ SaneWidget::SaneWidget(QWidget* parent)
                  << SANE_VERSION_MINOR(version) << "."
                  << SANE_VERSION_BUILD(version) << endl;
     }
-    r_val_tmr.setSingleShot(true);
+    m_rValTmr.setSingleShot(true);
 
-    connect (&r_val_tmr, SIGNAL(timeout()), 
+    connect (&m_rValTmr, SIGNAL(timeout()), 
              this, SLOT(valReload()));
 }
 
 SaneWidget::~SaneWidget()
 {
-    optList.clear();
+    m_optList.clear();
     sane_exit();
 }
 
@@ -242,16 +250,16 @@ bool SaneWidget::openDevice(const QString &device_name)
     // read the rest of the options
     for (i=1; i<num_sane_options; i++) 
     {
-        optList.append(new SaneOption(m_saneHandle, i));
+        m_optList.append(new SaneOption(m_saneHandle, i));
     }
 
     // do the connections of the option parameters
-    for (i=1; i<optList.size(); i++) 
+    for (i=1; i<m_optList.size(); i++) 
     {
-        connect (optList.at(i), SIGNAL(optsNeedReload()), 
+        connect (m_optList.at(i), SIGNAL(optsNeedReload()), 
                  this, SLOT(optReload()));
 
-        connect (optList.at(i), SIGNAL(valsNeedReload()), 
+        connect (m_optList.at(i), SIGNAL(valsNeedReload()), 
                  this, SLOT(scheduleValReload()));
     }
 
@@ -269,10 +277,10 @@ bool SaneWidget::openDevice(const QString &device_name)
     base_layout->addLayout(pr_layout, 100);
 
     // Create Option Scroll Area
-    opt_area = new QScrollArea(this);
-    opt_area->setWidgetResizable(true);
-    opt_area->setFrameShape(QFrame::NoFrame);
-    opt_lay->addWidget(opt_area, 0);
+    m_optArea = new QScrollArea(this);
+    m_optArea->setWidgetResizable(true);
+    m_optArea->setFrameShape(QFrame::NoFrame);
+    opt_lay->addWidget(m_optArea, 0);
     opt_lay->setSpacing(2);
     opt_lay->setMargin(0);
 
@@ -285,41 +293,41 @@ bool SaneWidget::openDevice(const QString &device_name)
              this, SLOT(handleSelection(float,float,float,float)));
     pr_img = preview->getImage();
 
-    z_in_btn  = new QPushButton();
-    z_in_btn->setIcon(SmallIcon("zoom-in"));
-    z_in_btn->setToolTip(i18n("Zoom in preview image"));
-    z_out_btn = new QPushButton();
-    z_out_btn->setIcon(SmallIcon("zoom-out"));
-    z_out_btn->setToolTip(i18n("Zoom out preview image"));
-    z_sel_btn = new QPushButton();
-    z_sel_btn->setIcon(SmallIcon("file-find"));
-    z_sel_btn->setToolTip(i18n("Zoom to selection of preview image"));
-    z_fit_btn = new QPushButton();
-    z_fit_btn->setIcon(SmallIcon("zoom-best-fit"));
-    z_fit_btn->setToolTip(i18n("Zoom to fit preview image"));
-    prev_btn  = new QPushButton();
-    prev_btn->setIcon(SmallIcon("stamp"));
-    prev_btn->setToolTip(i18n("Scan preview image from device"));
-    scan_btn  = new QPushButton();
-    scan_btn->setIcon(SmallIcon("scanner"));
-    scan_btn->setToolTip(i18n("Scan final image from device"));
+    m_zInBtn  = new QPushButton();
+    m_zInBtn->setIcon(SmallIcon("zoom-in"));
+    m_zInBtn->setToolTip(i18n("Zoom in preview image"));
+    m_zOutBtn = new QPushButton();
+    m_zOutBtn->setIcon(SmallIcon("zoom-out"));
+    m_zOutBtn->setToolTip(i18n("Zoom out preview image"));
+    m_zSelBtn = new QPushButton();
+    m_zSelBtn->setIcon(SmallIcon("file-find"));
+    m_zSelBtn->setToolTip(i18n("Zoom to selection of preview image"));
+    m_zFitBtn = new QPushButton();
+    m_zFitBtn->setIcon(SmallIcon("zoom-best-fit"));
+    m_zFitBtn->setToolTip(i18n("Zoom to fit preview image"));
+    m_prevBtn  = new QPushButton();
+    m_prevBtn->setIcon(SmallIcon("stamp"));
+    m_prevBtn->setToolTip(i18n("Scan preview image from device"));
+    m_scanBtn  = new QPushButton();
+    m_scanBtn->setIcon(SmallIcon("scanner"));
+    m_scanBtn->setToolTip(i18n("Scan final image from device"));
 
-    connect(z_in_btn, SIGNAL(clicked()), 
+    connect(m_zInBtn, SIGNAL(clicked()), 
             preview, SLOT(zoomIn()));
 
-    connect(z_out_btn, SIGNAL(clicked()), 
+    connect(m_zOutBtn, SIGNAL(clicked()), 
             preview, SLOT(zoomOut()));
 
-    connect(z_sel_btn, SIGNAL(clicked()), 
+    connect(m_zSelBtn, SIGNAL(clicked()), 
             preview, SLOT(zoomSel()));
 
-    connect(z_fit_btn, SIGNAL(clicked()), 
+    connect(m_zFitBtn, SIGNAL(clicked()), 
             preview, SLOT(zoom2Fit()));
 
-    connect (scan_btn, SIGNAL(clicked()), 
+    connect (m_scanBtn, SIGNAL(clicked()), 
              this, SLOT(scanFinal()));
 
-    connect (prev_btn, SIGNAL(clicked()), 
+    connect (m_prevBtn, SIGNAL(clicked()), 
              this, SLOT(scanPreview()));
 
     QHBoxLayout *zoom_layout = new QHBoxLayout;
@@ -327,20 +335,20 @@ bool SaneWidget::openDevice(const QString &device_name)
     pr_layout->addWidget(preview, 100);
     pr_layout->addLayout(zoom_layout, 0);
 
-    zoom_layout->addWidget(z_in_btn);
-    zoom_layout->addWidget(z_out_btn);
-    zoom_layout->addWidget(z_sel_btn);
-    zoom_layout->addWidget(z_fit_btn);
+    zoom_layout->addWidget(m_zInBtn);
+    zoom_layout->addWidget(m_zOutBtn);
+    zoom_layout->addWidget(m_zSelBtn);
+    zoom_layout->addWidget(m_zFitBtn);
     zoom_layout->addStretch();
-    zoom_layout->addWidget(prev_btn);
-    zoom_layout->addWidget(scan_btn);
+    zoom_layout->addWidget(m_prevBtn);
+    zoom_layout->addWidget(m_scanBtn);
 
     //QHBoxLayout *scan_layout = new QHBoxLayout;
     //opt_lay->addLayout(scan_layout, 0);
 
     //scan_layout->addStretch();
-    //scan_layout->addWidget(prev_btn);
-    //scan_layout->addWidget(scan_btn);
+    //scan_layout->addWidget(m_prevBtn);
+    //scan_layout->addWidget(m_scanBtn);
 
     // try to set SaneWidget default values
     setDefaultValues();
@@ -358,8 +366,8 @@ bool SaneWidget::openDevice(const QString &device_name)
 void SaneWidget::createOptInterface()
 {
     // create the container widget
-    QWidget *opt_container = new QWidget(opt_area);
-    opt_area->setWidget(opt_container);
+    QWidget *opt_container = new QWidget(m_optArea);
+    m_optArea->setWidget(opt_container);
     QVBoxLayout *opt_layout = new QVBoxLayout(opt_container);
     opt_layout->setSpacing(4);
     opt_layout->setMargin(3);
@@ -404,14 +412,14 @@ void SaneWidget::createOptInterface()
     // Scan mode
     if ((option = getOption(SANE_NAME_SCAN_MODE)) != 0) 
     {
-        opt_mode = option;
+        m_optMode = option;
         option->createWidget(opt_container);
         opt_layout->addWidget(option->widget());
     }
     // Bitdepth
     if ((option = getOption(SANE_NAME_BIT_DEPTH)) != 0) 
     {
-        opt_depth = option;
+        m_optDepth = option;
         option->createWidget(opt_container);
         opt_layout->addWidget(option->widget());
     }
@@ -424,58 +432,58 @@ void SaneWidget::createOptInterface()
     // Resolution
     if ((option = getOption(SANE_NAME_SCAN_RESOLUTION)) != 0) 
     {
-        opt_res = option;
+        m_optRes = option;
         option->createWidget(opt_container);
         opt_layout->addWidget(option->widget());
     }
     else if ((option = getOption(SANE_NAME_SCAN_X_RESOLUTION)) != 0) 
     {
-        opt_res = option;
+        m_optRes = option;
         option->createWidget(opt_container);
         opt_layout->addWidget(option->widget());
     }
     if ((option = getOption(SANE_NAME_SCAN_Y_RESOLUTION)) != 0) 
     {
-        opt_res_y = option;
+        m_optResY = option;
         option->createWidget(opt_container);
         opt_layout->addWidget(option->widget());
     }
     // scan area
     if ((option = getOption(SANE_NAME_SCAN_TL_X)) != 0) 
     {
-        opt_tl_x = option;
+        m_optTl = option;
         connect (option, SIGNAL(fValueRead(float)), 
                  this, SLOT(setTLX(float)));
     }
     if ((option = getOption(SANE_NAME_SCAN_TL_Y)) != 0) 
     {
-        opt_tl_y = option;
+        m_optTlY = option;
         connect (option, SIGNAL(fValueRead(float)), 
                  this, SLOT(setTLY(float)));
     }
     if ((option = getOption(SANE_NAME_SCAN_BR_X)) != 0) 
     {
-        opt_br_x = option;
+        m_optBrX = option;
         connect (option, SIGNAL(fValueRead(float)), 
                  this, SLOT(setBRX(float)));
     }
     if ((option = getOption(SANE_NAME_SCAN_BR_Y)) != 0) 
     {
-        opt_br_y = option;
+        m_optBrY = option;
         connect (option, SIGNAL(fValueRead(float)), 
                  this, SLOT(setBRY(float)));
     }
 
     // Color Options Frame
-    color_opts = new QWidget(opt_container);
-    opt_layout->addWidget(color_opts);
-    QVBoxLayout *color_lay = new QVBoxLayout(color_opts);
+    m_colorOpts = new QWidget(opt_container);
+    opt_layout->addWidget(m_colorOpts);
+    QVBoxLayout *color_lay = new QVBoxLayout(m_colorOpts);
     color_lay->setSpacing(2);
     color_lay->setMargin(0);
 
     // add separator line
     color_lay->addSpacing(6);
-    QFrame *line1 = new QFrame(color_opts);
+    QFrame *line1 = new QFrame(m_colorOpts);
     line1->setFrameShape(QFrame::HLine);
     line1->setFrameShadow(QFrame::Sunken);
     color_lay->addWidget(line1);
@@ -483,17 +491,17 @@ void SaneWidget::createOptInterface()
 
     if ((option = getOption(SANE_NAME_BRIGHTNESS)) != 0) 
     {
-        option->createWidget(color_opts);
+        option->createWidget(m_colorOpts);
         color_lay->addWidget(option->widget());
     }
     if ((option = getOption(SANE_NAME_CONTRAST)) != 0) 
     {
-        option->createWidget(color_opts);
+        option->createWidget(m_colorOpts);
         color_lay->addWidget(option->widget());
     }
 
     // gamma tables
-    QWidget *gamma_frm = new QWidget(color_opts);
+    QWidget *gamma_frm = new QWidget(m_colorOpts);
     color_lay->addWidget(gamma_frm);
     QVBoxLayout *gam_frm_l = new QVBoxLayout(gamma_frm);
     gam_frm_l->setSpacing(2);
@@ -501,38 +509,38 @@ void SaneWidget::createOptInterface()
 
     if ((option = getOption(SANE_NAME_GAMMA_VECTOR_R)) != 0) 
     {
-        opt_gam_r= option;
+        m_optGamR= option;
         option->createWidget(gamma_frm);
         gam_frm_l->addWidget(option->widget());
     }
     if ((option = getOption(SANE_NAME_GAMMA_VECTOR_G)) != 0) 
     {
-        opt_gam_g= option;
+        m_optGamG= option;
         option->createWidget(gamma_frm);
         gam_frm_l->addWidget(option->widget());
     }
     if ((option = getOption(SANE_NAME_GAMMA_VECTOR_B)) != 0) 
     {
-        opt_gam_b= option;
+        m_optGamB= option;
         option->createWidget(gamma_frm);
         gam_frm_l->addWidget(option->widget());
     }
 
-    if ((opt_gam_r != 0) && (opt_gam_g != 0) && (opt_gam_b != 0)) 
+    if ((m_optGamR != 0) && (m_optGamG != 0) && (m_optGamB != 0)) 
     {
-        LabeledGamma *lgamma = new LabeledGamma(color_opts,
+        LabeledGamma *lgamma = new LabeledGamma(m_colorOpts,
                                   QString(SANE_TITLE_GAMMA_VECTOR),
-                                  opt_gam_r->lgamma->size());
+                                  m_optGamR->lgamma->size());
         color_lay->addWidget(lgamma);
 
         connect(lgamma, SIGNAL(gammaChanged(int,int,int)),
-                opt_gam_r->lgamma, SLOT(setValues(int,int,int)));
+                m_optGamR->lgamma, SLOT(setValues(int,int,int)));
 
         connect(lgamma, SIGNAL(gammaChanged(int,int,int)),
-                opt_gam_g->lgamma, SLOT(setValues(int,int,int)));
+                m_optGamG->lgamma, SLOT(setValues(int,int,int)));
 
         connect(lgamma, SIGNAL(gammaChanged(int,int,int)),
-                opt_gam_b->lgamma, SLOT(setValues(int,int,int)));
+                m_optGamB->lgamma, SLOT(setValues(int,int,int)));
 
         QCheckBox *split_gam_btn = new QCheckBox(i18n("Separate color intensity tables"),
                                                  opt_container);
@@ -549,42 +557,42 @@ void SaneWidget::createOptInterface()
 
     if ((option = getOption(SANE_NAME_BLACK_LEVEL)) != 0) 
     {
-        option->createWidget(color_opts);
+        option->createWidget(m_colorOpts);
         color_lay->addWidget(option->widget());
     }
     if ((option = getOption(SANE_NAME_WHITE_LEVEL)) != 0) 
     {
-        option->createWidget(color_opts);
+        option->createWidget(m_colorOpts);
         color_lay->addWidget(option->widget());
     }
 
     // Remaining (un known) Options Frame
-    remain_opts = new QWidget(opt_container);
-    opt_layout->addWidget(remain_opts);
-    QVBoxLayout *remain_lay = new QVBoxLayout(remain_opts);
+    m_remainOpts = new QWidget(opt_container);
+    opt_layout->addWidget(m_remainOpts);
+    QVBoxLayout *remain_lay = new QVBoxLayout(m_remainOpts);
     remain_lay->setSpacing(2);
     remain_lay->setMargin(0);
 
     // add separator line
     remain_lay->addSpacing(4);
-    QFrame *line2 = new QFrame(remain_opts);
+    QFrame *line2 = new QFrame(m_remainOpts);
     line2->setFrameShape(QFrame::HLine);
     line2->setFrameShadow(QFrame::Sunken);
     remain_lay->addWidget(line2);
     remain_lay->addSpacing(4);
 
     // add remaining parameters
-    for (int i=0; i<optList.size(); i++) 
+    for (int i=0; i<m_optList.size(); i++) 
     {
-        if ((optList.at(i)->widget() == 0) &&
-             (optList.at(i)->name() != SANE_NAME_SCAN_TL_X) &&
-             (optList.at(i)->name() != SANE_NAME_SCAN_TL_Y) &&
-             (optList.at(i)->name() != SANE_NAME_SCAN_BR_X) &&
-             (optList.at(i)->name() != SANE_NAME_SCAN_BR_Y) &&
-             (optList.at(i)->sw_type() != SW_GROUP))
+        if ((m_optList.at(i)->widget() == 0) &&
+             (m_optList.at(i)->name() != SANE_NAME_SCAN_TL_X) &&
+             (m_optList.at(i)->name() != SANE_NAME_SCAN_TL_Y) &&
+             (m_optList.at(i)->name() != SANE_NAME_SCAN_BR_X) &&
+             (m_optList.at(i)->name() != SANE_NAME_SCAN_BR_Y) &&
+             (m_optList.at(i)->sw_type() != SW_GROUP))
         {
-            optList.at(i)->createWidget(remain_opts);
-            remain_lay->addWidget(optList.at(i)->widget());
+            m_optList.at(i)->createWidget(m_remainOpts);
+            remain_lay->addWidget(m_optList.at(i)->widget());
         }
     }
 
@@ -596,31 +604,31 @@ void SaneWidget::createOptInterface()
     opt_layout->addStretch();
 
     // encsure that you do not get a scrollbar at the bottom of the option of the options
-    opt_area->setMinimumWidth(opt_container->sizeHint().width()+20);
+    m_optArea->setMinimumWidth(opt_container->sizeHint().width()+20);
 
     // this could/should be set by saved settings.
-    color_opts->setVisible(false);
-    remain_opts->setVisible(false);
+    m_colorOpts->setVisible(false);
+    m_remainOpts->setVisible(false);
 }
 
 void SaneWidget::opt_level_change(int level)
 {
-    if (color_opts == 0) return;
-    if (remain_opts == 0) return;
+    if (m_colorOpts == 0) return;
+    if (m_remainOpts == 0) return;
 
     switch (level)
     {
         case 1:
-            color_opts->setVisible(true);
-            remain_opts->setVisible(false);
+            m_colorOpts->setVisible(true);
+            m_remainOpts->setVisible(false);
             break;
         case 2:
-            color_opts->setVisible(true);
-            remain_opts->setVisible(true);
+            m_colorOpts->setVisible(true);
+            m_remainOpts->setVisible(true);
             break;
         default:
-            color_opts->setVisible(false);
-            remain_opts->setVisible(false);
+            m_colorOpts->setVisible(false);
+            m_remainOpts->setVisible(false);
     }
 }
 
@@ -641,15 +649,15 @@ void SaneWidget::setDefaultValues()
     }
 
     // Try to set Scan resolution to 600 DPI
-    if (opt_res != 0) 
+    if (m_optRes != 0) 
     {
-        opt_res->setValue(600);
+        m_optRes->setValue(600);
     }
 }
 
 void SaneWidget::scheduleValReload()
 {
-    r_val_tmr.start(5);
+    m_rValTmr.start(5);
 }
 
 void SaneWidget::optReload()
@@ -657,11 +665,11 @@ void SaneWidget::optReload()
     int i;
     //printf("Reload Options\n");
 
-    for (i=0; i<optList.size(); i++)
+    for (i=0; i<m_optList.size(); i++)
     {
-        optList.at(i)->readOption();
+        m_optList.at(i)->readOption();
         // Also read the values
-        optList.at(i)->readValue();
+        m_optList.at(i)->readValue();
     }
     // estimate the preview size and create an empty image
     // this is done so that you can select scanarea without
@@ -675,13 +683,13 @@ void SaneWidget::valReload()
     QString tmp;
     //printf("Reload Values\n");
 
-    for (i=0; i<optList.size(); i++)
+    for (i=0; i<m_optList.size(); i++)
     {
-        optList.at(i)->readValue();
+        m_optList.at(i)->readValue();
         /*
-        if (optList.at(i)->getValue(&tmp)) {
+        if (m_optList.at(i)->getValue(&tmp)) {
             printf("option(%s)=%s\n",
-                   qPrintable(optList.at(i)->name()),
+                   qPrintable(m_optList.at(i)->name()),
                    qPrintable(tmp));
         }
         */
@@ -692,11 +700,11 @@ SaneOption *SaneWidget::getOption(const QString &name)
 {
     int i;
 
-    for (i=0; i<optList.size(); i++)
+    for (i=0; i<m_optList.size(); i++)
     {
-        if (optList.at(i)->name() == name) 
+        if (m_optList.at(i)->name() == name) 
         {
-            return optList.at(i);
+            return m_optList.at(i);
         }
     }
     return 0;
@@ -708,8 +716,8 @@ void SaneWidget::handleSelection(float tl_x, float tl_y, float br_x, float br_y)
     //printf("handleSelection0: %f %f %f %f\n", tl_x, tl_y, br_x, br_y);
     if ((pr_img->width()==0) || (pr_img->height()==0)) return;
 
-    opt_br_x->getMaxValue(&max_x);
-    opt_br_y->getMaxValue(&max_y);
+    m_optBrX->getMaxValue(&max_x);
+    m_optBrY->getMaxValue(&max_y);
     float ftl_x = tl_x*max_x;
     float ftl_y = tl_y*max_y;
     float fbr_x = br_x*max_x;
@@ -717,10 +725,10 @@ void SaneWidget::handleSelection(float tl_x, float tl_y, float br_x, float br_y)
 
     //printf("handleSelection1: %f %f %f %f\n", ftl_x, ftl_y, fbr_x, fbr_y);
 
-    if (opt_tl_x != 0) opt_tl_x->setValue(ftl_x);
-    if (opt_tl_y != 0) opt_tl_y->setValue(ftl_y);
-    if (opt_br_x != 0) opt_br_x->setValue(fbr_x);
-    if (opt_br_y != 0) opt_br_y->setValue(fbr_y);
+    if (m_optTl != 0) m_optTl->setValue(ftl_x);
+    if (m_optTlY != 0) m_optTlY->setValue(ftl_y);
+    if (m_optBrX != 0) m_optBrX->setValue(fbr_x);
+    if (m_optBrY != 0) m_optBrY->setValue(fbr_y);
 }
 
 void SaneWidget::setTLX(float ftlx) 
@@ -728,7 +736,7 @@ void SaneWidget::setTLX(float ftlx)
     float max, ratio;
 
     //std::cout << "setTLX " << ftlx;
-    opt_br_x->getMaxValue(&max);
+    m_optBrX->getMaxValue(&max);
     ratio = ftlx / max;
     //std::cout << " -> " << ratio << std::endl;
     preview->setTLX(ratio);
@@ -739,7 +747,7 @@ void SaneWidget::setTLY(float ftly)
     float max, ratio;
 
     //std::cout << "setTLY " << ftly;
-    opt_br_y->getMaxValue(&max);
+    m_optBrY->getMaxValue(&max);
     ratio = ftly / max;
     //std::cout << " -> " << ratio << std::endl;
     preview->setTLY(ratio);
@@ -750,7 +758,7 @@ void SaneWidget::setBRX(float fbrx)
     float max, ratio;
 
     //std::cout << "setBRX " << fbrx;
-    opt_br_x->getMaxValue(&max);
+    m_optBrX->getMaxValue(&max);
     ratio = fbrx / max;
     //std::cout << " -> " << ratio << std::endl;
     preview->setBRX(ratio);
@@ -761,7 +769,7 @@ void SaneWidget::setBRY(float fbry)
     float max, ratio;
 
     //std::cout << "setBRY " << fbry;
-    opt_br_y->getMaxValue(&max);
+    m_optBrY->getMaxValue(&max);
     ratio = fbry / max;
     //std::cout << " -> " << ratio << std::endl;
     preview->setBRY(ratio);
@@ -774,13 +782,13 @@ void SaneWidget::updatePreviewSize()
     float max_x=0, max_y=0;
 
     // check if an update is necessary
-    if (opt_br_x != 0) 
+    if (m_optBrX != 0) 
     {
-        opt_br_x->getMaxValue(&max_x);
+        m_optBrX->getMaxValue(&max_x);
     }
-    if (opt_br_y != 0) 
+    if (m_optBrY != 0) 
     {
-        opt_br_y->getMaxValue(&max_y);
+        m_optBrY->getMaxValue(&max_y);
     }
     if ((max_x == previewWidth) && (max_y == previewHeight)) 
     {
@@ -790,22 +798,22 @@ void SaneWidget::updatePreviewSize()
     previewWidth = max_x;
     previewHeight = max_y;
     // set the scan area to the whole area
-    if (opt_tl_x != 0) 
+    if (m_optTl != 0) 
     {
-        opt_tl_x->setValue(0);
+        m_optTl->setValue(0);
     }
-    if (opt_tl_y != 0) 
+    if (m_optTlY != 0) 
     {
-        opt_tl_y->setValue(0);
+        m_optTlY->setValue(0);
     }
 
-    if (opt_br_x != 0) 
+    if (m_optBrX != 0) 
     {
-        opt_br_x->setValue(max_x);
+        m_optBrX->setValue(max_x);
     }
-    if (opt_br_y != 0) 
+    if (m_optBrY != 0) 
     {
-        opt_br_y->setValue(max_y);
+        m_optBrY->setValue(max_y);
     }
 
     // set the resopution to 100 dpi and increase if necessary
@@ -814,13 +822,13 @@ void SaneWidget::updatePreviewSize()
     {
         // Increase the dpi value
         dpi += 100;
-        if (opt_res != 0) 
+        if (m_optRes != 0) 
         {
-            opt_res->setValue(dpi);
+            m_optRes->setValue(dpi);
         }
-        if (opt_res_y != 0) 
+        if (m_optResY != 0) 
         {
-            opt_res_y->setValue(dpi);
+            m_optResY->setValue(dpi);
         }
         //check what image size we would get in a scan
         status = sane_get_parameters(m_saneHandle, &params);
@@ -867,39 +875,39 @@ void SaneWidget::scanPreview()
     //std::cout << "scanPreview" << std::endl;
 
     // store the current settings of parameters to be changed
-    if (opt_depth != 0) opt_depth->storeCurrentData();
-    if (opt_res != 0) opt_res->storeCurrentData();
-    if (opt_res_y != 0) opt_res_y->storeCurrentData();
-    if (opt_tl_x != 0) opt_tl_x->storeCurrentData();
-    if (opt_tl_y != 0) opt_tl_y->storeCurrentData();
-    if (opt_br_x != 0) opt_br_x->storeCurrentData();
-    if (opt_br_y != 0) opt_br_y->storeCurrentData();
+    if (m_optDepth != 0) m_optDepth->storeCurrentData();
+    if (m_optRes != 0) m_optRes->storeCurrentData();
+    if (m_optResY != 0) m_optResY->storeCurrentData();
+    if (m_optTl != 0) m_optTl->storeCurrentData();
+    if (m_optTlY != 0) m_optTlY->storeCurrentData();
+    if (m_optBrX != 0) m_optBrX->storeCurrentData();
+    if (m_optBrY != 0) m_optBrY->storeCurrentData();
 
     // set 8 bits per color if possible
-    if (opt_depth != 0) 
+    if (m_optDepth != 0) 
     {
-        opt_depth->setValue(8);
+        m_optDepth->setValue(8);
     }
 
     // select the whole area
-    if (opt_tl_x != 0) 
+    if (m_optTl != 0) 
     {
-        opt_tl_x->setValue(0);
+        m_optTl->setValue(0);
     }
-    if (opt_tl_y != 0) 
+    if (m_optTlY != 0) 
     {
-        opt_tl_y->setValue(0);
+        m_optTlY->setValue(0);
     }
 
-    if (opt_br_x != 0) 
+    if (m_optBrX != 0) 
     {
-        opt_br_x->getMaxValue(&max);
-        opt_br_x->setValue(max);
+        m_optBrX->getMaxValue(&max);
+        m_optBrX->setValue(max);
     }
-    if (opt_br_y != 0) 
+    if (m_optBrY != 0) 
     {
-        opt_br_y->getMaxValue(&max);
-        opt_br_y->setValue(max);
+        m_optBrY->getMaxValue(&max);
+        m_optBrY->setValue(max);
     }
 
     // set the resopution to 100 dpi and increase if necessary
@@ -908,13 +916,13 @@ void SaneWidget::scanPreview()
     {
         // Increase the dpi value
         dpi += 100;
-        if (opt_res != 0) 
+        if (m_optRes != 0) 
         {
-            opt_res->setValue(dpi);
+            m_optRes->setValue(dpi);
         }
-        if (opt_res_y != 0) 
+        if (m_optResY != 0) 
         {
-            opt_res_y->setValue(dpi);
+            m_optResY->setValue(dpi);
         }
         //check what image size we would get in a scan
         status = sane_get_parameters(m_saneHandle, &params);
@@ -932,9 +940,9 @@ void SaneWidget::scanPreview()
     while ((params.pixels_per_line < 300) || (params.lines < 300));
 
     // execute valReload if there is a pending value reload
-    while (r_val_tmr.isActive()) 
+    while (m_rValTmr.isActive()) 
     {
-        r_val_tmr.stop();
+        m_rValTmr.stop();
         valReload();
     }
 
@@ -1002,13 +1010,13 @@ void SaneWidget::scanPreview()
     preview->updateScaledImg();
 
     // restore the original settings of the changed parameters
-    if (opt_depth != 0) opt_depth->restoreSavedData();
-    if (opt_res != 0) opt_res->restoreSavedData();
-    if (opt_res_y != 0) opt_res_y->restoreSavedData();
-    if (opt_tl_x != 0) opt_tl_x->restoreSavedData();
-    if (opt_tl_y != 0) opt_tl_y->restoreSavedData();
-    if (opt_br_x != 0) opt_br_x->restoreSavedData();
-    if (opt_br_y != 0) opt_br_y->restoreSavedData();
+    if (m_optDepth != 0) m_optDepth->restoreSavedData();
+    if (m_optRes != 0) m_optRes->restoreSavedData();
+    if (m_optResY != 0) m_optResY->restoreSavedData();
+    if (m_optTl != 0) m_optTl->restoreSavedData();
+    if (m_optTlY != 0) m_optTlY->restoreSavedData();
+    if (m_optBrX != 0) m_optBrX->restoreSavedData();
+    if (m_optBrY != 0) m_optBrY->restoreSavedData();
 
     setDisabled(false);
 }
@@ -1020,34 +1028,34 @@ void SaneWidget::scanFinal()
 
     //std::cout << "scanFinal" << std::endl;
 
-    if ((opt_tl_x != 0) && (opt_br_x != 0)) 
+    if ((m_optTl != 0) && (m_optBrX != 0)) 
     {
-        opt_tl_x->getValue(&v1);
-        opt_br_x->getValue(&v2);
+        m_optTl->getValue(&v1);
+        m_optBrX->getValue(&v2);
         if (v1 == v2) 
         {
-            opt_tl_x->setValue(0);
-            opt_br_x->getMaxValue(&v2);
-            opt_br_x->setValue(v2);
+            m_optTl->setValue(0);
+            m_optBrX->getMaxValue(&v2);
+            m_optBrX->setValue(v2);
         }
     }
 
-    if ((opt_tl_y != 0) && (opt_br_y != 0)) 
+    if ((m_optTlY != 0) && (m_optBrY != 0)) 
     {
-        opt_tl_y->getValue(&v1);
-        opt_br_y->getValue(&v2);
+        m_optTlY->getValue(&v1);
+        m_optBrY->getValue(&v2);
         if (v1 == v2) 
         {
-            opt_tl_y->setValue(0);
-            opt_br_y->getMaxValue(&v2);
-            opt_br_y->setValue(v2);
+            m_optTlY->setValue(0);
+            m_optBrY->getMaxValue(&v2);
+            m_optBrY->setValue(v2);
         }
     }
 
     // execute a pending value reload
-    while (r_val_tmr.isActive()) 
+    while (m_rValTmr.isActive()) 
     {
-        r_val_tmr.stop();
+        m_rValTmr.stop();
         valReload();
     }
 
@@ -1352,9 +1360,9 @@ void SaneWidget::scanCancel()
 
 bool SaneWidget::setIconColorMode(const QIcon &icon)
 {
-    if ((opt_mode != 0) && (opt_mode->widget() != 0)) 
+    if ((m_optMode != 0) && (m_optMode->widget() != 0)) 
     {
-        opt_mode->setIconColorMode(icon);
+        m_optMode->setIconColorMode(icon);
         return true;
     }
     return false;
@@ -1362,9 +1370,9 @@ bool SaneWidget::setIconColorMode(const QIcon &icon)
 
 bool SaneWidget::setIconGrayMode(const QIcon &icon)
 {
-    if ((opt_mode != 0) && (opt_mode->widget() != 0)) 
+    if ((m_optMode != 0) && (m_optMode->widget() != 0)) 
     {
-        opt_mode->setIconGrayMode(icon);
+        m_optMode->setIconGrayMode(icon);
         return true;
     }
     return false;
@@ -1372,9 +1380,9 @@ bool SaneWidget::setIconGrayMode(const QIcon &icon)
 
 bool SaneWidget::setIconBWMode(const QIcon &icon)
 {
-    if ((opt_mode != 0) && (opt_mode->widget() != 0)) 
+    if ((m_optMode != 0) && (m_optMode->widget() != 0)) 
     {
-        opt_mode->setIconBWMode(icon);
+        m_optMode->setIconBWMode(icon);
         return true;
     }
     return false;
