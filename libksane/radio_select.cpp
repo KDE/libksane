@@ -43,7 +43,7 @@ RadioSelect::RadioSelect(QWidget *parent)
            : QDialog(parent)
 {
     QVBoxLayout *layout = new QVBoxLayout;
-    this->setLayout(layout);
+    setLayout(layout);
 
     radio_group = new QGroupBox(this);
     layout->addWidget(radio_group, 100);
@@ -75,10 +75,10 @@ int RadioSelect::getSelectedIndex(QWidget *parent,
     int i;
     if (items.size() == 0) 
     {
-        return -1;
+        return -2;
     }
 
-    this->setParent(parent);
+    setParent(parent);
     radio_group->setTitle(group_name);
 
     // Create the RadioButton list
@@ -103,10 +103,10 @@ int RadioSelect::getSelectedIndex(QWidget *parent,
     btn_list.at(radio_index)->toggle();
 
     // show the dialog and get the selection
-    if (this->exec()) 
+    if (exec()) 
     {
         // check which one is selected
-        for (i=0; i < btn_list.size(); i++) 
+        for (i = 0; i < btn_list.size(); i++) 
         {
             if (btn_list.at(i)->isChecked()) break;
         }
@@ -117,10 +117,7 @@ int RadioSelect::getSelectedIndex(QWidget *parent,
         }
         return i;
     }
-    else 
-    {
-        return -1;
-    }
+
     return -1;
 }
 
