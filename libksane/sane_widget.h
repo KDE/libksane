@@ -153,10 +153,10 @@ private:
     QPushButton        *m_zFitBtn;
 
     // preview variables
-    PreviewArea        *preview;
-    QImage             *pr_img;
-    float               previewWidth;
-    float               previewHeight;
+    PreviewArea        *m_preview;
+    QImage             *m_prImg;
+    float               m_previewWidth;
+    float               m_previewHeight;
 
     // general scanning
     SANE_Parameters     params;

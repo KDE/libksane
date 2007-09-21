@@ -66,32 +66,33 @@ namespace KSaneIface
 SaneWidget::SaneWidget(QWidget* parent)
           : QWidget(parent)
 {
-    m_optArea     = 0;
-    m_optMode     = 0;
-    m_optDepth    = 0;
-    m_optRes      = 0;
-    m_optResY     = 0;
-    m_optTl       = 0;
-    m_optTlY      = 0;
-    m_optBrX      = 0;
-    m_optBrY      = 0;
-    m_optGamR     = 0;
-    m_optGamG     = 0;
-    m_optGamB     = 0;
-    m_colorOpts   = 0;
-    m_remainOpts  = 0;
-    m_scanBtn     = 0;
-    m_prevBtn     = 0;
-    m_zInBtn      = 0;
-    m_zOutBtn     = 0;
-    m_zSelBtn     = 0;
-    m_zFitBtn     = 0;
+    m_optArea       = 0;
+    m_optMode       = 0;
+    m_optDepth      = 0;
+    m_optRes        = 0;
+    m_optResY       = 0;
+    m_optTl         = 0;
+    m_optTlY        = 0;
+    m_optBrX        = 0;
+    m_optBrY        = 0;
+    m_optGamR       = 0;
+    m_optGamG       = 0;
+    m_optGamB       = 0;
+    m_colorOpts     = 0;
+    m_remainOpts    = 0;
+    m_scanBtn       = 0;
+    m_prevBtn       = 0;
+    m_zInBtn        = 0;
+    m_zOutBtn       = 0;
+    m_zSelBtn       = 0;
+    m_zFitBtn       = 0;
+    m_preview       = 0;
+    m_prImg         = 0;
+    m_previewWidth  = 0;
+    m_previewHeight = 0;
 
-    previewWidth  = 0;
-    previewHeight = 0;
     read_status   = READ_NOT_READING;
     px_c_index    = 0;
-    pr_img        = 0;
     the_img       = QImage(10, 10, QImage::Format_RGB32);
 
     SANE_Int    version;
@@ -288,10 +289,10 @@ bool SaneWidget::openDevice(const QString &device_name)
     createOptInterface();
 
     // create the preview
-    preview = new PreviewArea(this);
-    connect (preview, SIGNAL(newSelection(float,float,float,float)),
+    m_preview = new PreviewArea(this);
+    connect (m_preview, SIGNAL(newSelection(float,float,float,float)),
              this, SLOT(handleSelection(float,float,float,float)));
-    pr_img = preview->getImage();
+    m_prImg = m_preview->getImage();
 
     m_zInBtn  = new QPushButton();
     m_zInBtn->setIcon(SmallIcon("zoom-in"));
@@ -313,16 +314,16 @@ bool SaneWidget::openDevice(const QString &device_name)
     m_scanBtn->setToolTip(i18n("Scan final image from device"));
 
     connect(m_zInBtn, SIGNAL(clicked()), 
-            preview, SLOT(zoomIn()));
+            m_preview, SLOT(zoomIn()));
 
     connect(m_zOutBtn, SIGNAL(clicked()), 
-            preview, SLOT(zoomOut()));
+            m_preview, SLOT(zoomOut()));
 
     connect(m_zSelBtn, SIGNAL(clicked()), 
-            preview, SLOT(zoomSel()));
+            m_preview, SLOT(zoomSel()));
 
     connect(m_zFitBtn, SIGNAL(clicked()), 
-            preview, SLOT(zoom2Fit()));
+            m_preview, SLOT(zoom2Fit()));
 
     connect (m_scanBtn, SIGNAL(clicked()), 
              this, SLOT(scanFinal()));
@@ -332,7 +333,7 @@ bool SaneWidget::openDevice(const QString &device_name)
 
     QHBoxLayout *zoom_layout = new QHBoxLayout;
 
-    pr_layout->addWidget(preview, 100);
+    pr_layout->addWidget(m_preview, 100);
     pr_layout->addLayout(zoom_layout, 0);
 
     zoom_layout->addWidget(m_zInBtn);
@@ -358,7 +359,7 @@ bool SaneWidget::openDevice(const QString &device_name)
     // having to scan a preview.
     updatePreviewSize();
 
-    //preview->zoom2Fit();
+    //m_preview->zoom2Fit();
 
     return true;
 }
@@ -714,7 +715,7 @@ void SaneWidget::handleSelection(float tl_x, float tl_y, float br_x, float br_y)
     float max_x, max_y;
 
     //printf("handleSelection0: %f %f %f %f\n", tl_x, tl_y, br_x, br_y);
-    if ((pr_img->width()==0) || (pr_img->height()==0)) return;
+    if ((m_prImg->width()==0) || (m_prImg->height()==0)) return;
 
     m_optBrX->getMaxValue(&max_x);
     m_optBrY->getMaxValue(&max_y);
@@ -739,7 +740,7 @@ void SaneWidget::setTLX(float ftlx)
     m_optBrX->getMaxValue(&max);
     ratio = ftlx / max;
     //std::cout << " -> " << ratio << std::endl;
-    preview->setTLX(ratio);
+    m_preview->setTLX(ratio);
 }
 
 void SaneWidget::setTLY(float ftly) 
@@ -750,7 +751,7 @@ void SaneWidget::setTLY(float ftly)
     m_optBrY->getMaxValue(&max);
     ratio = ftly / max;
     //std::cout << " -> " << ratio << std::endl;
-    preview->setTLY(ratio);
+    m_preview->setTLY(ratio);
 }
 
 void SaneWidget::setBRX(float fbrx) 
@@ -761,7 +762,7 @@ void SaneWidget::setBRX(float fbrx)
     m_optBrX->getMaxValue(&max);
     ratio = fbrx / max;
     //std::cout << " -> " << ratio << std::endl;
-    preview->setBRX(ratio);
+    m_preview->setBRX(ratio);
 }
 
 void SaneWidget::setBRY(float fbry) 
@@ -772,7 +773,7 @@ void SaneWidget::setBRY(float fbry)
     m_optBrY->getMaxValue(&max);
     ratio = fbry / max;
     //std::cout << " -> " << ratio << std::endl;
-    preview->setBRY(ratio);
+    m_preview->setBRY(ratio);
 }
 
 void SaneWidget::updatePreviewSize()
@@ -790,13 +791,13 @@ void SaneWidget::updatePreviewSize()
     {
         m_optBrY->getMaxValue(&max_y);
     }
-    if ((max_x == previewWidth) && (max_y == previewHeight)) 
+    if ((max_x == m_previewWidth) && (max_y == m_previewHeight)) 
     {
         return;
     }
 
-    previewWidth = max_x;
-    previewHeight = max_y;
+    m_previewWidth  = max_x;
+    m_previewHeight = max_y;
     // set the scan area to the whole area
     if (m_optTl != 0) 
     {
@@ -846,23 +847,23 @@ void SaneWidget::updatePreviewSize()
     while ((params.pixels_per_line < 300) || (params.lines < 300));
 
 
-    if ((pr_img->width() != params.pixels_per_line) || (pr_img->height() != params.lines)) 
+    if ((m_prImg->width() != params.pixels_per_line) || (m_prImg->height() != params.lines)) 
     {
-        *pr_img = QImage(params.pixels_per_line, params.lines, QImage::Format_RGB32);
-        for (i=0; i<pr_img->height(); i++) 
+        *m_prImg = QImage(params.pixels_per_line, params.lines, QImage::Format_RGB32);
+        for (i=0; i<m_prImg->height(); i++) 
         {
-            for (j=0; j<pr_img->width(); j++) 
+            for (j=0; j<m_prImg->width(); j++) 
             {
-                pr_img->setPixel(j, i, qRgb(255,255,255));
+                m_prImg->setPixel(j, i, qRgb(255,255,255));
             }
         }
 
         // clear the selection
-        preview->clearSelection();
+        m_preview->clearSelection();
 
         // update the size of the preview widget.
-        preview->updateScaledImg();
-        //preview->resize(preview->sizeHint());
+        m_preview->updateScaledImg();
+        //m_preview->resize(m_preview->sizeHint());
     }
 }
 
@@ -976,24 +977,24 @@ void SaneWidget::scanPreview()
     // create a new image if necessary
     //(This image should be small so who cares about waisted memory :)
     // FIXME optimize size
-    scan_img = pr_img;
-    if ((pr_img->height() != params.lines) ||
-         (pr_img->width() != params.pixels_per_line))
+    scan_img = m_prImg;
+    if ((m_prImg->height() != params.lines) ||
+         (m_prImg->width() != params.pixels_per_line))
     {
-        *pr_img = QImage(params.pixels_per_line, params.lines, QImage::Format_RGB32);
+        *m_prImg = QImage(params.pixels_per_line, params.lines, QImage::Format_RGB32);
     }
 
     // clear the old image
-    for (i=0; i<pr_img->height(); i++) 
+    for (i=0; i<m_prImg->height(); i++) 
     {
-        for (j=0; j<pr_img->width(); j++) 
+        for (j=0; j<m_prImg->width(); j++) 
         {
-            pr_img->setPixel(j, i, qRgb(255,255,255));
+            m_prImg->setPixel(j, i, qRgb(255,255,255));
         }
     }
 
     // update the size of the preview widget.
-    preview->zoom2Fit();
+    m_preview->zoom2Fit();
 
     read_status = READ_ON_GOING;
     pixel_x = 0;
@@ -1007,7 +1008,7 @@ void SaneWidget::scanPreview()
         processData();
     }
 
-    preview->updateScaledImg();
+    m_preview->updateScaledImg();
 
     // restore the original settings of the changed parameters
     if (m_optDepth != 0) m_optDepth->restoreSavedData();
@@ -1290,7 +1291,7 @@ void SaneWidget::processData()
                     return;
                 }
 
-                color = pr_img->pixel(pixel_x, pixel_y);
+                color = m_prImg->pixel(pixel_x, pixel_y);
                 red   = qRed(color);
                 green = qGreen(color);
                 blue  = qBlue(color);
@@ -1334,9 +1335,9 @@ void SaneWidget::processData()
         if (abs (new_progress - progress) > 5) 
         {
             progress = new_progress;
-            if (scan_img == pr_img) 
+            if (scan_img == m_prImg) 
             {
-                preview->updateScaledImg();
+                m_preview->updateScaledImg();
             }
             if ((progress < PROGRESS_MAX) && (scan_img == &the_img)) 
             {
