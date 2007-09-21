@@ -41,6 +41,10 @@ extern "C"
 #include <QVarLengthArray>
 #include <QComboBox>
 #include <QPushButton>
+#include <QImage>
+#include <QTimer>
+#include <QScrollArea>
+#include <QList>
 
 // KDE includes
 
@@ -48,6 +52,13 @@ extern "C"
 #include <kdebug.h>
 #include <kiconloader.h>
 #include <kmessagebox.h>
+
+// LibSane includes.
+
+extern "C" 
+{
+#include <sane/sane.h>
+}
 
 // Local includes.
 

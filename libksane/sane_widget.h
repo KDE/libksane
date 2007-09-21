@@ -30,30 +30,17 @@
 
 // Qt includes.
 
-#include <QScrollArea>
 #include <QWidget>
 #include <QString>
-#include <QToolBar>
-#include <QTimer>
-
-// Sane includes.
-
-extern "C" 
-{
-#include <sane/sane.h>
-}
 
 // Local includes.
 
 #include "libksane_export.h"
 
-class QPushButton;
-
 namespace KSaneIface
 {
 
 class SaneOption;
-class PreviewArea;
 class SaneWidgetPriv;
 
 typedef enum
