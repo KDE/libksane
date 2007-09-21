@@ -125,12 +125,12 @@ QString SaneWidget::model() const
 
 QString SaneWidget::selectDevice(QWidget* parent)
 {
-    int i=0;
-    int num_scaners;
-    SANE_Status status;
+    int                 i=0;
+    int                 num_scaners;
+    QStringList         dev_name_list;
+    QString             tmp;
+    SANE_Status         status;
     SANE_Device const **dev_list;
-    QStringList dev_name_list;
-    QString tmp;
 
     status = sane_get_devices(&dev_list, SANE_TRUE);
 
