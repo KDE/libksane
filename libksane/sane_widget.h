@@ -121,9 +121,8 @@ private:
 private:
 
     // device info
-    SANE_Handle         s_handle;
-    QString             devname;
-    QString             modelname;
+    SANE_Handle         m_saneHandle;
+    QString             m_modelName;
     QString             m_make;
     QString             m_model;
 

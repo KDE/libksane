@@ -197,9 +197,9 @@ bool SaneWidget::openDevice(const QString &device_name)
     {
         if (QString(dev_list[i]->name) == device_name) 
         {
-            modelname = QString(dev_list[i]->vendor) + " " + QString(dev_list[i]->model);
-            m_make    = QString(dev_list[i]->vendor);
-            m_model   = QString(dev_list[i]->model);
+            m_modelName = QString(dev_list[i]->vendor) + " " + QString(dev_list[i]->model);
+            m_make      = QString(dev_list[i]->vendor);
+            m_model     = QString(dev_list[i]->model);
             break;
         }
         i++;
@@ -208,7 +208,7 @@ bool SaneWidget::openDevice(const QString &device_name)
     if (dev_list[i] == 0) 
     {
 #ifdef ENABLE_DEBUG
-        modelname = i18n("Test Scanner");
+        m_modelName = i18n("Test Scanner");
 #else
         kDebug() << "openDevice: device '" << qPrintable(device_name) 
                  << "' not found" << endl;
@@ -217,7 +217,7 @@ bool SaneWidget::openDevice(const QString &device_name)
     }
 
     // Try to open the device
-    if (sane_open(device_name.toLatin1(), &s_handle) != SANE_STATUS_GOOD) 
+    if (sane_open(device_name.toLatin1(), &m_saneHandle) != SANE_STATUS_GOOD) 
     {
         kDebug() << "openDevice: sane_open(\"" << qPrintable(device_name) 
                  << "\", &handle) failed!" << endl;
@@ -225,16 +225,14 @@ bool SaneWidget::openDevice(const QString &device_name)
     }
     //printf("openDevice: sane_open(\"%s\", &handle) == SANE_STATUS_GOOD\n", qPrintable(device_name));
 
-    devname = device_name;
-
     // Read the options (start with option 0 the number of parameters)
-    num_option_d = sane_get_option_descriptor(s_handle, 0);
+    num_option_d = sane_get_option_descriptor(m_saneHandle, 0);
     if (num_option_d == 0) 
     {
         return false;
     }
     QVarLengthArray<char> data(num_option_d->size);
-    status = sane_control_option(s_handle, 0, SANE_ACTION_GET_VALUE, data.data(), &res);
+    status = sane_control_option(m_saneHandle, 0, SANE_ACTION_GET_VALUE, data.data(), &res);
     if (status != SANE_STATUS_GOOD) 
     {
         return false;
@@ -244,7 +242,7 @@ bool SaneWidget::openDevice(const QString &device_name)
     // read the rest of the options
     for (i=1; i<num_sane_options; i++) 
     {
-        optList.append(new SaneOption(s_handle, i));
+        optList.append(new SaneOption(m_saneHandle, i));
     }
 
     // do the connections of the option parameters
@@ -368,7 +366,7 @@ void SaneWidget::createOptInterface()
 
     // add the options
     // (Should Vendor and model always be visible?)
-    LabeledSeparator *model_label = new LabeledSeparator(opt_container, modelname);
+    LabeledSeparator *model_label = new LabeledSeparator(opt_container, m_modelName);
     opt_layout->addWidget(model_label);
 
     // basic/intermediate/All options
@@ -825,7 +823,7 @@ void SaneWidget::updatePreviewSize()
             opt_res_y->setValue(dpi);
         }
         //check what image size we would get in a scan
-        status = sane_get_parameters(s_handle, &params);
+        status = sane_get_parameters(m_saneHandle, &params);
         if (status != SANE_STATUS_GOOD) 
         {
             kDebug() << "ERROR: status="
@@ -919,7 +917,7 @@ void SaneWidget::scanPreview()
             opt_res_y->setValue(dpi);
         }
         //check what image size we would get in a scan
-        status = sane_get_parameters(s_handle, &params);
+        status = sane_get_parameters(m_saneHandle, &params);
         if (status != SANE_STATUS_GOOD) 
         {
             kDebug() << "ERROR: status="
@@ -941,22 +939,22 @@ void SaneWidget::scanPreview()
     }
 
     // Start the scanning
-    status = sane_start(s_handle);
+    status = sane_start(m_saneHandle);
     if (status != SANE_STATUS_GOOD) 
     {
         kDebug() << "sane_start ERROR: status="
                  << sane_strstatus(status) << endl;
 
-        sane_cancel(s_handle);
+        sane_cancel(m_saneHandle);
         return;
     }
 
-    status = sane_get_parameters(s_handle, &params);
+    status = sane_get_parameters(m_saneHandle, &params);
     if (status != SANE_STATUS_GOOD) 
     {
         kDebug() << "sane_get_parameters ERROR: status="
                  << sane_strstatus(status) << endl;
-        sane_cancel(s_handle);
+        sane_cancel(m_saneHandle);
         return;
     }
 
@@ -1055,22 +1053,22 @@ void SaneWidget::scanFinal()
 
     // Start the scanning
     emit scanStart();
-    status = sane_start(s_handle);
+    status = sane_start(m_saneHandle);
     if (status != SANE_STATUS_GOOD) 
     {
         kDebug() << "sane_start ERROR: status="
                  << sane_strstatus(status) << endl;
-        sane_cancel(s_handle);
+        sane_cancel(m_saneHandle);
         return;
     }
     //printf("start OK\n");
 
-    status = sane_get_parameters(s_handle, &params);
+    status = sane_get_parameters(m_saneHandle, &params);
     if (status != SANE_STATUS_GOOD) 
     {
         kDebug() << "sane_get_parameters ERROR: status=" 
                  << sane_strstatus(status) << endl;
-        sane_cancel(s_handle);
+        sane_cancel(m_saneHandle);
         return;
     }
 
@@ -1114,7 +1112,7 @@ void SaneWidget::processData()
     int i, j;
 
     //printf("Pre read()\n");
-    status = sane_read(s_handle, img_data, IMG_DATA_R_SIZE, &read_bytes);
+    status = sane_read(m_saneHandle, img_data, IMG_DATA_R_SIZE, &read_bytes);
     //printf("Post read() read=%d\n", read_bytes);
 
     if (status == SANE_STATUS_EOF) 
@@ -1125,7 +1123,7 @@ void SaneWidget::processData()
             kDebug() << "pixel_y(" << pixel_y
                      << ") < params.lines(" << params.lines << ")" << endl;
             sleep(1);
-            //sane_cancel(s_handle);
+            //sane_cancel(m_saneHandle);
         }
         if (params.last_frame == SANE_TRUE) 
         {
@@ -1140,12 +1138,12 @@ void SaneWidget::processData()
         }
         else 
         {
-            sane_start(s_handle);
+            sane_start(m_saneHandle);
             if (status != SANE_STATUS_GOOD) 
             {
                 kDebug() << "sane_start ERROR: status=" 
                          << sane_strstatus(status) << endl;
-                sane_cancel(s_handle);
+                sane_cancel(m_saneHandle);
                 read_status = READ_ERROR;
                 return;
             }
@@ -1155,7 +1153,7 @@ void SaneWidget::processData()
     {
         kDebug() << "Reading error, status=" 
                  << sane_strstatus(status) << endl;
-        sane_cancel(s_handle);
+        sane_cancel(m_saneHandle);
         read_status = READ_ERROR;
         return;
     }
@@ -1172,7 +1170,7 @@ void SaneWidget::processData()
                     {
                         kDebug() << "processData: reached image height before EOF" 
                                  << endl;
-                        sane_cancel(s_handle);
+                        sane_cancel(m_saneHandle);
                         read_status = READ_ERROR;
                         return;
                     }
@@ -1199,7 +1197,7 @@ void SaneWidget::processData()
             {
                 kDebug() << "Only 8-bit colors are currently supported!" 
                          << endl;
-                sane_cancel(s_handle);
+                sane_cancel(m_saneHandle);
                 read_status = READ_ERROR;
                 return;
             }
@@ -1213,7 +1211,7 @@ void SaneWidget::processData()
                     if (pixel_y >= params.lines) 
                     {
                         kDebug() << "reached image height before EOF" << endl;
-                        sane_cancel(s_handle);
+                        sane_cancel(m_saneHandle);
                         read_status = READ_ERROR;
                         return;
                     }
@@ -1236,7 +1234,7 @@ void SaneWidget::processData()
                     if (pixel_y >= params.lines) 
                     {
                         kDebug() << "reached image height before EOF" << endl;
-                        sane_cancel(s_handle);
+                        sane_cancel(m_saneHandle);
                         read_status = READ_ERROR;
                         return;
                     }
@@ -1265,7 +1263,7 @@ void SaneWidget::processData()
             {
                 kDebug() << "Only 1 and 8-bit colors are supported "
                             "for grayscale!" << endl;
-                sane_cancel(s_handle);
+                sane_cancel(m_saneHandle);
                 read_status = READ_ERROR;
                 return;
             }
@@ -1279,7 +1277,7 @@ void SaneWidget::processData()
                 printf("%d\n", pr_img_data[i]);
                 if (pixel_y >= params.lines) {
                     printf("reached image height before EOF\n");
-                    sane_cancel(s_handle);
+                    sane_cancel(m_saneHandle);
                     read_status = READ_ERROR;
                     return;
                 }
@@ -1318,7 +1316,7 @@ void SaneWidget::processData()
         default :
             kDebug() << "This frame format ( " << params.format
                      << ") is not yet suppoeted!" << endl;
-            sane_cancel(s_handle);
+            sane_cancel(m_saneHandle);
             read_status = READ_ERROR;
             return;
     }
@@ -1348,7 +1346,7 @@ QImage *SaneWidget::getFinalImage()
 
 void SaneWidget::scanCancel()
 {
-    sane_cancel(s_handle);
+    sane_cancel(m_saneHandle);
     read_status = READ_CANCEL;
 }
 
