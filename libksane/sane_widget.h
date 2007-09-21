@@ -122,7 +122,6 @@ private:
 
     // device info
     SANE_Device const **dev_list;
-    SANE_Device const  *device;
     SANE_Handle         s_handle;
     QString             devname;
     QString             modelname;

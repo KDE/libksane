@@ -47,6 +47,7 @@ extern "C"
 #include <klocale.h>
 #include <kdebug.h>
 #include <kiconloader.h>
+#include <kmessagebox.h>
 
 // Local includes.
 
@@ -67,7 +68,6 @@ SaneWidget::SaneWidget(QWidget* parent)
 {
     SANE_Int version;
 
-    device        = 0;
     previewWidth  = 0;
     previewHeight = 0;
     read_status   = READ_NOT_READING;
@@ -156,6 +156,12 @@ QString SaneWidget::selectDevice(QWidget* parent)
     tmp += " : " + QString("Model");
     dev_name_list += tmp;
 #endif
+
+    if (dev_name_list.isEmpty())
+    {
+        KMessageBox::sorry(0, i18n("No scanner device has been found."));
+        return QString();
+    }
 
     RadioSelect sel;
     sel.setWindowTitle(qApp->applicationName());
