@@ -90,10 +90,13 @@ SaneWidget::SaneWidget(QWidget* parent)
     m_prImg         = 0;
     m_previewWidth  = 0;
     m_previewHeight = 0;
-
-    read_status   = READ_NOT_READING;
-    px_c_index    = 0;
-    the_img       = QImage(10, 10, QImage::Format_RGB32);
+    m_pxCIndex      = 0;
+    m_progress      = 0;
+    m_pixelX        = 0;
+    m_pixelY        = 0;
+    m_readStatus    = READ_NOT_READING;
+    m_scanImg       = 0;
+    m_theImg        = QImage(10, 10, QImage::Format_RGB32);
 
     SANE_Int    version;
     SANE_Status status;
@@ -832,7 +835,7 @@ void SaneWidget::updatePreviewSize()
             m_optResY->setValue(dpi);
         }
         //check what image size we would get in a scan
-        status = sane_get_parameters(m_saneHandle, &params);
+        status = sane_get_parameters(m_saneHandle, &m_params);
         if (status != SANE_STATUS_GOOD) 
         {
             kDebug() << "ERROR: status="
@@ -840,16 +843,16 @@ void SaneWidget::updatePreviewSize()
             return;
         }
         //printf("dpi = %d\n", dpi);
-        //printf("lines = %d\n", params.lines);
-        //printf("pixels_per_line = %d\n", params.pixels_per_line);
+        //printf("lines = %d\n", m_params.lines);
+        //printf("pixels_per_line = %d\n", m_params.pixels_per_line);
         if (dpi > 800) break;
     } 
-    while ((params.pixels_per_line < 300) || (params.lines < 300));
+    while ((m_params.pixels_per_line < 300) || (m_params.lines < 300));
 
 
-    if ((m_prImg->width() != params.pixels_per_line) || (m_prImg->height() != params.lines)) 
+    if ((m_prImg->width() != m_params.pixels_per_line) || (m_prImg->height() != m_params.lines)) 
     {
-        *m_prImg = QImage(params.pixels_per_line, params.lines, QImage::Format_RGB32);
+        *m_prImg = QImage(m_params.pixels_per_line, m_params.lines, QImage::Format_RGB32);
         for (i=0; i<m_prImg->height(); i++) 
         {
             for (j=0; j<m_prImg->width(); j++) 
@@ -926,7 +929,7 @@ void SaneWidget::scanPreview()
             m_optResY->setValue(dpi);
         }
         //check what image size we would get in a scan
-        status = sane_get_parameters(m_saneHandle, &params);
+        status = sane_get_parameters(m_saneHandle, &m_params);
         if (status != SANE_STATUS_GOOD) 
         {
             kDebug() << "ERROR: status="
@@ -934,11 +937,11 @@ void SaneWidget::scanPreview()
             return;
         }
         //printf("dpi = %d\n", dpi);
-        //printf("lines = %d\n", params.lines);
-        //printf("pixels_per_line = %d\n", params.pixels_per_line);
+        //printf("lines = %d\n", m_params.lines);
+        //printf("pixels_per_line = %d\n", m_params.pixels_per_line);
         if (dpi > 800) break;
     } 
-    while ((params.pixels_per_line < 300) || (params.lines < 300));
+    while ((m_params.pixels_per_line < 300) || (m_params.lines < 300));
 
     // execute valReload if there is a pending value reload
     while (m_rValTmr.isActive()) 
@@ -958,7 +961,7 @@ void SaneWidget::scanPreview()
         return;
     }
 
-    status = sane_get_parameters(m_saneHandle, &params);
+    status = sane_get_parameters(m_saneHandle, &m_params);
     if (status != SANE_STATUS_GOOD) 
     {
         kDebug() << "sane_get_parameters ERROR: status="
@@ -967,21 +970,21 @@ void SaneWidget::scanPreview()
         return;
     }
 
-    //printf("format = %d\n", params.format);
-    //printf("last_frame = %d\n", params.last_frame);
-    //printf("lines = %d\n", params.lines);
-    //printf("depth = %d\n", params.depth);
-    //printf("pixels_per_line = %d\n", params.pixels_per_line);
-    //printf("bytes_per_line = %d\n", params.bytes_per_line);
+    //printf("format = %d\n", m_params.format);
+    //printf("last_frame = %d\n", m_params.last_frame);
+    //printf("lines = %d\n", m_params.lines);
+    //printf("depth = %d\n", m_params.depth);
+    //printf("pixels_per_line = %d\n", m_params.pixels_per_line);
+    //printf("bytes_per_line = %d\n", m_params.bytes_per_line);
 
     // create a new image if necessary
     //(This image should be small so who cares about waisted memory :)
     // FIXME optimize size
-    scan_img = m_prImg;
-    if ((m_prImg->height() != params.lines) ||
-         (m_prImg->width() != params.pixels_per_line))
+    m_scanImg = m_prImg;
+    if ((m_prImg->height() != m_params.lines) ||
+         (m_prImg->width() != m_params.pixels_per_line))
     {
-        *m_prImg = QImage(params.pixels_per_line, params.lines, QImage::Format_RGB32);
+        *m_prImg = QImage(m_params.pixels_per_line, m_params.lines, QImage::Format_RGB32);
     }
 
     // clear the old image
@@ -996,14 +999,14 @@ void SaneWidget::scanPreview()
     // update the size of the preview widget.
     m_preview->zoom2Fit();
 
-    read_status = READ_ON_GOING;
-    pixel_x = 0;
-    pixel_y = 0;
-    px_c_index = 0;
+    m_readStatus = READ_ON_GOING;
+    m_pixelX = 0;
+    m_pixelY = 0;
+    m_pxCIndex = 0;
 
     setDisabled(true);
 
-    while (read_status == READ_ON_GOING) 
+    while (m_readStatus == READ_ON_GOING) 
     {
         processData();
     }
@@ -1072,7 +1075,7 @@ void SaneWidget::scanFinal()
     }
     //printf("start OK\n");
 
-    status = sane_get_parameters(m_saneHandle, &params);
+    status = sane_get_parameters(m_saneHandle, &m_params);
     if (status != SANE_STATUS_GOOD) 
     {
         kDebug() << "sane_get_parameters ERROR: status=" 
@@ -1081,33 +1084,33 @@ void SaneWidget::scanFinal()
         return;
     }
 
-    //printf("format = %d\n", params.format);
-    //printf("last_frame = %d\n", params.last_frame);
-    //printf("lines = %d\n", params.lines);
-    //printf("depth = %d\n", params.depth);
-    //printf("pixels_per_line = %d\n", params.pixels_per_line);
-    //printf("bytes_per_line = %d\n", params.bytes_per_line);
+    //printf("format = %d\n", m_params.format);
+    //printf("last_frame = %d\n", m_params.last_frame);
+    //printf("lines = %d\n", m_params.lines);
+    //printf("depth = %d\n", m_params.depth);
+    //printf("pixels_per_line = %d\n", m_params.pixels_per_line);
+    //printf("bytes_per_line = %d\n", m_params.bytes_per_line);
 
     // create a new image
     //(This image should be small so who cares about waisted memory :)
     // FIXME optimize size
-    scan_img  = &the_img;
-    *scan_img = QImage(params.pixels_per_line, params.lines, QImage::Format_RGB32);
+    m_scanImg  = &m_theImg;
+    *m_scanImg = QImage(m_params.pixels_per_line, m_params.lines, QImage::Format_RGB32);
 
     // Signal for a progress dialog
     emit scanProgress(0);
 
-    read_status = READ_ON_GOING;
-    pixel_x = 0;
-    pixel_y = 0;
-    px_c_index = 0;
+    m_readStatus = READ_ON_GOING;
+    m_pixelX = 0;
+    m_pixelY = 0;
+    m_pxCIndex = 0;
 
     setDisabled(true);
-    while (read_status == READ_ON_GOING) 
+    while (m_readStatus == READ_ON_GOING) 
     {
         processData();
     }
-    if (read_status != READ_FINISHED) 
+    if (m_readStatus != READ_FINISHED) 
     {
         emit scanFaild();
     }
@@ -1121,24 +1124,24 @@ void SaneWidget::processData()
     int i, j;
 
     //printf("Pre read()\n");
-    status = sane_read(m_saneHandle, img_data, IMG_DATA_R_SIZE, &read_bytes);
+    status = sane_read(m_saneHandle, m_imgData, IMG_DATA_R_SIZE, &read_bytes);
     //printf("Post read() read=%d\n", read_bytes);
 
     if (status == SANE_STATUS_EOF) 
     {
         //printf("Read finished read_bytes=%d\n", read_bytes);
-        if (pixel_y < params.lines) 
+        if (m_pixelY < m_params.lines) 
         {
-            kDebug() << "pixel_y(" << pixel_y
-                     << ") < params.lines(" << params.lines << ")" << endl;
+            kDebug() << "m_pixelY(" << m_pixelY
+                     << ") < m_params.lines(" << m_params.lines << ")" << endl;
             sleep(1);
             //sane_cancel(m_saneHandle);
         }
-        if (params.last_frame == SANE_TRUE) 
+        if (m_params.last_frame == SANE_TRUE) 
         {
             // this is where it all ends well :)
-            read_status = READ_FINISHED;
-            if (scan_img == &the_img) 
+            m_readStatus = READ_FINISHED;
+            if (m_scanImg == &m_theImg) 
             {
                 emit scanDone();
                 emit imageReady();
@@ -1153,7 +1156,7 @@ void SaneWidget::processData()
                 kDebug() << "sane_start ERROR: status=" 
                          << sane_strstatus(status) << endl;
                 sane_cancel(m_saneHandle);
-                read_status = READ_ERROR;
+                m_readStatus = READ_ERROR;
                 return;
             }
         }
@@ -1163,41 +1166,41 @@ void SaneWidget::processData()
         kDebug() << "Reading error, status=" 
                  << sane_strstatus(status) << endl;
         sane_cancel(m_saneHandle);
-        read_status = READ_ERROR;
+        m_readStatus = READ_ERROR;
         return;
     }
 
-    switch (params.format)
+    switch (m_params.format)
     {
         case SANE_FRAME_RGB:
-            if (params.depth == 8) 
+            if (m_params.depth == 8) 
             {
                 // go through the data
                 for (i=0; i<read_bytes; i++) 
                 {
-                    if (pixel_y >= params.lines) 
+                    if (m_pixelY >= m_params.lines) 
                     {
                         kDebug() << "processData: reached image height before EOF" 
                                  << endl;
                         sane_cancel(m_saneHandle);
-                        read_status = READ_ERROR;
+                        m_readStatus = READ_ERROR;
                         return;
                     }
-                    px_colors[px_c_index] = img_data[i];
-                    px_c_index++;
-                    if (px_c_index >= 3) px_c_index = 0;
+                    m_pxColors[m_pxCIndex] = m_imgData[i];
+                    m_pxCIndex++;
+                    if (m_pxCIndex >= 3) m_pxCIndex = 0;
 
-                    if (px_c_index == 0) 
+                    if (m_pxCIndex == 0) 
                     {
-                        scan_img->setPixel(pixel_x, pixel_y,
-                                         qRgb(px_colors[0],
-                                              px_colors[1],
-                                              px_colors[2]));
-                        pixel_x++;
-                        if (pixel_x >= params.pixels_per_line) 
+                        m_scanImg->setPixel(m_pixelX, m_pixelY,
+                                           qRgb(m_pxColors[0],
+                                                m_pxColors[1],
+                                                m_pxColors[2]));
+                        m_pixelX++;
+                        if (m_pixelX >= m_params.pixels_per_line) 
                         {
-                            pixel_x = 0;
-                            pixel_y++;
+                            m_pixelX = 0;
+                            m_pixelY++;
                         }
                     }
                 }
@@ -1207,64 +1210,64 @@ void SaneWidget::processData()
                 kDebug() << "Only 8-bit colors are currently supported!" 
                          << endl;
                 sane_cancel(m_saneHandle);
-                read_status = READ_ERROR;
+                m_readStatus = READ_ERROR;
                 return;
             }
             break;
 
         case SANE_FRAME_GRAY:
-            if (params.depth == 8) 
+            if (m_params.depth == 8) 
             {
                 for (i=0; i<read_bytes; i++) 
                 {
-                    if (pixel_y >= params.lines) 
+                    if (m_pixelY >= m_params.lines) 
                     {
                         kDebug() << "reached image height before EOF" << endl;
                         sane_cancel(m_saneHandle);
-                        read_status = READ_ERROR;
+                        m_readStatus = READ_ERROR;
                         return;
                     }
-                    scan_img->setPixel(pixel_x, pixel_y,
-                                       qRgb(img_data[i],
-                                            img_data[i],
-                                            img_data[i]));
-                    pixel_x++;
-                    if (pixel_x >= params.pixels_per_line) 
+                    m_scanImg->setPixel(m_pixelX, m_pixelY,
+                                       qRgb(m_imgData[i],
+                                            m_imgData[i],
+                                            m_imgData[i]));
+                    m_pixelX++;
+                    if (m_pixelX >= m_params.pixels_per_line) 
                     {
-                        pixel_x = 0;
-                        pixel_y++;
+                        m_pixelX = 0;
+                        m_pixelY++;
                     }
                 }
             }
-            else if (params.depth == 1)
+            else if (m_params.depth == 1)
             {
                 for (i=0; i<read_bytes; i++) 
                 {
-                    if (pixel_y >= params.lines) 
+                    if (m_pixelY >= m_params.lines) 
                     {
                         kDebug() << "reached image height before EOF" << endl;
                         sane_cancel(m_saneHandle);
-                        read_status = READ_ERROR;
+                        m_readStatus = READ_ERROR;
                         return;
                     }
                     for (j=7; j>=0; j--) 
                     {
-                        if ((img_data[i] & (1<<j)) == 0) 
+                        if ((m_imgData[i] & (1<<j)) == 0) 
                         {
-                            scan_img->setPixel(pixel_x, pixel_y, qRgb(255,255,255));
+                            m_scanImg->setPixel(m_pixelX, m_pixelY, qRgb(255,255,255));
                         }
                         else 
                         {
-                            scan_img->setPixel(pixel_x, pixel_y, qRgb(0,0,0));
+                            m_scanImg->setPixel(m_pixelX, m_pixelY, qRgb(0,0,0));
                         }
-                        pixel_x++;
-                        if(pixel_x >= params.pixels_per_line) 
+                        m_pixelX++;
+                        if(m_pixelX >= m_params.pixels_per_line) 
                         {
-                            pixel_x = 0;
-                            pixel_y++;
+                            m_pixelX = 0;
+                            m_pixelY++;
                             break;
                         }
-                        if (pixel_y >= params.lines) break;
+                        if (m_pixelY >= m_params.lines) break;
                     }
                 }
             }
@@ -1273,7 +1276,7 @@ void SaneWidget::processData()
                 kDebug() << "Only 1 and 8-bit colors are supported "
                             "for grayscale!" << endl;
                 sane_cancel(m_saneHandle);
-                read_status = READ_ERROR;
+                m_readStatus = READ_ERROR;
                 return;
             }
             break;
@@ -1284,19 +1287,19 @@ void SaneWidget::processData()
         case SANE_FRAME_BLUE:
             for (i=0; i<read_bytes; i++) {
                 printf("%d\n", pr_img_data[i]);
-                if (pixel_y >= params.lines) {
+                if (m_pixelY >= m_params.lines) {
                     printf("reached image height before EOF\n");
                     sane_cancel(m_saneHandle);
-                    read_status = READ_ERROR;
+                    m_readStatus = READ_ERROR;
                     return;
                 }
 
-                color = m_prImg->pixel(pixel_x, pixel_y);
+                color = m_prImg->pixel(m_pixelX, m_pixelY);
                 red   = qRed(color);
                 green = qGreen(color);
                 blue  = qBlue(color);
 
-                switch(params.format)
+                switch(m_params.format)
                 {
                     case SANE_FRAME_RED :
                         newColor = qRgb(pr_img_data[i], green, blue);
@@ -1312,36 +1315,36 @@ void SaneWidget::processData()
                         newColor = qRgb(0,0,0);
                         break;
                 }
-                scan_img->setPixel(pixel_x, pixel_y, newColor);
-                pixel_x++;
-                if(pixel_x >= params.pixels_per_line) {
-                    pixel_x = 0;
-                    pixel_y++;
+                m_scanImg->setPixel(m_pixelX, m_pixelY, newColor);
+                m_pixelX++;
+                if(m_pixelX >= m_params.pixels_per_line) {
+                    m_pixelX = 0;
+                    m_pixelY++;
                     break;
                 }
             }
             break;
         */
         default :
-            kDebug() << "This frame format ( " << params.format
+            kDebug() << "This frame format ( " << m_params.format
                      << ") is not yet suppoeted!" << endl;
             sane_cancel(m_saneHandle);
-            read_status = READ_ERROR;
+            m_readStatus = READ_ERROR;
             return;
     }
-    if (params.lines > 0) 
+    if (m_params.lines > 0) 
     {
-        int new_progress = (int)( ((double)PROGRESS_MAX / params.lines) * pixel_y);
-        if (abs (new_progress - progress) > 5) 
+        int new_progress = (int)( ((double)PROGRESS_MAX / m_params.lines) * m_pixelY);
+        if (abs (new_progress - m_progress) > 5) 
         {
-            progress = new_progress;
-            if (scan_img == m_prImg) 
+            m_progress = new_progress;
+            if (m_scanImg == m_prImg) 
             {
                 m_preview->updateScaledImg();
             }
-            if ((progress < PROGRESS_MAX) && (scan_img == &the_img)) 
+            if ((m_progress < PROGRESS_MAX) && (m_scanImg == &m_theImg)) 
             {
-                emit scanProgress(progress);
+                emit scanProgress(m_progress);
             }
             qApp->processEvents();
         }
@@ -1350,13 +1353,13 @@ void SaneWidget::processData()
 
 QImage *SaneWidget::getFinalImage()
 {
-    return &the_img;
+    return &m_theImg;
 }
 
 void SaneWidget::scanCancel()
 {
     sane_cancel(m_saneHandle);
-    read_status = READ_CANCEL;
+    m_readStatus = READ_CANCEL;
 }
 
 bool SaneWidget::setIconColorMode(const QIcon &icon)

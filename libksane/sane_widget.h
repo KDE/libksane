@@ -159,17 +159,16 @@ private:
     float               m_previewHeight;
 
     // general scanning
-    SANE_Parameters     params;
-
-    //QSocketNotifier *sn;
-    int                 progress;
-    SANE_Byte           img_data[IMG_DATA_R_SIZE];
-    SANE_Byte           px_colors[3];
-    unsigned int        px_c_index;
-    int                 pixel_x, pixel_y;
-    ReadStatus          read_status;
-    QImage             *scan_img;
-    QImage              the_img;
+    unsigned int        m_pxCIndex;
+    int                 m_progress;
+    int                 m_pixelX;
+    int                 m_pixelY;
+    SANE_Parameters     m_params;
+    SANE_Byte           m_imgData[IMG_DATA_R_SIZE];
+    SANE_Byte           m_pxColors[3];
+    ReadStatus          m_readStatus;
+    QImage             *m_scanImg;
+    QImage              m_theImg;
 };
 
 }  // NameSpace KSaneIface
