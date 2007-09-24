@@ -33,6 +33,7 @@ extern "C"
 {
 #include <sys/ioctl.h>
 #include <sane/saneopts.h>
+#include <sane/sane.h>
 }
 
 // Qt includes.
@@ -54,13 +55,6 @@ extern "C"
 #include <kdebug.h>
 #include <kiconloader.h>
 #include <kmessagebox.h>
-
-// LibSane includes.
-
-extern "C" 
-{
-#include <sane/sane.h>
-}
 
 // Local includes.
 
@@ -389,11 +383,10 @@ bool SaneWidget::openDevice(const QString &device_name)
     d->zFitBtn->setToolTip(i18n("Zoom to fit preview image"));
 
     d->progressBar = new QProgressBar();
-    d->progressBar->setMaximumHeight(fontMetrics().height()+4);
     d->progressBar->hide();
     d->cancelBtn   = new QPushButton();
     d->cancelBtn->setIcon(SmallIcon("dialog-cancel"));
-    d->cancelBtn->setMaximumHeight(fontMetrics().height()+4);
+    d->cancelBtn->setToolTip(i18n("Cancel current scan operation"));
     d->cancelBtn->hide();
 
     d->prevBtn = new QPushButton();
@@ -421,6 +414,12 @@ bool SaneWidget::openDevice(const QString &device_name)
     connect(d->prevBtn, SIGNAL(clicked()), 
             this, SLOT(scanPreview()));
 
+    connect(d->cancelBtn, SIGNAL(clicked()), 
+            this, SLOT(scanCancel()));
+
+    connect(this, SIGNAL(scanProgress(int)), 
+            d->progressBar, SLOT(setValue(int)));
+
     QHBoxLayout *zoom_layout = new QHBoxLayout;
 
     pr_layout->addWidget(d->preview, 100);
@@ -432,6 +431,8 @@ bool SaneWidget::openDevice(const QString &device_name)
     zoom_layout->addWidget(d->zFitBtn);
     zoom_layout->addStretch();
     zoom_layout->addWidget(d->progressBar);
+    zoom_layout->addWidget(d->cancelBtn);
+    zoom_layout->addStretch();
     zoom_layout->addWidget(d->prevBtn);
     zoom_layout->addWidget(d->scanBtn);
 
@@ -1088,11 +1089,11 @@ void SaneWidget::scanPreview()
     d->preview->zoom2Fit();
 
     d->readStatus = READ_ON_GOING;
-    d->pixelX = 0;
-    d->pixelY = 0;
-    d->pxCIndex = 0;
+    d->pixelX     = 0;
+    d->pixelY     = 0;
+    d->pxCIndex   = 0;
 
-    setDisabled(true);
+    setBusy(true);
 
     while (d->readStatus == READ_ON_GOING) 
     {
@@ -1110,7 +1111,7 @@ void SaneWidget::scanPreview()
     if (d->optBrX != 0) d->optBrX->restoreSavedData();
     if (d->optBrY != 0) d->optBrY->restoreSavedData();
 
-    setDisabled(false);
+    setBusy(false);
 }
 
 void SaneWidget::scanFinal()
@@ -1193,7 +1194,8 @@ void SaneWidget::scanFinal()
     d->pixelY = 0;
     d->pxCIndex = 0;
 
-    setDisabled(true);
+    setBusy(true, true);
+
     while (d->readStatus == READ_ON_GOING) 
     {
         processData();
@@ -1202,7 +1204,7 @@ void SaneWidget::scanFinal()
     {
         emit scanFaild();
     }
-    setDisabled(false);
+    setBusy(false, true);
 }
 
 void SaneWidget::processData()
@@ -1231,6 +1233,8 @@ void SaneWidget::processData()
             d->readStatus = READ_FINISHED;
             if (d->scanImg == &d->theImg) 
             {
+                d->progressBar->hide();
+                d->cancelBtn->hide();
                 emit scanDone();
                 emit imageReady();
             }
@@ -1478,6 +1482,34 @@ bool SaneWidget::setIconBWMode(const QIcon &icon)
         return true;
     }
     return false;
+}
+
+void SaneWidget::setBusy(bool busy, bool finalScan)
+{
+    d->optArea->setDisabled(busy);
+    d->preview->setDisabled(busy);
+    d->zInBtn->setDisabled(busy);
+    d->zOutBtn->setDisabled(busy);
+    d->zSelBtn->setDisabled(busy);
+    d->zFitBtn->setDisabled(busy);
+    d->prevBtn->setDisabled(busy);
+    d->scanBtn->setDisabled(busy);
+    
+    if (!finalScan) return;
+
+    if (busy)
+    {
+        d->progressBar->show();
+        d->cancelBtn->show();
+    }
+    else
+    {
+        d->progressBar->hide();
+        d->cancelBtn->hide();
+    }
+
+    d->progressBar->setDisabled(!busy);
+    d->cancelBtn->setDisabled(!busy);
 }
 
 }  // NameSpace KSaneIface

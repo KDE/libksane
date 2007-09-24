@@ -106,6 +106,7 @@ private:
     void updatePreviewSize();
     void processData();
     void setDefaultValues();
+    void setBusy(bool busy, bool finalScan=false);
 
 private:
 
