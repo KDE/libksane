@@ -8,7 +8,6 @@ TODO list to be more KDE compliant:
 * API : use reference instead pointers when it's possible.
 * Doc : add API documentation using Doxygen forms.
 * Add signal to send progress of preview operation.
-* Include progress bar in bottom of preview area (between zoom buttons and preview button)
 * QDialog => Kdialog. fix dialog buttons handling.
 
 TODO list of new features:
