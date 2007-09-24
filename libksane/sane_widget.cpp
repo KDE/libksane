@@ -7,6 +7,7 @@
  * Description : Sane interface for KDE
  *
  * Copyright (C) 2007 by Kare Sars <kare dot sars at kolumbus dot fi>
+ * Copyright (C) 2007 by Gilles Caulier <caulier dot gilles at gmail dot com>
  *
  * This program is free software; you can redistribute it
  * and/or modify it under the terms of the GNU General
@@ -45,6 +46,7 @@ extern "C"
 #include <QTimer>
 #include <QScrollArea>
 #include <QList>
+#include <QProgressBar>
 
 // KDE includes
 
@@ -100,6 +102,7 @@ public:
         zOutBtn       = 0;
         zSelBtn       = 0;
         zFitBtn       = 0;
+        cancelBtn     = 0;
         preview       = 0;
         prImg         = 0;
         previewWidth  = 0;
@@ -110,6 +113,7 @@ public:
         pixelY        = 0;
         readStatus    = READ_NOT_READING;
         scanImg       = 0;
+        progressBar   = 0;
         theImg        = QImage(10, 10, QImage::Format_RGB32);
     }
 
@@ -139,11 +143,13 @@ public:
 
     QPushButton        *scanBtn;
     QPushButton        *prevBtn;
-
     QPushButton        *zInBtn;
     QPushButton        *zOutBtn;
     QPushButton        *zSelBtn;
     QPushButton        *zFitBtn;
+    QPushButton        *cancelBtn;
+
+    QProgressBar       *progressBar;
 
     // preview variables
     PreviewArea        *preview;
@@ -365,8 +371,8 @@ bool SaneWidget::openDevice(const QString &device_name)
 
     // create the preview
     d->preview = new PreviewArea(this);
-    connect (d->preview, SIGNAL(newSelection(float,float,float,float)),
-             this, SLOT(handleSelection(float,float,float,float)));
+    connect(d->preview, SIGNAL(newSelection(float, float, float, float)),
+            this, SLOT(handleSelection(float, float, float, float)));
     d->prImg = d->preview->getImage();
 
     d->zInBtn  = new QPushButton();
@@ -381,10 +387,19 @@ bool SaneWidget::openDevice(const QString &device_name)
     d->zFitBtn = new QPushButton();
     d->zFitBtn->setIcon(SmallIcon("zoom-best-fit"));
     d->zFitBtn->setToolTip(i18n("Zoom to fit preview image"));
-    d->prevBtn  = new QPushButton();
+
+    d->progressBar = new QProgressBar();
+    d->progressBar->setMaximumHeight(fontMetrics().height()+4);
+    d->progressBar->hide();
+    d->cancelBtn   = new QPushButton();
+    d->cancelBtn->setIcon(SmallIcon("dialog-cancel"));
+    d->cancelBtn->setMaximumHeight(fontMetrics().height()+4);
+    d->cancelBtn->hide();
+
+    d->prevBtn = new QPushButton();
     d->prevBtn->setIcon(SmallIcon("stamp"));
     d->prevBtn->setToolTip(i18n("Scan preview image from device"));
-    d->scanBtn  = new QPushButton();
+    d->scanBtn = new QPushButton();
     d->scanBtn->setIcon(SmallIcon("scanner"));
     d->scanBtn->setToolTip(i18n("Scan final image from device"));
 
@@ -400,11 +415,11 @@ bool SaneWidget::openDevice(const QString &device_name)
     connect(d->zFitBtn, SIGNAL(clicked()), 
             d->preview, SLOT(zoom2Fit()));
 
-    connect (d->scanBtn, SIGNAL(clicked()), 
-             this, SLOT(scanFinal()));
+    connect(d->scanBtn, SIGNAL(clicked()), 
+            this, SLOT(scanFinal()));
 
-    connect (d->prevBtn, SIGNAL(clicked()), 
-             this, SLOT(scanPreview()));
+    connect(d->prevBtn, SIGNAL(clicked()), 
+            this, SLOT(scanPreview()));
 
     QHBoxLayout *zoom_layout = new QHBoxLayout;
 
@@ -416,6 +431,7 @@ bool SaneWidget::openDevice(const QString &device_name)
     zoom_layout->addWidget(d->zSelBtn);
     zoom_layout->addWidget(d->zFitBtn);
     zoom_layout->addStretch();
+    zoom_layout->addWidget(d->progressBar);
     zoom_layout->addWidget(d->prevBtn);
     zoom_layout->addWidget(d->scanBtn);
 
