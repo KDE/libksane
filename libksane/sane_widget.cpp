@@ -221,10 +221,10 @@ QString SaneWidget::selectDevice(QWidget* parent)
     while(dev_list[i] != 0) 
     {
         kDebug() << "i="       << i << " "
-                 << "name='"   << dev_list[i]->name << "' "
+                 << "name='"   << dev_list[i]->name   << "' "
                  << "vendor='" << dev_list[i]->vendor << "' "
-                 << "model='"  << dev_list[i]->model << "' "
-                 << "type='"   << dev_list[i]->type << "' " << endl;
+                 << "model='"  << dev_list[i]->model  << "' "
+                 << "type='"   << dev_list[i]->type   << "' " << endl;
         tmp = QString(dev_list[i]->name);
         tmp += "\n" + QString(dev_list[i]->vendor);
         tmp += " : " + QString(dev_list[i]->model);
@@ -293,6 +293,8 @@ bool SaneWidget::openDevice(const QString &device_name)
     {
 #ifdef ENABLE_DEBUG
         d->modelName = i18n("Test Scanner");
+        d->make      = QString("Test");
+        d->model     = QString("Debug");
 #else
         kDebug() << "openDevice: device '" << qPrintable(device_name) 
                  << "' not found" << endl;
