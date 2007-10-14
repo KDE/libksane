@@ -13,7 +13,7 @@
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation;
  * either version 2, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -167,26 +167,26 @@ public:
 SaneWidget::SaneWidget(QWidget* parent)
           : QWidget(parent)
 {
-    d = new SaneWidgetPriv;   
+    d = new SaneWidgetPriv;
 
     SANE_Int    version;
     SANE_Status status;
     status = sane_init(&version, 0);
-    if (status != SANE_STATUS_GOOD) 
+    if (status != SANE_STATUS_GOOD)
     {
-        kDebug() << "libksane: sane_init() failed(" 
+        kDebug() << "libksane: sane_init() failed("
                  << sane_strstatus(status) << ")" << endl;
     }
-    else 
+    else
     {
-        kDebug() << "Sane Version = " 
+        kDebug() << "Sane Version = "
                  << SANE_VERSION_MAJOR(version) << "."
                  << SANE_VERSION_MINOR(version) << "."
                  << SANE_VERSION_BUILD(version) << endl;
     }
     d->rValTmr.setSingleShot(true);
 
-    connect (&d->rValTmr, SIGNAL(timeout()), 
+    connect (&d->rValTmr, SIGNAL(timeout()),
              this, SLOT(valReload()));
 }
 
@@ -218,7 +218,7 @@ QString SaneWidget::selectDevice(QWidget* parent)
 
     status = sane_get_devices(&dev_list, SANE_TRUE);
 
-    while(dev_list[i] != 0) 
+    while(dev_list[i] != 0)
     {
         kDebug() << "i="       << i << " "
                  << "name='"   << dev_list[i]->name   << "' "
@@ -252,12 +252,12 @@ QString SaneWidget::selectDevice(QWidget* parent)
     i = sel.getSelectedIndex(parent, QString("Select Scanner"), dev_name_list, 0);
     kDebug() << "i=" << i << endl;
 
-    if (i == num_scaners) 
+    if (i == num_scaners)
     {
         return QString("test:0");
     }
 
-    if ((i < 0) || (i >= num_scaners)) 
+    if ((i < 0) || (i >= num_scaners))
     {
         return QString();
     }
@@ -277,9 +277,9 @@ bool SaneWidget::openDevice(const QString &device_name)
     // get the device list to get the vendor and model info
     status = sane_get_devices(&dev_list, SANE_TRUE);
 
-    while(dev_list[i] != 0) 
+    while(dev_list[i] != 0)
     {
-        if (QString(dev_list[i]->name) == device_name) 
+        if (QString(dev_list[i]->name) == device_name)
         {
             d->modelName = QString(dev_list[i]->vendor) + " " + QString(dev_list[i]->model);
             d->make      = QString(dev_list[i]->vendor);
@@ -289,23 +289,23 @@ bool SaneWidget::openDevice(const QString &device_name)
         i++;
     }
 
-    if (dev_list[i] == 0) 
+    if (dev_list[i] == 0)
     {
 #ifdef ENABLE_DEBUG
         d->modelName = i18n("Test Scanner");
         d->make      = QString("Test");
         d->model     = QString("Debug");
 #else
-        kDebug() << "openDevice: device '" << qPrintable(device_name) 
+        kDebug() << "openDevice: device '" << qPrintable(device_name)
                  << "' not found" << endl;
         return false;
 #endif
     }
 
     // Try to open the device
-    if (sane_open(device_name.toLatin1(), &d->saneHandle) != SANE_STATUS_GOOD) 
+    if (sane_open(device_name.toLatin1(), &d->saneHandle) != SANE_STATUS_GOOD)
     {
-        kDebug() << "openDevice: sane_open(\"" << qPrintable(device_name) 
+        kDebug() << "openDevice: sane_open(\"" << qPrintable(device_name)
                  << "\", &handle) failed!" << endl;
         return false;
     }
@@ -313,31 +313,31 @@ bool SaneWidget::openDevice(const QString &device_name)
 
     // Read the options (start with option 0 the number of parameters)
     num_option_d = sane_get_option_descriptor(d->saneHandle, 0);
-    if (num_option_d == 0) 
+    if (num_option_d == 0)
     {
         return false;
     }
     QVarLengthArray<char> data(num_option_d->size);
     status = sane_control_option(d->saneHandle, 0, SANE_ACTION_GET_VALUE, data.data(), &res);
-    if (status != SANE_STATUS_GOOD) 
+    if (status != SANE_STATUS_GOOD)
     {
         return false;
     }
     num_sane_options = *reinterpret_cast<SANE_Word*>(data.data());
 
     // read the rest of the options
-    for (i=1; i<num_sane_options; i++) 
+    for (i=1; i<num_sane_options; i++)
     {
         d->optList.append(new SaneOption(d->saneHandle, i));
     }
 
     // do the connections of the option parameters
-    for (i=1; i<d->optList.size(); i++) 
+    for (i=1; i<d->optList.size(); i++)
     {
-        connect (d->optList.at(i), SIGNAL(optsNeedReload()), 
+        connect (d->optList.at(i), SIGNAL(optsNeedReload()),
                  this, SLOT(optReload()));
 
-        connect (d->optList.at(i), SIGNAL(valsNeedReload()), 
+        connect (d->optList.at(i), SIGNAL(valsNeedReload()),
                  this, SLOT(scheduleValReload()));
     }
 
@@ -398,28 +398,28 @@ bool SaneWidget::openDevice(const QString &device_name)
     d->scanBtn->setIcon(SmallIcon("scanner"));
     d->scanBtn->setToolTip(i18n("Scan final image from device"));
 
-    connect(d->zInBtn, SIGNAL(clicked()), 
+    connect(d->zInBtn, SIGNAL(clicked()),
             d->preview, SLOT(zoomIn()));
 
-    connect(d->zOutBtn, SIGNAL(clicked()), 
+    connect(d->zOutBtn, SIGNAL(clicked()),
             d->preview, SLOT(zoomOut()));
 
-    connect(d->zSelBtn, SIGNAL(clicked()), 
+    connect(d->zSelBtn, SIGNAL(clicked()),
             d->preview, SLOT(zoomSel()));
 
-    connect(d->zFitBtn, SIGNAL(clicked()), 
+    connect(d->zFitBtn, SIGNAL(clicked()),
             d->preview, SLOT(zoom2Fit()));
 
-    connect(d->scanBtn, SIGNAL(clicked()), 
+    connect(d->scanBtn, SIGNAL(clicked()),
             this, SLOT(scanFinal()));
 
-    connect(d->prevBtn, SIGNAL(clicked()), 
+    connect(d->prevBtn, SIGNAL(clicked()),
             this, SLOT(scanPreview()));
 
-    connect(d->cancelBtn, SIGNAL(clicked()), 
+    connect(d->cancelBtn, SIGNAL(clicked()),
             this, SLOT(scanCancel()));
 
-    connect(this, SIGNAL(scanProgress(int)), 
+    connect(this, SIGNAL(scanProgress(int)),
             d->progressBar, SLOT(setValue(int)));
 
     QHBoxLayout *zoom_layout = new QHBoxLayout;
@@ -488,7 +488,7 @@ void SaneWidget::createOptInterface()
 
     SaneOption *option;
     // Scan Source
-    if ((option = getOption(SANE_NAME_SCAN_SOURCE)) != 0) 
+    if ((option = getOption(SANE_NAME_SCAN_SOURCE)) != 0)
     {
         option->createWidget(opt_container);
         opt_layout->addWidget(option->widget());
@@ -505,67 +505,67 @@ void SaneWidget::createOptInterface()
         opt_layout->addWidget(option->widget());
     }
     // Scan mode
-    if ((option = getOption(SANE_NAME_SCAN_MODE)) != 0) 
+    if ((option = getOption(SANE_NAME_SCAN_MODE)) != 0)
     {
         d->optMode = option;
         option->createWidget(opt_container);
         opt_layout->addWidget(option->widget());
     }
     // Bitdepth
-    if ((option = getOption(SANE_NAME_BIT_DEPTH)) != 0) 
+    if ((option = getOption(SANE_NAME_BIT_DEPTH)) != 0)
     {
         d->optDepth = option;
         option->createWidget(opt_container);
         opt_layout->addWidget(option->widget());
     }
     // Threshold
-    if ((option = getOption(SANE_NAME_THRESHOLD)) != 0) 
+    if ((option = getOption(SANE_NAME_THRESHOLD)) != 0)
     {
         option->createWidget(opt_container);
         opt_layout->addWidget(option->widget());
     }
     // Resolution
-    if ((option = getOption(SANE_NAME_SCAN_RESOLUTION)) != 0) 
+    if ((option = getOption(SANE_NAME_SCAN_RESOLUTION)) != 0)
     {
         d->optRes = option;
         option->createWidget(opt_container);
         opt_layout->addWidget(option->widget());
     }
-    else if ((option = getOption(SANE_NAME_SCAN_X_RESOLUTION)) != 0) 
+    else if ((option = getOption(SANE_NAME_SCAN_X_RESOLUTION)) != 0)
     {
         d->optRes = option;
         option->createWidget(opt_container);
         opt_layout->addWidget(option->widget());
     }
-    if ((option = getOption(SANE_NAME_SCAN_Y_RESOLUTION)) != 0) 
+    if ((option = getOption(SANE_NAME_SCAN_Y_RESOLUTION)) != 0)
     {
         d->optResY = option;
         option->createWidget(opt_container);
         opt_layout->addWidget(option->widget());
     }
     // scan area
-    if ((option = getOption(SANE_NAME_SCAN_TL_X)) != 0) 
+    if ((option = getOption(SANE_NAME_SCAN_TL_X)) != 0)
     {
         d->optTl = option;
-        connect (option, SIGNAL(fValueRead(float)), 
+        connect (option, SIGNAL(fValueRead(float)),
                  this, SLOT(setTLX(float)));
     }
-    if ((option = getOption(SANE_NAME_SCAN_TL_Y)) != 0) 
+    if ((option = getOption(SANE_NAME_SCAN_TL_Y)) != 0)
     {
         d->optTlY = option;
-        connect (option, SIGNAL(fValueRead(float)), 
+        connect (option, SIGNAL(fValueRead(float)),
                  this, SLOT(setTLY(float)));
     }
-    if ((option = getOption(SANE_NAME_SCAN_BR_X)) != 0) 
+    if ((option = getOption(SANE_NAME_SCAN_BR_X)) != 0)
     {
         d->optBrX = option;
-        connect (option, SIGNAL(fValueRead(float)), 
+        connect (option, SIGNAL(fValueRead(float)),
                  this, SLOT(setBRX(float)));
     }
-    if ((option = getOption(SANE_NAME_SCAN_BR_Y)) != 0) 
+    if ((option = getOption(SANE_NAME_SCAN_BR_Y)) != 0)
     {
         d->optBrY = option;
-        connect (option, SIGNAL(fValueRead(float)), 
+        connect (option, SIGNAL(fValueRead(float)),
                  this, SLOT(setBRY(float)));
     }
 
@@ -584,12 +584,12 @@ void SaneWidget::createOptInterface()
     color_lay->addWidget(line1);
     color_lay->addSpacing(2);
 
-    if ((option = getOption(SANE_NAME_BRIGHTNESS)) != 0) 
+    if ((option = getOption(SANE_NAME_BRIGHTNESS)) != 0)
     {
         option->createWidget(d->colorOpts);
         color_lay->addWidget(option->widget());
     }
-    if ((option = getOption(SANE_NAME_CONTRAST)) != 0) 
+    if ((option = getOption(SANE_NAME_CONTRAST)) != 0)
     {
         option->createWidget(d->colorOpts);
         color_lay->addWidget(option->widget());
@@ -602,29 +602,29 @@ void SaneWidget::createOptInterface()
     gam_frm_l->setSpacing(2);
     gam_frm_l->setMargin(0);
 
-    if ((option = getOption(SANE_NAME_GAMMA_VECTOR_R)) != 0) 
+    if ((option = getOption(SANE_NAME_GAMMA_VECTOR_R)) != 0)
     {
         d->optGamR= option;
         option->createWidget(gamma_frm);
         gam_frm_l->addWidget(option->widget());
     }
-    if ((option = getOption(SANE_NAME_GAMMA_VECTOR_G)) != 0) 
+    if ((option = getOption(SANE_NAME_GAMMA_VECTOR_G)) != 0)
     {
         d->optGamG= option;
         option->createWidget(gamma_frm);
         gam_frm_l->addWidget(option->widget());
     }
-    if ((option = getOption(SANE_NAME_GAMMA_VECTOR_B)) != 0) 
+    if ((option = getOption(SANE_NAME_GAMMA_VECTOR_B)) != 0)
     {
         d->optGamB= option;
         option->createWidget(gamma_frm);
         gam_frm_l->addWidget(option->widget());
     }
 
-    if ((d->optGamR != 0) && (d->optGamG != 0) && (d->optGamB != 0)) 
+    if ((d->optGamR != 0) && (d->optGamG != 0) && (d->optGamB != 0))
     {
         LabeledGamma *lgamma = new LabeledGamma(d->colorOpts,
-                                  QString(SANE_TITLE_GAMMA_VECTOR),
+                                  i18n(SANE_TITLE_GAMMA_VECTOR),
                                   d->optGamR->lgamma->size());
         color_lay->addWidget(lgamma);
 
@@ -641,21 +641,21 @@ void SaneWidget::createOptInterface()
                                                  opt_container);
         color_lay->addWidget(split_gam_btn);
 
-        connect (split_gam_btn, SIGNAL(toggled(bool)), 
+        connect (split_gam_btn, SIGNAL(toggled(bool)),
                  gamma_frm, SLOT(setVisible(bool)));
 
-        connect (split_gam_btn, SIGNAL(toggled(bool)), 
+        connect (split_gam_btn, SIGNAL(toggled(bool)),
                  lgamma, SLOT(setHidden(bool)));
 
         gamma_frm->hide();
     }
 
-    if ((option = getOption(SANE_NAME_BLACK_LEVEL)) != 0) 
+    if ((option = getOption(SANE_NAME_BLACK_LEVEL)) != 0)
     {
         option->createWidget(d->colorOpts);
         color_lay->addWidget(option->widget());
     }
-    if ((option = getOption(SANE_NAME_WHITE_LEVEL)) != 0) 
+    if ((option = getOption(SANE_NAME_WHITE_LEVEL)) != 0)
     {
         option->createWidget(d->colorOpts);
         color_lay->addWidget(option->widget());
@@ -677,7 +677,7 @@ void SaneWidget::createOptInterface()
     remain_lay->addSpacing(4);
 
     // add remaining parameters
-    for (int i=0; i<d->optList.size(); i++) 
+    for (int i=0; i<d->optList.size(); i++)
     {
         if ((d->optList.at(i)->widget() == 0) &&
              (d->optList.at(i)->name() != SANE_NAME_SCAN_TL_X) &&
@@ -692,7 +692,7 @@ void SaneWidget::createOptInterface()
     }
 
     // connect showing/hiding finctionality
-    connect (opt_level, SIGNAL(activated(int)), 
+    connect (opt_level, SIGNAL(activated(int)),
              this, SLOT(opt_level_change(int)));
 
     // add a stretch to the end to ceep the parameters at the top
@@ -732,19 +732,19 @@ void SaneWidget::setDefaultValues()
     SaneOption *option;
 
     // Try to get Color mode by default
-    if ((option = getOption(SANE_NAME_SCAN_MODE)) != 0) 
+    if ((option = getOption(SANE_NAME_SCAN_MODE)) != 0)
     {
-        option->setValue(QString(SANE_VALUE_SCAN_MODE_COLOR));
+        option->setValue(SANE_VALUE_SCAN_MODE_COLOR);
     }
 
     // Try to set 8 bit color
-    if ((option = getOption(SANE_NAME_BIT_DEPTH)) != 0) 
+    if ((option = getOption(SANE_NAME_BIT_DEPTH)) != 0)
     {
         option->setValue(8);
     }
 
     // Try to set Scan resolution to 600 DPI
-    if (d->optRes != 0) 
+    if (d->optRes != 0)
     {
         d->optRes->setValue(600);
     }
@@ -797,7 +797,7 @@ SaneOption *SaneWidget::getOption(const QString &name)
 
     for (i=0; i<d->optList.size(); i++)
     {
-        if (d->optList.at(i)->name() == name) 
+        if (d->optList.at(i)->name() == name)
         {
             return d->optList.at(i);
         }
@@ -826,7 +826,7 @@ void SaneWidget::handleSelection(float tl_x, float tl_y, float br_x, float br_y)
     if (d->optBrY != 0) d->optBrY->setValue(fbr_y);
 }
 
-void SaneWidget::setTLX(float ftlx) 
+void SaneWidget::setTLX(float ftlx)
 {
     float max, ratio;
 
@@ -837,7 +837,7 @@ void SaneWidget::setTLX(float ftlx)
     d->preview->setTLX(ratio);
 }
 
-void SaneWidget::setTLY(float ftly) 
+void SaneWidget::setTLY(float ftly)
 {
     float max, ratio;
 
@@ -848,7 +848,7 @@ void SaneWidget::setTLY(float ftly)
     d->preview->setTLY(ratio);
 }
 
-void SaneWidget::setBRX(float fbrx) 
+void SaneWidget::setBRX(float fbrx)
 {
     float max, ratio;
 
@@ -859,7 +859,7 @@ void SaneWidget::setBRX(float fbrx)
     d->preview->setBRX(ratio);
 }
 
-void SaneWidget::setBRY(float fbry) 
+void SaneWidget::setBRY(float fbry)
 {
     float max, ratio;
 
@@ -877,15 +877,15 @@ void SaneWidget::updatePreviewSize()
     float max_x=0, max_y=0;
 
     // check if an update is necessary
-    if (d->optBrX != 0) 
+    if (d->optBrX != 0)
     {
         d->optBrX->getMaxValue(&max_x);
     }
-    if (d->optBrY != 0) 
+    if (d->optBrY != 0)
     {
         d->optBrY->getMaxValue(&max_y);
     }
-    if ((max_x == d->previewWidth) && (max_y == d->previewHeight)) 
+    if ((max_x == d->previewWidth) && (max_y == d->previewHeight))
     {
         return;
     }
@@ -893,41 +893,41 @@ void SaneWidget::updatePreviewSize()
     d->previewWidth  = max_x;
     d->previewHeight = max_y;
     // set the scan area to the whole area
-    if (d->optTl != 0) 
+    if (d->optTl != 0)
     {
         d->optTl->setValue(0);
     }
-    if (d->optTlY != 0) 
+    if (d->optTlY != 0)
     {
         d->optTlY->setValue(0);
     }
 
-    if (d->optBrX != 0) 
+    if (d->optBrX != 0)
     {
         d->optBrX->setValue(max_x);
     }
-    if (d->optBrY != 0) 
+    if (d->optBrY != 0)
     {
         d->optBrY->setValue(max_y);
     }
 
     // set the resopution to 100 dpi and increase if necessary
     dpi = 0;
-    do 
+    do
     {
         // Increase the dpi value
         dpi += 100;
-        if (d->optRes != 0) 
+        if (d->optRes != 0)
         {
             d->optRes->setValue(dpi);
         }
-        if (d->optResY != 0) 
+        if (d->optResY != 0)
         {
             d->optResY->setValue(dpi);
         }
         //check what image size we would get in a scan
         status = sane_get_parameters(d->saneHandle, &d->params);
-        if (status != SANE_STATUS_GOOD) 
+        if (status != SANE_STATUS_GOOD)
         {
             kDebug() << "ERROR: status="
                      << sane_strstatus(status) << endl;
@@ -937,16 +937,16 @@ void SaneWidget::updatePreviewSize()
         //printf("lines = %d\n", d->params.lines);
         //printf("pixels_per_line = %d\n", d->params.pixels_per_line);
         if (dpi > 800) break;
-    } 
+    }
     while ((d->params.pixels_per_line < 300) || (d->params.lines < 300));
 
 
-    if ((d->prImg->width() != d->params.pixels_per_line) || (d->prImg->height() != d->params.lines)) 
+    if ((d->prImg->width() != d->params.pixels_per_line) || (d->prImg->height() != d->params.lines))
     {
         *d->prImg = QImage(d->params.pixels_per_line, d->params.lines, QImage::Format_RGB32);
-        for (i=0; i<d->prImg->height(); i++) 
+        for (i=0; i<d->prImg->height(); i++)
         {
-            for (j=0; j<d->prImg->width(); j++) 
+            for (j=0; j<d->prImg->width(); j++)
             {
                 d->prImg->setPixel(j, i, qRgb(255,255,255));
             }
@@ -979,27 +979,27 @@ void SaneWidget::scanPreview()
     if (d->optBrY != 0) d->optBrY->storeCurrentData();
 
     // set 8 bits per color if possible
-    if (d->optDepth != 0) 
+    if (d->optDepth != 0)
     {
         d->optDepth->setValue(8);
     }
 
     // select the whole area
-    if (d->optTl != 0) 
+    if (d->optTl != 0)
     {
         d->optTl->setValue(0);
     }
-    if (d->optTlY != 0) 
+    if (d->optTlY != 0)
     {
         d->optTlY->setValue(0);
     }
 
-    if (d->optBrX != 0) 
+    if (d->optBrX != 0)
     {
         d->optBrX->getMaxValue(&max);
         d->optBrX->setValue(max);
     }
-    if (d->optBrY != 0) 
+    if (d->optBrY != 0)
     {
         d->optBrY->getMaxValue(&max);
         d->optBrY->setValue(max);
@@ -1007,21 +1007,21 @@ void SaneWidget::scanPreview()
 
     // set the resopution to 100 dpi and increase if necessary
     dpi = 0;
-    do 
+    do
     {
         // Increase the dpi value
         dpi += 100;
-        if (d->optRes != 0) 
+        if (d->optRes != 0)
         {
             d->optRes->setValue(dpi);
         }
-        if (d->optResY != 0) 
+        if (d->optResY != 0)
         {
             d->optResY->setValue(dpi);
         }
         //check what image size we would get in a scan
         status = sane_get_parameters(d->saneHandle, &d->params);
-        if (status != SANE_STATUS_GOOD) 
+        if (status != SANE_STATUS_GOOD)
         {
             kDebug() << "ERROR: status="
                      << sane_strstatus(status) << endl;
@@ -1031,11 +1031,11 @@ void SaneWidget::scanPreview()
         //printf("lines = %d\n", d->params.lines);
         //printf("pixels_per_line = %d\n", d->params.pixels_per_line);
         if (dpi > 800) break;
-    } 
+    }
     while ((d->params.pixels_per_line < 300) || (d->params.lines < 300));
 
     // execute valReload if there is a pending value reload
-    while (d->rValTmr.isActive()) 
+    while (d->rValTmr.isActive())
     {
         d->rValTmr.stop();
         valReload();
@@ -1043,7 +1043,7 @@ void SaneWidget::scanPreview()
 
     // Start the scanning
     status = sane_start(d->saneHandle);
-    if (status != SANE_STATUS_GOOD) 
+    if (status != SANE_STATUS_GOOD)
     {
         kDebug() << "sane_start ERROR: status="
                  << sane_strstatus(status) << endl;
@@ -1053,7 +1053,7 @@ void SaneWidget::scanPreview()
     }
 
     status = sane_get_parameters(d->saneHandle, &d->params);
-    if (status != SANE_STATUS_GOOD) 
+    if (status != SANE_STATUS_GOOD)
     {
         kDebug() << "sane_get_parameters ERROR: status="
                  << sane_strstatus(status) << endl;
@@ -1079,9 +1079,9 @@ void SaneWidget::scanPreview()
     }
 
     // clear the old image
-    for (i=0; i<d->prImg->height(); i++) 
+    for (i=0; i<d->prImg->height(); i++)
     {
-        for (j=0; j<d->prImg->width(); j++) 
+        for (j=0; j<d->prImg->width(); j++)
         {
             d->prImg->setPixel(j, i, qRgb(255,255,255));
         }
@@ -1097,7 +1097,7 @@ void SaneWidget::scanPreview()
 
     setBusy(true);
 
-    while (d->readStatus == READ_ON_GOING) 
+    while (d->readStatus == READ_ON_GOING)
     {
         processData();
     }
@@ -1123,11 +1123,11 @@ void SaneWidget::scanFinal()
 
     //std::cout << "scanFinal" << std::endl;
 
-    if ((d->optTl != 0) && (d->optBrX != 0)) 
+    if ((d->optTl != 0) && (d->optBrX != 0))
     {
         d->optTl->getValue(&v1);
         d->optBrX->getValue(&v2);
-        if (v1 == v2) 
+        if (v1 == v2)
         {
             d->optTl->setValue(0);
             d->optBrX->getMaxValue(&v2);
@@ -1135,11 +1135,11 @@ void SaneWidget::scanFinal()
         }
     }
 
-    if ((d->optTlY != 0) && (d->optBrY != 0)) 
+    if ((d->optTlY != 0) && (d->optBrY != 0))
     {
         d->optTlY->getValue(&v1);
         d->optBrY->getValue(&v2);
-        if (v1 == v2) 
+        if (v1 == v2)
         {
             d->optTlY->setValue(0);
             d->optBrY->getMaxValue(&v2);
@@ -1148,7 +1148,7 @@ void SaneWidget::scanFinal()
     }
 
     // execute a pending value reload
-    while (d->rValTmr.isActive()) 
+    while (d->rValTmr.isActive())
     {
         d->rValTmr.stop();
         valReload();
@@ -1157,7 +1157,7 @@ void SaneWidget::scanFinal()
     // Start the scanning
     emit scanStart();
     status = sane_start(d->saneHandle);
-    if (status != SANE_STATUS_GOOD) 
+    if (status != SANE_STATUS_GOOD)
     {
         kDebug() << "sane_start ERROR: status="
                  << sane_strstatus(status) << endl;
@@ -1167,9 +1167,9 @@ void SaneWidget::scanFinal()
     //printf("start OK\n");
 
     status = sane_get_parameters(d->saneHandle, &d->params);
-    if (status != SANE_STATUS_GOOD) 
+    if (status != SANE_STATUS_GOOD)
     {
-        kDebug() << "sane_get_parameters ERROR: status=" 
+        kDebug() << "sane_get_parameters ERROR: status="
                  << sane_strstatus(status) << endl;
         sane_cancel(d->saneHandle);
         return;
@@ -1198,11 +1198,11 @@ void SaneWidget::scanFinal()
 
     setBusy(true, true);
 
-    while (d->readStatus == READ_ON_GOING) 
+    while (d->readStatus == READ_ON_GOING)
     {
         processData();
     }
-    if (d->readStatus != READ_FINISHED) 
+    if (d->readStatus != READ_FINISHED)
     {
         emit scanFaild();
     }
@@ -1219,21 +1219,21 @@ void SaneWidget::processData()
     status = sane_read(d->saneHandle, d->imgData, IMG_DATA_R_SIZE, &read_bytes);
     //printf("Post read() read=%d\n", read_bytes);
 
-    if (status == SANE_STATUS_EOF) 
+    if (status == SANE_STATUS_EOF)
     {
         //printf("Read finished read_bytes=%d\n", read_bytes);
-        if (d->pixelY < d->params.lines) 
+        if (d->pixelY < d->params.lines)
         {
             kDebug() << "d->pixelY(" << d->pixelY
                      << ") < d->params.lines(" << d->params.lines << ")" << endl;
             sleep(1);
             //sane_cancel(d->saneHandle);
         }
-        if (d->params.last_frame == SANE_TRUE) 
+        if (d->params.last_frame == SANE_TRUE)
         {
             // this is where it all ends well :)
             d->readStatus = READ_FINISHED;
-            if (d->scanImg == &d->theImg) 
+            if (d->scanImg == &d->theImg)
             {
                 d->progressBar->hide();
                 d->cancelBtn->hide();
@@ -1242,12 +1242,12 @@ void SaneWidget::processData()
             }
             return;
         }
-        else 
+        else
         {
             sane_start(d->saneHandle);
-            if (status != SANE_STATUS_GOOD) 
+            if (status != SANE_STATUS_GOOD)
             {
-                kDebug() << "sane_start ERROR: status=" 
+                kDebug() << "sane_start ERROR: status="
                          << sane_strstatus(status) << endl;
                 sane_cancel(d->saneHandle);
                 d->readStatus = READ_ERROR;
@@ -1255,9 +1255,9 @@ void SaneWidget::processData()
             }
         }
     }
-    else if (status != SANE_STATUS_GOOD) 
+    else if (status != SANE_STATUS_GOOD)
     {
-        kDebug() << "Reading error, status=" 
+        kDebug() << "Reading error, status="
                  << sane_strstatus(status) << endl;
         sane_cancel(d->saneHandle);
         d->readStatus = READ_ERROR;
@@ -1267,14 +1267,14 @@ void SaneWidget::processData()
     switch (d->params.format)
     {
         case SANE_FRAME_RGB:
-            if (d->params.depth == 8) 
+            if (d->params.depth == 8)
             {
                 // go through the data
-                for (i=0; i<read_bytes; i++) 
+                for (i=0; i<read_bytes; i++)
                 {
-                    if (d->pixelY >= d->params.lines) 
+                    if (d->pixelY >= d->params.lines)
                     {
-                        kDebug() << "processData: reached image height before EOF" 
+                        kDebug() << "processData: reached image height before EOF"
                                  << endl;
                         sane_cancel(d->saneHandle);
                         d->readStatus = READ_ERROR;
@@ -1284,14 +1284,14 @@ void SaneWidget::processData()
                     d->pxCIndex++;
                     if (d->pxCIndex >= 3) d->pxCIndex = 0;
 
-                    if (d->pxCIndex == 0) 
+                    if (d->pxCIndex == 0)
                     {
                         d->scanImg->setPixel(d->pixelX, d->pixelY,
                                            qRgb(d->pxColors[0],
                                                 d->pxColors[1],
                                                 d->pxColors[2]));
                         d->pixelX++;
-                        if (d->pixelX >= d->params.pixels_per_line) 
+                        if (d->pixelX >= d->params.pixels_per_line)
                         {
                             d->pixelX = 0;
                             d->pixelY++;
@@ -1299,9 +1299,9 @@ void SaneWidget::processData()
                     }
                 }
             }
-            else 
+            else
             {
-                kDebug() << "Only 8-bit colors are currently supported!" 
+                kDebug() << "Only 8-bit colors are currently supported!"
                          << endl;
                 sane_cancel(d->saneHandle);
                 d->readStatus = READ_ERROR;
@@ -1310,11 +1310,11 @@ void SaneWidget::processData()
             break;
 
         case SANE_FRAME_GRAY:
-            if (d->params.depth == 8) 
+            if (d->params.depth == 8)
             {
-                for (i=0; i<read_bytes; i++) 
+                for (i=0; i<read_bytes; i++)
                 {
-                    if (d->pixelY >= d->params.lines) 
+                    if (d->pixelY >= d->params.lines)
                     {
                         kDebug() << "reached image height before EOF" << endl;
                         sane_cancel(d->saneHandle);
@@ -1326,7 +1326,7 @@ void SaneWidget::processData()
                                             d->imgData[i],
                                             d->imgData[i]));
                     d->pixelX++;
-                    if (d->pixelX >= d->params.pixels_per_line) 
+                    if (d->pixelX >= d->params.pixels_per_line)
                     {
                         d->pixelX = 0;
                         d->pixelY++;
@@ -1335,27 +1335,27 @@ void SaneWidget::processData()
             }
             else if (d->params.depth == 1)
             {
-                for (i=0; i<read_bytes; i++) 
+                for (i=0; i<read_bytes; i++)
                 {
-                    if (d->pixelY >= d->params.lines) 
+                    if (d->pixelY >= d->params.lines)
                     {
                         kDebug() << "reached image height before EOF" << endl;
                         sane_cancel(d->saneHandle);
                         d->readStatus = READ_ERROR;
                         return;
                     }
-                    for (j=7; j>=0; j--) 
+                    for (j=7; j>=0; j--)
                     {
-                        if ((d->imgData[i] & (1<<j)) == 0) 
+                        if ((d->imgData[i] & (1<<j)) == 0)
                         {
                             d->scanImg->setPixel(d->pixelX, d->pixelY, qRgb(255,255,255));
                         }
-                        else 
+                        else
                         {
                             d->scanImg->setPixel(d->pixelX, d->pixelY, qRgb(0,0,0));
                         }
                         d->pixelX++;
-                        if(d->pixelX >= d->params.pixels_per_line) 
+                        if(d->pixelX >= d->params.pixels_per_line)
                         {
                             d->pixelX = 0;
                             d->pixelY++;
@@ -1365,7 +1365,7 @@ void SaneWidget::processData()
                     }
                 }
             }
-            else 
+            else
             {
                 kDebug() << "Only 1 and 8-bit colors are supported "
                             "for grayscale!" << endl;
@@ -1426,17 +1426,17 @@ void SaneWidget::processData()
             d->readStatus = READ_ERROR;
             return;
     }
-    if (d->params.lines > 0) 
+    if (d->params.lines > 0)
     {
         int new_progress = (int)( ((double)PROGRESS_MAX / d->params.lines) * d->pixelY);
-        if (abs (new_progress - d->progress) > 5) 
+        if (abs (new_progress - d->progress) > 5)
         {
             d->progress = new_progress;
-            if (d->scanImg == d->prImg) 
+            if (d->scanImg == d->prImg)
             {
                 d->preview->updateScaledImg();
             }
-            if ((d->progress < PROGRESS_MAX) && (d->scanImg == &d->theImg)) 
+            if ((d->progress < PROGRESS_MAX) && (d->scanImg == &d->theImg))
             {
                 emit scanProgress(d->progress);
             }
@@ -1458,7 +1458,7 @@ void SaneWidget::scanCancel()
 
 bool SaneWidget::setIconColorMode(const QIcon &icon)
 {
-    if ((d->optMode != 0) && (d->optMode->widget() != 0)) 
+    if ((d->optMode != 0) && (d->optMode->widget() != 0))
     {
         d->optMode->setIconColorMode(icon);
         return true;
@@ -1468,7 +1468,7 @@ bool SaneWidget::setIconColorMode(const QIcon &icon)
 
 bool SaneWidget::setIconGrayMode(const QIcon &icon)
 {
-    if ((d->optMode != 0) && (d->optMode->widget() != 0)) 
+    if ((d->optMode != 0) && (d->optMode->widget() != 0))
     {
         d->optMode->setIconGrayMode(icon);
         return true;
@@ -1478,7 +1478,7 @@ bool SaneWidget::setIconGrayMode(const QIcon &icon)
 
 bool SaneWidget::setIconBWMode(const QIcon &icon)
 {
-    if ((d->optMode != 0) && (d->optMode->widget() != 0)) 
+    if ((d->optMode != 0) && (d->optMode->widget() != 0))
     {
         d->optMode->setIconBWMode(icon);
         return true;
@@ -1496,7 +1496,7 @@ void SaneWidget::setBusy(bool busy, bool finalScan)
     d->zFitBtn->setDisabled(busy);
     d->prevBtn->setDisabled(busy);
     d->scanBtn->setDisabled(busy);
-    
+
     if (!finalScan) return;
 
     if (busy)

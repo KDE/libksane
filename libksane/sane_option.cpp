@@ -12,7 +12,7 @@
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation;
  * either version 2, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -26,6 +26,14 @@
 
 #include <cstdio>
 #include <iostream>
+
+// Sane includes.
+
+extern "C"
+{
+#include <sane/saneopts.h>
+}
+
 
 // Qt includes
 #include <QtCore/QVarLengthArray>
@@ -63,7 +71,7 @@ SaneOption::SaneOption(const SANE_Handle s_handle, const int opt_num)
     cstrl = new QStringList("ComboStringList");
 
     sane_option = sane_get_option_descriptor(sane_handle, opt_number);
-    if (sane_option == 0) 
+    if (sane_option == 0)
     {
         printf("sane_option == 0!! ");
         return;
@@ -78,7 +86,7 @@ SaneOption::SaneOption(const SANE_Handle s_handle, const int opt_num)
     {
         sw_state = SW_STATE_HIDDEN;
     }
-    else if ((sane_option->cap & SANE_CAP_SOFT_SELECT) == 0) 
+    else if ((sane_option->cap & SANE_CAP_SOFT_SELECT) == 0)
     {
         sw_state = SW_STATE_DISABLED;
     }
@@ -95,7 +103,7 @@ void SaneOption::createWidget(QWidget *parent)
 {
     float tmp_step;
     //printf("createWidget for opt(%d)\n", opt_number);
-    if (sane_option == 0) 
+    if (sane_option == 0)
     {
         printf("createWidget:sane_option == 0!!\n");
         return;
@@ -106,20 +114,20 @@ void SaneOption::createWidget(QWidget *parent)
     switch(type)
     {
         case SW_GROUP:
-            frame = new LabeledSeparator(parent, QString(sane_option->title));
+            frame = new LabeledSeparator(parent, i18n(sane_option->title));
             return;
         case SW_CHECKBOX:
-            frame = lchebx = new LabeledCheckbox(parent, QString(sane_option->title));
+            frame = lchebx = new LabeledCheckbox(parent, i18n(sane_option->title));
             connect(lchebx, SIGNAL(toggled(bool)), this, SLOT(checkboxChanged(bool)));
             break;
         case SW_COMBO:
             cstrl = genComboStringList();
-            frame = lcombx = new LabeledCombo(parent, QString(sane_option->title), *cstrl);
+            frame = lcombx = new LabeledCombo(parent, i18n(sane_option->title), *cstrl);
             connect(lcombx, SIGNAL(activated(int)), this, SLOT(comboboxChanged(int)));
             break;
         case SW_SLIDER:
             frame = lslider = new LabeledSlider(parent,
-                    QString(sane_option->title),
+                    i18n(sane_option->title),
                     sane_option->constraint.range->min,
                     sane_option->constraint.range->max,
                     sane_option->constraint.range->quant);
@@ -128,7 +136,7 @@ void SaneOption::createWidget(QWidget *parent)
             break;
         case SW_SLIDER_INT:
             frame = lslider = new LabeledSlider(parent,
-                    QString(sane_option->title),
+                    i18n(sane_option->title),
                     SW_INT_MIN,
                     SW_INT_MAX,
                     1);
@@ -140,7 +148,7 @@ void SaneOption::createWidget(QWidget *parent)
             if (tmp_step < MIN_FOAT_STEP) tmp_step = MIN_FOAT_STEP;
 
             frame = lfslider = new LabeledFSlider(parent,
-                    QString(sane_option->title),
+                    i18n(sane_option->title),
                     SANE_UNFIX(sane_option->constraint.range->min),
                     SANE_UNFIX(sane_option->constraint.range->max),
                     tmp_step);
@@ -151,7 +159,7 @@ void SaneOption::createWidget(QWidget *parent)
         case SW_F_SLIDER_FIX:
 
             frame = lfslider = new LabeledFSlider(parent,
-                    QString(sane_option->title),
+                    i18n(sane_option->title),
                     SW_FIXED_MIN,
                     SW_FIXED_MAX ,
                     MIN_FOAT_STEP);
@@ -160,12 +168,12 @@ void SaneOption::createWidget(QWidget *parent)
             connect(lfslider, SIGNAL(valueChanged(float)), this, SLOT(fsliderChanged(float)));
             break;
         case SW_ENTRY:
-            frame = lentry = new LabeledEntry(parent, QString(sane_option->title));
+            frame = lentry = new LabeledEntry(parent, i18n(sane_option->title));
             connect(lentry, SIGNAL(entryEdited(const QString&)),
                     this, SLOT(entryChanged(const QString&)));
             break;
         case SW_GAMMA:
-            frame = lgamma = new LabeledGamma(parent, QString(sane_option->title),
+            frame = lgamma = new LabeledGamma(parent, i18n(sane_option->title),
                                               sane_option->size/sizeof(SANE_Word));
             connect(lgamma, SIGNAL(gammaTableChanged(const QVector<int> &)),
                     this, SLOT(gammaTableChanged(const QVector<int> &)));
@@ -176,13 +184,13 @@ void SaneOption::createWidget(QWidget *parent)
         case SW_DETECT_FAIL:
             frame = new LabeledSeparator(parent, ">>> " +
                     QString().sprintf("%d \"", opt_number) +
-                            QString(sane_option->title)+"\" <<<");
+                            i18n(sane_option->title)+"\" <<<");
             printf("SW_DETECT_FAIL opt(%d), %s\n", opt_number, sane_option->title);
             break;
     }
 
     if (sw_state == SW_STATE_HIDDEN) frame->hide();
-    else 
+    else
     {
         frame->show();
         frame->setEnabled(sw_state == SW_STATE_SHOWN);
@@ -303,11 +311,13 @@ QStringList *SaneOption::genComboStringList()
     return cstrl;
 }
 
+
 QString SaneOption::getSaneComboString(unsigned char *data)
 {
     QString tmp;
+    if (data == 0) return QString();
 
-    if (type != SW_COMBO) 
+    if (type != SW_COMBO)
     {
         //printf("getSaneComboString: type != SW_COMBO\n");
         return QString();
@@ -320,9 +330,9 @@ QString SaneOption::getSaneComboString(unsigned char *data)
         case SANE_TYPE_FIXED:
             return QString().sprintf("%f", SANE_UNFIX(toSANE_Word(data))) + unitString();
         case SANE_TYPE_STRING:
-            tmp = QLatin1String(reinterpret_cast<char*>(data));
+            tmp = i18n(reinterpret_cast<char*>(data));
             // FIXME clean the end of the string !!
-            if (tmp.length() > 25) 
+            if (tmp.length() > 25)
             {
                 tmp = tmp.left(22);
                 tmp += "...";
@@ -349,23 +359,23 @@ bool SaneOption::writeData(unsigned char *data)
     status = sane_control_option (sane_handle, opt_number, SANE_ACTION_SET_VALUE, data, &res);
     //printf("'%20.20s'(%2d) status=%d, res=%d", sane_option->name, opt_number, status, res);
     //printf("data=0x%02x%02x%02x%02x\n", data[0], data[1], data[2], data[3]);
-    if (status != SANE_STATUS_GOOD) 
+    if (status != SANE_STATUS_GOOD)
     {
         printf("writeData: '%s' sane_control_option returned %d\n", sane_option->name, status);
         return false;
     }
-    if ((res & SANE_INFO_INEXACT) && (frame != 0)) 
+    if ((res & SANE_INFO_INEXACT) && (frame != 0))
     {
         //printf("writeData: write was inexact. Reload value just in case...\n");
         readValue();
     }
 
-    if (res & SANE_INFO_RELOAD_OPTIONS) 
+    if (res & SANE_INFO_RELOAD_OPTIONS)
     {
         emit optsNeedReload();
         // optReload reloads also the values
     }
-    else if (res & SANE_INFO_RELOAD_PARAMS) 
+    else if (res & SANE_INFO_RELOAD_PARAMS)
     {
         // 'else if' because with optReload we force also valReload :)
         emit valsNeedReload();
@@ -451,10 +461,10 @@ bool SaneOption::comboboxChanged(const QString &value)
             break;
         case SANE_TYPE_STRING:
             i = 0;
-            while (sane_option->constraint.string_list[i] != 0) 
+            while (sane_option->constraint.string_list[i] != 0)
             {
                 tmp = getSaneComboString((unsigned char *)sane_option->constraint.string_list[i]);
-                if (value == tmp) 
+                if (value == tmp)
                 {
                     strncpy(reinterpret_cast<char*>(data.data()), sane_option->constraint.string_list[i], sane_option->size);
                     //std::cout << "->>" << qPrintable(tmp) << std::endl;
@@ -487,7 +497,7 @@ void SaneOption::fsliderChanged(float val)
     unsigned char data[4];
     SANE_Word fixed;
 
-    if (((val-fVal) >= min_change) || ((fVal-val) >= min_change)) 
+    if (((val-fVal) >= min_change) || ((fVal-val) >= min_change))
     {
         //printf("opt(%s): fsliderChanged(%f - %f)\n", sane_option->name, fVal, val);
         fVal = val;
