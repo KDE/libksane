@@ -64,8 +64,8 @@ extern "C"
 #include "labeled_separator.h"
 #include "radio_select.h"
 #include "labeled_gamma.h"
-#include "sane_widget.h"
-#include "sane_widget.moc"
+#include "ksane.h"
+#include "ksane.moc"
 
 namespace KSaneIface
 {

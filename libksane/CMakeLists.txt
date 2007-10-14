@@ -27,7 +27,7 @@ SET_TARGET_PROPERTIES(ksane PROPERTIES VERSION ${KSANE_LIB_SO_VERSION_STRING} SO
 
 INSTALL(TARGETS ksane DESTINATION ${LIB_INSTALL_DIR})
 
-INSTALL(FILES sane_widget.h 
-              libksane_export.h 
-              ${CMAKE_CURRENT_BINARY_DIR}/version.h 
+INSTALL(FILES ksane.h
+              libksane_export.h
+              ${CMAKE_CURRENT_BINARY_DIR}/version.h
         DESTINATION ${INCLUDE_INSTALL_DIR}/libksane)
