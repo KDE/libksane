@@ -41,6 +41,7 @@ extern "C"
 // KDE includes
 
 #include <klocale.h>
+#include <kiconloader.h>
 
 // Local includes.
 
@@ -64,9 +65,6 @@ SaneOption::SaneOption(const SANE_Handle s_handle, const int opt_num)
     iVal=0;
     fVal=0;
     bVal=false;
-    icon_color = 0;
-    icon_gray = 0;
-    icon_bw = 0;
 
     cstrl = new QStringList("ComboStringList");
 
@@ -569,18 +567,12 @@ void SaneOption::readOption()
             cstrl = genComboStringList();
             lcombx->clear();
             lcombx->addItems(*cstrl);
-            if (icon_color != 0) {
-                lcombx->setIcon(*icon_color,
-                                getSaneComboString((unsigned char*)SANE_VALUE_SCAN_MODE_COLOR));
-            }
-            if (icon_gray != 0) {
-                lcombx->setIcon(*icon_gray,
-                                getSaneComboString((unsigned char*)SANE_VALUE_SCAN_MODE_GRAY));
-            }
-            if (icon_bw != 0) {
-                lcombx->setIcon(*icon_bw,
-                                getSaneComboString((unsigned char*)SANE_VALUE_SCAN_MODE_LINEART));
-            }
+            lcombx->setIcon(SmallIcon("color"),
+                             getSaneComboString((unsigned char*)SANE_VALUE_SCAN_MODE_COLOR));
+            lcombx->setIcon(SmallIcon("gray-scale"),
+                             getSaneComboString((unsigned char*)SANE_VALUE_SCAN_MODE_GRAY));
+            lcombx->setIcon(SmallIcon("black-while"),
+                             getSaneComboString((unsigned char*)SANE_VALUE_SCAN_MODE_LINEART));
             break;
         case SW_SLIDER:
             lslider->setRange(sane_option->constraint.range->min,
@@ -1001,46 +993,5 @@ bool SaneOption::setValue(const QString &val)
     return true;
 }
 
-bool SaneOption::setIconColorMode(const QIcon &icon)
-{
-    if (icon_color != 0) {
-        delete icon_color;
-    }
-    icon_color = new QIcon(icon);
-    if ((strcmp(sane_option->name, SANE_NAME_SCAN_MODE) != 0) ||
-       (lcombx == 0))
-    {
-        return false;
-    }
-    return lcombx->setIcon(icon, getSaneComboString((unsigned char*)SANE_VALUE_SCAN_MODE_COLOR));
-}
-
-bool SaneOption::setIconGrayMode(const QIcon &icon)
-{
-    if (icon_gray != 0) {
-        delete icon_gray;
-    }
-    icon_gray = new QIcon(icon);
-    if ((strcmp(sane_option->name, SANE_NAME_SCAN_MODE) != 0) ||
-         (lcombx == 0))
-    {
-        return false;
-    }
-    return lcombx->setIcon(icon, getSaneComboString((unsigned char*)SANE_VALUE_SCAN_MODE_GRAY));
-}
-
-bool SaneOption::setIconBWMode(const QIcon &icon)
-{
-    if (icon_bw != 0) {
-        delete icon_bw;
-    }
-    icon_bw = new QIcon(icon);
-    if ((strcmp(sane_option->name, SANE_NAME_SCAN_MODE) != 0) ||
-         (lcombx == 0))
-    {
-        return false;
-    }
-    return lcombx->setIcon(icon, getSaneComboString((unsigned char*)SANE_VALUE_SCAN_MODE_LINEART));
-}
 
 }  // NameSpace KSaneIface

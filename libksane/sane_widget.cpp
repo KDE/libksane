@@ -1448,35 +1448,6 @@ void SaneWidget::scanCancel()
     d->readStatus = READ_CANCEL;
 }
 
-bool SaneWidget::setIconColorMode(const QIcon &icon)
-{
-    if ((d->optMode != 0) && (d->optMode->widget() != 0))
-    {
-        d->optMode->setIconColorMode(icon);
-        return true;
-    }
-    return false;
-}
-
-bool SaneWidget::setIconGrayMode(const QIcon &icon)
-{
-    if ((d->optMode != 0) && (d->optMode->widget() != 0))
-    {
-        d->optMode->setIconGrayMode(icon);
-        return true;
-    }
-    return false;
-}
-
-bool SaneWidget::setIconBWMode(const QIcon &icon)
-{
-    if ((d->optMode != 0) && (d->optMode->widget() != 0))
-    {
-        d->optMode->setIconBWMode(icon);
-        return true;
-    }
-    return false;
-}
 
 void SaneWidget::setBusy(bool busy)
 {

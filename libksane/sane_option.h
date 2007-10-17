@@ -103,9 +103,6 @@ public:
     bool setChecked(bool check);
     bool storeCurrentData();
     bool restoreSavedData();
-    bool setIconColorMode(const QIcon &icon);
-    bool setIconGrayMode(const QIcon &icon);
-    bool setIconBWMode(const QIcon &icon);
 
     LabeledGamma *lgamma;
     LabeledCombo *lcombx;
@@ -151,9 +148,6 @@ private:
 
     SaneOptWidget_t type;
     SaneOptWState sw_state;
-    QIcon *icon_color;
-    QIcon *icon_gray;
-    QIcon *icon_bw;
 
     // Sane variables
     SANE_Handle sane_handle;

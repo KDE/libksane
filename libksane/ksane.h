@@ -70,10 +70,6 @@ public:
     QString make() const;
     QString model() const;
 
-    bool setIconColorMode(const QIcon &icon);
-    bool setIconGrayMode(const QIcon &icon);
-    bool setIconBWMode(const QIcon &icon);
-
 public Q_SLOTS:
 
     void scanCancel();
