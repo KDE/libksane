@@ -13,7 +13,7 @@
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation;
  * either version 2, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -66,6 +66,7 @@ public:
     bool    openDevice(const QString &device_name);
     QImage *getFinalImage();
 
+    QString vendor() const;
     QString make() const;
     QString model() const;
 
@@ -79,9 +80,6 @@ public Q_SLOTS:
 
 Q_SIGNALS:
 
-    void scanStart();
-    void scanProgress(int);
-    void scanDone();
     void imageReady();
     void scanFaild();
 
@@ -106,7 +104,7 @@ private:
     void updatePreviewSize();
     void processData();
     void setDefaultValues();
-    void setBusy(bool busy, bool finalScan=false);
+    void setBusy(bool busy);
 
 private:
 
