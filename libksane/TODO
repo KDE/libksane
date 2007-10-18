@@ -9,11 +9,12 @@ TODO list to be more KDE compliant:
 * Doc : add API documentation using Doxygen forms.
 * Add signal to send progress of preview operation.
 * QDialog => Kdialog. fix dialog buttons handling.
+* Remove scanFailed() signal and display the error directly.
 
 TODO list of new features:
 
-* Added methods to get strings info from scanner device to be hosted later in 
+* Added methods to get strings info from scanner device to be hosted later in
   image metadata (make, model, dpi, color mode, etc)
 * Support 16 bits color depth images.
-* Progressive final scan: scan can provide huge image especially in 16 bits color depth. 
+* Progressive final scan: scan can provide huge image especially in 16 bits color depth.
   Send image data on host application by blog, not the whole image.

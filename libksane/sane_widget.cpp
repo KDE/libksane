@@ -69,6 +69,16 @@ extern "C"
 namespace KSaneIface
 {
 
+typedef enum
+{
+    READ_NOT_READING,
+    READ_ON_GOING,
+    READ_ERROR,
+    READ_CANCEL,
+    READ_FINISHED
+} ReadStatus;
+
+
 class SaneWidgetPriv
 {
 public:
@@ -1230,7 +1240,11 @@ void SaneWidget::processData()
             {
                 d->progressBar->hide();
                 d->cancelBtn->hide();
-                emit imageReady();
+                emit imageReady(d->scanImg->bits(),
+                                d->params.pixels_per_line,
+                                d->params.lines,
+                                d->params.bytes_per_line,
+                                (int)FormatRGB_8_C);
             }
             return;
         }

@@ -38,26 +38,27 @@
 
 #include "libksane_export.h"
 
+
 namespace KSaneIface
 {
 
 class SaneOption;
 class SaneWidgetPriv;
 
-typedef enum
-{
-    READ_NOT_READING,
-    READ_ON_GOING,
-    READ_ERROR,
-    READ_CANCEL,
-    READ_FINISHED
-} ReadStatus;
-
 class LIBKSANE_EXPORT SaneWidget : public QWidget
 {
     Q_OBJECT
 
 public:
+    typedef enum
+    {
+        FormatBlackWhite,
+        FormatGrayScale8,
+        FormatGrayScale16,
+        FormatRGB_8_C,
+        FormatRGB_16_C
+    } ImageFormat;
+
 
     SaneWidget(QWidget* parent=0);
     ~SaneWidget();
@@ -70,13 +71,14 @@ public:
     QString make() const;
     QString model() const;
 
+
 public Q_SLOTS:
 
     void scanCancel();
 
 Q_SIGNALS:
 
-    void imageReady();
+    void imageReady(uchar *data, int width, int height, int bytesPerLine, int format);
     void scanFaild();
 
 private Q_SLOTS:
