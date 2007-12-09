@@ -571,8 +571,10 @@ void SaneOption::readOption()
                              getSaneComboString((unsigned char*)SANE_VALUE_SCAN_MODE_COLOR));
             lcombx->setIcon(SmallIcon("gray-scale"),
                              getSaneComboString((unsigned char*)SANE_VALUE_SCAN_MODE_GRAY));
-            lcombx->setIcon(SmallIcon("black-while"),
+            lcombx->setIcon(SmallIcon("black-white"),
                              getSaneComboString((unsigned char*)SANE_VALUE_SCAN_MODE_LINEART));
+            // The epkowa/epson backend uses "Binary" which is the same as "Lineart"
+            lcombx->setIcon(SmallIcon("black-white"), i18n("Binary"));
             break;
         case SW_SLIDER:
             lslider->setRange(sane_option->constraint.range->min,

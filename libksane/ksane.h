@@ -24,11 +24,6 @@
 #ifndef SANE_WIDGET_H
 #define SANE_WIDGET_H
 
-#define MAX_NUM_OPTIONS 100
-#define IMG_DATA_R_SIZE 1000
-#define PROGRESS_MAX 100
-#define PROGRESS_MIN 0
-
 // Qt includes.
 
 #include <QWidget>
@@ -38,14 +33,12 @@
 
 #include "libksane_export.h"
 
-
 namespace KSaneIface
 {
 
-class SaneOption;
-class SaneWidgetPriv;
+class KSaneWidgetPriv;
 
-class LIBKSANE_EXPORT SaneWidget : public QWidget
+class LIBKSANE_EXPORT KSaneWidget : public QWidget
 {
     Q_OBJECT
 
@@ -56,16 +49,22 @@ public:
         FormatGrayScale8,
         FormatGrayScale16,
         FormatRGB_8_C,
-        FormatRGB_16_C
+        FormatRGB_16_C,
+        FormatNone
     } ImageFormat;
 
 
-    SaneWidget(QWidget* parent=0);
-    ~SaneWidget();
+    KSaneWidget(QWidget* parent=0);
+    ~KSaneWidget();
 
     QString selectDevice(QWidget* parent=0);
     bool    openDevice(const QString &device_name);
-    QImage *getFinalImage();
+    bool    makeQImage(const QByteArray &data,
+                       int width,
+                       int height,
+                       int bytes_per_line,
+                       ImageFormat format,
+                       QImage &img);
 
     QString vendor() const;
     QString make() const;
@@ -78,8 +77,8 @@ public Q_SLOTS:
 
 Q_SIGNALS:
 
-    void imageReady(uchar *data, int width, int height, int bytesPerLine, int format);
-    void scanFaild();
+    void imageReady(QByteArray &data, int width, int height,
+                    int bytesperline, int format);
 
 private Q_SLOTS:
 
@@ -97,16 +96,17 @@ private Q_SLOTS:
 
 private:
 
-    SaneOption *getOption(const QString &name);
     void createOptInterface();
     void updatePreviewSize();
     void processData();
+    void copyToScanData(int read_bytes);
+    void copyToPreview(int read_bytes);
     void setDefaultValues();
     void setBusy(bool busy);
 
 private:
 
-    SaneWidgetPriv* d;
+    KSaneWidgetPriv* d;
 };
 
 }  // NameSpace KSaneIface
