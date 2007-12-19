@@ -27,10 +27,6 @@
 
 #include <QWidget>
 
-// Local includes.
-
-#include "libksane_export.h"
-
 /**
  *@author Kåre Särs
  *
@@ -40,7 +36,7 @@
 namespace KSaneIface
 {
 
-class LIBKSANE_EXPORT GammaDisp : public QWidget
+class GammaDisp : public QWidget
 {
     Q_OBJECT
 

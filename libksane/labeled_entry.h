@@ -30,10 +30,6 @@
 #include <QPushButton>
 #include <QLabel>
 
-// Local includes.
-
-#include "libksane_export.h"
-
 /**
  *@author Kåre Särs
  */
@@ -44,7 +40,7 @@ namespace KSaneIface
 /**
  * A text entry field with a set and reset button
  */
-class LIBKSANE_EXPORT LabeledEntry : public QFrame
+class LabeledEntry : public QFrame
 {
     Q_OBJECT
 

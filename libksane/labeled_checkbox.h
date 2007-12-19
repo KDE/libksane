@@ -28,10 +28,6 @@
 #include <QFrame>
 #include <QCheckBox>
 
-// Local includes.
-
-#include "libksane_export.h"
-
 namespace KSaneIface
 {
 
@@ -42,7 +38,7 @@ namespace KSaneIface
 /**
  * A wrapper for a checkbox
  */
-class LIBKSANE_EXPORT LabeledCheckbox : public QFrame
+class LabeledCheckbox : public QFrame
 {
     Q_OBJECT
 

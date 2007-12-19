@@ -28,8 +28,6 @@
 #include <QFrame>
 
 // Local includes.
-
-#include "libksane_export.h"
 #include "labeled_slider.h"
 #include "gamma_disp.h"
 
@@ -43,7 +41,7 @@ namespace KSaneIface
 /**
  * A wrapper for a checkbox
  */
-class LIBKSANE_EXPORT LabeledGamma : public QFrame
+class LabeledGamma : public QFrame
 {
     Q_OBJECT
 

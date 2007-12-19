@@ -27,10 +27,6 @@
 
 #include <QFrame>
 
-// Local includes.
-
-#include "libksane_export.h"
-
 /**
   *@author Kåre Särs
   */
@@ -41,7 +37,7 @@ namespace KSaneIface
 /**
  * A separator with a text label
  */
-class LIBKSANE_EXPORT LabeledSeparator : public QFrame
+class LabeledSeparator : public QFrame
 {
     Q_OBJECT
 
