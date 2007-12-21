@@ -34,10 +34,8 @@ extern "C"
 }
 
 // Qt includes.
-#include <QEventLoop>
 #include <QApplication>
 #include <QVarLengthArray>
-#include <QComboBox>
 #include <QImage>
 #include <QTimer>
 #include <QScrollArea>

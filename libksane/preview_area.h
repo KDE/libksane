@@ -26,7 +26,6 @@
 // Qt includes.
 
 #include <QAction>
-#include <QFrame>
 #include <QImage>
 #include <QScrollArea>
 

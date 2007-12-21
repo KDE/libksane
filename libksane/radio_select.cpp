@@ -24,7 +24,8 @@
 
 #include <QRadioButton>
 #include <QPushButton>
-#include <QLayout>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
 
 // KDE includes.
 

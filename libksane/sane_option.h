@@ -33,7 +33,6 @@
 
 #include <QFrame>
 #include <QCheckBox>
-#include <QLayout>
 
 // Sane includes.
 

@@ -26,7 +26,6 @@
 
 // Qt includes.
 
-#include <QLayout>
 #include <QGroupBox>
 
 // KDE includes.

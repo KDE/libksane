@@ -23,7 +23,6 @@
 // Qt includes.
 
 #include <QSpinBox>
-#include <QToolTip>
 #include <QLabel>
 #include <QSlider>
 

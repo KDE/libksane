@@ -22,12 +22,12 @@
 
 // Qt includes.
 
-#include <QLayout>
 
 // Local includes.
 
 #include "labeled_entry.h"
 #include "labeled_entry.moc"
+#include <QHBoxLayout>
 
 namespace KSaneIface
 {

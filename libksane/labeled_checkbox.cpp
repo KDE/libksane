@@ -22,12 +22,12 @@
 
 // Qt includes.
 
-#include <QLayout>
 
 // Local includes.
 
 #include "labeled_checkbox.h"
 #include "labeled_checkbox.moc"
+#include <QHBoxLayout>
 
 namespace KSaneIface
 {

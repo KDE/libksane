@@ -22,13 +22,13 @@
 
 // Qt includes.
 
-#include <QLayout>
 #include <QLabel>
 
 // Local includes.
 
 #include "labeled_separator.h"
 #include "labeled_separator.moc"
+#include <QHBoxLayout>
 
 namespace KSaneIface
 {
