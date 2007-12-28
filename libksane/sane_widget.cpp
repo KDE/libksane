@@ -529,8 +529,8 @@ void KSaneWidget::createOptInterface()
 
     // add the options
     // (Should Vendor and model always be visible?)
-    LabeledSeparator *model_label = new LabeledSeparator(opt_container, d->modelName);
-    opt_layout->addWidget(model_label);
+    //LabeledSeparator *model_label = new LabeledSeparator(opt_container, d->modelName);
+    //opt_layout->addWidget(model_label);
 
     // basic/intermediate/All options
     QStringList strl;
