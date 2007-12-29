@@ -12,7 +12,7 @@
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation;
  * either version 2, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -40,7 +40,7 @@
 namespace KSaneIface
 {
 
-RadioSelect::RadioSelect(QWidget *parent) 
+RadioSelect::RadioSelect(QWidget *parent)
            : QDialog(parent)
 {
     QVBoxLayout *layout = new QVBoxLayout;
@@ -61,10 +61,10 @@ RadioSelect::RadioSelect(QWidget *parent)
     cancel->setText(i18n("Cancel"));
     btn_layout->addWidget(cancel);
 
-    connect (ok, SIGNAL(clicked()), 
+    connect (ok, SIGNAL(clicked()),
              this, SLOT(accept()));
 
-    connect (cancel, SIGNAL(clicked()), 
+    connect (cancel, SIGNAL(clicked()),
              this, SLOT(reject()));
 }
 
@@ -74,26 +74,20 @@ int RadioSelect::getSelectedIndex(QWidget *parent,
                                   int default_index)
 {
     int i;
-    if (items.size() == 0) 
-    {
-        return -2;
-    }
+    if (items.size() == 0) return -2;
 
     setParent(parent);
     radio_group->setTitle(group_name);
 
     // Create the RadioButton list
     QList<QRadioButton *> btn_list;
-    for (i=0; i < items.size(); i++) 
-    {
-        //printf("device[i] = %s\n", qPrintable(items.at(i)));
+    for (i=0; i < items.size(); i++) {
         btn_list.append(new QRadioButton(items.at(i), radio_group));
     }
 
     // Add the device list to the layout
     QVBoxLayout *radio_layout = new QVBoxLayout(radio_group);
-    for (i=0; i < btn_list.size(); i++) 
-    {
+    for (i=0; i < btn_list.size(); i++) {
         radio_layout->addWidget(btn_list.at(i));
     }
 
@@ -104,15 +98,12 @@ int RadioSelect::getSelectedIndex(QWidget *parent,
     btn_list.at(radio_index)->toggle();
 
     // show the dialog and get the selection
-    if (exec()) 
-    {
+    if (exec()) {
         // check which one is selected
-        for (i = 0; i < btn_list.size(); i++) 
-        {
+        for (i = 0; i < btn_list.size(); i++) {
             if (btn_list.at(i)->isChecked()) break;
         }
-        if (i == btn_list.size()) 
-        {
+        if (i == btn_list.size()) {
             kDebug() << "This is a bad index..." << endl;
             return -1;
         }

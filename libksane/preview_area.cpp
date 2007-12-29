@@ -12,7 +12,7 @@
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation;
  * either version 2, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -87,8 +87,7 @@ QSize PreviewArea::sizeHint() const
 
 QImage *PreviewArea::getImage()
 {
-    if (image) 
-    {
+    if (image) {
         return image->getImage();
     }
     return 0;
@@ -96,16 +95,14 @@ QImage *PreviewArea::getImage()
 
 void PreviewArea::clearSelection()
 {
-    if (image) 
-    {
+    if (image) {
         image->clearSelection();
     }
 }
 
 void PreviewArea::updateScaledImg()
 {
-    if (image) 
-    {
+    if (image) {
         image->updateScaledImg();
         image->update();
     }
@@ -113,40 +110,35 @@ void PreviewArea::updateScaledImg()
 
 void PreviewArea::zoomIn()
 {
-    if (image) 
-    {
+    if (image) {
         image->zoomIn();
     }
 }
 
 void PreviewArea::zoomOut()
 {
-    if (image) 
-    {
+    if (image) {
         image->zoomOut();
     }
 }
 
 void PreviewArea::zoomSel()
 {
-    if (image) 
-    {
+    if (image) {
         image->zoomSel();
     }
 }
 
 void PreviewArea::zoom2Fit()
 {
-    if (image) 
-    {
+    if (image) {
         image->zoom2Fit();
     }
 }
 
 void PreviewArea::setTLX(float ratio)
 {
-    if (image) 
-    {
+    if (image) {
         image->setTLX(ratio);
         image->update();
     }
@@ -154,8 +146,7 @@ void PreviewArea::setTLX(float ratio)
 
 void PreviewArea::setTLY(float ratio)
 {
-    if (image) 
-    {
+    if (image) {
         image->setTLY(ratio);
         image->update();
     }
@@ -163,8 +154,7 @@ void PreviewArea::setTLY(float ratio)
 
 void PreviewArea::setBRX(float ratio)
 {
-    if (image) 
-    {
+    if (image) {
         image->setBRX(ratio);
         image->update();
     }
@@ -172,8 +162,7 @@ void PreviewArea::setBRX(float ratio)
 
 void PreviewArea::setBRY(float ratio)
 {
-    if (image) 
-    {
+    if (image) {
         image->setBRY(ratio);
         image->update();
     }
@@ -182,7 +171,6 @@ void PreviewArea::setBRY(float ratio)
 
 void PreviewArea::requestVisibility(int tl_x, int tl_y)
 {
-    //printf("requestVisibility %d, %d\n", tl_x, tl_y);
     setFocus();
     // first move to the bottom to get the selection at the top/left of the window
     ensureVisible(2000, 2000);

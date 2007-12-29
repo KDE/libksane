@@ -12,7 +12,7 @@
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation;
  * either version 2, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -73,8 +73,7 @@ void GammaDisp::paintEvent(QPaintEvent *)
     double yscale = (double)(size().height()-1) / (double)gam_tbl->size();
 
     painter.setPen(gam_color);
-    for (int i=0; i<gam_tbl->size()-1; i++) 
-    {
+    for (int i=0; i<gam_tbl->size()-1; i++) {
         p1.setX(i*xscale);
         p1.setY(size().height()- 1 - (gam_tbl->at(i) * yscale));
 

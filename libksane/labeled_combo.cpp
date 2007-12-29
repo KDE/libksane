@@ -12,7 +12,7 @@
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation;
  * either version 2, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -31,7 +31,7 @@
 namespace KSaneIface
 {
 
-LabeledCombo::LabeledCombo(QWidget *parent, const QString& ltext, 
+LabeledCombo::LabeledCombo(QWidget *parent, const QString& ltext,
                            const QStringList& list)
             : QFrame(parent)
 {
@@ -57,10 +57,8 @@ LabeledCombo::LabeledCombo(QWidget *parent, const QString& ltext,
 void LabeledCombo::setCurrentText(const QString &t)
 {
     int i;
-    for (i=0; i<combo->count(); i++) 
-    {
-        if (combo->itemText(i) == t) 
-        {
+    for (i=0; i<combo->count(); i++) {
+        if (combo->itemText(i) == t) {
             combo->setCurrentIndex(i);
         }
     }
@@ -68,10 +66,8 @@ void LabeledCombo::setCurrentText(const QString &t)
 
 bool LabeledCombo::setIcon(const QIcon &icon, const QString& str)
 {
-    for (int i=0; i < combo->count(); i++)
-    {
-        if (combo->itemText(i) == str)
-        {
+    for (int i=0; i < combo->count(); i++) {
+        if (combo->itemText(i) == str) {
             combo->setItemIcon(i, icon);
             return true;
         }
@@ -99,7 +95,6 @@ void LabeledCombo::wigetSizeHints(int *lab_w, int *cmb_w)
 {
     if (lab_w != 0) *lab_w = label->sizeHint().width();
     if (cmb_w != 0) *cmb_w = combo->sizeHint().width();
-    //printf("lab_w=%d, cmb_w=%d\n", *lab_w, *cmb_w);
 }
 
 void LabeledCombo::setColumnWidths(int lab_w, int cmb_w)

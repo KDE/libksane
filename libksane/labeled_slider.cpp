@@ -12,7 +12,7 @@
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation;
  * either version 2, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -40,7 +40,7 @@ LabeledSlider::LabeledSlider(QWidget *parent, const QString& ltext,
 {
     layout = new QGridLayout(this);
     label  = new QLabel(ltext, this);
-    step   = ste; 
+    step   = ste;
     if (step == 0) step = 1;
 
     slider = new QSlider(this);
@@ -61,13 +61,13 @@ LabeledSlider::LabeledSlider(QWidget *parent, const QString& ltext,
     spinb->setValue(min);
     label->setBuddy(slider);
 
-    connect(spinb, SIGNAL(valueChanged(int)), 
+    connect(spinb, SIGNAL(valueChanged(int)),
             this, SLOT(syncValues(int)));
 
-    connect(slider, SIGNAL(valueChanged(int)), 
+    connect(slider, SIGNAL(valueChanged(int)),
             this, SLOT(syncValues(int)));
 
-    connect(slider, SIGNAL(sliderReleased()), 
+    connect(slider, SIGNAL(sliderReleased()),
             this, SLOT(fixValue()));
 
     layout->setSpacing(3);
@@ -125,23 +125,18 @@ void LabeledSlider::setStep(int st)
 void LabeledSlider::syncValues(int value)
 {
     if      (value != spinb->value()) spinb->setValue(value);
-    else if (value != slider->value()) 
-    {
+    else if (value != slider->value()) {
         //ensure that the value step is followed also for the slider
-        if ((value - slider->minimum())%step != 0) 
-        {
-            if (value > spinb->value()) 
-            {
+        if ((value - slider->minimum())%step != 0) {
+            if (value > spinb->value()) {
                 slider->setValue(slider->value()+(step-(value - spinb->value())));
             }
-            else 
-            {
+            else {
                 slider->setValue(slider->value()-(step-(spinb->value() - value)));
             }
             // this function will be reentered with the signal fom the slider
         }
-        else 
-        {
+        else {
             slider->setValue(value);
         }
     }
@@ -153,8 +148,7 @@ void LabeledSlider::fixValue()
     //ensure that the value step is followed also for the slider
     int rest = (slider->value() - slider->minimum())%step;
 
-    if (rest != 0) 
-    {
+    if (rest != 0) {
         if (rest > (step/2)) slider->setValue(slider->value()+(step-rest));
         else                 slider->setValue(slider->value()-rest);
         spinb->setValue(slider->value());

@@ -364,8 +364,7 @@ bool KSaneWidget::openDevice(const QString &device_name)
         i++;
     }
 
-    if (dev_list[i] == 0)
-    {
+    if (dev_list[i] == 0) {
 #ifdef ENABLE_DEBUG
         d->modelName = i18n("Test Scanner");
         d->vendor    = QString("Test");
@@ -382,7 +381,6 @@ bool KSaneWidget::openDevice(const QString &device_name)
                  << "\", &handle) failed!";
         return false;
     }
-    //printf("openDevice: sane_open(\"%s\", &handle) == SANE_STATUS_GOOD\n", qPrintable(device_name));
 
     // Read the options (start with option 0 the number of parameters)
     num_option_d = sane_get_option_descriptor(d->saneHandle, 0);
@@ -716,8 +714,7 @@ void KSaneWidget::createOptInterface()
     remain_lay->addSpacing(4);
 
     // add remaining parameters
-    for (int i=0; i<d->optList.size(); i++)
-    {
+    for (int i=0; i<d->optList.size(); i++) {
         if ((d->optList.at(i)->widget() == 0) &&
              (d->optList.at(i)->name() != SANE_NAME_SCAN_TL_X) &&
              (d->optList.at(i)->name() != SANE_NAME_SCAN_TL_Y) &&
@@ -793,7 +790,6 @@ void KSaneWidget::scheduleValReload()
 void KSaneWidget::optReload()
 {
     int i;
-    //printf("Reload Options\n");
 
     for (i=0; i<d->optList.size(); i++) {
         d->optList.at(i)->readOption();
@@ -810,24 +806,15 @@ void KSaneWidget::valReload()
 {
     int i;
     QString tmp;
-    //printf("Reload Values\n");
 
     for (i=0; i<d->optList.size(); i++) {
         d->optList.at(i)->readValue();
-        /*
-        if (d->optList.at(i)->getValue(&tmp)) {
-            printf("option(%s)=%s\n",
-                   qPrintable(d->optList.at(i)->name()),
-                   qPrintable(tmp));
-        }
-        */
     }
 }
 
 void KSaneWidget::handleSelection(float tl_x, float tl_y, float br_x, float br_y) {
     float max_x, max_y;
 
-    //printf("handleSelection0: %f %f %f %f\n", tl_x, tl_y, br_x, br_y);
     if ((d->previewImg->width()==0) || (d->previewImg->height()==0)) return;
 
     d->optBrX->getMaxValue(&max_x);
@@ -836,8 +823,6 @@ void KSaneWidget::handleSelection(float tl_x, float tl_y, float br_x, float br_y
     float ftl_y = tl_y*max_y;
     float fbr_x = br_x*max_x;
     float fbr_y = br_y*max_y;
-
-    //printf("handleSelection1: %f %f %f %f\n", ftl_x, ftl_y, fbr_x, fbr_y);
 
     if (d->optTl != 0) d->optTl->setValue(ftl_x);
     if (d->optTlY != 0) d->optTlY->setValue(ftl_y);
@@ -1220,9 +1205,7 @@ void KSaneWidget::processData()
     SANE_Status status = SANE_STATUS_GOOD;
     SANE_Int read_bytes = 0;
 
-    //printf("Pre read()\n");
     status = sane_read(d->saneHandle, d->saneReadBuffer, IMG_DATA_R_SIZE, &read_bytes);
-    //printf("Post read() read=%d\n", read_bytes);
 
     switch (status) {
         case SANE_STATUS_GOOD:

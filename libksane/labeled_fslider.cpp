@@ -12,7 +12,7 @@
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation;
  * either version 2, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -45,8 +45,7 @@ LabeledFSlider::LabeledFSlider(QWidget *parent, const QString& ltext,
     int imax = TO_FIX(max);
     istep = TO_FIX(step);
     fstep = step;
-    if (istep == 0) 
-    {
+    if (istep == 0) {
         istep = 1;
         fstep = TO_FLOAT(istep);
     }
@@ -66,8 +65,7 @@ LabeledFSlider::LabeledFSlider(QWidget *parent, const QString& ltext,
     spinb->setSingleStep(fstep);
     int decimals=0;
     float tmp_step = fstep;
-    while (tmp_step < 1) 
-    {
+    while (tmp_step < 1) {
         tmp_step *= 10;
         decimals++;
         if (decimals > 5) break;
@@ -80,13 +78,13 @@ LabeledFSlider::LabeledFSlider(QWidget *parent, const QString& ltext,
 
     label->setBuddy(slider);
 
-    connect(spinb, SIGNAL(valueChanged(double)), 
+    connect(spinb, SIGNAL(valueChanged(double)),
             this, SLOT(syncValues(double)));
 
-    connect(slider, SIGNAL(valueChanged(int)), 
+    connect(slider, SIGNAL(valueChanged(int)),
             this, SLOT(syncValues(int)));
 
-    connect(slider, SIGNAL(sliderReleased()), 
+    connect(slider, SIGNAL(sliderReleased()),
             this, SLOT(fixValue()));
 
     layout->addWidget(label, 0, 0);
@@ -121,8 +119,8 @@ void LabeledFSlider::setSuffix(const QString &text)
 
 void LabeledFSlider::setRange(float min, float max)
 {
-    //std::cout << "min,max(" << spinb->minimum() << " - " << spinb->maximum();
-    //std::cout << ") -> (" << min << " - " << max << ")" << std::endl;
+    //kDebug() << "min,max(" << spinb->minimum() << " - " << spinb->maximum();
+    //kDebug() << ") -> (" << min << " - " << max << ")" << std::endl;
     int imin=TO_FIX(min);
     int imax=TO_FIX(max);
     slider->setRange(imin, imax);
@@ -135,8 +133,7 @@ void LabeledFSlider::setStep(float step)
 {
     istep = TO_FIX(step);
     fstep = step;
-    if (istep == 0) 
-    {
+    if (istep == 0) {
         istep = 1;
         fstep = TO_FLOAT(istep);
     }
@@ -145,8 +142,7 @@ void LabeledFSlider::setStep(float step)
 
     int decimals=0;
     float tmp_step = fstep;
-    while (tmp_step < 1) 
-    {
+    while (tmp_step < 1) {
         tmp_step *= 10;
         decimals++;
         if (decimals > 5) break;
@@ -157,10 +153,8 @@ void LabeledFSlider::setStep(float step)
 void LabeledFSlider::setValue(float value)
 {
     int ivalue = TO_FIX(value);
-    //printf("LabeledFSlider::setValue: val=%f ival=%d\n", value, ivalue);
 
-    if (((value - spinb->value()) > fstep) || ((spinb->value() - value) > fstep)) 
-    {
+    if (((value - spinb->value()) > fstep) || ((spinb->value() - value) > fstep)) {
         spinb->setValue(value);
     }
     else if (ivalue != slider->value()) slider->setValue(ivalue);
@@ -169,9 +163,7 @@ void LabeledFSlider::setValue(float value)
 void LabeledFSlider::syncValues(int ivalue)
 {
     double value = TO_FLOAT(ivalue);
-    //printf("LabeledFSlider::syncValue(int): val=%f ival=%d\n", value, ivalue);
-    if (((value - spinb->value()) > fstep) || ((spinb->value() - value) > fstep)) 
-    {
+    if (((value - spinb->value()) > fstep) || ((spinb->value() - value) > fstep)) {
         spinb->setValue(value);
     }
     else if (ivalue != slider->value())slider->setValue(ivalue);
@@ -181,9 +173,7 @@ void LabeledFSlider::syncValues(int ivalue)
 void LabeledFSlider::syncValues(double value)
 {
     int ivalue = TO_FIX(value);
-    //printf("LabeledFSlider::syncValue(double): val=%f ival=%d\n", value, ivalue);
-    if (((value - spinb->value()) > fstep) || ((spinb->value() - value) > fstep)) 
-    {
+    if (((value - spinb->value()) > fstep) || ((spinb->value() - value) > fstep)) {
         spinb->setValue(value);
     }
     else if (ivalue != slider->value())slider->setValue(ivalue);
@@ -193,11 +183,9 @@ void LabeledFSlider::syncValues(double value)
 void LabeledFSlider::fixValue()
 {
     //ensure that the value step is followed also for the slider
-    //printf("fixValue\n");
     int rest = (slider->value() - slider->minimum())%istep;
 
-    if (rest != 0) 
-    {
+    if (rest != 0) {
         if (rest > (istep/2)) slider->setValue(slider->value()+(istep-rest));
         else                  slider->setValue(slider->value()-rest);
         spinb->setValue(TO_FLOAT(slider->value()));

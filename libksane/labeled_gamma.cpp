@@ -12,7 +12,7 @@
  * and/or modify it under the terms of the GNU General
  * Public License as published by the Free Software Foundation;
  * either version 2, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -22,7 +22,7 @@
 
 // C++ includes.
 
-#include <cmath> 
+#include <cmath>
 
 // Qt includes.
 
@@ -69,8 +69,7 @@ LabeledGamma::LabeledGamma(QWidget *parent, const QString& text, int size)
     gam_slider->setColumnWidths(lw_max, spw_max);
 
     gam_tbl.resize(size);
-    for (int i=0; i<gam_tbl.size(); i++) 
-    {
+    for (int i=0; i<gam_tbl.size(); i++) {
         gam_tbl[i] = i;
     }
     max_val = size-1; // assume a gamma table 0 -> max
@@ -94,13 +93,13 @@ LabeledGamma::LabeledGamma(QWidget *parent, const QString& text, int size)
     gbl->setMargin(0);
     gbl->activate();
 
-    connect(bri_slider, SIGNAL(valueChanged(int)), 
+    connect(bri_slider, SIGNAL(valueChanged(int)),
             this, SLOT(calculateGT()));
 
-    connect(con_slider, SIGNAL(valueChanged(int)), 
+    connect(con_slider, SIGNAL(valueChanged(int)),
             this, SLOT(calculateGT()));
 
-    connect(gam_slider, SIGNAL(valueChanged(int)), 
+    connect(gam_slider, SIGNAL(valueChanged(int)),
             this, SLOT(calculateGT()));
 }
 
@@ -110,8 +109,7 @@ LabeledGamma::~LabeledGamma()
 
 void LabeledGamma::setColor(QColor color)
 {
-    if (gamma_disp != 0)
-    {
+    if (gamma_disp != 0) {
         gamma_disp->setColor(color);
     }
 }
@@ -136,8 +134,7 @@ void LabeledGamma::setValues(int bri, int con, int gam)
 void LabeledGamma::setSize(int size)
 {
     gam_tbl.resize(size);
-    for (int i=0; i<gam_tbl.size(); i++) 
-    {
+    for (int i=0; i<gam_tbl.size(); i++) {
         gam_tbl[i] = i;
     }
     bri_slider->setValue(0);
@@ -154,8 +151,7 @@ void LabeledGamma::calculateGT()
     double bri      = (bri_slider->value()/half_max) * max_val;
     double x;
 
-    for (int i = 0; i<gam_tbl.size(); i++) 
-    {
+    for (int i = 0; i<gam_tbl.size(); i++) {
         // apply gamma
         x = pow(i/max_val, gam) * max_val;
 
@@ -170,14 +166,9 @@ void LabeledGamma::calculateGT()
         if (x < 0) x = 0;
 
         gam_tbl[i] = (int)x;
-
-        //if (i%16 == 0) printf("\n");
-        //printf(" %d", (int)x);
     }
-    //printf("\n");
 
     gamma_disp->update();
-    //printf("emmit gammaTableChanged\n");
     emit gammaChanged(bri_slider->value(), con_slider->value(), gam_slider->value());
     emit gammaTableChanged(gam_tbl);
 }
