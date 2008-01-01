@@ -445,7 +445,7 @@ bool KSaneWidget::openDevice(const QString &device_name)
     d->zOutBtn->setIcon(SmallIcon("zoom-out"));
     d->zOutBtn->setToolTip(i18n("Zoom out preview image"));
     d->zSelBtn = new QPushButton();
-    d->zSelBtn->setIcon(SmallIcon("file-find"));
+    d->zSelBtn->setIcon(SmallIcon("document-preview"));
     d->zSelBtn->setToolTip(i18n("Zoom to selection of preview image"));
     d->zFitBtn = new QPushButton();
     d->zFitBtn->setIcon(SmallIcon("zoom-best-fit"));
@@ -454,12 +454,12 @@ bool KSaneWidget::openDevice(const QString &device_name)
     d->progressBar = new QProgressBar();
     d->progressBar->hide();
     d->cancelBtn   = new QPushButton();
-    d->cancelBtn->setIcon(SmallIcon("dialog-cancel"));
+    d->cancelBtn->setIcon(SmallIcon("process-stop"));
     d->cancelBtn->setToolTip(i18n("Cancel current scan operation"));
     d->cancelBtn->hide();
 
     d->prevBtn = new QPushButton();
-    d->prevBtn->setIcon(SmallIcon("fileview-preview"));
+    d->prevBtn->setIcon(SmallIcon("view-preview"));
     d->prevBtn->setToolTip(i18n("Scan preview image from device"));
     d->scanBtn = new QPushButton();
     d->scanBtn->setIcon(SmallIcon("document-save"));
