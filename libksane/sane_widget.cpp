@@ -448,7 +448,7 @@ bool KSaneWidget::openDevice(const QString &device_name)
     d->zSelBtn->setIcon(SmallIcon("document-preview"));
     d->zSelBtn->setToolTip(i18n("Zoom to selection of preview image"));
     d->zFitBtn = new QPushButton();
-    d->zFitBtn->setIcon(SmallIcon("zoom-best-fit"));
+    d->zFitBtn->setIcon(SmallIcon("zoom-fit-best"));
     d->zFitBtn->setToolTip(i18n("Zoom to fit preview image"));
 
     d->progressBar = new QProgressBar();
