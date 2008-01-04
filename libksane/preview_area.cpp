@@ -172,9 +172,9 @@ void PreviewArea::setBRY(float ratio)
 void PreviewArea::requestVisibility(int tl_x, int tl_y)
 {
     setFocus();
-    // first move to the bottom to get the selection at the top/left of the window
-    ensureVisible(2000, 2000);
-    ensureVisible(tl_x, tl_y, 20, 20);
+    // first move to the bottom-right to get the selection at the top/left of the window
+    ensureVisible(image->size().width()-10, image->size().height()-10);
+    ensureVisible(tl_x, tl_y, SCALE_SELECT_MARGIN, SCALE_SELECT_MARGIN);
 }
 
 bool PreviewArea::setIconZoomIn(const QIcon &icon)
