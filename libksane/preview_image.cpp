@@ -98,7 +98,7 @@ void PreviewImage::zoomIn()
     setTLY(tl_y_r);
     setBRX(br_x_r);
     setBRY(br_y_r);
-    emit requestVisibility(tl_x, tl_y);
+    //emit requestVisibility(tl_x, tl_y);
 }
 
 void PreviewImage::zoomOut()
@@ -111,7 +111,7 @@ void PreviewImage::zoomOut()
     setTLY(tl_y_r);
     setBRX(br_x_r);
     setBRY(br_y_r);
-    emit requestVisibility(tl_x, tl_y);
+    //emit requestVisibility(tl_x, tl_y);
 }
 
 void PreviewImage::zoomSel()

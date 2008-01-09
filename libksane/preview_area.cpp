@@ -25,8 +25,11 @@
 #include <stdio.h>
 #include <iostream>
 
-// Local includes.
+#include <QScrollBar>
+// KDE includes
+#include <KDebug>
 
+// Local includes.
 #include "preview_area.h"
 #include "preview_area.moc"
 
@@ -175,6 +178,9 @@ void PreviewArea::requestVisibility(int tl_x, int tl_y)
     // first move to the bottom-right to get the selection at the top/left of the window
     ensureVisible(image->size().width()-10, image->size().height()-10);
     ensureVisible(tl_x, tl_y, SCALE_SELECT_MARGIN, SCALE_SELECT_MARGIN);
+    kDebug() << verticalScrollBar()->value();
+    kDebug() << horizontalScrollBar()->value();
+    kDebug() << horizontalScrollBar()->maximum();
 }
 
 bool PreviewArea::setIconZoomIn(const QIcon &icon)
