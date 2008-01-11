@@ -71,6 +71,8 @@ public:
     void clearSelection();
     QImage *getImage() {return &orig_img;}
     void updateScaledImg();
+    int topLeftX() {return tl_x;};
+    int topLeftY() {return tl_y;};
 
 public Q_SLOTS:
 

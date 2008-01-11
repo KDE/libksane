@@ -24,18 +24,18 @@
 #define MAX_SCALE 4.0
 
 // C++ includes.
-
 #include <cstdio>
 #include <cmath>
 #include <iostream>
 
 // Qt includes.
-
 #include <QPainter>
 #include <QMouseEvent>
 
-// Local includes.
+// KDE includes
+#include <KDebug>
 
+// Local includes.
 #include "preview_image.h"
 #include "preview_image.moc"
 
@@ -98,7 +98,6 @@ void PreviewImage::zoomIn()
     setTLY(tl_y_r);
     setBRX(br_x_r);
     setBRY(br_y_r);
-    //emit requestVisibility(tl_x, tl_y);
 }
 
 void PreviewImage::zoomOut()
@@ -111,7 +110,6 @@ void PreviewImage::zoomOut()
     setTLY(tl_y_r);
     setBRX(br_x_r);
     setBRY(br_y_r);
-    //emit requestVisibility(tl_x, tl_y);
 }
 
 void PreviewImage::zoomSel()
@@ -125,20 +123,24 @@ void PreviewImage::zoomSel()
 
         parent_size = (float)(parent->size().width() - (SCALE_SELECT_MARGIN*2));
         if (parent_size < (SCALE_SELECT_MARGIN*2)) {
+            kDebug() << parent_size << "<" << (SCALE_SELECT_MARGIN*2);
             return;
         }
         select_size = (br_x_r - tl_x_r) * (float)(orig_img.width());
         if (select_size <= 50.0) {
+            kDebug() << select_size << "< 50.0";
             return;
         }
         w_scale = parent_size / select_size;
 
         parent_size = (float)(parent->size().height() - (SCALE_SELECT_MARGIN*2));
         if (parent_size < (SCALE_SELECT_MARGIN*2)) {
+            kDebug() << parent_size << "< (2)" << (SCALE_SELECT_MARGIN*2);
             return;
         }
         select_size = (br_y_r - tl_y_r) * (float)(orig_img.height());
         if (select_size <= 50.0) {
+            kDebug() << select_size << "< 50.0 (2)";
             return;
         }
         h_scale = parent_size / select_size;
@@ -154,7 +156,6 @@ void PreviewImage::zoomSel()
         setBRX(br_x_r);
         setBRY(br_y_r);
     }
-    emit requestVisibility(tl_x, tl_y);
 }
 
 void PreviewImage::zoom2Fit()
@@ -173,7 +174,6 @@ void PreviewImage::zoom2Fit()
         setBRX(br_x_r);
         setBRY(br_y_r);
     }
-    emit requestVisibility(tl_x, tl_y);
 }
 
 void PreviewImage::mousePressEvent(QMouseEvent *event)
@@ -204,8 +204,9 @@ void PreviewImage::mouseMoveEvent(QMouseEvent *event)
     if (tmp_y < 0) tmp_y = 0;
     if (tmp_x >= image.width()) tmp_x = image.width() - 1;
     if (tmp_y >= image.height()) tmp_y = image.height() - 1;
-    //std::cout << "Move to x=" << tmp_x << " y=" << tmp_y << std::endl;
+
     if (lmb) {
+        emit requestVisibility(tmp_x, tmp_y);
         switch (change)
         {
             case MOVE_NONE:

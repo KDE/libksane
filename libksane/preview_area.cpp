@@ -25,7 +25,9 @@
 #include <stdio.h>
 #include <iostream>
 
+// Qt includes
 #include <QScrollBar>
+
 // KDE includes
 #include <KDebug>
 
@@ -60,10 +62,6 @@ PreviewArea::~PreviewArea()
 
 void PreviewArea::createContextMenu()
 {
-    //Action->setIcon(QIcon(""));
-    //Action->setShortcut(tr(""));
-    //Action->setStatusTip(tr(""));
-
     zoomInAction = new QAction(tr("Zoom In"), this);
     connect(zoomInAction, SIGNAL(triggered()), image, SLOT(zoomIn()));
 
@@ -114,14 +112,32 @@ void PreviewArea::updateScaledImg()
 void PreviewArea::zoomIn()
 {
     if (image) {
+        int h_max = horizontalScrollBar()->maximum();
+        int v_max = verticalScrollBar()->maximum();
+
         image->zoomIn();
+
+        int diff = (horizontalScrollBar()->maximum() - h_max) / 2;
+        horizontalScrollBar()->setValue(horizontalScrollBar()->value() + diff);
+
+        diff = (verticalScrollBar()->maximum() - v_max) / 2;
+        verticalScrollBar()->setValue(verticalScrollBar()->value() + diff);
     }
 }
 
 void PreviewArea::zoomOut()
 {
     if (image) {
+        int h_max = horizontalScrollBar()->maximum();
+        int v_max = verticalScrollBar()->maximum();
+
         image->zoomOut();
+
+        int diff = (h_max - horizontalScrollBar()->maximum()) / 2;
+        horizontalScrollBar()->setValue(horizontalScrollBar()->value() - diff);
+
+        diff = (v_max - verticalScrollBar()->maximum()) / 2;
+        verticalScrollBar()->setValue(verticalScrollBar()->value() - diff);
     }
 }
 
@@ -129,6 +145,10 @@ void PreviewArea::zoomSel()
 {
     if (image) {
         image->zoomSel();
+        setFocus();
+        // first move to the bottom-right to get the selection at the top/left of the window
+        ensureVisible(image->size().width()-10, image->size().height()-10);
+        ensureVisible(image->topLeftX(), image->topLeftY(), SCALE_SELECT_MARGIN, SCALE_SELECT_MARGIN);
     }
 }
 
@@ -136,6 +156,8 @@ void PreviewArea::zoom2Fit()
 {
     if (image) {
         image->zoom2Fit();
+        setFocus();
+        ensureVisible(0, 0);
     }
 }
 
@@ -171,18 +193,6 @@ void PreviewArea::setBRY(float ratio)
     }
 }
 
-
-void PreviewArea::requestVisibility(int tl_x, int tl_y)
-{
-    setFocus();
-    // first move to the bottom-right to get the selection at the top/left of the window
-    ensureVisible(image->size().width()-10, image->size().height()-10);
-    ensureVisible(tl_x, tl_y, SCALE_SELECT_MARGIN, SCALE_SELECT_MARGIN);
-    kDebug() << verticalScrollBar()->value();
-    kDebug() << horizontalScrollBar()->value();
-    kDebug() << horizontalScrollBar()->maximum();
-}
-
 bool PreviewArea::setIconZoomIn(const QIcon &icon)
 {
     zoomInAction->setIcon(icon);
@@ -205,6 +215,12 @@ bool PreviewArea::setIconZoomFit(const QIcon &icon)
 {
     zoom2FitAction->setIcon(icon);
     return true;
+}
+
+void PreviewArea::requestVisibility(int tl_x, int tl_y)
+{
+    setFocus();
+    ensureVisible(tl_x, tl_y, 2, 2);
 }
 
 }  // NameSpace KSaneIface

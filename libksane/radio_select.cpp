@@ -29,7 +29,7 @@
 
 // KDE includes.
 
-#include <kdebug.h>
+#include <KDebug>
 #include <klocale.h>
 
 // Local includes.
