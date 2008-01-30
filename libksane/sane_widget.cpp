@@ -49,6 +49,7 @@ extern "C"
 #include <QProgressBar>
 
 // KDE includes
+#include <kglobal.h>
 #include <klocale.h>
 #include <kdebug.h>
 #include <kmessagebox.h>
@@ -255,16 +256,21 @@ KSaneWidget::KSaneWidget(QWidget* parent)
 
     SANE_Int    version;
     SANE_Status status;
+    
+    //kDebug() <<  "The language is:" << KGlobal::locale()->language();
+    //kDebug() <<  "Languagelist" << KGlobal::locale()->languageList();
+    KGlobal::locale()->insertCatalog("sane-backends");
+    
     status = sane_init(&version, 0);
     if (status != SANE_STATUS_GOOD) {
         kDebug() << "libksane: sane_init() failed("
                  << sane_strstatus(status) << ")";
     }
     else {
-        kDebug() << "Sane Version = "
-                 << SANE_VERSION_MAJOR(version) << "."
-                 << SANE_VERSION_MINOR(version) << "."
-                 << SANE_VERSION_BUILD(version);
+        //kDebug() << "Sane Version = "
+        //         << SANE_VERSION_MAJOR(version) << "."
+        //         << SANE_VERSION_MINOR(version) << "."
+        //         << SANE_VERSION_BUILD(version);
     }
     d->rValTmr.setSingleShot(true);
 
@@ -306,11 +312,11 @@ QString KSaneWidget::selectDevice(QWidget* parent)
     status = sane_get_devices(&dev_list, SANE_TRUE);
 
     while(dev_list[i] != 0) {
-        kDebug() << "i="       << i << " "
-                 << "name='"   << dev_list[i]->name   << "' "
-                 << "vendor='" << dev_list[i]->vendor << "' "
-                 << "model='"  << dev_list[i]->model  << "' "
-                 << "type='"   << dev_list[i]->type   << "'";
+        //kDebug() << "i="       << i << " "
+        //         << "name='"   << dev_list[i]->name   << "' "
+        //         << "vendor='" << dev_list[i]->vendor << "' "
+        //         << "model='"  << dev_list[i]->model  << "' "
+        //         << "type='"   << dev_list[i]->type   << "'";
         tmp = QString(dev_list[i]->name);
         tmp += "\n" + QString(dev_list[i]->vendor);
         tmp += " : " + QString(dev_list[i]->model);
@@ -335,7 +341,7 @@ QString KSaneWidget::selectDevice(QWidget* parent)
     RadioSelect sel;
     sel.setWindowTitle(qApp->applicationName());
     i = sel.getSelectedIndex(parent, QString("Select Scanner"), dev_name_list, 0);
-    kDebug() << "i=" << i;
+    //kDebug() << "i=" << i;
 
     if (i == num_scaners) {
         return QString("test:0");
@@ -376,15 +382,14 @@ bool KSaneWidget::openDevice(const QString &device_name)
         d->vendor    = QString("Test");
         d->model     = QString("Debug");
 #else
-        kDebug() << "openDevice: '" << qPrintable(device_name) << "' not found";
+        kDebug() << device_name << "' not found";
         return false;
 #endif
     }
 
     // Try to open the device
     if (sane_open(device_name.toLatin1(), &d->saneHandle) != SANE_STATUS_GOOD) {
-        kDebug() << "openDevice: sane_open(\"" << qPrintable(device_name)
-                 << "\", &handle) failed!";
+        //kDebug() << "sane_open(\"" << device_name << "\", &handle) failed!";
         return false;
     }
 
@@ -774,7 +779,7 @@ void KSaneWidget::setDefaultValues()
 
     // Try to get Color mode by default
     if ((option = d->getOption(SANE_NAME_SCAN_MODE)) != 0) {
-        option->setValue(SANE_VALUE_SCAN_MODE_COLOR);
+        option->setValue(i18n(SANE_VALUE_SCAN_MODE_COLOR));
     }
 
     // Try to set 8 bit color
