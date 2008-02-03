@@ -33,8 +33,8 @@
 #include <QHBoxLayout>
 
 // KDE includes.
+#include <KLocale>
 #include <KDebug>
-#include <klocale.h>
 
 // Local includes.
 #include "radio_select.h"
@@ -44,31 +44,19 @@ namespace KSaneIface
 {
 
 RadioSelect::RadioSelect(QWidget *parent)
-           : QDialog(parent)
+    : KDialog(parent)
 {
-    QVBoxLayout *layout = new QVBoxLayout;
-    setLayout(layout);
+    setButtons(KDialog::Ok | KDialog::Cancel);
+
+    QWidget *page = new QWidget(this);
+    setMainWidget(page);
+    QVBoxLayout *layout = new QVBoxLayout(page);
 
     radio_group = new QGroupBox(this);
     layout->addWidget(radio_group, 100);
 
     QHBoxLayout *btn_layout = new QHBoxLayout;
     layout->addLayout(btn_layout, 0);
-
-    // add the OK and Cancel buttons to the bottom
-    btn_layout->addStretch();
-    QPushButton *ok = new QPushButton;
-    ok->setText(i18n("OK"));
-    btn_layout->addWidget(ok);
-    QPushButton *cancel = new QPushButton;
-    cancel->setText(i18n("Cancel"));
-    btn_layout->addWidget(cancel);
-
-    connect (ok, SIGNAL(clicked()),
-             this, SLOT(accept()));
-
-    connect (cancel, SIGNAL(clicked()),
-             this, SLOT(reject()));
 }
 
 int RadioSelect::getSelectedIndex(QWidget *parent,

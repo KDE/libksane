@@ -30,15 +30,16 @@
 #define RADIO_SELECT_H
 
 // Qt includes.
-
 #include <QGroupBox>
-#include <QDialog>
 #include <QStringList>
+
+// KDE includes
+#include <KDialog>
 
 namespace KSaneIface
 {
 
-class RadioSelect : public QDialog
+class RadioSelect : public KDialog
 {
     Q_OBJECT
 
