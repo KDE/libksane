@@ -133,7 +133,6 @@ Q_SIGNALS:
 
 private Q_SLOTS:
 
-    void opt_level_change(int level);
     void scheduleValReload();
     void optReload();
     void valReload();

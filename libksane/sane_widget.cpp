@@ -45,6 +45,7 @@ extern "C"
 #include <QImage>
 #include <QTimer>
 #include <QScrollArea>
+#include <QScrollBar>
 #include <QList>
 #include <QProgressBar>
 
@@ -53,6 +54,7 @@ extern "C"
 #include <klocale.h>
 #include <kdebug.h>
 #include <kmessagebox.h>
+#include <KTabWidget>
 
 // Local includes.
 #include "sane_option.h"
@@ -86,7 +88,9 @@ public:
 
     KSaneWidgetPriv()
     {
-        optArea       = 0;
+        optsWidget    = 0;
+        basic_options = 0;
+        other_options = 0;
         optMode       = 0;
         optDepth      = 0;
         optRes        = 0;
@@ -197,7 +201,9 @@ public:
     QString             model;
 
     // Option variables
-    QScrollArea        *optArea;
+    KTabWidget         *optsWidget;
+    QWidget            *basic_options;
+    QWidget            *other_options;
     QList<SaneOption*>  optList;
     SaneOption         *optMode;
     SaneOption         *optDepth;
@@ -432,16 +438,14 @@ bool KSaneWidget::openDevice(const QString &device_name)
     base_layout->addLayout(opt_lay, 0);
     base_layout->addLayout(pr_layout, 100);
 
-    // Create Option Scroll Area
-    d->optArea = new QScrollArea(this);
-    d->optArea->setWidgetResizable(true);
-    d->optArea->setFrameShape(QFrame::NoFrame);
-    opt_lay->addWidget(d->optArea, 0);
+    // Create Options Widget
+    d->optsWidget = new KTabWidget(this);
+     // Create the options interface
+    createOptInterface();
+
+    opt_lay->addWidget(d->optsWidget, 0);
     opt_lay->setSpacing(2);
     opt_lay->setMargin(0);
-
-    // Create the options interface
-    createOptInterface();
 
     // create the preview
     d->previewArea = new PreviewArea(this);
@@ -529,81 +533,72 @@ bool KSaneWidget::openDevice(const QString &device_name)
 
 void KSaneWidget::createOptInterface()
 {
-    // create the container widget
-    QWidget *opt_container = new QWidget(d->optArea);
-    d->optArea->setWidget(opt_container);
-    QVBoxLayout *opt_layout = new QVBoxLayout(opt_container);
-    opt_layout->setSpacing(4);
-    opt_layout->setMargin(3);
+    // remove all tabs
+    d->optsWidget->clear();
 
-    // add the options
-    // (Should Vendor and model always be visible?)
-    //LabeledSeparator *model_label = new LabeledSeparator(opt_container, d->modelName);
-    //opt_layout->addWidget(model_label);
+    // Basic options
+    QScrollArea *basic_area = new QScrollArea(d->optsWidget);
+    basic_area->setWidgetResizable(true);
+    basic_area->setFrameShape(QFrame::NoFrame);
+    d->optsWidget->addTab(basic_area, i18n("Basic Options"));
 
-    // basic/intermediate/All options
-    QStringList strl;
-    strl << i18n("Basic") << i18n("Advanced") << i18n("All Options");
-    LabeledCombo *opt_level = new LabeledCombo(opt_container, i18n("Option Level"), strl);
-    opt_layout->addWidget(opt_level);
+    d->basic_options = new QWidget(basic_area);
+    basic_area->setWidget(d->basic_options);
 
-    // add separator line
-    opt_layout->addSpacing(4);
-    QFrame *line0 = new QFrame(opt_container);
-    line0->setFrameShape(QFrame::HLine);
-    line0->setFrameShadow(QFrame::Sunken);
-    opt_layout->addWidget(line0);
-    opt_layout->addSpacing(4);
+    QVBoxLayout *basic_layout = new QVBoxLayout(d->basic_options);
+    basic_layout->setSpacing(4);
+    basic_layout->setMargin(3);
+
 
     SaneOption *option;
     // Scan Source
     if ((option = d->getOption(SANE_NAME_SCAN_SOURCE)) != 0) {
-        option->createWidget(opt_container);
-        opt_layout->addWidget(option->widget());
+        option->createWidget(d->basic_options);
+        basic_layout->addWidget(option->widget());
     }
-    // film-type
+    // film-type (note: No translation)
     if ((option = d->getOption(QString("film-type"))) != 0) {
-        option->createWidget(opt_container);
-        opt_layout->addWidget(option->widget());
+        option->createWidget(d->basic_options);
+        basic_layout->addWidget(option->widget());
     }
     else if ((option = d->getOption(SANE_NAME_NEGATIVE)) != 0) {
-        option->createWidget(opt_container);
-        opt_layout->addWidget(option->widget());
+        option->createWidget(d->basic_options);
+        basic_layout->addWidget(option->widget());
     }
     // Scan mode
     if ((option = d->getOption(SANE_NAME_SCAN_MODE)) != 0) {
         d->optMode = option;
-        option->createWidget(opt_container);
-        opt_layout->addWidget(option->widget());
+        option->createWidget(d->basic_options);
+        basic_layout->addWidget(option->widget());
     }
     // Bitdepth
     if ((option = d->getOption(SANE_NAME_BIT_DEPTH)) != 0) {
         d->optDepth = option;
-        option->createWidget(opt_container);
-        opt_layout->addWidget(option->widget());
+        option->createWidget(d->basic_options);
+        basic_layout->addWidget(option->widget());
     }
     // Threshold
     if ((option = d->getOption(SANE_NAME_THRESHOLD)) != 0) {
-        option->createWidget(opt_container);
-        opt_layout->addWidget(option->widget());
+        option->createWidget(d->basic_options);
+        basic_layout->addWidget(option->widget());
     }
     // Resolution
     if ((option = d->getOption(SANE_NAME_SCAN_RESOLUTION)) != 0) {
         d->optRes = option;
-        option->createWidget(opt_container);
-        opt_layout->addWidget(option->widget());
+        option->createWidget(d->basic_options);
+        basic_layout->addWidget(option->widget());
     }
     else if ((option = d->getOption(SANE_NAME_SCAN_X_RESOLUTION)) != 0) {
         d->optRes = option;
-        option->createWidget(opt_container);
-        opt_layout->addWidget(option->widget());
+        option->createWidget(d->basic_options);
+        basic_layout->addWidget(option->widget());
     }
     if ((option = d->getOption(SANE_NAME_SCAN_Y_RESOLUTION)) != 0) {
         d->optResY = option;
-        option->createWidget(opt_container);
-        opt_layout->addWidget(option->widget());
+        option->createWidget(d->basic_options);
+        basic_layout->addWidget(option->widget());
     }
-    // scan area
+    // scan area (Do not add the widgets)
     if ((option = d->getOption(SANE_NAME_SCAN_TL_X)) != 0) {
         d->optTl = option;
         connect (option, SIGNAL(fValueRead(float)),
@@ -626,19 +621,19 @@ void KSaneWidget::createOptInterface()
     }
 
     // Color Options Frame
-    d->colorOpts = new QWidget(opt_container);
-    opt_layout->addWidget(d->colorOpts);
+    d->colorOpts = new QWidget(d->basic_options);
+    basic_layout->addWidget(d->colorOpts);
     QVBoxLayout *color_lay = new QVBoxLayout(d->colorOpts);
     color_lay->setSpacing(2);
     color_lay->setMargin(0);
 
     // add separator line
-    color_lay->addSpacing(6);
-    QFrame *line1 = new QFrame(d->colorOpts);
-    line1->setFrameShape(QFrame::HLine);
-    line1->setFrameShadow(QFrame::Sunken);
-    color_lay->addWidget(line1);
-    color_lay->addSpacing(2);
+    //color_lay->addSpacing(6);
+    //QFrame *line1 = new QFrame(d->colorOpts);
+    //line1->setFrameShape(QFrame::HLine);
+    //line1->setFrameShadow(QFrame::Sunken);
+    //color_lay->addWidget(line1);
+    //color_lay->addSpacing(2);
 
     if ((option = d->getOption(SANE_NAME_BRIGHTNESS)) != 0) {
         option->createWidget(d->colorOpts);
@@ -688,7 +683,7 @@ void KSaneWidget::createOptInterface()
                 d->optGamB->lgamma, SLOT(setValues(int,int,int)));
 
         QCheckBox *split_gam_btn = new QCheckBox(i18n("Separate color intensity tables"),
-                                                 opt_container);
+                                                 d-> basic_options);
         color_lay->addWidget(split_gam_btn);
 
         connect (split_gam_btn, SIGNAL(toggled(bool)),
@@ -709,20 +704,22 @@ void KSaneWidget::createOptInterface()
         color_lay->addWidget(option->widget());
     }
 
-    // Remaining (un known) Options Frame
-    d->remainOpts = new QWidget(opt_container);
-    opt_layout->addWidget(d->remainOpts);
-    QVBoxLayout *remain_lay = new QVBoxLayout(d->remainOpts);
-    remain_lay->setSpacing(2);
-    remain_lay->setMargin(0);
+    // add a stretch to the end to keep the parameters at the top
+    //basic_layout->addStretch();
 
-    // add separator line
-    remain_lay->addSpacing(4);
-    QFrame *line2 = new QFrame(d->remainOpts);
-    line2->setFrameShape(QFrame::HLine);
-    line2->setFrameShadow(QFrame::Sunken);
-    remain_lay->addWidget(line2);
-    remain_lay->addSpacing(4);
+
+    // Remaining (un known) Options tabs
+    QScrollArea *other_area = new QScrollArea(d->optsWidget);
+    other_area->setWidgetResizable(true);
+    other_area->setFrameShape(QFrame::NoFrame);
+    d->optsWidget->addTab(other_area, i18n("Other Options"));
+
+    d->other_options = new QWidget(other_area);
+    other_area->setWidget(d->other_options);
+
+    QVBoxLayout *other_layout = new QVBoxLayout(d->other_options);
+    other_layout->setSpacing(2);
+    other_layout->setMargin(0);
 
     // add remaining parameters
     for (int i=0; i<d->optList.size(); i++) {
@@ -733,45 +730,26 @@ void KSaneWidget::createOptInterface()
              (d->optList.at(i)->name() != SANE_NAME_SCAN_BR_Y) &&
              (d->optList.at(i)->sw_type() != SW_GROUP))
         {
-            d->optList.at(i)->createWidget(d->remainOpts);
-            remain_lay->addWidget(d->optList.at(i)->widget());
+            d->optList.at(i)->createWidget(d->other_options);
+            other_layout->addWidget(d->optList.at(i)->widget());
         }
     }
 
-    // connect showing/hiding finctionality
-    connect (opt_level, SIGNAL(activated(int)),
-             this, SLOT(opt_level_change(int)));
+    // add a stretch to the end to keep the parameters at the top
+    basic_layout->addStretch();
+    other_layout->addStretch();
 
-    // add a stretch to the end to ceep the parameters at the top
-    opt_layout->addStretch();
-
-    // encsure that you do not get a scrollbar at the bottom of the option of the options
-    d->optArea->setMinimumWidth(opt_container->sizeHint().width()+20);
-
-    // this could/should be set by saved settings.
-    d->colorOpts->setVisible(false);
-    d->remainOpts->setVisible(false);
-}
-
-void KSaneWidget::opt_level_change(int level)
-{
-    if (d->colorOpts == 0) return;
-    if (d->remainOpts == 0) return;
-
-    switch (level) {
-        case 1:
-            d->colorOpts->setVisible(true);
-            d->remainOpts->setVisible(false);
-            break;
-        case 2:
-            d->colorOpts->setVisible(true);
-            d->remainOpts->setVisible(true);
-            break;
-        default:
-            d->colorOpts->setVisible(false);
-            d->remainOpts->setVisible(false);
+    // encsure that we do not get a scrollbar at the bottom of the option of the options
+    int min_width = d->basic_options->sizeHint().width();
+    if (min_width < d->other_options->sizeHint().width()) {
+        min_width = d->other_options->sizeHint().width();
     }
+
+    d->optsWidget->setMinimumWidth(min_width +
+            basic_area->verticalScrollBar()->sizeHint().width() + 5);
+
 }
+
 
 void KSaneWidget::setDefaultValues()
 {
@@ -811,6 +789,15 @@ void KSaneWidget::optReload()
     // this is done so that you can select scanarea without
     // having to scan a preview.
     updatePreviewSize();
+
+    // encsure that we do not get a scrollbar at the bottom of the option of the options
+    int min_width = d->basic_options->sizeHint().width();
+    if (min_width < d->other_options->sizeHint().width()) {
+        min_width = d->other_options->sizeHint().width();
+    }
+
+    d->optsWidget->setMinimumWidth(min_width + 32);
+
 }
 
 void KSaneWidget::valReload()
@@ -1667,7 +1654,7 @@ void KSaneWidget::scanCancel()
 
 void KSaneWidget::setBusy(bool busy)
 {
-    d->optArea->setDisabled(busy);
+    d->optsWidget->setDisabled(busy);
     d->previewArea->setDisabled(busy);
     d->zInBtn->setDisabled(busy);
     d->zOutBtn->setDisabled(busy);
