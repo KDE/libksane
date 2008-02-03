@@ -256,11 +256,11 @@ KSaneWidget::KSaneWidget(QWidget* parent)
 
     SANE_Int    version;
     SANE_Status status;
-    
+
     //kDebug() <<  "The language is:" << KGlobal::locale()->language();
     //kDebug() <<  "Languagelist" << KGlobal::locale()->languageList();
     KGlobal::locale()->insertCatalog("sane-backends");
-    
+
     status = sane_init(&version, 0);
     if (status != SANE_STATUS_GOOD) {
         kDebug() << "libksane: sane_init() failed("
@@ -317,9 +317,9 @@ QString KSaneWidget::selectDevice(QWidget* parent)
         //         << "vendor='" << dev_list[i]->vendor << "' "
         //         << "model='"  << dev_list[i]->model  << "' "
         //         << "type='"   << dev_list[i]->type   << "'";
-        tmp = QString(dev_list[i]->name);
-        tmp += "\n" + QString(dev_list[i]->vendor);
-        tmp += " : " + QString(dev_list[i]->model);
+        tmp = i18n(dev_list[i]->name);
+        tmp += "\n" + i18n(dev_list[i]->vendor);
+        tmp += " : " + i18n(dev_list[i]->model);
         dev_name_list += tmp;
         i++;
     }
@@ -328,8 +328,8 @@ QString KSaneWidget::selectDevice(QWidget* parent)
     // add the debug test scanner to the end
 #ifdef ENABLE_DEBUG
     tmp = QString("test:0");
-    tmp += "\n" + QString("Tester");
-    tmp += " : " + QString("Model");
+    tmp += "\n" + i18n("Tester");
+    tmp += " : " + i18n("Model");
     dev_name_list += tmp;
 #endif
 
@@ -340,7 +340,7 @@ QString KSaneWidget::selectDevice(QWidget* parent)
 
     RadioSelect sel;
     sel.setWindowTitle(qApp->applicationName());
-    i = sel.getSelectedIndex(parent, QString("Select Scanner"), dev_name_list, 0);
+    i = sel.getSelectedIndex(parent, i18n("Select Scanner"), dev_name_list, 0);
     //kDebug() << "i=" << i;
 
     if (i == num_scaners) {
@@ -368,9 +368,9 @@ bool KSaneWidget::openDevice(const QString &device_name)
 
     while(dev_list[i] != 0) {
         if (QString(dev_list[i]->name) == device_name) {
-            d->modelName = QString(dev_list[i]->vendor) + " " + QString(dev_list[i]->model);
-            d->vendor    = QString(dev_list[i]->vendor);
-            d->model     = QString(dev_list[i]->model);
+            d->modelName = i18n(dev_list[i]->vendor) + " " + i18n(dev_list[i]->model);
+            d->vendor    = i18n(dev_list[i]->vendor);
+            d->model     = i18n(dev_list[i]->model);
             break;
         }
         i++;
@@ -379,8 +379,8 @@ bool KSaneWidget::openDevice(const QString &device_name)
     if (dev_list[i] == 0) {
 #ifdef ENABLE_DEBUG
         d->modelName = i18n("Test Scanner");
-        d->vendor    = QString("Test");
-        d->model     = QString("Debug");
+        d->vendor    = i18n("Test");
+        d->model     = i18n("Debug");
 #else
         kDebug() << device_name << "' not found";
         return false;
@@ -456,10 +456,10 @@ bool KSaneWidget::openDevice(const QString &device_name)
     d->zOutBtn->setIcon(SmallIcon("zoom-out"));
     d->zOutBtn->setToolTip(i18n("Zoom out preview image"));
     d->zSelBtn = new QPushButton();
-    d->zSelBtn->setIcon(SmallIcon("document-preview"));
+    d->zSelBtn->setIcon(SmallIcon("zoom-fit-best"));
     d->zSelBtn->setToolTip(i18n("Zoom to selection of preview image"));
     d->zFitBtn = new QPushButton();
-    d->zFitBtn->setIcon(SmallIcon("zoom-fit-best"));
+    d->zFitBtn->setIcon(SmallIcon("document-preview"));
     d->zFitBtn->setToolTip(i18n("Zoom to fit preview image"));
 
     d->progressBar = new QProgressBar();
@@ -470,7 +470,7 @@ bool KSaneWidget::openDevice(const QString &device_name)
     d->cancelBtn->hide();
 
     d->prevBtn = new QPushButton();
-    d->prevBtn->setIcon(SmallIcon("view-preview"));
+    d->prevBtn->setIcon(SmallIcon("document-import"));
     d->prevBtn->setToolTip(i18n("Scan preview image from device"));
     d->scanBtn = new QPushButton();
     d->scanBtn->setIcon(SmallIcon("document-save"));
@@ -543,7 +543,7 @@ void KSaneWidget::createOptInterface()
 
     // basic/intermediate/All options
     QStringList strl;
-    strl << "Basic" << "Advanced" << "All Options";
+    strl << i18n("Basic") << i18n("Advanced") << i18n("All Options");
     LabeledCombo *opt_level = new LabeledCombo(opt_container, i18n("Option Level"), strl);
     opt_layout->addWidget(opt_level);
 
@@ -1607,9 +1607,8 @@ bool KSaneWidget::makeQImage(const QByteArray &data,
                 img.bits()[j+2] = data.data()[i];
                 j+=4;
             }
-            KMessageBox::sorry(0, i18n("The image data contains 16 bits per color, "
-                                         "but QImage support only 8 bits per color. "
-                                         "The image data will be truncated to 8 bits per color."));
+            KMessageBox::sorry(0, i18n("The image data contained 16 bits per color, "
+                    "but the color depth has been truncated to 8 bits per color."));
             return true;
 
         case FormatRGB_8_C:
@@ -1648,9 +1647,8 @@ bool KSaneWidget::makeQImage(const QByteArray &data,
 
                 inc_pixel(pixel_x, pixel_y, width);
             }
-            KMessageBox::sorry(0, i18n("The image data contains 16 bits per color, "
-                                         "but QImage support only 8 bits per color. "
-                                         "The image data will be truncated to 8 bits per color."));
+            KMessageBox::sorry(0, i18n("The image data contained 16 bits per color, "
+                    "but the color depth has been truncated to 8 bits per color."));
             return true;
 
         case FormatNone:
