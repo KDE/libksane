@@ -1,14 +1,10 @@
 TODO list to be more KDE compliant:
 
-* Internationalization : tr() ==> i18n().
-* Internationalization : check if libsane strings are i18n using gettext and handle it properlly.
-* API : use reference instead pointers when it's possible.
 * Doc : add API documentation using Doxygen forms.
-* QDialog => Kdialog. fix dialog buttons handling.
 
 TODO list of new features:
 
 * Added methods to get strings info from scanner device to be hosted later in
-  image metadata (make, model, dpi, color mode, etc)
+  image metadata (dpi, color mode, etc)
 * Progressive final scan: scan can provide huge image especially in 16 bits color depth.
   Send image data on host application by blog, not the whole image.
