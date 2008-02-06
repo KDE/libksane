@@ -627,14 +627,7 @@ void KSaneWidget::createOptInterface()
     color_lay->setSpacing(2);
     color_lay->setMargin(0);
 
-    // add separator line
-    //color_lay->addSpacing(6);
-    //QFrame *line1 = new QFrame(d->colorOpts);
-    //line1->setFrameShape(QFrame::HLine);
-    //line1->setFrameShadow(QFrame::Sunken);
-    //color_lay->addWidget(line1);
-    //color_lay->addSpacing(2);
-
+    // Color correction
     if ((option = d->getOption(SANE_NAME_BRIGHTNESS)) != 0) {
         option->createWidget(d->colorOpts);
         color_lay->addWidget(option->widget());
@@ -673,6 +666,8 @@ void KSaneWidget::createOptInterface()
                                   d->optGamR->lgamma->size());
         color_lay->addWidget(lgamma);
 
+        lgamma->setToolTip(i18n(SANE_DESC_GAMMA_VECTOR));
+        
         connect(lgamma, SIGNAL(gammaChanged(int,int,int)),
                 d->optGamR->lgamma, SLOT(setValues(int,int,int)));
 

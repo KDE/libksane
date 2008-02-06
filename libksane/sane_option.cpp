@@ -182,6 +182,8 @@ void SaneOption::createWidget(QWidget *parent)
             break;
     }
 
+    frame->setToolTip(i18n(sane_option->desc));
+    
     if (sw_state == SW_STATE_HIDDEN) {
         frame->hide();
     }
