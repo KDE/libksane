@@ -26,13 +26,11 @@
  *
  * ============================================================ */
 
-// Qt includes.
-
-
 // Local includes.
-
 #include "labeled_entry.h"
 #include "labeled_entry.moc"
+
+// Qt includes.
 #include <QHBoxLayout>
 
 namespace KSaneIface
@@ -45,7 +43,7 @@ LabeledEntry::LabeledEntry(QWidget *parent, const QString& ltext)
     hb->setSpacing(2);
     hb->setMargin(0);
     label = new QLabel(ltext, this);
-    entry = new QLineEdit(this);
+    entry = new KLineEdit(this);
     reset = new QPushButton(this);
     reset->setText("Reset");
     set = new QPushButton(this);

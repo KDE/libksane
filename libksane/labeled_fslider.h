@@ -26,8 +26,8 @@
  *
  * ============================================================ */
 
-#ifndef LABELED_SFSLIDER_H
-#define LABELED_SFSLIDER_H
+#ifndef LABELED_FSLIDER_H
+#define LABELED_FSLIDER_H
 
 // Qt includes.
 

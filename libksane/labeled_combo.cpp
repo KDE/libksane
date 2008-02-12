@@ -25,14 +25,14 @@
  * License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * ============================================================ */
-
-// Qt includes.
-
-#include <QComboBox>
-#include <QLabel>
-
 #include "labeled_combo.h"
 #include "labeled_combo.moc"
+
+// Qt includes.
+#include <QLabel>
+
+// KDE includes
+#include <KComboBox>
 
 namespace KSaneIface
 {
@@ -43,7 +43,7 @@ LabeledCombo::LabeledCombo(QWidget *parent, const QString& ltext,
 {
     layout = new QGridLayout(this);
     label  = new QLabel(ltext, this);
-    combo  = new QComboBox(this);
+    combo  = new KComboBox(this);
     combo->addItems(list);
 
     connect(combo, SIGNAL(activated(const QString &)),

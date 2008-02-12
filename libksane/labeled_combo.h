@@ -30,11 +30,12 @@
 #define LABELED_COMBO_H
 
 // Qt includes.
-
 #include <QFrame>
-#include <QComboBox>
 #include <QLabel>
 #include <QGridLayout>
+
+// KDE includes
+#include <KComboBox>
 
 namespace KSaneIface
 {
@@ -115,7 +116,7 @@ Q_SIGNALS:
 private:
 
     QLabel *label;
-    QComboBox *combo;
+    KComboBox *combo;
     QGridLayout *layout;
 };
 

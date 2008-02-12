@@ -59,7 +59,6 @@ extern "C"
 // Local includes.
 #include "sane_option.h"
 #include "preview_area.h"
-#include "sane_option.h"
 #include "labeled_separator.h"
 #include "radio_select.h"
 #include "labeled_gamma.h"
@@ -82,11 +81,11 @@ typedef enum
 } ReadStatus;
 
 
-class KSaneWidgetPriv
+class KSaneWidgetPrivate
 {
 public:
 
-    KSaneWidgetPriv()
+    KSaneWidgetPrivate()
     {
         optsWidget    = 0;
         basic_options = 0;
@@ -256,10 +255,8 @@ public:
 };
 
 KSaneWidget::KSaneWidget(QWidget* parent)
-          : QWidget(parent)
+    : QWidget(parent), d(new KSaneWidgetPrivate)
 {
-    d = new KSaneWidgetPriv;
-
     SANE_Int    version;
     SANE_Status status;
 
@@ -324,7 +321,7 @@ QString KSaneWidget::selectDevice(QWidget* parent)
         //         << "model='"  << dev_list[i]->model  << "' "
         //         << "type='"   << dev_list[i]->type   << "'";
         tmp = i18n(dev_list[i]->name);
-        tmp += "\n" + i18n(dev_list[i]->vendor);
+        tmp += '\n' + i18n(dev_list[i]->vendor);
         tmp += " : " + i18n(dev_list[i]->model);
         dev_name_list += tmp;
         i++;
@@ -334,8 +331,8 @@ QString KSaneWidget::selectDevice(QWidget* parent)
     // add the debug test scanner to the end
 #ifdef ENABLE_DEBUG
     tmp = QString("test:0");
-    tmp += "\n" + i18n("Tester");
-    tmp += " : " + i18n("Model");
+    tmp += '\n' + i18nc("Test backend vendor name", "Tester");
+    tmp += " : " + i18nc("Test backend model name", "Debug");
     dev_name_list += tmp;
 #endif
 
@@ -374,7 +371,7 @@ bool KSaneWidget::openDevice(const QString &device_name)
 
     while(dev_list[i] != 0) {
         if (QString(dev_list[i]->name) == device_name) {
-            d->modelName = i18n(dev_list[i]->vendor) + " " + i18n(dev_list[i]->model);
+            d->modelName = i18n(dev_list[i]->vendor) + ' ' + i18n(dev_list[i]->model);
             d->vendor    = i18n(dev_list[i]->vendor);
             d->model     = i18n(dev_list[i]->model);
             break;
@@ -385,8 +382,8 @@ bool KSaneWidget::openDevice(const QString &device_name)
     if (dev_list[i] == 0) {
 #ifdef ENABLE_DEBUG
         d->modelName = i18n("Test Scanner");
-        d->vendor    = i18n("Test");
-        d->model     = i18n("Debug");
+        d->vendor    = i18nc("Test backend vendor name", "Tester");
+        d->model     = i18nc("Test backend model name", "Debug");
 #else
         kDebug() << device_name << "' not found";
         return false;

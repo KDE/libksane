@@ -26,8 +26,8 @@
  *
  * ============================================================ */
 
-#ifndef LABELD_SEPARATOR_H
-#define LABELD_SEPARATOR_H
+#ifndef LABELED_SEPARATOR_H
+#define LABELED_SEPARATOR_H
 
 // Qt includes.
 

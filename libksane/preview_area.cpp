@@ -26,20 +26,15 @@
  *
  * ============================================================ */
 
-// C++ includes.
-
-#include <stdio.h>
-#include <iostream>
+// Local includes.
+#include "preview_area.h"
+#include "preview_area.moc"
 
 // Qt includes
 #include <QScrollBar>
 
 // KDE includes
 #include <KDebug>
-
-// Local includes.
-#include "preview_area.h"
-#include "preview_area.moc"
 
 namespace KSaneIface
 {

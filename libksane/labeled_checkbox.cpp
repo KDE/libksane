@@ -26,13 +26,11 @@
  *
  * ============================================================ */
 
-// Qt includes.
-
-
 // Local includes.
-
 #include "labeled_checkbox.h"
 #include "labeled_checkbox.moc"
+
+// Qt includes.
 #include <QHBoxLayout>
 
 namespace KSaneIface

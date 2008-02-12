@@ -62,7 +62,7 @@ public:
     LabeledGamma(QWidget *parent, const QString& text, int elements);
     ~LabeledGamma();
 
-    void setColor(QColor color);
+    void setColor(const QColor &color);
     void setSize(int size);
     const QVector<int> &gammaTablePtr() { return gam_tbl; }
     int size() {return (int)(max_val+1);}

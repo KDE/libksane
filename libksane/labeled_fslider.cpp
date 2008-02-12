@@ -26,14 +26,13 @@
  *
  * ============================================================ */
 
+// Local includes.
+#include "labeled_fslider.h"
+#include "labeled_fslider.moc"
+
 #define FLOAT_MULTIP 32768.0
 #define TO_FLOAT(v) ((float)v / FLOAT_MULTIP)
 #define TO_FIX(v) ((int)(v * FLOAT_MULTIP))
-
-// Local includes.
-
-#include "labeled_fslider.h"
-#include "labeled_fslider.moc"
 
 namespace KSaneIface
 {

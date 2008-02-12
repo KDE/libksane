@@ -26,6 +26,10 @@
  *
  * ============================================================ */
 
+// Local includes.
+#include "radio_select.h"
+#include "radio_select.moc"
+
 // Qt includes.
 #include <QRadioButton>
 #include <QPushButton>
@@ -35,10 +39,6 @@
 // KDE includes.
 #include <KLocale>
 #include <KDebug>
-
-// Local includes.
-#include "radio_select.h"
-#include "radio_select.moc"
 
 namespace KSaneIface
 {

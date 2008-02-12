@@ -26,14 +26,12 @@
  *
  * ============================================================ */
 
-// Qt includes.
-
-#include <QPainter>
-
 // Local includes.
-
 #include "gamma_disp.h"
 #include "gamma_disp.moc"
+
+// Qt includes.
+#include <QPainter>
 
 namespace KSaneIface
 {
@@ -55,7 +53,7 @@ QSize GammaDisp::sizeHint() const
     return QSize(75, 75);
 }
 
-void GammaDisp::setColor(QColor color)
+void GammaDisp::setColor(const QColor &color)
 {
     gam_color = color;
 }

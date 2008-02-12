@@ -29,6 +29,10 @@
 #define MIN_SCALE 0.4
 #define MAX_SCALE 4.0
 
+// Local includes.
+#include "preview_image.h"
+#include "preview_image.moc"
+
 // C++ includes.
 #include <cstdio>
 #include <cmath>
@@ -40,10 +44,6 @@
 
 // KDE includes
 #include <KDebug>
-
-// Local includes.
-#include "preview_image.h"
-#include "preview_image.moc"
 
 namespace KSaneIface
 {

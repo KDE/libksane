@@ -26,16 +26,14 @@
  *
  * ============================================================ */
 
-// Qt includes.
+// Local includes.
+#include "labeled_slider.h"
+#include "labeled_slider.moc"
 
+// Qt includes.
 #include <QSpinBox>
 #include <QLabel>
 #include <QSlider>
-
-// Local includes.
-
-#include "labeled_slider.h"
-#include "labeled_slider.moc"
 
 namespace KSaneIface
 {

@@ -26,22 +26,18 @@
  *
  * ============================================================ */
 
-// C++ includes.
+// Local includes.
+#include "labeled_gamma.h"
+#include "labeled_gamma.moc"
 
+// C++ includes.
 #include <cmath>
 
 // Qt includes.
-
 #include <QGroupBox>
 
 // KDE includes.
-
 #include <klocale.h>
-
-// Local includes.
-
-#include "labeled_gamma.h"
-#include "labeled_gamma.moc"
 
 namespace KSaneIface
 {
@@ -113,7 +109,7 @@ LabeledGamma::~LabeledGamma()
 {
 }
 
-void LabeledGamma::setColor(QColor color)
+void LabeledGamma::setColor(const QColor &color)
 {
     if (gamma_disp != 0) {
         gamma_disp->setColor(color);

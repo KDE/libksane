@@ -58,7 +58,7 @@ public:
     QSize sizeHint() const;
     QSize minimumSizeHint() const;
 
-    void setColor(QColor color);
+    void setColor(const QColor &color);
 
 protected:
 

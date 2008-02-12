@@ -27,12 +27,12 @@
  *
  * ============================================================ */
 
-#ifndef SANE_WIDGET_H
-#define SANE_WIDGET_H
+#ifndef KSANE_H
+#define KSANE_H
 
 // Qt includes.
 
-#include <QWidget>
+#include <QtGui/QWidget>
 
 // Local includes.
 
@@ -42,7 +42,7 @@
 namespace KSaneIface
 {
 
-class KSaneWidgetPriv;
+class KSaneWidgetPrivate;
 
 /**
  * This class provides the widget containing the scan options and the preview.
@@ -88,7 +88,7 @@ public:
     bool    openDevice(const QString &device_name);
 
     /**
-     * This is a convinience method that can be used to create a QImage from the image data
+     * This is a convenience method that can be used to create a QImage from the image data
      * returned by the imageReady(...) signal.
      *
      * @param data is the byte data containing the image.
@@ -156,7 +156,7 @@ private:
 
 private:
 
-    KSaneWidgetPriv* d;
+    KSaneWidgetPrivate * const d;
 };
 
 }  // NameSpace KSaneIface

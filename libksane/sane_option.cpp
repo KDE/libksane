@@ -25,8 +25,9 @@
  * License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * ============================================================ */
-
-#define MIN_FOAT_STEP 0.001
+// Local includes.
+#include "sane_option.h"
+#include "sane_option.moc"
 
 // Sane includes.
 extern "C"
@@ -43,9 +44,7 @@ extern "C"
 #include <KLocale>
 #include <kiconloader.h>
 
-// Local includes.
-#include "sane_option.h"
-#include "sane_option.moc"
+#define MIN_FOAT_STEP 0.001
 
 namespace KSaneIface
 {
@@ -258,12 +257,12 @@ QString SaneOption::unitString()
     switch(sane_option->unit)
     {
         case SANE_UNIT_NONE:        return QString("");
-        case SANE_UNIT_PIXEL:       return i18n(" Pixel");
-        case SANE_UNIT_BIT:         return i18n(" Bit");
-        case SANE_UNIT_MM:          return i18n(" mm");
-        case SANE_UNIT_DPI:         return i18n(" DPI");
+        case SANE_UNIT_PIXEL:       return i18nc("Parameter unit"," Pixel");
+        case SANE_UNIT_BIT:         return i18nc("Parameter unit"," Bit");
+        case SANE_UNIT_MM:          return i18nc("Parameter unit"," mm");
+        case SANE_UNIT_DPI:         return i18nc("Parameter unit"," DPI");
         case SANE_UNIT_PERCENT:     return QString(" %");
-        case SANE_UNIT_MICROSECOND: return i18n(" usec");
+        case SANE_UNIT_MICROSECOND: return i18nc("Parameter unit"," usec");
     }
     return QString("");
 }
@@ -497,6 +496,7 @@ void SaneOption::readOption()
 {
     float tmp_step;
     int tmp_size;
+    static const char tmp_binary[] = "Binary";
 
     sane_option = sane_get_option_descriptor(sane_handle, opt_number);
 
@@ -530,7 +530,7 @@ void SaneOption::readOption()
             lcombx->setIcon(SmallIcon("black-white"),
                              getSaneComboString((unsigned char*)SANE_VALUE_SCAN_MODE_LINEART));
             // The epkowa/epson backend uses "Binary" which is the same as "Lineart"
-            lcombx->setIcon(SmallIcon("black-white"), i18n("Binary"));
+            lcombx->setIcon(SmallIcon("black-white"), i18n(tmp_binary));
             break;
         case SW_SLIDER:
             lslider->setRange(sane_option->constraint.range->min,

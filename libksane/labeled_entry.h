@@ -30,11 +30,12 @@
 #define LABELED_ENTRY_H
 
 // Qt includes.
-
 #include <QFrame>
-#include <QLineEdit>
 #include <QPushButton>
 #include <QLabel>
+
+// KDE includes
+#include <KLineEdit>
 
 /**
  *@author Kåre Särs
