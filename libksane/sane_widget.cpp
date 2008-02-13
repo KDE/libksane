@@ -320,9 +320,9 @@ QString KSaneWidget::selectDevice(QWidget* parent)
         //         << "vendor='" << dev_list[i]->vendor << "' "
         //         << "model='"  << dev_list[i]->model  << "' "
         //         << "type='"   << dev_list[i]->type   << "'";
-        tmp = i18n(dev_list[i]->name);
-        tmp += '\n' + i18n(dev_list[i]->vendor);
-        tmp += " : " + i18n(dev_list[i]->model);
+        tmp = QString(dev_list[i]->name);
+        tmp += '\n' + QString(dev_list[i]->vendor);
+        tmp += " : " + QString(dev_list[i]->model);
         dev_name_list += tmp;
         i++;
     }
@@ -330,10 +330,7 @@ QString KSaneWidget::selectDevice(QWidget* parent)
 
     // add the debug test scanner to the end
 #ifdef ENABLE_DEBUG
-    tmp = QString("test:0");
-    tmp += '\n' + i18nc("Test backend vendor name", "Tester");
-    tmp += " : " + i18nc("Test backend model name", "Debug");
-    dev_name_list += tmp;
+    dev_name_list += QString("test:0\nTest : Scanner");
 #endif
 
     if (dev_name_list.isEmpty()) {
@@ -346,9 +343,11 @@ QString KSaneWidget::selectDevice(QWidget* parent)
     i = sel.getSelectedIndex(parent, i18n("Select Scanner"), dev_name_list, 0);
     //kDebug() << "i=" << i;
 
+#ifdef ENABLE_DEBUG
     if (i == num_scaners) {
         return QString("test:0");
     }
+#endif
 
     if ((i < 0) || (i >= num_scaners)) {
         return QString();
@@ -371,9 +370,9 @@ bool KSaneWidget::openDevice(const QString &device_name)
 
     while(dev_list[i] != 0) {
         if (QString(dev_list[i]->name) == device_name) {
-            d->modelName = i18n(dev_list[i]->vendor) + ' ' + i18n(dev_list[i]->model);
-            d->vendor    = i18n(dev_list[i]->vendor);
-            d->model     = i18n(dev_list[i]->model);
+            d->modelName = QString(dev_list[i]->vendor) + ' ' + QString(dev_list[i]->model);
+            d->vendor    = QString(dev_list[i]->vendor);
+            d->model     = QString(dev_list[i]->model);
             break;
         }
         i++;
@@ -381,9 +380,9 @@ bool KSaneWidget::openDevice(const QString &device_name)
 
     if (dev_list[i] == 0) {
 #ifdef ENABLE_DEBUG
-        d->modelName = i18n("Test Scanner");
-        d->vendor    = i18nc("Test backend vendor name", "Tester");
-        d->model     = i18nc("Test backend model name", "Debug");
+        d->modelName = "Test Scanner";
+        d->vendor    = "Test";
+        d->model     = "Scanner";
 #else
         kDebug() << device_name << "' not found";
         return false;
@@ -664,7 +663,7 @@ void KSaneWidget::createOptInterface()
         color_lay->addWidget(lgamma);
 
         lgamma->setToolTip(i18n(SANE_DESC_GAMMA_VECTOR));
-        
+
         connect(lgamma, SIGNAL(gammaChanged(int,int,int)),
                 d->optGamR->lgamma, SLOT(setValues(int,int,int)));
 
