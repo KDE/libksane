@@ -6,7 +6,7 @@
  * Date        : 2007-09-13
  * Description : Sane interface for KDE
  *
- * Copyright (C) 2007 by Kare Sars <kare dot sars at kolumbus dot fi>
+ * Copyright (C) 2007-2008 by Kare Sars <kare dot sars at iki dot fi>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
