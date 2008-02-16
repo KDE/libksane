@@ -135,6 +135,8 @@ private:
     SaneOptWidget_t getWidgetType();
     QStringList *genComboStringList();
     QString getSaneComboString(unsigned char *data);
+    QString getSaneComboString(int ival);
+    QString getSaneComboString(float fval);
     SANE_Word toSANE_Word(unsigned char *data);
     void fromSANE_Word(unsigned char *data, SANE_Word from);
     QString unitString();

@@ -182,7 +182,7 @@ void SaneOption::createWidget(QWidget *parent)
     }
 
     frame->setToolTip(i18n(sane_option->desc));
-    
+
     if (sw_state == SW_STATE_HIDDEN) {
         frame->hide();
     }
@@ -257,12 +257,12 @@ QString SaneOption::unitString()
     switch(sane_option->unit)
     {
         case SANE_UNIT_NONE:        return QString("");
-        case SANE_UNIT_PIXEL:       return i18nc("Parameter unit"," Pixel");
-        case SANE_UNIT_BIT:         return i18nc("Parameter unit"," Bit");
-        case SANE_UNIT_MM:          return i18nc("Parameter unit"," mm");
-        case SANE_UNIT_DPI:         return i18nc("Parameter unit"," DPI");
-        case SANE_UNIT_PERCENT:     return QString(" %");
-        case SANE_UNIT_MICROSECOND: return i18nc("Parameter unit"," usec");
+        case SANE_UNIT_PIXEL:       return i18nc("SpinBox parameter unit"," Pixels");
+        case SANE_UNIT_BIT:         return i18nc("SpinBox parameter unit"," Bits");
+        case SANE_UNIT_MM:          return i18nc("SpinBox parameter unit"," mm");
+        case SANE_UNIT_DPI:         return i18nc("SpinBox parameter unit"," DPI");
+        case SANE_UNIT_PERCENT:     return i18nc("SpinBox parameter unit"," %");
+        case SANE_UNIT_MICROSECOND: return i18nc("SpinBox parameter unit"," usec");
     }
     return QString("");
 }
@@ -277,14 +277,12 @@ QStringList *SaneOption::genComboStringList()
     {
         case SANE_TYPE_INT:
             for (i=1; i<=sane_option->constraint.word_list[0]; i++) {
-                *cstrl += (QString().sprintf("%d", sane_option->constraint.word_list[i]) +
-                        unitString());
+                *cstrl += getSaneComboString((int)sane_option->constraint.word_list[i]);
             }
             break;
         case SANE_TYPE_FIXED:
             for (i=1; i<=sane_option->constraint.word_list[0]; i++) {
-                *cstrl += (QString().sprintf("%f", SANE_UNFIX(sane_option->constraint.word_list[i])) +
-                        unitString());
+                *cstrl += getSaneComboString((float)SANE_UNFIX(sane_option->constraint.word_list[i]));
             }
             break;
         case SANE_TYPE_STRING:
@@ -300,6 +298,35 @@ QStringList *SaneOption::genComboStringList()
     return cstrl;
 }
 
+QString SaneOption::getSaneComboString(int ival)
+{
+    switch(sane_option->unit)
+    {
+        case SANE_UNIT_NONE:        break;
+        case SANE_UNIT_PIXEL:       return i18np("%1 Pixel","%1 Pixels", ival);
+        case SANE_UNIT_BIT:         return i18np("%1 Bit","%1 Bits", ival);
+        case SANE_UNIT_MM:          return i18np("%1 mm","%1 mm", ival);
+        case SANE_UNIT_DPI:         return i18np("%1 DPI","%1 DPI", ival);
+        case SANE_UNIT_PERCENT:     return i18np("%1 %","%1 %", ival);
+        case SANE_UNIT_MICROSECOND: return i18np("%1 usec","%1 usec", ival);
+    }
+    return QString().sprintf("%d", ival);
+}
+
+QString SaneOption::getSaneComboString(float fval)
+{
+    switch(sane_option->unit)
+    {
+        case SANE_UNIT_NONE:        break;
+        case SANE_UNIT_PIXEL:       return i18nc("Parameter and Unit","%1 Pixels", fval);
+        case SANE_UNIT_BIT:         return i18nc("Parameter and Unit","%1 Bits", fval);
+        case SANE_UNIT_MM:          return i18nc("Parameter and Unit","%1 mm", fval);
+        case SANE_UNIT_DPI:         return i18nc("Parameter and Unit","%1 DPI", fval);
+        case SANE_UNIT_PERCENT:     return i18nc("Parameter and Unit","%1 %", fval);
+        case SANE_UNIT_MICROSECOND: return i18nc("Parameter and Unit","%1 usec", fval);
+    }
+    return QString().sprintf("%f", fval);
+}
 
 QString SaneOption::getSaneComboString(unsigned char *data)
 {
@@ -313,17 +340,16 @@ QString SaneOption::getSaneComboString(unsigned char *data)
     switch (sane_option->type)
     {
         case SANE_TYPE_INT:
-            return QString().sprintf("%d", (int)toSANE_Word(data)) + unitString();
+            return getSaneComboString((int)toSANE_Word(data));
         case SANE_TYPE_FIXED:
-            return QString().sprintf("%f", SANE_UNFIX(toSANE_Word(data))) + unitString();
+            return getSaneComboString((float)SANE_UNFIX(toSANE_Word(data)));
         case SANE_TYPE_STRING:
             tmp = i18n(reinterpret_cast<char*>(data));
-            // FIXME clean the end of the string !!
+            // FIXME clean spaces at the end of the string !!
             if (tmp.length() > 25) {
                 tmp = tmp.left(22);
                 tmp += "...";
             }
-            tmp += unitString();
             return tmp;
         default :
             break;
