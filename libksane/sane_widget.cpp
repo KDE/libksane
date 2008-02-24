@@ -27,7 +27,7 @@
  *
  * ============================================================ */
 
-#define ENABLE_DEBUG
+//#define ENABLE_DEBUG
 
 // C++ includes.
 #include <iostream>
@@ -262,6 +262,7 @@ KSaneWidget::KSaneWidget(QWidget* parent)
 
     //kDebug() <<  "The language is:" << KGlobal::locale()->language();
     //kDebug() <<  "Languagelist" << KGlobal::locale()->languageList();
+    KGlobal::locale()->insertCatalog("libksane");
     KGlobal::locale()->insertCatalog("sane-backends");
 
     status = sane_init(&version, 0);
@@ -345,7 +346,7 @@ QString KSaneWidget::selectDevice(QWidget* parent)
 
 #ifdef ENABLE_DEBUG
     if (i == num_scaners) {
-        return QString("test:0");
+        return QString("test");
     }
 #endif
 
@@ -378,15 +379,10 @@ bool KSaneWidget::openDevice(const QString &device_name)
         i++;
     }
 
-    if (dev_list[i] == 0) {
-#ifdef ENABLE_DEBUG
+    if ((i == 0) && (device_name == "test")) {
         d->modelName = "Test Scanner";
         d->vendor    = "Test";
         d->model     = "Scanner";
-#else
-        kDebug() << device_name << "' not found";
-        return false;
-#endif
     }
 
     // Try to open the device
