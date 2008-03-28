@@ -43,6 +43,7 @@ extern "C"
 #include <KDebug>
 #include <KLocale>
 #include <kiconloader.h>
+#include <kicon.h>
 
 #define MIN_FOAT_STEP 0.001
 
@@ -549,14 +550,14 @@ void SaneOption::readOption()
             cstrl = genComboStringList();
             lcombx->clear();
             lcombx->addItems(*cstrl);
-            lcombx->setIcon(SmallIcon("color"),
+            lcombx->setIcon(KIcon("color"),
                              getSaneComboString((unsigned char*)SANE_VALUE_SCAN_MODE_COLOR));
-            lcombx->setIcon(SmallIcon("gray-scale"),
+            lcombx->setIcon(KIcon("gray-scale"),
                              getSaneComboString((unsigned char*)SANE_VALUE_SCAN_MODE_GRAY));
-            lcombx->setIcon(SmallIcon("black-white"),
+            lcombx->setIcon(KIcon("black-white"),
                              getSaneComboString((unsigned char*)SANE_VALUE_SCAN_MODE_LINEART));
             // The epkowa/epson backend uses "Binary" which is the same as "Lineart"
-            lcombx->setIcon(SmallIcon("black-white"), i18n(tmp_binary));
+            lcombx->setIcon(KIcon("black-white"), i18n(tmp_binary));
             break;
         case SW_SLIDER:
             lslider->setRange(sane_option->constraint.range->min,
