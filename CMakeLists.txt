@@ -31,7 +31,7 @@ SET(KSANE_LIB_SUFFIX_VERSION "-svn")
 # For details : http://www.gnu.org/software/libtool/manual.html#Updating-version-info
 SET(KSANE_LIB_SO_CUR_VERSION "0")
 SET(KSANE_LIB_SO_REV_VERSION "1")
-SET(KSANE_LIB_SO_AGE_VERSION "0")
+SET(KSANE_LIB_SO_AGE_VERSION "1")
 
 # =======================================================
 # Set env. variables accordinly.

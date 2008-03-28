@@ -27,11 +27,6 @@
  *
  * ============================================================ */
 
-//#define ENABLE_DEBUG
-
-// C++ includes.
-#include <iostream>
-
 // Sane includes.
 extern "C"
 {
@@ -329,11 +324,6 @@ QString KSaneWidget::selectDevice(QWidget* parent)
     }
     num_scaners = i;
 
-    // add the debug test scanner to the end
-#ifdef ENABLE_DEBUG
-    dev_name_list += QString("test:0\nTest : Scanner");
-#endif
-
     if (dev_name_list.isEmpty()) {
         KMessageBox::sorry(0, i18n("No scanner device has been found."));
         return QString();
@@ -343,12 +333,6 @@ QString KSaneWidget::selectDevice(QWidget* parent)
     sel.setWindowTitle(qApp->applicationName());
     i = sel.getSelectedIndex(parent, i18n("Select Scanner"), dev_name_list, 0);
     //kDebug() << "i=" << i;
-
-#ifdef ENABLE_DEBUG
-    if (i == num_scaners) {
-        return QString("test");
-    }
-#endif
 
     if ((i < 0) || (i >= num_scaners)) {
         return QString();
@@ -366,6 +350,10 @@ bool KSaneWidget::openDevice(const QString &device_name)
     SANE_Int                       res;
     SANE_Device const            **dev_list;
 
+    // don't bother trying to open if the device string is empty
+    if (device_name.isEmpty()) {
+        return false;
+    }
     // get the device list to get the vendor and model info
     status = sane_get_devices(&dev_list, SANE_TRUE);
 
@@ -447,16 +435,16 @@ bool KSaneWidget::openDevice(const QString &device_name)
 
     d->zInBtn  = new QPushButton();
     d->zInBtn->setIcon(KIcon("zoom-in"));
-    d->zInBtn->setToolTip(i18n("Zoom in preview image"));
+    d->zInBtn->setToolTip(i18n("Zoom In"));
     d->zOutBtn = new QPushButton();
     d->zOutBtn->setIcon(KIcon("zoom-out"));
-    d->zOutBtn->setToolTip(i18n("Zoom out preview image"));
+    d->zOutBtn->setToolTip(i18n("Zoom Out"));
     d->zSelBtn = new QPushButton();
     d->zSelBtn->setIcon(KIcon("zoom-fit-best"));
-    d->zSelBtn->setToolTip(i18n("Zoom to selection of preview image"));
+    d->zSelBtn->setToolTip(i18n("Zoom to Selection"));
     d->zFitBtn = new QPushButton();
     d->zFitBtn->setIcon(KIcon("document-preview"));
-    d->zFitBtn->setToolTip(i18n("Zoom to fit preview image"));
+    d->zFitBtn->setToolTip(i18n("Zoom to Fit"));
 
     d->progressBar = new QProgressBar();
     d->progressBar->hide();
@@ -467,10 +455,10 @@ bool KSaneWidget::openDevice(const QString &device_name)
 
     d->prevBtn = new QPushButton();
     d->prevBtn->setIcon(KIcon("document-import"));
-    d->prevBtn->setToolTip(i18n("Scan preview image from device"));
+    d->prevBtn->setToolTip(i18n("Scan Preview Image"));
     d->scanBtn = new QPushButton();
     d->scanBtn->setIcon(KIcon("document-save"));
-    d->scanBtn->setToolTip(i18n("Scan final image from device"));
+    d->scanBtn->setToolTip(i18n("Scan Final Image"));
 
     connect(d->zInBtn, SIGNAL(clicked()),
             d->previewArea, SLOT(zoomIn()));

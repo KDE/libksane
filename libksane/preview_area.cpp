@@ -35,6 +35,8 @@
 
 // KDE includes
 #include <KDebug>
+#include <KLocale>
+#include <KIcon>
 
 namespace KSaneIface
 {
@@ -63,16 +65,16 @@ PreviewArea::~PreviewArea()
 
 void PreviewArea::createContextMenu()
 {
-    zoomInAction = new QAction(tr("Zoom In"), this);
+    zoomInAction = new QAction(KIcon("zoom-in"), i18n("Zoom In"), this);
     connect(zoomInAction, SIGNAL(triggered()), image, SLOT(zoomIn()));
 
-    zoomOutAction = new QAction(tr("Zoom Out"), this);
+    zoomOutAction = new QAction(KIcon("zoom-out"), i18n("Zoom Out"), this);
     connect(zoomOutAction, SIGNAL(triggered()), image, SLOT(zoomOut()));
 
-    zoomSelAction = new QAction(tr("Zoom to Selection"), this);
+    zoomSelAction = new QAction(KIcon("zoom-fit-best"), i18n("Zoom to Selection"), this);
     connect(zoomSelAction, SIGNAL(triggered()), image, SLOT(zoomSel()));
 
-    zoom2FitAction = new QAction(tr("Zoom to Fit"), this);
+    zoom2FitAction = new QAction(KIcon("document-preview"), i18n("Zoom to Fit"), this);
     connect(zoom2FitAction, SIGNAL(triggered()), image, SLOT(zoom2Fit()));
 
     addAction(zoomInAction);
