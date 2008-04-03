@@ -89,7 +89,8 @@ public:
 
     /**
      * This is a convenience method that can be used to create a QImage from the image data
-     * returned by the imageReady(...) signal.
+     * returned by the imageReady(...) signal.Note: If the image data has 16 bits/color the 
+     * data is truncated to 8 bits/color since QImage does not support 16 bits/color.
      *
      * @param data is the byte data containing the image.
      * @param width is the width of the image in pixels.
@@ -99,12 +100,30 @@ public:
      * @param format is the KSane image format of the data.
      * @param img is the QImage reference to the image to fill.
      */
-    bool    makeQImage(const QByteArray &data,
-                       int width,
-                       int height,
-                       int bytes_per_line,
-                       ImageFormat format,
-                       QImage &img);
+    bool makeQImage(const QByteArray &data,
+                    int width,
+                    int height,
+                    int bytes_per_line,
+                    ImageFormat format,
+                    QImage &img) KDE_DEPRECATED;
+    /**
+     * This is a convenience method that can be used to create a QImage from the image data
+     * returned by the imageReady(...) signal. Note: If the image data has 16 bits/color the 
+     * data is truncated to 8 bits/color since QImage does not support 16 bits/color.
+     *
+     * @param data is the byte data containing the image.
+     * @param width is the width of the image in pixels.
+     * @param height is the height of the image in pixels.
+     * @param bytes_per_line is the number of bytes used per line. This might include padding
+     * and is probably only relevant for 'FormatBlackWhite'.
+     * @param format is the KSane image format of the data.
+     * @return Thi function returns the provided image data as a QImage.
+     */
+    QImage toQImage(const QByteArray &data,
+                    int width,
+                    int height,
+                    int bytes_per_line,
+                    ImageFormat format);
 
     /** This method returns the vendor name of the scanner (Same as make). */
     QString vendor() const;

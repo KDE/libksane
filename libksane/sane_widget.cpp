@@ -1521,13 +1521,13 @@ void KSaneWidget::copyToScanData(int read_bytes)
 
 
 
-bool KSaneWidget::makeQImage(const QByteArray &data,
+QImage KSaneWidget::toQImage(const QByteArray &data,
                               int width,
                               int height,
                               int bytes_per_line,
-                              ImageFormat format,
-                              QImage &img)
+                              ImageFormat format)
 {
+    QImage img;
     int j=0;
     int pixel_x = 0;
     int pixel_y = 0;
@@ -1543,7 +1543,7 @@ bool KSaneWidget::makeQImage(const QByteArray &data,
             for (int i=0; i<img.height()*img.bytesPerLine(); i++) {
                 img.bits()[i] = ~img.bits()[i];
             }
-            return true;
+            return img;
 
         case FormatGrayScale8:
             img = QImage(width,
@@ -1556,7 +1556,7 @@ bool KSaneWidget::makeQImage(const QByteArray &data,
                 img.bits()[j+2] = data.data()[i];
                 j+=4;
             }
-            return true;
+            return img;
 
         case FormatGrayScale16:
             img = QImage(width,
@@ -1571,7 +1571,7 @@ bool KSaneWidget::makeQImage(const QByteArray &data,
             }
             KMessageBox::sorry(0, i18n("The image data contained 16 bits per color, "
                     "but the color depth has been truncated to 8 bits per color."));
-            return true;
+            return img;
 
         case FormatRGB_8_C:
             pixel_x = 0;
@@ -1590,7 +1590,7 @@ bool KSaneWidget::makeQImage(const QByteArray &data,
 
                 inc_pixel(pixel_x, pixel_y, width);
             }
-            return true;
+            return img;
 
         case FormatRGB_16_C:
             pixel_x = 0;
@@ -1611,13 +1611,25 @@ bool KSaneWidget::makeQImage(const QByteArray &data,
             }
             KMessageBox::sorry(0, i18n("The image data contained 16 bits per color, "
                     "but the color depth has been truncated to 8 bits per color."));
-            return true;
+            return img;
 
         case FormatNone:
             break;
     }
     kDebug() << "Unsupported conversion";
-    return false;
+    return img;
+}
+
+bool KSaneWidget::makeQImage(const QByteArray &data,
+                             int width,
+                             int height,
+                             int bytes_per_line,
+                             ImageFormat format,
+                             QImage &img)
+{
+    img = toQImage(data, width, height, bytes_per_line, format);
+    if (img.isNull()) return false;
+    return true;
 }
 
 void KSaneWidget::scanCancel()
