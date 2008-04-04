@@ -302,7 +302,6 @@ QString KSaneWidget::model() const
 QString KSaneWidget::selectDevice(QWidget* parent)
 {
     int                 i=0;
-    int                 num_scaners;
     QStringList         dev_name_list;
     QString             tmp;
     SANE_Status         status;
@@ -322,11 +321,15 @@ QString KSaneWidget::selectDevice(QWidget* parent)
         dev_name_list += tmp;
         i++;
     }
-    num_scaners = i;
 
     if (dev_name_list.isEmpty()) {
         KMessageBox::sorry(0, i18n("No scanner device has been found."));
         return QString();
+    }
+
+    if (dev_name_list.count() == 1) {
+        // don't bother asking the user: we only have one choice!
+        return dev_list[0]->name;
     }
 
     RadioSelect sel;
@@ -334,7 +337,7 @@ QString KSaneWidget::selectDevice(QWidget* parent)
     i = sel.getSelectedIndex(parent, i18n("Select Scanner"), dev_name_list, 0);
     //kDebug() << "i=" << i;
 
-    if ((i < 0) || (i >= num_scaners)) {
+    if ((i < 0) || (i >= dev_name_list.count())) {
         return QString();
     }
 
