@@ -175,10 +175,8 @@ void SaneOption::createWidget(QWidget *parent)
             if (strcmp(sane_option->name, SANE_NAME_GAMMA_VECTOR_B) == 0) lgamma->setColor(Qt::blue);
             break;
         case SW_DETECT_FAIL:
-            frame = new LabeledSeparator(parent, ">>> " +
-                    QString().sprintf("%d \"", opt_number) +
-                            i18n(sane_option->title)+"\" <<<");
-            kDebug() << sane_option->title << "SW_DETECT_FAIL";
+            frame = new QFrame();
+            //kDebug() << sane_option->title << "SW_DETECT_FAIL";
             break;
     }
 
@@ -204,9 +202,19 @@ SaneOptWidget_t SaneOption::getWidgetType()
                     return SW_CHECKBOX;
                 case SANE_TYPE_INT:
                     if (sane_option->size == sizeof(SANE_Word)) return SW_SLIDER_INT;
+                    kDebug() << "Can not handle:"<< sane_option->title;
+                    kDebug() << "SANE_CONSTRAINT_NONE && SANE_TYPE_INT";
+                    kDebug() << "size" << sane_option->size<< "!= sizeof(SANE_Word)";
+                    break;
                 case SANE_TYPE_FIXED:
                     if (sane_option->size == sizeof(SANE_Word)) return SW_F_SLIDER_FIX;
+                    kDebug() << "Can not handle:"<< sane_option->title;
+                    kDebug() << "SANE_CONSTRAINT_NONE && SANE_TYPE_FIXED";
+                    kDebug() << "size" << sane_option->size<< "!= sizeof(SANE_Word)";
+                    break;
                 case SANE_TYPE_BUTTON:
+                    kDebug() << "Can not handle:"<< sane_option->title;
+                    kDebug() << "SANE_CONSTRAINT_NONE && SANE_TYPE_BUTTON";
                     return SW_DETECT_FAIL;
                 case SANE_TYPE_STRING:
                     return SW_ENTRY;
@@ -229,12 +237,24 @@ SaneOptWidget_t SaneOption::getWidgetType()
                     {
                         return SW_GAMMA;
                     }
+                    kDebug() << "Can not handle:"<< sane_option->title;
+                    kDebug() << "SANE_CONSTRAINT_RANGE && SANE_TYPE_INT && !SANE_NAME_GAMMA_VECTOR...";
+                    kDebug() << "size" << sane_option->size<< "!= sizeof(SANE_Word)";
                     break;
                 case SANE_TYPE_FIXED:
                     if (sane_option->size == sizeof(SANE_Word)) return SW_F_SLIDER;
+                    kDebug() << "Can not handle:"<< sane_option->title;
+                    kDebug() << "SANE_CONSTRAINT_RANGE && SANE_TYPE_FIXED";
+                    kDebug() << "size" << sane_option->size<< "!= sizeof(SANE_Word)";
+                    kDebug() << "Analog Gamma vector?";
                     break;
                 case SANE_TYPE_STRING:
+                    kDebug() << "Can not handle:" << sane_option->title;
+                    kDebug() << "SANE_CONSTRAINT_RANGE && SANE_TYPE_STRING";
+                    return SW_DETECT_FAIL;
                 case SANE_TYPE_BUTTON:
+                    kDebug() << "Can not handle:" << sane_option->title;
+                    kDebug() << "SANE_CONSTRAINT_RANGE && SANE_TYPE_BUTTON";
                     return SW_DETECT_FAIL;
                 case SANE_TYPE_GROUP:
                     return SW_GROUP;
