@@ -385,7 +385,7 @@ bool SaneOption::writeData(unsigned char *data)
 
     status = sane_control_option (sane_handle, opt_number, SANE_ACTION_SET_VALUE, data, &res);
     if (status != SANE_STATUS_GOOD) {
-        kDebug() << sane_option->name << "sane_control_option returned" << status;
+        kDebug() << sane_option->name << "sane_control_option returned:" << sane_strstatus(status);
         return false;
     }
     if ((res & SANE_INFO_INEXACT) && (frame != 0)) {
@@ -424,7 +424,9 @@ void SaneOption::comboboxChanged(int i)
             fromSANE_Word(data.data(), sane_option->constraint.word_list[i+1]);
             break;
         case SANE_TYPE_STRING:
-            strncpy(reinterpret_cast<char*>(data.data()), sane_option->constraint.string_list[i], sane_option->size);
+            strncpy(reinterpret_cast<char*>(data.data()), 
+                    sane_option->constraint.string_list[i], 
+                    sane_option->size);
             break;
         default:
             kDebug() << "can not handle type:" << sane_option->type;
@@ -482,7 +484,9 @@ bool SaneOption::comboboxChanged(const QString &value)
             while (sane_option->constraint.string_list[i] != 0) {
                 tmp = getSaneComboString((unsigned char *)sane_option->constraint.string_list[i]);
                 if (value == tmp) {
-                    strncpy(reinterpret_cast<char*>(data.data()), sane_option->constraint.string_list[i], sane_option->size);
+                    strncpy(reinterpret_cast<char*>(data.data()), 
+                            sane_option->constraint.string_list[i], 
+                            sane_option->size);
                     //kDebug() << "->>" << tmp;
                     break;
                 }
