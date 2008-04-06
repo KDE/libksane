@@ -974,7 +974,17 @@ void KSaneWidget::scanPreview()
     // Start the scanning
     status = sane_start(d->saneHandle);
     if (status != SANE_STATUS_GOOD) {
-        kDebug() << "sane_start=" << sane_strstatus(status);
+        if ((status == SANE_STATUS_NO_DOCS) ||
+             (status == SANE_STATUS_JAMMED) ||
+             (status == SANE_STATUS_COVER_OPEN) ||
+             (status == SANE_STATUS_DEVICE_BUSY) ||
+             (status == SANE_STATUS_ACCESS_DENIED))
+        {
+            KMessageBox::sorry(0, i18n(sane_strstatus(status)));
+        }
+        else {
+            kDebug() << "sane_start=" << sane_strstatus(status);
+        }
         sane_cancel(d->saneHandle);
         return;
     }
@@ -1089,7 +1099,17 @@ void KSaneWidget::scanFinal()
     // Start the scanning
     status = sane_start(d->saneHandle);
     if (status != SANE_STATUS_GOOD) {
-        kDebug() << "sane_start =" << sane_strstatus(status);
+        if ((status == SANE_STATUS_NO_DOCS) ||
+             (status == SANE_STATUS_JAMMED) ||
+             (status == SANE_STATUS_COVER_OPEN) ||
+             (status == SANE_STATUS_DEVICE_BUSY) ||
+             (status == SANE_STATUS_ACCESS_DENIED))
+        {
+            KMessageBox::sorry(0, i18n(sane_strstatus(status)));
+        }
+        else {
+            kDebug() << "sane_start=" << sane_strstatus(status);
+        }
         sane_cancel(d->saneHandle);
         return;
     }
