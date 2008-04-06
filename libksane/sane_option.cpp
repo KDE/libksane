@@ -63,6 +63,7 @@ SaneOption::SaneOption(const SANE_Handle s_handle, const int opt_num)
     type = SW_DETECT_FAIL;
     iVal=0;
     fVal=0;
+    min_change = 0.0005;
     bVal=false;
 
     cstrl = new QStringList("ComboStringList");
