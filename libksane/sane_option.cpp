@@ -97,6 +97,8 @@ SaneOption::~SaneOption()
 void SaneOption::createWidget(QWidget *parent)
 {
     float tmp_step;
+    static const char tmp_binary[] = "Binary";
+
     if (sane_option == 0) {
         kDebug() << "sane_option == 0!!";
         return;
@@ -116,6 +118,14 @@ void SaneOption::createWidget(QWidget *parent)
         case SW_COMBO:
             cstrl = genComboStringList();
             frame = lcombx = new LabeledCombo(parent, i18n(sane_option->title), *cstrl);
+            lcombx->setIcon(KIcon("color"),
+                            getSaneComboString((unsigned char*)SANE_VALUE_SCAN_MODE_COLOR));
+            lcombx->setIcon(KIcon("gray-scale"),
+                            getSaneComboString((unsigned char*)SANE_VALUE_SCAN_MODE_GRAY));
+            lcombx->setIcon(KIcon("black-white"),
+                            getSaneComboString((unsigned char*)SANE_VALUE_SCAN_MODE_LINEART));
+            // The epkowa/epson backend uses "Binary" which is the same as "Lineart"
+            lcombx->setIcon(KIcon("black-white"), i18n(tmp_binary));
             connect(lcombx, SIGNAL(activated(int)), this, SLOT(comboboxChanged(int)));
             break;
         case SW_SLIDER:
@@ -189,6 +199,7 @@ void SaneOption::createWidget(QWidget *parent)
         frame->show();
         frame->setEnabled(sw_state == SW_STATE_SHOWN);
     }
+    readValue();
 }
 
 SaneOptWidget_t SaneOption::getWidgetType()
@@ -378,7 +389,7 @@ QString SaneOption::getSaneComboString(unsigned char *data)
     return QString();
 }
 
-bool SaneOption::writeData(unsigned char *data)
+bool SaneOption::writeData(void *data)
 {
     SANE_Status status;
     SANE_Int res;
@@ -386,6 +397,8 @@ bool SaneOption::writeData(unsigned char *data)
     status = sane_control_option (sane_handle, opt_number, SANE_ACTION_SET_VALUE, data, &res);
     if (status != SANE_STATUS_GOOD) {
         kDebug() << sane_option->name << "sane_control_option returned:" << sane_strstatus(status);
+        // write failed. re read the current setting
+        readValue();
         return false;
     }
     if ((res & SANE_INFO_INEXACT) && (frame != 0)) {
@@ -415,51 +428,52 @@ void SaneOption::checkboxChanged(bool toggled)
 
 void SaneOption::comboboxChanged(int i)
 {
-    QVarLengthArray<unsigned char> data(sane_option->size);
+    unsigned char data[4];
+    void *data_ptr;
 
     switch (sane_option->type)
     {
         case SANE_TYPE_INT:
         case SANE_TYPE_FIXED:
-            fromSANE_Word(data.data(), sane_option->constraint.word_list[i+1]);
+            fromSANE_Word(data, sane_option->constraint.word_list[i+1]);
+            data_ptr = data;
             break;
         case SANE_TYPE_STRING:
-            strncpy(reinterpret_cast<char*>(data.data()), 
-                    sane_option->constraint.string_list[i], 
-                    sane_option->size);
+            data_ptr = (void *)sane_option->constraint.string_list[i];
             break;
         default:
             kDebug() << "can not handle type:" << sane_option->type;
-            break;
+            return;
     }
-    writeData(data.data());
+    writeData(data_ptr);
 }
 
 bool SaneOption::comboboxChanged(float value)
 {
-    QVarLengthArray<unsigned char> data(sane_option->size);
+    unsigned char data[4];
     SANE_Word fixed;
 
     switch (sane_option->type)
     {
         case SANE_TYPE_INT:
-            fromSANE_Word(data.data(), (int)value);
+            fromSANE_Word(data, (int)value);
             break;
         case SANE_TYPE_FIXED:
             fixed = SANE_FIX(value);
-            fromSANE_Word(data.data(), fixed);
+            fromSANE_Word(data, fixed);
             break;
         default:
             kDebug() << "can only handle SANE_TYPE_INT and SANE_TYPE_FIXED";
             return false;
     }
-    writeData(data.data());
+    writeData(data);
     return true;
 }
 
 bool SaneOption::comboboxChanged(const QString &value)
 {
-    QVarLengthArray<unsigned char> data(sane_option->size);
+    unsigned char data[4];
+    void *data_ptr;
     SANE_Word fixed;
     int i;
     float f;
@@ -471,23 +485,22 @@ bool SaneOption::comboboxChanged(const QString &value)
         case SANE_TYPE_INT:
             i = value.toInt(&ok);
             if (ok == false) return false;
-            fromSANE_Word(data.data(), i);
+            fromSANE_Word(data, i);
+            data_ptr = data;
             break;
         case SANE_TYPE_FIXED:
             f = value.toFloat(&ok);
             if (ok == false) return false;
             fixed = SANE_FIX(f);
-            fromSANE_Word(data.data(), fixed);
+            fromSANE_Word(data, fixed);
+            data_ptr = data;
             break;
         case SANE_TYPE_STRING:
             i = 0;
             while (sane_option->constraint.string_list[i] != 0) {
                 tmp = getSaneComboString((unsigned char *)sane_option->constraint.string_list[i]);
                 if (value == tmp) {
-                    strncpy(reinterpret_cast<char*>(data.data()), 
-                            sane_option->constraint.string_list[i], 
-                            sane_option->size);
-                    //kDebug() << "->>" << tmp;
+                    data_ptr = (void *)sane_option->constraint.string_list[i];
                     break;
                 }
                 i++;
@@ -498,7 +511,7 @@ bool SaneOption::comboboxChanged(const QString &value)
             kDebug() << "can only handle SANE_TYPE: INT, FIXED and STRING";
             return false;
     }
-    writeData(data.data());
+    writeData(data_ptr);
     return true;
 }
 
@@ -528,19 +541,16 @@ void SaneOption::fsliderChanged(float val)
 
 void SaneOption::entryChanged(const QString& text)
 {
-    QVarLengthArray<unsigned char> data(sane_option->size);
-
     QString tmp;
     tmp += text.left(sane_option->size);
     if (tmp != text) lentry->setText(tmp);
-    strcpy(reinterpret_cast<char*>(data.data()), tmp.toLatin1());
-    writeData(data.data());
+    writeData(tmp.toLatin1().data());
 }
 
 void SaneOption::gammaTableChanged(const QVector<int> &gam_tbl)
 {
     QVector<int> copy = gam_tbl;
-    writeData(reinterpret_cast<unsigned char *>(copy.data()));
+    writeData(copy.data());
 }
 
 void SaneOption::readOption()

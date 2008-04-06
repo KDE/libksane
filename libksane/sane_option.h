@@ -140,7 +140,7 @@ private:
     SANE_Word toSANE_Word(unsigned char *data);
     void fromSANE_Word(unsigned char *data, SANE_Word from);
     QString unitString();
-    bool writeData(unsigned char *data);
+    bool writeData(void *data);
     bool comboboxChanged(float value);
 
 private:
