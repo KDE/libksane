@@ -813,7 +813,8 @@ bool SaneOption::setValue(float value)
     switch (type)
     {
         case SW_SLIDER:
-            sliderChanged((int)(value+0.5));
+            if (value >=0) sliderChanged((int)(value+0.5));
+            else sliderChanged((int)(value-0.5));
             if (lslider != 0) {
                 lslider->setValue((int)value);
             }
