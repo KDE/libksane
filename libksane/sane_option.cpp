@@ -105,7 +105,7 @@ void SaneOption::createWidget(QWidget *parent)
         return;
     }
 
-    if (frame != 0) delete(frame);
+    delete frame;
 
     switch(type)
     {
@@ -868,7 +868,7 @@ bool SaneOption::storeCurrentData()
     if (sw_state == SW_STATE_HIDDEN) return false;
 
     // read that current value
-    if (sane_data != 0) delete (sane_data);
+    if (sane_data != 0) free(sane_data);
     sane_data = (unsigned char *)malloc(sane_option->size);
     status = sane_control_option (sane_handle, opt_number, SANE_ACTION_GET_VALUE, sane_data, &res);
     if (status != SANE_STATUS_GOOD) {
