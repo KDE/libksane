@@ -30,8 +30,8 @@
 #include "labeled_checkbox.h"
 #include "labeled_checkbox.moc"
 
-// Qt includes.
-#include <QHBoxLayout>
+// Qt includes
+#include <KDebug>
 
 namespace KSaneIface
 {
@@ -39,12 +39,14 @@ namespace KSaneIface
 LabeledCheckbox::LabeledCheckbox(QWidget *parent, const QString& ltext)
                : QFrame(parent)
 {
-    QHBoxLayout *hb = new QHBoxLayout(this);
-    hb->setSpacing(2);
-    hb->setMargin(2);
+    layout = new QGridLayout(this);
+    layout->setSpacing(3);
+    layout->setMargin(0);
     chbx = new QCheckBox(ltext, this);
-    hb->addWidget(chbx);
-    hb->activate();
+    layout->addWidget(chbx, 0, 0);
+
+    layout->setColumnStretch(0, 0);
+    layout->setColumnStretch(1, 50);
 
     connect(chbx, SIGNAL(toggled(bool)),
             this, SLOT(prToggled(bool)));
@@ -62,6 +64,19 @@ void LabeledCheckbox::setChecked(bool is_checked)
 void LabeledCheckbox::prToggled(bool on)
 {
     emit toggled(on);
+}
+
+void LabeledCheckbox::widgetSizeHints(int *lab_w, int *rest_w)
+{
+    if (lab_w != 0) *lab_w = chbx->sizeHint().width();;
+    if (rest_w != 0) *rest_w = 0;
+}
+
+void LabeledCheckbox::setColumnWidths(int lab_w, int rest_w)
+{
+    //kDebug() << "lab_w =" << lab_w << "rest_w =" << rest_w;
+    layout->setColumnMinimumWidth(0, lab_w);
+    layout->setColumnMinimumWidth(1, rest_w);
 }
 
 }  // NameSpace KSaneIface

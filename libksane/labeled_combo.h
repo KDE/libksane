@@ -70,7 +70,7 @@ public:
     * \return the number of list entries.
     */
     int count() const;
-    void wigetSizeHints(int *lab_w, int *cmb_w);
+    void widgetSizeHints(int *lab_w, int *cmb_w);
     void setColumnWidths(int lab_w, int cmb_w);
 
 public Q_SLOTS:

@@ -81,7 +81,7 @@ LabeledFSlider::LabeledFSlider(QWidget *parent, const QString& ltext,
     spinb->setAlignment(Qt::AlignRight);
     spinb->setValue(min);
 
-    label->setBuddy(slider);
+    label->setBuddy(spinb);
 
     connect(spinb, SIGNAL(valueChanged(double)),
             this, SLOT(syncValues(double)));
@@ -92,7 +92,7 @@ LabeledFSlider::LabeledFSlider(QWidget *parent, const QString& ltext,
     connect(slider, SIGNAL(sliderReleased()),
             this, SLOT(fixValue()));
 
-    layout->addWidget(label, 0, 0);
+    layout->addWidget(label, 0, 0, Qt::AlignRight);
     layout->addWidget(slider, 0,1);
     layout->addWidget(spinb, 0, 2);
     layout->setColumnStretch(0, 0);
@@ -105,7 +105,7 @@ LabeledFSlider::~LabeledFSlider()
 {
 }
 
-void LabeledFSlider::wigetSizeHints(int *lab_w, int *spi_w)
+void LabeledFSlider::widgetSizeHints(int *lab_w, int *spi_w)
 {
     if (lab_w != 0) *lab_w = label->sizeHint().width();
     if (spi_w != 0) *spi_w = spinb->sizeHint().width();

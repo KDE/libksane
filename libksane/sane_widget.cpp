@@ -370,7 +370,7 @@ bool KSaneWidget::openDevice(const QString &device_name)
         i++;
     }
 
-    if ((i == 0) && (device_name == "test")) {
+    if (device_name == "test") {
         d->modelName = "Test Scanner";
         d->vendor    = "Test";
         d->model     = "Scanner";
@@ -644,31 +644,33 @@ void KSaneWidget::createOptInterface()
     }
 
     if ((d->optGamR != 0) && (d->optGamG != 0) && (d->optGamB != 0)) {
-        LabeledGamma *lgamma = new LabeledGamma(d->colorOpts,
+        LabeledGamma *gamma = reinterpret_cast<LabeledGamma *>(d->optGamR->widget());
+        LabeledGamma *one_gamma = new LabeledGamma(d->colorOpts,
                                   i18n(SANE_TITLE_GAMMA_VECTOR),
-                                  d->optGamR->lgamma->size());
-        color_lay->addWidget(lgamma);
+                                       gamma->size());
 
-        lgamma->setToolTip(i18n(SANE_DESC_GAMMA_VECTOR));
+        color_lay->addWidget(one_gamma);
 
-        connect(lgamma, SIGNAL(gammaChanged(int,int,int)),
-                d->optGamR->lgamma, SLOT(setValues(int,int,int)));
+        one_gamma->setToolTip(i18n(SANE_DESC_GAMMA_VECTOR));
 
-        connect(lgamma, SIGNAL(gammaChanged(int,int,int)),
-                d->optGamG->lgamma, SLOT(setValues(int,int,int)));
+        connect(one_gamma, SIGNAL(gammaChanged(int,int,int)),
+                d->optGamR->widget(), SLOT(setValues(int,int,int)));
 
-        connect(lgamma, SIGNAL(gammaChanged(int,int,int)),
-                d->optGamB->lgamma, SLOT(setValues(int,int,int)));
+        connect(one_gamma, SIGNAL(gammaChanged(int,int,int)),
+                d->optGamG->widget(), SLOT(setValues(int,int,int)));
+
+        connect(one_gamma, SIGNAL(gammaChanged(int,int,int)),
+                d->optGamB->widget(), SLOT(setValues(int,int,int)));
 
         QCheckBox *split_gam_btn = new QCheckBox(i18n("Separate color intensity tables"),
-                                                 d-> basic_options);
+                                                 d->basic_options);
         color_lay->addWidget(split_gam_btn);
 
         connect (split_gam_btn, SIGNAL(toggled(bool)),
                  gamma_frm, SLOT(setVisible(bool)));
 
         connect (split_gam_btn, SIGNAL(toggled(bool)),
-                 lgamma, SLOT(setHidden(bool)));
+                 one_gamma, SLOT(setHidden(bool)));
 
         gamma_frm->hide();
     }
@@ -683,8 +685,25 @@ void KSaneWidget::createOptInterface()
     }
 
     // add a stretch to the end to keep the parameters at the top
-    //basic_layout->addStretch();
-
+    basic_layout->addStretch();
+    
+    // calculeate sizes
+    /*
+    int lab_w=0, rest_w=0;
+    int lab_tmp, rest_tmp;
+    for (int i=0; i<d->optList.size(); i++) {
+        if (d->optList.at(i)->widget() != 0) {
+            d->optList.at(i)->widgetSizeHints(&lab_tmp, &rest_tmp);
+            lab_tmp = qMax(lab_tmp, lab_w);
+            rest_w  = qMax(rest_w, rest_tmp);
+        }
+    }
+    for (int i=0; i<d->optList.size(); i++) {
+        if (d->optList.at(i)->widget() != 0) {
+            d->optList.at(i)->setColumnWidths(lab_w, rest_w);
+        }
+    }
+    */
 
     // Remaining (un known) Options tabs
     QScrollArea *other_area = new QScrollArea(d->optsWidget);
@@ -713,8 +732,24 @@ void KSaneWidget::createOptInterface()
         }
     }
 
+    // calculeate sizes
+    /*
+    int lab_w=0, rest_w=0;
+    int lab_tmp, rest_tmp;
+    for (int i=0; i<d->optList.size(); i++) {
+        if (d->optList.at(i)->widget() != 0) {
+            d->optList.at(i)->widgetSizeHints(&lab_tmp, &rest_tmp);
+            lab_w = qMax(lab_tmp, lab_w);
+            rest_w  = qMax(rest_w, rest_tmp);
+        }
+    }
+    for (int i=0; i<d->optList.size(); i++) {
+        if (d->optList.at(i)->widget() != 0) {
+            d->optList.at(i)->setColumnWidths(lab_w, rest_w);
+        }
+    }
+    */
     // add a stretch to the end to keep the parameters at the top
-    basic_layout->addStretch();
     other_layout->addStretch();
 
     // encsure that we do not get a scrollbar at the bottom of the option of the options

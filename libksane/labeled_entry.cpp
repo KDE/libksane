@@ -83,4 +83,10 @@ void LabeledEntry::setClicked()
     emit entryEdited(e_text);
 }
 
+void LabeledEntry::widgetSizeHints(int *lab_w, int *chb_w)
+{
+    if (lab_w != 0) *lab_w = 0;
+    if (chb_w != 0) *chb_w = 0;
+}
+
 }  // NameSpace KSaneIface

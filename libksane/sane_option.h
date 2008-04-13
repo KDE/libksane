@@ -107,10 +107,8 @@ public:
     bool storeCurrentData();
     bool restoreSavedData();
 
-    LabeledGamma *lgamma;
-    LabeledCombo *lcombx;
-    LabeledSlider *lslider;
-    LabeledFSlider *lfslider;
+    void widgetSizeHints(int *lab_w, int *cmb_w);
+    void setColumnWidths(int lab_w, int cmb_w);
 
 Q_SIGNALS:
 
@@ -144,6 +142,11 @@ private:
     bool comboboxChanged(float value);
 
 private:
+
+    LabeledGamma *lgamma;
+    LabeledCombo *lcombx;
+    LabeledSlider *lslider;
+    LabeledFSlider *lfslider;
 
     // gui object variables
     QFrame *frame;

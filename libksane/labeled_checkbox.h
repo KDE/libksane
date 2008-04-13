@@ -30,9 +30,9 @@
 #define LABELED_CHECKBOX_H
 
 // Qt includes.
-
 #include <QFrame>
 #include <QCheckBox>
+#include <QGridLayout>
 
 namespace KSaneIface
 {
@@ -59,6 +59,8 @@ public:
     LabeledCheckbox(QWidget *parent, const QString& text);
     ~LabeledCheckbox();
     void setChecked(bool);
+    void widgetSizeHints(int *lab_w, int *chb_w);
+    void setColumnWidths(int lab_w, int rest_w);
 
 private Q_SLOTS:
 
@@ -71,6 +73,7 @@ Q_SIGNALS:
 private:
 
     QCheckBox *chbx;
+    QGridLayout *layout;
 };
 
 }  // NameSpace KSaneIface

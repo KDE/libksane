@@ -68,7 +68,7 @@ public:
                    float min, float max, float st);
     ~LabeledFSlider();
 
-    void wigetSizeHints(int *lab_w, int *spi_w);
+    void widgetSizeHints(int *lab_w, int *spi_w);
     void setColumnWidths(int lab_w, int spi_w);
 
    /**

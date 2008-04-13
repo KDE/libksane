@@ -56,13 +56,13 @@ LabeledGamma::LabeledGamma(QWidget *parent, const QString& text, int size)
 
     // Calculate the size of the widgets in the sliders
     int lw, spw, lw_max=0, spw_max=0;
-    bri_slider->wigetSizeHints(&lw, &spw);
+    bri_slider->widgetSizeHints(&lw, &spw);
     lw_max=lw;
     spw_max=spw;
-    con_slider->wigetSizeHints(&lw, &spw);
+    con_slider->widgetSizeHints(&lw, &spw);
     if (lw>lw_max) lw_max = lw;
     if (spw>spw_max) spw_max = spw;
-    gam_slider->wigetSizeHints(&lw, &spw);
+    gam_slider->widgetSizeHints(&lw, &spw);
     if (lw>lw_max) lw_max = lw;
     if (spw>spw_max) spw_max = spw;
     // set the calculated widths
@@ -173,6 +173,12 @@ void LabeledGamma::calculateGT()
     gamma_disp->update();
     emit gammaChanged(bri_slider->value(), con_slider->value(), gam_slider->value());
     emit gammaTableChanged(gam_tbl);
+}
+
+void LabeledGamma::widgetSizeHints(int *lab_w, int *rest_w)
+{
+    if (lab_w != 0) *lab_w = 0;
+    if (rest_w != 0) *rest_w = 0;
 }
 
 }  // NameSpace KSaneIface

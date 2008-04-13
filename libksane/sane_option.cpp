@@ -814,6 +814,7 @@ bool SaneOption::setValue(float value)
     switch (type)
     {
         case SW_SLIDER:
+        case SW_SLIDER_INT:
             if (value >=0) sliderChanged((int)(value+0.5));
             else sliderChanged((int)(value-0.5));
             if (lslider != 0) {
@@ -821,6 +822,7 @@ bool SaneOption::setValue(float value)
             }
             return true;
         case SW_F_SLIDER:
+        case SW_F_SLIDER_FIX:
             fsliderChanged(value);
             if (lfslider != 0) {
                 lfslider->setValue(value);
@@ -918,9 +920,11 @@ bool SaneOption::getValue(QString *val)
             *val = getSaneComboString(data.data());
             break;
         case SW_SLIDER:
+        case SW_SLIDER_INT:
             *val = QString().sprintf("%d", (int)toSANE_Word(data.data()));
             break;
         case SW_F_SLIDER:
+        case SW_F_SLIDER_FIX:
             *val = QString().sprintf("%f", SANE_UNFIX( toSANE_Word(data.data())));
             break;
         case SW_ENTRY:
@@ -964,6 +968,7 @@ bool SaneOption::setValue(const QString &val)
             }
             break;
         case SW_SLIDER:
+        case SW_SLIDER_INT:
             i = val.toInt(&ok);
             if (ok == false) return false;
             sliderChanged(i);
@@ -972,6 +977,7 @@ bool SaneOption::setValue(const QString &val)
             }
             break;
         case SW_F_SLIDER:
+        case SW_F_SLIDER_FIX:
             f = val.toFloat(&ok);
             if (ok == false) return false;
             fsliderChanged(f);
@@ -990,6 +996,90 @@ bool SaneOption::setValue(const QString &val)
             return false;
     }
     return true;
+}
+
+void SaneOption::widgetSizeHints(int *lab_w, int *rest_w)
+{
+    switch(type)
+    {
+        case SW_CHECKBOX:
+            if (lchebx != 0) {
+                lchebx->widgetSizeHints(lab_w, rest_w);
+            }
+            break;
+        case SW_COMBO:
+            if (lcombx != 0) {
+                lcombx->widgetSizeHints(lab_w, rest_w);
+            }
+            break;
+        case SW_SLIDER:
+        case SW_SLIDER_INT:
+            if (lslider != 0) {
+                lslider->widgetSizeHints(lab_w, rest_w);
+            }
+            break;
+        case SW_F_SLIDER:
+        case SW_F_SLIDER_FIX:
+            if (lfslider != 0) {
+                lfslider->widgetSizeHints(lab_w, rest_w);
+            }
+            break;
+        case SW_ENTRY:
+            if (lentry != 0) {
+                lentry->widgetSizeHints(lab_w, rest_w);
+            }
+            break;
+        case SW_GAMMA:
+            if (lgamma != 0) {
+                lgamma->widgetSizeHints(lab_w, rest_w);
+            }
+            break;
+        default:
+            kDebug() << sane_option->name << "type:" << type << "is not supported";
+            return;
+    }
+}
+
+void SaneOption::setColumnWidths(int lab_w, int rest_w)
+{
+    switch(type)
+    {
+        case SW_CHECKBOX:
+            if (lchebx != 0) {
+                lchebx->setColumnWidths(lab_w, rest_w);
+            }
+            break;
+        case SW_COMBO:
+            if (lcombx != 0) {
+                lcombx->setColumnWidths(lab_w, rest_w);
+            }
+            break;
+        case SW_SLIDER:
+        case SW_SLIDER_INT:
+            if (lslider != 0) {
+                lslider->setColumnWidths(lab_w, rest_w);
+            }
+            break;
+        case SW_F_SLIDER:
+        case SW_F_SLIDER_FIX:
+            if (lfslider != 0) {
+                lfslider->setColumnWidths(lab_w, rest_w);
+            }
+            break;
+        case SW_ENTRY:
+            if (lentry != 0) {
+                lentry->setColumnWidths(lab_w, rest_w);
+            }
+            break;
+        case SW_GAMMA:
+            if (lgamma != 0) {
+                lgamma->setColumnWidths(lab_w, rest_w);
+            }
+            break;
+        default:
+            kDebug() << sane_option->name << "type:" << type << "is not supported";
+            return;
+    }
 }
 
 

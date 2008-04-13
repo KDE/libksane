@@ -69,7 +69,7 @@ public:
                 int min, int max, int st);
     ~LabeledSlider();
 
-    void wigetSizeHints(int *lab_w, int *spi_w);
+    void widgetSizeHints(int *lab_w, int *spi_w);
     void setColumnWidths(int lab_w, int spi_w);
     int value() const { return( slider->value()); }
 

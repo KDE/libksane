@@ -33,6 +33,7 @@
 
 // KDE includes
 #include <KComboBox>
+#include <KDebug>
 
 namespace KSaneIface
 {
@@ -46,6 +47,8 @@ LabeledCombo::LabeledCombo(QWidget *parent, const QString& ltext,
     combo  = new KComboBox(this);
     combo->addItems(list);
 
+    label->setBuddy(combo);
+
     connect(combo, SIGNAL(activated(const QString &)),
             this, SLOT(prActivated(const QString &)));
 
@@ -54,10 +57,11 @@ LabeledCombo::LabeledCombo(QWidget *parent, const QString& ltext,
 
     layout->setSpacing(3);
     layout->setMargin(0);
-    layout->addWidget(label, 0, 0);
-    layout->addWidget(combo, 0, 1);
-    layout->setColumnStretch(0, 50);
-    layout->setColumnStretch(1, 0);
+    layout->addWidget(label, 0, 0, Qt::AlignLeft);
+    layout->addWidget(combo, 0, 2);
+    layout->setColumnStretch(0, 0);
+    layout->setColumnStretch(1, 50);
+    layout->setColumnStretch(2, 0);
 }
 
 void LabeledCombo::setCurrentText(const QString &t)
@@ -97,16 +101,17 @@ void LabeledCombo::setCurrentIndex(int i)
 }
 
 
-void LabeledCombo::wigetSizeHints(int *lab_w, int *cmb_w)
+void LabeledCombo::widgetSizeHints(int *lab_w, int *cmb_w)
 {
     if (lab_w != 0) *lab_w = label->sizeHint().width();
-    if (cmb_w != 0) *cmb_w = combo->sizeHint().width();
+    if (cmb_w != 0) *cmb_w = combo->sizeHint().width();;
 }
 
 void LabeledCombo::setColumnWidths(int lab_w, int cmb_w)
 {
+    //kDebug() << "lab_w =" << lab_w << "cmb_w =" << cmb_w;
     layout->setColumnMinimumWidth(0, lab_w);
-    layout->setColumnMinimumWidth(1, cmb_w);
+    layout->setColumnMinimumWidth(2, cmb_w);
 }
 
 int LabeledCombo::count() const

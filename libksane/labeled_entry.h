@@ -61,8 +61,9 @@ public:
     */
     LabeledEntry(QWidget *parent, const QString& text);
     ~LabeledEntry();
-
     void setText(const QString& text);
+    void widgetSizeHints(int *lab_w, int *cmb_w);
+    void setColumnWidths(int, int) {};
 
 private Q_SLOTS:
 
