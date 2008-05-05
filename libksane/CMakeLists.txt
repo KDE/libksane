@@ -14,6 +14,7 @@ SET(ksane_LIB_SRCS gamma_disp.cpp
                    labeled_slider.cpp
                    preview_area.cpp
                    radio_select.cpp
+                   ksane_button.cpp
                    sane_widget.cpp)
 
 KDE4_ADD_LIBRARY(ksane SHARED ${ksane_LIB_SRCS})

@@ -422,7 +422,7 @@ bool KSaneWidget::openDevice(const QString &device_name)
     base_layout->addLayout(pr_layout, 100);
 
     // Create Options Widget
-    d->optsWidget = new KTabWidget(this);
+    d->optsWidget = new KTabWidget;
      // Create the options interface
     createOptInterface();
 
@@ -436,30 +436,30 @@ bool KSaneWidget::openDevice(const QString &device_name)
             this, SLOT(handleSelection(float, float, float, float)));
     d->previewImg = d->previewArea->getImage();
 
-    d->zInBtn  = new QPushButton();
+    d->zInBtn  = new QPushButton(this);
     d->zInBtn->setIcon(KIcon("zoom-in"));
     d->zInBtn->setToolTip(i18n("Zoom In"));
-    d->zOutBtn = new QPushButton();
+    d->zOutBtn = new QPushButton(this);
     d->zOutBtn->setIcon(KIcon("zoom-out"));
     d->zOutBtn->setToolTip(i18n("Zoom Out"));
-    d->zSelBtn = new QPushButton();
+    d->zSelBtn = new QPushButton(this);
     d->zSelBtn->setIcon(KIcon("zoom-fit-best"));
     d->zSelBtn->setToolTip(i18n("Zoom to Selection"));
-    d->zFitBtn = new QPushButton();
+    d->zFitBtn = new QPushButton(this);
     d->zFitBtn->setIcon(KIcon("document-preview"));
     d->zFitBtn->setToolTip(i18n("Zoom to Fit"));
 
-    d->progressBar = new QProgressBar();
+    d->progressBar = new QProgressBar(this);
     d->progressBar->hide();
-    d->cancelBtn   = new QPushButton();
+    d->cancelBtn   = new QPushButton(this);
     d->cancelBtn->setIcon(KIcon("process-stop"));
     d->cancelBtn->setToolTip(i18n("Cancel current scan operation"));
     d->cancelBtn->hide();
 
-    d->prevBtn = new QPushButton();
+    d->prevBtn = new QPushButton(this);
     d->prevBtn->setIcon(KIcon("document-import"));
     d->prevBtn->setToolTip(i18n("Scan Preview Image"));
-    d->scanBtn = new QPushButton();
+    d->scanBtn = new QPushButton(this);
     d->scanBtn->setIcon(KIcon("document-save"));
     d->scanBtn->setToolTip(i18n("Scan Final Image"));
 

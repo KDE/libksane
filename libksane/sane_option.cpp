@@ -58,6 +58,7 @@ SaneOption::SaneOption(const SANE_Handle s_handle, const int opt_num)
     frame = 0;
     lslider = 0;
     lfslider = 0;
+    button = 0;
     lentry = 0;
     sane_data = 0;
     type = SW_DETECT_FAIL;
@@ -79,7 +80,7 @@ SaneOption::SaneOption(const SANE_Handle s_handle, const int opt_num)
     sw_state = SW_STATE_SHOWN;
     if (((sane_option->cap & SANE_CAP_SOFT_DETECT) == 0) ||
           (sane_option->cap & SANE_CAP_INACTIVE) ||
-          (sane_option->size == 0))
+          ((sane_option->size == 0) && (type != SW_BUTTON)))
     {
         sw_state = SW_STATE_HIDDEN;
     }
@@ -185,6 +186,10 @@ void SaneOption::createWidget(QWidget *parent)
             if (strcmp(sane_option->name, SANE_NAME_GAMMA_VECTOR_G) == 0) lgamma->setColor(Qt::green);
             if (strcmp(sane_option->name, SANE_NAME_GAMMA_VECTOR_B) == 0) lgamma->setColor(Qt::blue);
             break;
+        case SW_BUTTON:
+            frame = button = new KSaneButton(parent, i18n(sane_option->title));
+            connect(button, SIGNAL(clicked()), this, SLOT(buttonClicked()));
+            break;
         case SW_DETECT_FAIL:
             frame = new QFrame();
             //kDebug() << sane_option->title << "SW_DETECT_FAIL";
@@ -225,9 +230,7 @@ SaneOptWidget_t SaneOption::getWidgetType()
                     kDebug() << "size" << sane_option->size<< "!= sizeof(SANE_Word)";
                     break;
                 case SANE_TYPE_BUTTON:
-                    kDebug() << "Can not handle:"<< sane_option->title;
-                    kDebug() << "SANE_CONSTRAINT_NONE && SANE_TYPE_BUTTON";
-                    return SW_DETECT_FAIL;
+                    return SW_BUTTON;
                 case SANE_TYPE_STRING:
                     return SW_ENTRY;
                 case SANE_TYPE_GROUP:
@@ -265,9 +268,7 @@ SaneOptWidget_t SaneOption::getWidgetType()
                     kDebug() << "SANE_CONSTRAINT_RANGE && SANE_TYPE_STRING";
                     return SW_DETECT_FAIL;
                 case SANE_TYPE_BUTTON:
-                    kDebug() << "Can not handle:" << sane_option->title;
-                    kDebug() << "SANE_CONSTRAINT_RANGE && SANE_TYPE_BUTTON";
-                    return SW_DETECT_FAIL;
+                    return SW_BUTTON;
                 case SANE_TYPE_GROUP:
                     return SW_GROUP;
             }
@@ -419,6 +420,12 @@ bool SaneOption::writeData(void *data)
     return true;
 }
 
+void SaneOption::buttonClicked()
+{
+    unsigned char data[4];
+    writeData(data);
+}
+
 void SaneOption::checkboxChanged(bool toggled)
 {
     unsigned char data[4];
@@ -566,7 +573,7 @@ void SaneOption::readOption()
     sw_state = SW_STATE_SHOWN;
     if (((sane_option->cap & SANE_CAP_SOFT_DETECT) == 0) ||
           (sane_option->cap & SANE_CAP_INACTIVE) ||
-          (sane_option->size == 0))
+          ((sane_option->size == 0) && (type != SW_BUTTON)))
     {
         sw_state = SW_STATE_HIDDEN;
     }
@@ -631,6 +638,7 @@ void SaneOption::readOption()
         case SW_GROUP:
         case SW_CHECKBOX:
         case SW_ENTRY:
+        case SW_BUTTON:
         case SW_DETECT_FAIL:
             // no changes
             break;
@@ -702,6 +710,9 @@ void SaneOption::readValue()
         case SW_GAMMA:
             // Unfortunately gamma table to brigthness, contrast and gamma is
             // not easy nor fast.. ergo not done
+            break;
+        case SW_BUTTON:
+            // can not be read
             break;
         case SW_DETECT_FAIL:
             // kDebug() << "Unhandeled";

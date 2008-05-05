@@ -55,6 +55,7 @@ extern "C"
 #include "labeled_checkbox.h"
 #include "labeled_entry.h"
 #include "labeled_gamma.h"
+#include "ksane_button.h"
 
 namespace KSaneIface
 {
@@ -70,7 +71,8 @@ typedef enum
     SW_F_SLIDER_FIX,
     SW_COMBO,
     SW_ENTRY,
-    SW_GAMMA
+    SW_GAMMA,
+    SW_BUTTON
 } SaneOptWidget_t;
 
 typedef enum
@@ -127,6 +129,7 @@ private Q_SLOTS:
     void fsliderChanged(float val);
     void entryChanged(const QString& text);
     void gammaTableChanged(const QVector<int> &gam_tbl);
+    void buttonClicked();
 
 private:
 
@@ -142,17 +145,16 @@ private:
     bool comboboxChanged(float value);
 
 private:
-
-    LabeledGamma *lgamma;
-    LabeledCombo *lcombx;
-    LabeledSlider *lslider;
-    LabeledFSlider *lfslider;
-
     // gui object variables
-    QFrame *frame;
+    QFrame          *frame;
     LabeledCheckbox *lchebx;
-    QStringList *cstrl;
-    LabeledEntry *lentry;
+    QStringList     *cstrl;
+    LabeledEntry    *lentry;
+    LabeledGamma    *lgamma;
+    LabeledCombo    *lcombx;
+    LabeledSlider   *lslider;
+    LabeledFSlider  *lfslider;
+    KSaneButton     *button;
 
     SaneOptWidget_t type;
     SaneOptWState sw_state;

@@ -12,11 +12,12 @@ FIND_PACKAGE(Sane REQUIRED)
 # Library version history:
 # API      ABI
 # 0.1.0 => 0.1.0
+# 0.1.1 => 0.1.1
 
 # Library API version
 SET(KSANE_LIB_MAJOR_VERSION "0")
 SET(KSANE_LIB_MINOR_VERSION "1")
-SET(KSANE_LIB_PATCH_VERSION "0")
+SET(KSANE_LIB_PATCH_VERSION "1")
 
 # Suffix to add at end of version string. Usual values are:
 # "-svn"   : alpha code unstable from svn. Do not use in production
@@ -25,7 +26,7 @@ SET(KSANE_LIB_PATCH_VERSION "0")
 # "-beta3" : beta3 release.
 # "-rc"    : release candidate.
 # ""       : final relase. Can be used in production.
-SET(KSANE_LIB_SUFFIX_VERSION "-svn")
+SET(KSANE_LIB_SUFFIX_VERSION "")
 
 # Library ABI version used by linker.
 # For details : http://www.gnu.org/software/libtool/manual.html#Updating-version-info

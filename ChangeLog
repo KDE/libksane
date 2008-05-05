@@ -1,1 +1,11 @@
+0.1.2
 
+- Add support for button parameters
+
+0.1.1
+
+- Add toQImage() for a nicer API
+
+0.1.0
+
+- Initial release
