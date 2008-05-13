@@ -485,21 +485,20 @@ bool KSaneWidget::openDevice(const QString &device_name)
             this, SLOT(scanCancel()));
 
     QHBoxLayout *zoom_layout = new QHBoxLayout;
+    QHBoxLayout *progress_lay = new QHBoxLayout;
 
     pr_layout->addWidget(d->previewArea, 100);
+    pr_layout->addLayout(progress_lay, 0);
     pr_layout->addLayout(zoom_layout, 0);
 
-    zoom_layout->addWidget(d->zInBtn, 0);
-    zoom_layout->addWidget(d->zOutBtn, 0);
-    zoom_layout->addWidget(d->zSelBtn, 0);
-    zoom_layout->addWidget(d->zFitBtn, 0);
-
-    QHBoxLayout *progress_lay = new QHBoxLayout;
-    progress_lay->addStretch(0);
     progress_lay->addWidget(d->progressBar, 100);
     progress_lay->addWidget(d->cancelBtn, 0);
-    zoom_layout->addLayout(progress_lay, 100);
 
+    zoom_layout->addWidget(d->zInBtn);
+    zoom_layout->addWidget(d->zOutBtn);
+    zoom_layout->addWidget(d->zSelBtn);
+    zoom_layout->addWidget(d->zFitBtn);
+    zoom_layout->addStretch(100);
     zoom_layout->addWidget(d->prevBtn);
     zoom_layout->addWidget(d->scanBtn);
 
@@ -686,7 +685,7 @@ void KSaneWidget::createOptInterface()
 
     // add a stretch to the end to keep the parameters at the top
     basic_layout->addStretch();
-    
+
     // calculeate sizes
     /*
     int lab_w=0, rest_w=0;
@@ -1283,14 +1282,6 @@ void KSaneWidget::processData()
             return;
     }
 
-    // copy the data to the buffer
-    if (d->isPreview) {
-        copyToPreview((int)read_bytes);
-    }
-    else {
-        copyToScanData((int)read_bytes);
-    }
-
     // update progressBar
     if (d->params.lines > 0) {
         int new_progress;
@@ -1313,6 +1304,14 @@ void KSaneWidget::processData()
             }
             qApp->processEvents();
         }
+    }
+
+    // copy the data to the buffer
+    if (d->isPreview) {
+        copyToPreview((int)read_bytes);
+    }
+    else {
+        copyToScanData((int)read_bytes);
     }
 }
 
