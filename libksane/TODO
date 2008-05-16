@@ -1,7 +1,5 @@
 TODO list to be more KDE compliant:
 
-* Doc : add API documentation using Doxygen forms.
-
 TODO list of new features:
 
 * Rework Scanner selection dialog.
@@ -9,3 +7,4 @@ TODO list of new features:
   image metadata (dpi, color mode, etc)
 * Progressive final scan: scan can provide huge image especially in 16 bits color depth.
   Send image data to host application by block, not the whole image at once.
+* Move the scan reading to a thread to get a more responcive UI.
