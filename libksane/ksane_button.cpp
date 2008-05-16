@@ -1,7 +1,6 @@
 /* ============================================================
  *
- * This file is a part of kipi-plugins project
- * http://www.kipi-plugins.org
+ * This file is part of the KDE project
  *
  * Date        : 2007-05-05
  * Description : Sane interface for KDE
