@@ -1,11 +1,5 @@
 PROJECT(libksane)
 
-# search packages used by KDE
-FIND_PACKAGE(KDE4 REQUIRED)
-INCLUDE (KDE4Defaults)
-INCLUDE (MacroLibrary)
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake/modules )
-FIND_PACKAGE(Sane REQUIRED)
 # =======================================================
 # Informations to update before to release this library.
 
