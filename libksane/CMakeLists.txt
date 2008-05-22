@@ -1,5 +1,7 @@
 CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/version.h)
 
+INCLUDE_DIRECTORIES(${SANE_INCLUDE_DIR})
+
 SET(ksane_LIB_SRCS gamma_disp.cpp
                    labeled_gamma.cpp
                    labeled_checkbox.cpp
