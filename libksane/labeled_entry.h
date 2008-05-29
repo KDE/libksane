@@ -30,15 +30,14 @@
 
 // Qt includes.
 #include <QFrame>
-#include <QPushButton>
-#include <QLabel>
-
-// KDE includes
-#include <KLineEdit>
 
 /**
  *@author Kåre Särs
  */
+
+class QPushButton;
+class QLabel;
+class KLineEdit;
 
 namespace KSaneIface
 {
@@ -76,7 +75,7 @@ Q_SIGNALS:
 private:
 
     QLabel *label;
-    QLineEdit *entry;
+    KLineEdit *entry;
     QPushButton *set;
     QPushButton *reset;
     QString e_text;

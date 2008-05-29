@@ -36,7 +36,6 @@
 #include <QHBoxLayout>
 
 // KDE includes.
-#include <KLocale>
 #include <KDebug>
 
 namespace KSaneIface

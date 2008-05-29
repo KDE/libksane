@@ -31,6 +31,9 @@
 
 // Qt includes.
 #include <QHBoxLayout>
+#include <QLabel>
+#include <KLineEdit>
+#include <QPushButton>
 
 namespace KSaneIface
 {
