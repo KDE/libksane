@@ -30,6 +30,6 @@ install(TARGETS ksane ${INSTALL_TARGETS_DEFAULT_ARGS} )
 INSTALL(FILES ksane.h
               libksane_export.h
               ${CMAKE_CURRENT_BINARY_DIR}/version.h
-        DESTINATION ${INCLUDE_INSTALL_DIR}/libksane)
+        DESTINATION ${INCLUDE_INSTALL_DIR}/libksane COMPONENT Devel)
 
 KDE4_INSTALL_ICONS(${ICON_INSTALL_DIR})
