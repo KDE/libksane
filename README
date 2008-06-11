@@ -32,7 +32,7 @@ just use something like that:
 # cmake .
 # make
 
-Usual CMake options :
+Usual CMake options:
 
 -DCMAKE_INSTALL_PREFIX : decide where the program will be install on your computer.
 -DCMAKE_BUILD_TYPE     : decide which type of build you want. You can chose between "debugfull", "debug", "profile", "relwithdebinfo" and "release". The default is "relwithdebinfo" (-O2 -g).
@@ -46,9 +46,15 @@ More details can be found ata this url: http://techbase.kde.org/Development/Tuto
 
 -- CONTACT ------------------------------------------------------------
 
-If you have questions, comments, suggestions to make do email at :
+If you have questions, comments, suggestions to make do email at:
 
 kde-imaging@kde.org
+
+IRC channel from freenode.net server:
+
+#kde-imaging
+
+-- BUGS ---------------------------------------------------------------
 
 IMPORTANT : the bugreports and wishlist are hosted by the KDE bugs report 
 system who can be contacted by the standard Kde help menu of plugins dialog. 
@@ -59,4 +65,4 @@ or a devel wish.
 The current Kipi bugs and devel wish reported to the Kde bugs report can be see 
 at this url :
 
-http://bugs.kde.org/buglist.cgi?product=kipiplugins&bug_status=UNCONFIRMED&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED
+http://bugs.kde.org/buglist.cgi?product=kipiplugins&component=libksane&bug_status=UNCONFIRMED&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED
