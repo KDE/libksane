@@ -33,6 +33,7 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <KLineEdit>
+#include <KLocale>
 #include <QPushButton>
 
 namespace KSaneIface
@@ -47,9 +48,9 @@ LabeledEntry::LabeledEntry(QWidget *parent, const QString& ltext)
     label = new QLabel(ltext, this);
     entry = new KLineEdit(this);
     reset = new QPushButton(this);
-    reset->setText("Reset");
+    reset->setText(i18n("Reset"));
     set = new QPushButton(this);
-    set->setText("Set");
+    set->setText(i18n("Set"));
 
     hb->addWidget(label);
     hb->addWidget(entry);
