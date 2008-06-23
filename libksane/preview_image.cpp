@@ -53,7 +53,7 @@ PreviewImage::PreviewImage(QWidget *parent)
     orig_img = QImage(400, 700, QImage::Format_RGB32);
     for (int i = 0; i < 255; i++) {
         for (int j = 0; j < 255; j++) {
-            orig_img.setPixel(j, i, qRgb((int)sqrt(i*j),(int)sqrt(i*j),(int)sqrt(i*j)));
+            orig_img.setPixel(j, i, qRgb((int)std::sqrt((float)i*j),(int)std::sqrt((float)i*j),(int)std::sqrt((float)i*j)));
         }
     }
 

@@ -154,7 +154,7 @@ void LabeledGamma::calculateGT()
 
     for (int i = 0; i<gam_tbl.size(); i++) {
         // apply gamma
-        x = pow(i/max_val, gam) * max_val;
+        x = std::pow(i/max_val, gam) * max_val;
 
         // apply contrast
         x = (con*(x-half_max)) + half_max;
