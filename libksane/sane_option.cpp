@@ -93,6 +93,7 @@ SaneOption::SaneOption(const SANE_Handle s_handle, const int opt_num)
 
 SaneOption::~SaneOption()
 {
+    delete cstrl;
 }
 
 void SaneOption::createWidget(QWidget *parent)
