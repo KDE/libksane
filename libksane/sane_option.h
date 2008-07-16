@@ -99,10 +99,10 @@ public:
     QFrame *widget() {return frame;}
     SaneOptWidget_t sw_type() {return type;}
     QString name();
-    bool getMaxValue(float *max);
-    bool getValue(float *val);
-    bool setValue(float percent);
-    bool getValue(QString *val);
+    bool getMaxValue(float &max);
+    bool getValue(float &val);
+    bool setValue(float fval);
+    bool getValue(QString &val);
     bool setValue(const QString &val);
     bool setChecked(bool check);
     bool storeCurrentData();
@@ -121,7 +121,7 @@ Q_SIGNALS:
 
 private Q_SLOTS:
 
-    void comboboxChanged(int i);
+    void comboboxChangedIndex(int i);
     void checkboxChanged(bool toggled);
     bool comboboxChanged(const QString &value);
     void sliderChanged(int val);

@@ -128,7 +128,7 @@ void SaneOption::createWidget(QWidget *parent)
                             getSaneComboString((unsigned char*)SANE_VALUE_SCAN_MODE_LINEART));
             // The epkowa/epson backend uses "Binary" which is the same as "Lineart"
             lcombx->setIcon(KIcon("black-white"), i18n(tmp_binary));
-            connect(lcombx, SIGNAL(activated(int)), this, SLOT(comboboxChanged(int)));
+            connect(lcombx, SIGNAL(activated(int)), this, SLOT(comboboxChangedIndex(int)));
             break;
         case SW_SLIDER:
             frame = lslider = new LabeledSlider(parent,
@@ -434,7 +434,7 @@ void SaneOption::checkboxChanged(bool toggled)
     writeData(data);
 }
 
-void SaneOption::comboboxChanged(int i)
+void SaneOption::comboboxChangedIndex(int i)
 {
     unsigned char data[4];
     void *data_ptr;
@@ -491,7 +491,8 @@ bool SaneOption::comboboxChanged(const QString &value)
     switch (sane_option->type)
     {
         case SANE_TYPE_INT:
-            i = value.toInt(&ok);
+            // accept float formating of the string
+            i = (int)(value.toFloat(&ok));
             if (ok == false) return false;
             fromSANE_Word(data, i);
             data_ptr = data;
@@ -519,8 +520,7 @@ bool SaneOption::comboboxChanged(const QString &value)
             kDebug() << "can only handle SANE_TYPE: INT, FIXED and STRING";
             return false;
     }
-    writeData(data_ptr);
-    return true;
+    return writeData(data_ptr);
 }
 
 void SaneOption::sliderChanged(int val)
@@ -739,7 +739,7 @@ void SaneOption::fromSANE_Word(unsigned char *data, SANE_Word from)
     data[3] = (from & 0xFF000000)>>24;
 }
 
-bool SaneOption::getMaxValue(float *max)
+bool SaneOption::getMaxValue(float &max)
 {
     int last;
     switch (sane_option->type)
@@ -748,16 +748,16 @@ bool SaneOption::getMaxValue(float *max)
             switch (sane_option->constraint_type)
             {
                 case SANE_CONSTRAINT_RANGE:
-                    *max = (float)(sane_option->constraint.range->max);
+                    max = (float)(sane_option->constraint.range->max);
                     return true;
                 case SANE_CONSTRAINT_WORD_LIST:
                     last = sane_option->constraint.word_list[0];
-                    *max = (float)(sane_option->constraint.word_list[last]);
+                    max = (float)(sane_option->constraint.word_list[last]);
                     return true;
                 case SANE_CONSTRAINT_NONE:
                     if (sane_option->size == sizeof(SANE_Word)) {
                         // FIXME precision is lost.
-                        *max = (float)SW_INT_MAX;
+                        max = (float)SW_INT_MAX;
                         return true;
                     }
                 default:
@@ -768,15 +768,15 @@ bool SaneOption::getMaxValue(float *max)
             switch (sane_option->constraint_type)
             {
                 case SANE_CONSTRAINT_RANGE:
-                    *max = SANE_UNFIX(sane_option->constraint.range->max);
+                    max = SANE_UNFIX(sane_option->constraint.range->max);
                     return true;
                 case SANE_CONSTRAINT_WORD_LIST:
                     last = sane_option->constraint.word_list[0];
-                    *max = SANE_UNFIX(sane_option->constraint.word_list[last]);
+                    max = SANE_UNFIX(sane_option->constraint.word_list[last]);
                     return true;
                 case SANE_CONSTRAINT_NONE:
                     if (sane_option->size == sizeof(SANE_Word)) {
-                        *max = SW_FIXED_MAX;
+                        max = SW_FIXED_MAX;
                         return true;
                     }
                 default:
@@ -789,7 +789,7 @@ bool SaneOption::getMaxValue(float *max)
     return false;
 }
 
-bool SaneOption::getValue(float *val)
+bool SaneOption::getValue(float &val)
 {
     // check if we can read the value
     if (type == SW_GROUP) return false;
@@ -808,10 +808,10 @@ bool SaneOption::getValue(float *val)
     switch (sane_option->type)
     {
         case SANE_TYPE_INT:
-            *val = (float)toSANE_Word(data.data());
+            val = (float)toSANE_Word(data.data());
             return true;
         case SANE_TYPE_FIXED:
-            *val = SANE_UNFIX(toSANE_Word(data.data()));
+            val = SANE_UNFIX(toSANE_Word(data.data()));
             return true;
         default:
             kDebug() << "Type" << sane_option->type << "not supported!";
@@ -906,7 +906,7 @@ bool SaneOption::restoreSavedData()
     return true;
 }
 
-bool SaneOption::getValue(QString *val)
+bool SaneOption::getValue(QString &val)
 {
     // check if we can read the value
     if (type == SW_GROUP) return false;
@@ -925,24 +925,29 @@ bool SaneOption::getValue(QString *val)
     switch(type)
     {
         case SW_CHECKBOX:
-            *val = (toSANE_Word(data.data()) != 0) ? QString("true") :QString("false");
+            val = (toSANE_Word(data.data()) != 0) ? QString("true") :QString("false");
             break;
         case SW_COMBO:
-            *val = getSaneComboString(data.data());
+            val = getSaneComboString(data.data());
+            // strip the unit 
+            val = val.left(val.indexOf(' '));
             break;
         case SW_SLIDER:
         case SW_SLIDER_INT:
-            *val = QString().sprintf("%d", (int)toSANE_Word(data.data()));
+            val = QString().sprintf("%d", (int)toSANE_Word(data.data()));
             break;
         case SW_F_SLIDER:
         case SW_F_SLIDER_FIX:
-            *val = QString().sprintf("%f", SANE_UNFIX( toSANE_Word(data.data())));
+            val = QString().sprintf("%f", SANE_UNFIX( toSANE_Word(data.data())));
             break;
         case SW_ENTRY:
-            *val = QLatin1String(reinterpret_cast<char*>(data.data()));
+            val = QLatin1String(reinterpret_cast<char*>(data.data()));
             break;
-        default:
+        case SW_GAMMA:
+        case SW_DETECT_FAIL:
             kDebug() << sane_option->name << "type:" << type << "is not supported";
+        case SW_GROUP:
+        case SW_BUTTON:
             return false;
     }
     return true;
@@ -960,8 +965,8 @@ bool SaneOption::setValue(const QString &val)
     if (sw_state == SW_STATE_HIDDEN) return false;
     if (sw_state == SW_STATE_DISABLED) return false;
 
-    if (getValue(&tmp) == false) return false;
-
+    // does it need updating?
+    if (getValue(tmp) == false) return false;
     if (tmp == val) return true; // no update needed
 
     switch(type)
@@ -973,14 +978,17 @@ bool SaneOption::setValue(const QString &val)
             }
             break;
         case SW_COMBO:
-            comboboxChanged(val);
+            if (comboboxChanged(val) == false) {
+                return false;
+            }
             if (lcombx != 0) {
                 readValue();
             }
             break;
         case SW_SLIDER:
         case SW_SLIDER_INT:
-            i = val.toInt(&ok);
+            // accept float formating of the string
+            i = (int)(val.toFloat(&ok));
             if (ok == false) return false;
             sliderChanged(i);
             if (lslider != 0) {
@@ -1002,8 +1010,11 @@ bool SaneOption::setValue(const QString &val)
                 readValue();
             }
             break;
-        default:
+        case SW_GAMMA:
+        case SW_DETECT_FAIL:
             kDebug() << sane_option->name << "type:" << type << "is not supported";
+        case SW_GROUP:
+        case SW_BUTTON:
             return false;
     }
     return true;

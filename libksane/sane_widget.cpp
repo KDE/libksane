@@ -25,6 +25,7 @@
  * License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * ============================================================ */
+#include "ksane.h"
 
 // Sane includes.
 extern "C"
@@ -56,7 +57,6 @@ extern "C"
 #include "labeled_separator.h"
 #include "radio_select.h"
 #include "labeled_gamma.h"
-#include "ksane.h"
 #include "ksane.moc"
 
 #define SCALED_PREVIEW_MAX_SIDE 400
@@ -826,8 +826,8 @@ void KSaneWidget::handleSelection(float tl_x, float tl_y, float br_x, float br_y
 
     if ((d->previewImg->width()==0) || (d->previewImg->height()==0)) return;
 
-    d->optBrX->getMaxValue(&max_x);
-    d->optBrY->getMaxValue(&max_y);
+    d->optBrX->getMaxValue(max_x);
+    d->optBrY->getMaxValue(max_y);
     float ftl_x = tl_x*max_x;
     float ftl_y = tl_y*max_y;
     float fbr_x = br_x*max_x;
@@ -844,7 +844,7 @@ void KSaneWidget::setTLX(float ftlx)
     float max, ratio;
 
     //kDebug() << "setTLX " << ftlx;
-    d->optBrX->getMaxValue(&max);
+    d->optBrX->getMaxValue(max);
     ratio = ftlx / max;
     //kDebug() << " -> " << ratio;
     d->previewArea->setTLX(ratio);
@@ -855,7 +855,7 @@ void KSaneWidget::setTLY(float ftly)
     float max, ratio;
 
     //kDebug() << "setTLY " << ftly;
-    d->optBrY->getMaxValue(&max);
+    d->optBrY->getMaxValue(max);
     ratio = ftly / max;
     //kDebug() << " -> " << ratio;
     d->previewArea->setTLY(ratio);
@@ -866,7 +866,7 @@ void KSaneWidget::setBRX(float fbrx)
     float max, ratio;
 
     //kDebug() << "setBRX " << fbrx;
-    d->optBrX->getMaxValue(&max);
+    d->optBrX->getMaxValue(max);
     ratio = fbrx / max;
     //kDebug() << " -> " << ratio;
     d->previewArea->setBRX(ratio);
@@ -877,7 +877,7 @@ void KSaneWidget::setBRY(float fbry)
     float max, ratio;
 
     //kDebug() << "setBRY " << fbry;
-    d->optBrY->getMaxValue(&max);
+    d->optBrY->getMaxValue(max);
     ratio = fbry / max;
     //kDebug() << " -> " << ratio;
     d->previewArea->setBRY(ratio);
@@ -891,10 +891,10 @@ void KSaneWidget::updatePreviewSize()
 
     // check if an update is necessary
     if (d->optBrX != 0) {
-        d->optBrX->getMaxValue(&max_x);
+        d->optBrX->getMaxValue(max_x);
     }
     if (d->optBrY != 0) {
-        d->optBrY->getMaxValue(&max_y);
+        d->optBrY->getMaxValue(max_y);
     }
     if ((max_x == d->previewWidth) && (max_y == d->previewHeight)) {
         return;
@@ -969,11 +969,11 @@ void KSaneWidget::scanPreview()
     }
 
     if (d->optBrX != 0) {
-        d->optBrX->getMaxValue(&max);
+        d->optBrX->getMaxValue(max);
         d->optBrX->setValue(max);
     }
     if (d->optBrY != 0) {
-        d->optBrY->getMaxValue(&max);
+        d->optBrY->getMaxValue(max);
         d->optBrY->setValue(max);
     }
 
@@ -1077,12 +1077,17 @@ void KSaneWidget::scanPreview()
     d->progressBar->setMaximum(d->dataSize);
 
     setBusy(true);
+    qApp->processEvents();
 
     while (d->readStatus == READ_ON_GOING) {
         processData();
     }
+    if (d->readStatus == READ_FINISHED) {
+        // even if the scan is finished successfully we need to call sane_cancel()
+        sane_cancel(d->saneHandle);
+    }
 
-    sane_cancel(d->saneHandle);
+    d->progressBar->setValue(d->dataSize);
 
     d->isPreview = false;
     d->previewArea->updateScaledImg();
@@ -1106,21 +1111,21 @@ void KSaneWidget::scanFinal()
     float v1,v2;
 
     if ((d->optTl != 0) && (d->optBrX != 0)) {
-        d->optTl->getValue(&v1);
-        d->optBrX->getValue(&v2);
+        d->optTl->getValue(v1);
+        d->optBrX->getValue(v2);
         if (v1 == v2) {
             d->optTl->setValue(0);
-            d->optBrX->getMaxValue(&v2);
+            d->optBrX->getMaxValue(v2);
             d->optBrX->setValue(v2);
         }
     }
 
     if ((d->optTlY != 0) && (d->optBrY != 0)) {
-        d->optTlY->getValue(&v1);
-        d->optBrY->getValue(&v2);
+        d->optTlY->getValue(v1);
+        d->optBrY->getValue(v2);
         if (v1 == v2) {
             d->optTlY->setValue(0);
-            d->optBrY->getMaxValue(&v2);
+            d->optBrY->getMaxValue(v2);
             d->optBrY->setValue(v2);
         }
     }
@@ -1183,16 +1188,23 @@ void KSaneWidget::scanFinal()
     d->frame_t_count = 0;
     d->progressBar->setValue(0);
     d->progressBar->setMaximum(d->dataSize);
+    emit scanProgress(0);
 
     setBusy(true);
+    qApp->processEvents();
 
     while (d->readStatus == READ_ON_GOING) {
         processData();
     }
-
-    sane_cancel(d->saneHandle);
+    if (d->readStatus == READ_FINISHED) {
+        // even if the scan is finished successfully we need to call sane_cancel()
+        sane_cancel(d->saneHandle);
+    }
+    d->progressBar->setValue(d->dataSize);
+    emit scanProgress(100);
 
     if (d->readStatus == READ_FINISHED) {
+        qApp->processEvents();
         emit imageReady(d->scanData,
                         d->params.pixels_per_line,
                         d->params.lines,
@@ -1304,6 +1316,13 @@ void KSaneWidget::processData()
             }
             if (d->progress < d->progressBar->maximum()) {
                 d->progressBar->setValue(d->progress);
+                if (d->dataSize != 0) {
+                    // check, just to be sure :)
+                    emit scanProgress((d->progress * 100)/d->dataSize);
+                }
+                else {
+                    emit scanProgress(0);
+                }
             }
             qApp->processEvents();
         }
@@ -1696,6 +1715,8 @@ void KSaneWidget::scanCancel()
 {
     sane_cancel(d->saneHandle);
     d->readStatus = READ_CANCEL;
+    d->progressBar->setValue(0);
+    emit scanProgress(0);
 }
 
 
@@ -1722,5 +1743,61 @@ void KSaneWidget::setBusy(bool busy)
     d->progressBar->setDisabled(!busy);
     d->cancelBtn->setDisabled(!busy);
 }
+
+void KSaneWidget::getOptVals(QMap <QString, QString> &opts)
+{
+    SaneOption *option;
+    opts.clear();
+    QString tmp;
+    
+    for (int i=1; i<d->optList.size(); i++) {
+        option = d->optList.at(i);
+        if (option->getValue(tmp)) {
+            opts[option->name()] = tmp;
+        }
+    }
+}
+
+bool KSaneWidget::getOptVal(const QString &optname, QString &value)
+{
+    SaneOption *option;
+    
+    if ((option = d->getOption(optname)) != 0) {
+        return option->getValue(value);
+    }
+    return false;
+}
+
+int KSaneWidget::setOptVals(const QMap <QString, QString> &opts)
+{
+    QString tmp;
+    int i;
+    int ret=0;
+    
+    for (i=0; i<d->optList.size(); i++) {
+        if (opts.contains(d->optList.at(i)->name())) {
+            tmp = opts[d->optList.at(i)->name()];
+            if (d->optList.at(i)->setValue(tmp) == false) {
+                ret++;
+            }
+        }
+    }
+    return ret;
+}
+
+bool KSaneWidget::setOptVal(const QString &option, const QString &value)
+{
+    SaneOption *opt;
+
+    if ((opt = d->getOption(option)) != 0) {
+        if (opt->setValue(value)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+
 
 }  // NameSpace KSaneIface

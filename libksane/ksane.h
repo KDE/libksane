@@ -116,7 +116,7 @@ public:
      * @param bytes_per_line is the number of bytes used per line. This might include padding
      * and is probably only relevant for 'FormatBlackWhite'.
      * @param format is the KSane image format of the data.
-     * @return Thi function returns the provided image data as a QImage.
+     * @return This function returns the provided image data as a QImage.
      */
     QImage toQImage(const QByteArray &data,
                     int width,
@@ -131,12 +131,39 @@ public:
     /** This methos returns the model of the scanner. */
     QString model() const;
 
+    /** This method reads the available parameters and their values and 
+     * returns them in a QMap (Name, value) 
+     * @param opts is a QMap with the parameter names and values.
+     */
+    void getOptVals(QMap <QString, QString> &opts);
+    
+    /** This method can be used to write many parameter values at once.
+     * @param opts is a QMap with the parameter names and values.
+     * @return This function returns the number of successfull writes.
+     */
+    int setOptVals(const QMap <QString, QString> &opts);
+
+    /** This function reads one parameter value into a string.
+     * @param optname is the name of the parameter to read.
+     * @param value is the string representation of the value.
+     * @return this function returns true if the read was successfull.
+     */
+    bool getOptVal(const QString &optname, QString &value);
+    /** This function writes one parameter value into a string.
+     * @param optname is the name of the parameter to write.
+     * @param value is the string representation of the value.
+     * @return this function returns true if the write was successfull.
+     */
+    bool setOptVal(const QString &optname, const QString &value);
 
 public Q_SLOTS:
     /** This method can be used to cancel a scan. */
     void scanCancel();
 
-Q_SIGNALS:
+    /** This method can be used to start a scan (if no GUI is needed). */
+    void scanFinal();
+
+    Q_SIGNALS:
     /**
      * This Signal is emitted when a final scan is ready.
      * @param data is the byte data containing the image.
@@ -149,14 +176,21 @@ Q_SIGNALS:
     void imageReady(QByteArray &data, int width, int height,
                     int bytes_per_line, int format);
 
-private Q_SLOTS:
+    /**
+     * This Signal is emitted for progress information during a scan.
+     * The GUI already has a progress bar, but if the GUI is hidden, 
+     * this can be used to display a progress bar.
+     * @param percent is the percentage of the scan progress (0-100).
+     */
+    void scanProgress(int percent);
+
+    private Q_SLOTS:
 
     void scheduleValReload();
     void optReload();
     void valReload();
     void handleSelection(float tl_x, float tl_y, float br_x, float br_y);
     void scanPreview();
-    void scanFinal();
     void setTLX(float x);
     void setTLY(float y);
     void setBRX(float x);
