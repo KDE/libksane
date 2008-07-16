@@ -1082,6 +1082,8 @@ void KSaneWidget::scanPreview()
         processData();
     }
 
+    sane_cancel(d->saneHandle);
+
     d->isPreview = false;
     d->previewArea->updateScaledImg();
     setBusy(false);
@@ -1187,6 +1189,8 @@ void KSaneWidget::scanFinal()
     while (d->readStatus == READ_ON_GOING) {
         processData();
     }
+
+    sane_cancel(d->saneHandle);
 
     if (d->readStatus == READ_FINISHED) {
         emit imageReady(d->scanData,
