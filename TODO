@@ -2,7 +2,8 @@ TODO list to be more KDE compliant:
 
 TODO list of new features:
 
-* Add support for batch scanning.
+* Test support for batch scanning.
+* Be more verbose about errors (why did sane_open fail...)
 * Rework Scanner selection dialog.
 * Added methods to get strings info from scanner device to be hosted later in
   image metadata (dpi, color mode, etc)

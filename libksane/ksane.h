@@ -88,7 +88,7 @@ public:
 
     /**
      * This is a convenience method that can be used to create a QImage from the image data
-     * returned by the imageReady(...) signal.Note: If the image data has 16 bits/color the 
+     * returned by the imageReady(...) signal.Note: If the image data has 16 bits/color the
      * data is truncated to 8 bits/color since QImage does not support 16 bits/color.
      *
      * @param data is the byte data containing the image.
@@ -107,7 +107,7 @@ public:
                     QImage &img) KDE_DEPRECATED;
     /**
      * This is a convenience method that can be used to create a QImage from the image data
-     * returned by the imageReady(...) signal. Note: If the image data has 16 bits/color the 
+     * returned by the imageReady(...) signal. Note: If the image data has 16 bits/color the
      * data is truncated to 8 bits/color since QImage does not support 16 bits/color.
      *
      * @param data is the byte data containing the image.
@@ -131,12 +131,12 @@ public:
     /** This methos returns the model of the scanner. */
     QString model() const;
 
-    /** This method reads the available parameters and their values and 
-     * returns them in a QMap (Name, value) 
+    /** This method reads the available parameters and their values and
+     * returns them in a QMap (Name, value)
      * @param opts is a QMap with the parameter names and values.
      */
     void getOptVals(QMap <QString, QString> &opts);
-    
+
     /** This method can be used to write many parameter values at once.
      * @param opts is a QMap with the parameter names and values.
      * @return This function returns the number of successfull writes.
@@ -178,7 +178,7 @@ public Q_SLOTS:
 
     /**
      * This Signal is emitted for progress information during a scan.
-     * The GUI already has a progress bar, but if the GUI is hidden, 
+     * The GUI already has a progress bar, but if the GUI is hidden,
      * this can be used to display a progress bar.
      * @param percent is the percentage of the scan progress (0-100).
      */
@@ -195,16 +195,18 @@ public Q_SLOTS:
     void setTLY(float y);
     void setBRX(float x);
     void setBRY(float y);
+    void startScan();
+    void processData();
 
 private:
 
     void createOptInterface();
     void updatePreviewSize();
-    void processData();
     void copyToScanData(int read_bytes);
     void copyToPreview(int read_bytes);
     void setDefaultValues();
     void setBusy(bool busy);
+    void scanDone();
 
 private:
 

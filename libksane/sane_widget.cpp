@@ -61,7 +61,7 @@ extern "C"
 
 #define SCALED_PREVIEW_MAX_SIDE 400
 #define MAX_NUM_OPTIONS 100
-#define IMG_DATA_R_SIZE 10000
+#define IMG_DATA_R_SIZE 100000
 
 namespace KSaneIface
 {
@@ -114,8 +114,8 @@ public:
         frameSize     = 0;
         frameRead     = 0;
         dataSize      = 0;
-        progress      = 0;
-        readStatus    = READ_ON_GOING;
+        readStatus  = READ_FINISHED;
+        warmingUp     = 0;
         progressBar   = 0;
         px_c_index    = 0;
         frame_t_count = 0;
@@ -211,7 +211,9 @@ public:
     SaneOption         *optGamB;
     QWidget            *colorOpts;
     QWidget            *remainOpts;
-    QTimer              rValTmr;
+    QTimer              readValsTmr;
+    QTimer              startScanTmr;
+    QTimer              readDataTmr;
 
     QPushButton        *scanBtn;
     QPushButton        *prevBtn;
@@ -221,6 +223,7 @@ public:
     QPushButton        *zFitBtn;
     QPushButton        *cancelBtn;
 
+    QLabel             *warmingUp;
     QProgressBar       *progressBar;
 
     // preview variables
@@ -239,7 +242,6 @@ public:
 
     // general scanning
     ReadStatus          readStatus;
-    int                 progress;
     SANE_Parameters     params;
     SANE_Byte           saneReadBuffer[IMG_DATA_R_SIZE];
     int                 frameSize;
@@ -270,10 +272,14 @@ KSaneWidget::KSaneWidget(QWidget* parent)
         //         << SANE_VERSION_MINOR(version) << "."
         //         << SANE_VERSION_BUILD(version);
     }
-    d->rValTmr.setSingleShot(true);
 
-    connect (&d->rValTmr, SIGNAL(timeout()),
-             this, SLOT(valReload()));
+    d->readValsTmr.setSingleShot(true);
+    d->startScanTmr.setSingleShot(true);
+    d->readDataTmr.setSingleShot(true);
+
+    connect(&d->readValsTmr,   SIGNAL(timeout()), this, SLOT(valReload()));
+    connect(&d->startScanTmr,  SIGNAL(timeout()), this, SLOT(startScan()));
+    connect(&d->readDataTmr,   SIGNAL(timeout()), this, SLOT(processData()));
 }
 
 KSaneWidget::~KSaneWidget()
@@ -448,8 +454,18 @@ bool KSaneWidget::openDevice(const QString &device_name)
     d->zFitBtn->setIcon(KIcon("document-preview"));
     d->zFitBtn->setToolTip(i18n("Zoom to Fit"));
 
+    d->warmingUp = new QLabel(this);
+    d->warmingUp->setText(i18n("The lamp is warming up!"));
+    d->warmingUp->setAlignment(Qt::AlignCenter);
+    d->warmingUp->setAutoFillBackground(true);
+    d->warmingUp->setBackgroundRole(QPalette::Highlight);
+    //d->warmingUp->setForegroundRole(QPalette::HighlightedText);
+    d->warmingUp->hide();
+
     d->progressBar = new QProgressBar(this);
     d->progressBar->hide();
+    d->progressBar->setMaximum(100);
+
     d->cancelBtn   = new QPushButton(this);
     d->cancelBtn->setIcon(KIcon("process-stop"));
     d->cancelBtn->setToolTip(i18n("Cancel current scan operation"));
@@ -490,6 +506,7 @@ bool KSaneWidget::openDevice(const QString &device_name)
     pr_layout->addLayout(progress_lay, 0);
     pr_layout->addLayout(zoom_layout, 0);
 
+    progress_lay->addWidget(d->warmingUp, 100);
     progress_lay->addWidget(d->progressBar, 100);
     progress_lay->addWidget(d->cancelBtn, 0);
 
@@ -784,7 +801,7 @@ void KSaneWidget::setDefaultValues()
 
 void KSaneWidget::scheduleValReload()
 {
-    d->rValTmr.start(5);
+    d->readValsTmr.start(5);
 }
 
 void KSaneWidget::optReload()
@@ -822,6 +839,16 @@ void KSaneWidget::valReload()
 }
 
 void KSaneWidget::handleSelection(float tl_x, float tl_y, float br_x, float br_y) {
+
+    if ((d->optTl == 0) || (d->optTlY == 0) || (d->optBrX == 0) || (d->optBrY == 0)) {
+        // clear the selection since we can not set one
+        d->previewArea->setTLX(0);
+        d->previewArea->setTLY(0);
+        d->previewArea->setBRX(0);
+        d->previewArea->setBRY(0);
+        tl_x = tl_y = br_x = br_y = 0;
+        return;
+    }
     float max_x, max_y;
 
     if ((d->previewImg->width()==0) || (d->previewImg->height()==0)) return;
@@ -833,10 +860,10 @@ void KSaneWidget::handleSelection(float tl_x, float tl_y, float br_x, float br_y
     float fbr_x = br_x*max_x;
     float fbr_y = br_y*max_y;
 
-    if (d->optTl != 0) d->optTl->setValue(ftl_x);
-    if (d->optTlY != 0) d->optTlY->setValue(ftl_y);
-    if (d->optBrX != 0) d->optBrX->setValue(fbr_x);
-    if (d->optBrY != 0) d->optBrY->setValue(fbr_y);
+    d->optTl->setValue(ftl_x);
+    d->optTlY->setValue(ftl_y);
+    d->optBrX->setValue(fbr_x);
+    d->optBrY->setValue(fbr_y);
 }
 
 void KSaneWidget::setTLX(float ftlx)
@@ -944,7 +971,10 @@ void KSaneWidget::scanPreview()
     float max;
     int dpi;
 
-    //kDebug() << "scanPreview";
+    if (d->readStatus == READ_ON_GOING) return;
+
+    d->readStatus  = READ_ON_GOING;
+    d->isPreview = true;
 
     // store the current settings of parameters to be changed
     if (d->optDepth != 0) d->optDepth->storeCurrentData();
@@ -992,6 +1022,7 @@ void KSaneWidget::scanPreview()
         status = sane_get_parameters(d->saneHandle, &d->params);
         if (status != SANE_STATUS_GOOD) {
             kDebug() << "sane_get_parameters=" << sane_strstatus(status);
+            scanDone();
             return;
         }
         if (dpi > 800) break;
@@ -999,116 +1030,26 @@ void KSaneWidget::scanPreview()
     while ((d->params.pixels_per_line < 300) || (d->params.lines < 300));
 
     // execute valReload if there is a pending value reload
-    while (d->rValTmr.isActive()) {
-        d->rValTmr.stop();
+    while (d->readValsTmr.isActive()) {
+        d->readValsTmr.stop();
         valReload();
     }
 
-    // Start the scanning
-    status = sane_start(d->saneHandle);
-    if (status != SANE_STATUS_GOOD) {
-        if ((status == SANE_STATUS_NO_DOCS) ||
-             (status == SANE_STATUS_JAMMED) ||
-             (status == SANE_STATUS_COVER_OPEN) ||
-             (status == SANE_STATUS_DEVICE_BUSY) ||
-             (status == SANE_STATUS_ACCESS_DENIED))
-        {
-            KMessageBox::sorry(0, i18n(sane_strstatus(status)));
-        }
-        else {
-            kDebug() << "sane_start=" << sane_strstatus(status);
-        }
-        sane_cancel(d->saneHandle);
-        return;
-    }
-
-    // Read image parameters
-    status = sane_get_parameters(d->saneHandle, &d->params);
-    if (status != SANE_STATUS_GOOD) {
-        kDebug() << "sane_get_parameters=" << sane_strstatus(status);
-        sane_cancel(d->saneHandle);
-        return;
-    }
-
-    //kDebug() << "format =" << d->params.format;
-    //kDebug() << "last_frame =" << d->params.last_frame;
-    //kDebug() << "lines =" << d->params.lines;
-    //kDebug() << "depth =" << d->params.depth;
-    //kDebug() << "pixels_per_line =" << d->params.pixels_per_line;
-    //kDebug() << "bytes_per_line =" << d->params.bytes_per_line;
-
-    // create a new image if necessary
-    if ((d->previewImg->height() != d->params.lines) ||
-         (d->previewImg->width() != d->params.pixels_per_line))
-    {
-        *d->previewImg = QImage(d->params.pixels_per_line,
-                                d->params.lines,
-                                QImage::Format_RGB32);
-        d->previewImg->fill(0xFFFFFFFF);
-    }
-
-    // update the size of the preview widget.
-    d->previewArea->zoom2Fit();
-
-    // update the size of the preview widget.
-    d->previewArea->updateScaledImg();
-
-    // initialize the scan variables
-    d->frameSize  = d->params.lines * d->params.bytes_per_line;
-    if ((d->params.format == SANE_FRAME_RED) ||
-         (d->params.format == SANE_FRAME_GREEN) ||
-         (d->params.format == SANE_FRAME_BLUE))
-    {
-        d->dataSize  = d->frameSize*3;
-    }
-    else {
-        d->dataSize  = d->frameSize;
-    }
-    d->scanData.resize(0);
-    d->pixel_x     = 0;
-    d->pixel_y     = 0;
-    d->frameRead   = 0;
-    d->progress    = 0;
-    d->readStatus  = READ_ON_GOING;
-    d->isPreview   = true;
-    d->px_c_index  = 0;
-    d->frame_t_count = 0;
-    d->progressBar->setValue(0);
-    d->progressBar->setMaximum(d->dataSize);
-
     setBusy(true);
-    qApp->processEvents();
 
-    while (d->readStatus == READ_ON_GOING) {
-        processData();
-    }
-    if (d->readStatus == READ_FINISHED) {
-        // even if the scan is finished successfully we need to call sane_cancel()
-        sane_cancel(d->saneHandle);
-    }
-
-    d->progressBar->setValue(d->dataSize);
-
-    d->isPreview = false;
-    d->previewArea->updateScaledImg();
-    setBusy(false);
-
-    // restore the original settings of the changed parameters
-    if (d->optDepth != 0) d->optDepth->restoreSavedData();
-    if (d->optRes != 0) d->optRes->restoreSavedData();
-    if (d->optResY != 0) d->optResY->restoreSavedData();
-    if (d->optTl != 0) d->optTl->restoreSavedData();
-    if (d->optTlY != 0) d->optTlY->restoreSavedData();
-    if (d->optBrX != 0) d->optBrX->restoreSavedData();
-    if (d->optBrY != 0) d->optBrY->restoreSavedData();
+    d->startScanTmr.start(0);
 
 }
 
 
 void KSaneWidget::scanFinal()
 {
-    SANE_Status status;
     float v1,v2;
+
+    if (d->readStatus == READ_ON_GOING) return;
+
+    d->readStatus  = READ_ON_GOING;
+    d->isPreview = false;
 
     if ((d->optTl != 0) && (d->optBrX != 0)) {
         d->optTl->getValue(v1);
@@ -1131,44 +1072,74 @@ void KSaneWidget::scanFinal()
     }
 
     // execute a pending value reload
-    while (d->rValTmr.isActive()) {
-        d->rValTmr.stop();
+    while (d->readValsTmr.isActive()) {
+        d->readValsTmr.stop();
         valReload();
     }
 
-    // Start the scanning
+    setBusy(true);
+
+    d->startScanTmr.start(0);
+}
+
+
+void KSaneWidget::startScan()
+{
+    SANE_Status status;
+    // Start the scanning with sane_start
     status = sane_start(d->saneHandle);
+
+#ifndef SANE_CAP_ALWAYS_SETTABLE
+    // should better be done by detecting SANE's version in configure and providing a HAS_SANE_1_1
+    // FIXME remove these ifdefs and require sane 1.1.x as soon as possible
+    if (status == SANE_STATUS_WARMING_UP) {
+        d->warmingUp->show();
+        d->progressBar->hide();
+        if (d->readStatus == READ_ON_GOING) {
+            d->startScanTmr.start(20);
+        }
+        else {
+            d->warmingUp->hide();
+            scanDone();
+        }
+        return;
+    }
+#endif
+
     if (status != SANE_STATUS_GOOD) {
-        if ((status == SANE_STATUS_NO_DOCS) ||
-             (status == SANE_STATUS_JAMMED) ||
-             (status == SANE_STATUS_COVER_OPEN) ||
-             (status == SANE_STATUS_DEVICE_BUSY) ||
-             (status == SANE_STATUS_ACCESS_DENIED))
+        if ((status == SANE_STATUS_NO_DOCS)
+             || (status == SANE_STATUS_JAMMED)
+             || (status == SANE_STATUS_COVER_OPEN)
+             || (status == SANE_STATUS_DEVICE_BUSY)
+             || (status == SANE_STATUS_ACCESS_DENIED)
+#ifndef SANE_CAP_ALWAYS_SETTABLE
+             || (status == SANE_STATUS_HW_LOCKED)
+#endif
+           )
         {
             KMessageBox::sorry(0, i18n(sane_strstatus(status)));
         }
         else {
-            kDebug() << "sane_start=" << sane_strstatus(status);
+            kDebug() << "sane_start =" << status << "=" << sane_strstatus(status);
         }
-        sane_cancel(d->saneHandle);
+        scanCancel();
+        setBusy(false);
         return;
     }
 
+    d->warmingUp->hide();
+    d->progressBar->show();
+
+    // Read image parameters
     status = sane_get_parameters(d->saneHandle, &d->params);
     if (status != SANE_STATUS_GOOD) {
-        kDebug() << "sane_get_parameters =" << sane_strstatus(status);
-        sane_cancel(d->saneHandle);
+        kDebug() << "sane_get_parameters=" << sane_strstatus(status);
+        scanCancel();
+        setBusy(false);
         return;
     }
 
-    //kDebug() << "format =" << d->params.format;
-    //kDebug() << "last_frame =" << d->params.last_frame;
-    //kDebug() << "lines =" << d->params.lines;
-    //kDebug() << "depth =" << d->params.depth;
-    //kDebug() << "pixels_per_line =" << d->params.pixels_per_line;
-    //kDebug() << "bytes_per_line =" << d->params.bytes_per_line;
-
-    // initialize the scan variables
+    // calculate data size
     d->frameSize  = d->params.lines * d->params.bytes_per_line;
     if ((d->params.format == SANE_FRAME_RED) ||
          (d->params.format == SANE_FRAME_GREEN) ||
@@ -1180,41 +1151,73 @@ void KSaneWidget::scanFinal()
         d->dataSize = d->frameSize;
     }
 
-    d->scanData.resize(d->dataSize);
+    // make room for the new image
+    if (d->isPreview) {
+        // create a new image if necessary
+        if ((d->previewImg->height() != d->params.lines) ||
+             (d->previewImg->width() != d->params.pixels_per_line))
+        {
+            *d->previewImg = QImage(d->params.pixels_per_line,
+                                    d->params.lines,
+                                    QImage::Format_RGB32);
+            d->previewImg->fill(0xFFFFFFFF);
+        }
+
+        // update the size of the preview widget.
+        d->previewArea->zoom2Fit();
+
+        // update the size of the preview widget.
+        d->previewArea->updateScaledImg();
+
+        // free unused buffer
+        d->scanData.resize(0);
+    }
+    else {
+        d->scanData.resize(d->dataSize);
+    }
+
+    d->pixel_x     = 0;
+    d->pixel_y     = 0;
     d->frameRead   = 0;
-    d->progress    = 0;
-    d->readStatus  = READ_ON_GOING;
-    d->isPreview   = false;
+    d->px_c_index  = 0;
     d->frame_t_count = 0;
     d->progressBar->setValue(0);
-    d->progressBar->setMaximum(d->dataSize);
-    emit scanProgress(0);
 
-    setBusy(true);
-    qApp->processEvents();
+    d->readDataTmr.start(0);
+}
 
-    while (d->readStatus == READ_ON_GOING) {
-        processData();
-    }
-    if (d->readStatus == READ_FINISHED) {
+void KSaneWidget::scanDone()
+{
+    if (d->isPreview) {
+        d->previewArea->updateScaledImg();
+
         // even if the scan is finished successfully we need to call sane_cancel()
         sane_cancel(d->saneHandle);
-    }
-    d->progressBar->setValue(d->dataSize);
-    emit scanProgress(100);
 
-    if (d->readStatus == READ_FINISHED) {
-        qApp->processEvents();
-        emit imageReady(d->scanData,
-                        d->params.pixels_per_line,
-                        d->params.lines,
-                        d->getBytesPerLines(),
-                        (int)d->getImgFormat());
+        // restore the original settings of the changed parameters
+        if (d->optDepth != 0) d->optDepth->restoreSavedData();
+        if (d->optRes != 0) d->optRes->restoreSavedData();
+        if (d->optResY != 0) d->optResY->restoreSavedData();
+        if (d->optTl != 0) d->optTl->restoreSavedData();
+        if (d->optTlY != 0) d->optTlY->restoreSavedData();
+        if (d->optBrX != 0) d->optBrX->restoreSavedData();
+        if (d->optBrY != 0) d->optBrY->restoreSavedData();
     }
-    else if (d->readStatus == READ_ERROR) {
-        KMessageBox::error(0, i18n("Scanning Failed!"));
+    else {
+        if (d->readStatus == READ_FINISHED) {
+            emit imageReady(d->scanData,
+                            d->params.pixels_per_line,
+                            d->params.lines,
+                            d->getBytesPerLines(),
+                            (int)d->getImgFormat());
+        }
+        // if scanFinal has been called from the slot for imageReady,
+        // a new "batch" scan is wanted and d->readStatus will be
+        // READ_ON_GOING not READ_FINISHED or READ_ERROR
+        if (d->readStatus != READ_ON_GOING) {
+            sane_cancel(d->saneHandle);
+        }
     }
-
     setBusy(false);
 }
 
@@ -1261,13 +1264,14 @@ void KSaneWidget::processData()
             if (d->frameRead < d->frameSize) {
                 kDebug() << "frameRead =" << d->frameRead
                         << ", frameSize =" << d->frameSize;
-                sane_cancel(d->saneHandle);
                 d->readStatus = READ_ERROR;
+                scanDone();
                 return;
             }
             if (d->params.last_frame == SANE_TRUE) {
                 // this is where it all ends well :)
                 d->readStatus = READ_FINISHED;
+                scanDone();
                 return;
             }
             else {
@@ -1275,14 +1279,15 @@ void KSaneWidget::processData()
                 status = sane_start(d->saneHandle);
                 if (status != SANE_STATUS_GOOD) {
                     kDebug() << "sane_start =" << sane_strstatus(status);
-                    sane_cancel(d->saneHandle);
                     d->readStatus = READ_ERROR;
+                    scanDone();
                     return;
                 }
                 status = sane_get_parameters(d->saneHandle, &d->params);
                 if (status != SANE_STATUS_GOOD) {
                     kDebug() << "sane_get_parameters =" << sane_strstatus(status);
-                    sane_cancel(d->saneHandle);
+                    d->readStatus = READ_ERROR;
+                    scanDone();
                     return;
                 }
                 kDebug() << "New Frame";
@@ -1291,15 +1296,15 @@ void KSaneWidget::processData()
                 break;
             }
         default:
-            kDebug() << "sane_read=" << sane_strstatus(status);
-            sane_cancel(d->saneHandle);
+            kDebug() << "sane_read=" << status << "=" << sane_strstatus(status);
             d->readStatus = READ_ERROR;
+            scanDone();
             return;
     }
 
     // update progressBar
     if (d->params.lines > 0) {
-        int new_progress;
+        long int new_progress;
         if ((d->params.format == SANE_FRAME_RED) ||
              (d->params.format == SANE_FRAME_GREEN) ||
              (d->params.format == SANE_FRAME_BLUE))
@@ -1309,6 +1314,17 @@ void KSaneWidget::processData()
         else {
             new_progress = (d->frameRead);
         }
+        new_progress = (int)((((float)new_progress / (float)d->dataSize) * 100.0) + 0.5);
+
+        if (new_progress != d->progressBar->value()) {
+            //kDebug() << new_progress << d->frameRead << d->dataSize;
+            if (d->isPreview) {
+                d->previewArea->updateScaledImg();
+            }
+            d->progressBar->setValue((int)new_progress);
+            emit scanProgress(new_progress);
+        }
+        /*
         if (abs(new_progress - d->progress) > (d->dataSize/50)) {
             d->progress = new_progress;
             if (d->isPreview) {
@@ -1326,6 +1342,8 @@ void KSaneWidget::processData()
             }
             qApp->processEvents();
         }
+        */
+
     }
 
     // copy the data to the buffer
@@ -1334,6 +1352,13 @@ void KSaneWidget::processData()
     }
     else {
         copyToScanData((int)read_bytes);
+    }
+
+    if (d->readStatus == READ_ON_GOING) {
+        d->readDataTmr.start(0);
+    }
+    else {
+        scanDone();
     }
 }
 
@@ -1502,10 +1527,13 @@ void KSaneWidget::copyToPreview(int read_bytes)
             }
             break;
     }
+
+    if (d->readStatus == READ_ERROR) {
+        KMessageBox::error(0, i18n("The image format is not (yet?) supported by libksane!"));
+    }
     kDebug() << "Format" << d->params.format
             << "and depth" << d->params.format
-            << "is not yet suppoeted!";
-    sane_cancel(d->saneHandle);
+            << "is not yet suppoeted by libksane!";
     d->readStatus = READ_ERROR;
     return;
 }
@@ -1590,10 +1618,12 @@ void KSaneWidget::copyToScanData(int read_bytes)
             break;
     }
 
+    if (d->readStatus == READ_ERROR) {
+        KMessageBox::error(0, i18n("The image format is not (yet?) supported by libksane!"));
+    }
     kDebug() << "Format" << d->params.format
             << "and depth" << d->params.format
-            << "is not yet suppoeted!";
-    sane_cancel(d->saneHandle);
+            << "is not yet suppoeted by libksane!";
     d->readStatus = READ_ERROR;
     return;
 }
@@ -1749,7 +1779,7 @@ void KSaneWidget::getOptVals(QMap <QString, QString> &opts)
     SaneOption *option;
     opts.clear();
     QString tmp;
-    
+
     for (int i=1; i<d->optList.size(); i++) {
         option = d->optList.at(i);
         if (option->getValue(tmp)) {
@@ -1761,7 +1791,7 @@ void KSaneWidget::getOptVals(QMap <QString, QString> &opts)
 bool KSaneWidget::getOptVal(const QString &optname, QString &value)
 {
     SaneOption *option;
-    
+
     if ((option = d->getOption(optname)) != 0) {
         return option->getValue(value);
     }
@@ -1773,7 +1803,7 @@ int KSaneWidget::setOptVals(const QMap <QString, QString> &opts)
     QString tmp;
     int i;
     int ret=0;
-    
+
     for (i=0; i<d->optList.size(); i++) {
         if (opts.contains(d->optList.at(i)->name())) {
             tmp = opts[d->optList.at(i)->name()];
