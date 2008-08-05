@@ -822,9 +822,20 @@ void KSaneWidget::valReload()
 }
 
 void KSaneWidget::handleSelection(float tl_x, float tl_y, float br_x, float br_y) {
-    float max_x, max_y;
+
+    if ((d->optTl == 0) || (d->optTlY == 0) || (d->optBrX == 0) || (d->optBrY == 0)) {
+        // clear the selection since we can not set one
+        d->previewArea->setTLX(0);
+        d->previewArea->setTLY(0);
+        d->previewArea->setBRX(0);
+        d->previewArea->setBRY(0);
+        tl_x = tl_y = br_x = br_y = 0;
+        return;
+    }
 
     if ((d->previewImg->width()==0) || (d->previewImg->height()==0)) return;
+
+    float max_x, max_y;
 
     d->optBrX->getMaxValue(&max_x);
     d->optBrY->getMaxValue(&max_y);
@@ -833,10 +844,10 @@ void KSaneWidget::handleSelection(float tl_x, float tl_y, float br_x, float br_y
     float fbr_x = br_x*max_x;
     float fbr_y = br_y*max_y;
 
-    if (d->optTl != 0) d->optTl->setValue(ftl_x);
-    if (d->optTlY != 0) d->optTlY->setValue(ftl_y);
-    if (d->optBrX != 0) d->optBrX->setValue(fbr_x);
-    if (d->optBrY != 0) d->optBrY->setValue(fbr_y);
+    d->optTl->setValue(ftl_x);
+    d->optTlY->setValue(ftl_y);
+    d->optBrX->setValue(fbr_x);
+    d->optBrY->setValue(fbr_y);
 }
 
 void KSaneWidget::setTLX(float ftlx)
