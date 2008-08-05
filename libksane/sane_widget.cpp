@@ -1251,6 +1251,7 @@ void KSaneWidget::processData()
             }
             if (d->params.last_frame == SANE_TRUE) {
                 // this is where it all ends well :)
+                sane_cancel(d->saneHandle);
                 d->readStatus = READ_FINISHED;
                 return;
             }
