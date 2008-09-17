@@ -93,7 +93,7 @@ int RadioSelect::getSelectedIndex(QWidget *parent,
             if (btn_list.at(i)->isChecked()) break;
         }
         if (i == btn_list.size()) {
-            kDebug() << "This is a bad index..." << endl;
+            kDebug(51004) << "This is a bad index..." << endl;
             return -1;
         }
         return i;

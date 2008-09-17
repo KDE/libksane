@@ -70,7 +70,7 @@ SaneOption::SaneOption(const SANE_Handle s_handle, const int opt_num)
 
     sane_option = sane_get_option_descriptor(sane_handle, opt_number);
     if (sane_option == 0) {
-        kDebug() << "sane_option == 0!!";
+        kDebug(51004) << "sane_option == 0!!";
         return;
     }
     type = getWidgetType();
@@ -102,7 +102,7 @@ void SaneOption::createWidget(QWidget *parent)
     static const char tmp_binary[] = "Binary";
 
     if (sane_option == 0) {
-        kDebug() << "sane_option == 0!!";
+        kDebug(51004) << "sane_option == 0!!";
         return;
     }
 
@@ -192,7 +192,7 @@ void SaneOption::createWidget(QWidget *parent)
             break;
         case SW_DETECT_FAIL:
             frame = new QFrame();
-            //kDebug() << sane_option->title << "SW_DETECT_FAIL";
+            //kDebug(51004) << sane_option->title << "SW_DETECT_FAIL";
             break;
     }
 
@@ -219,15 +219,15 @@ SaneOptWidget_t SaneOption::getWidgetType()
                     return SW_CHECKBOX;
                 case SANE_TYPE_INT:
                     if (sane_option->size == sizeof(SANE_Word)) return SW_SLIDER_INT;
-                    kDebug() << "Can not handle:"<< sane_option->title;
-                    kDebug() << "SANE_CONSTRAINT_NONE && SANE_TYPE_INT";
-                    kDebug() << "size" << sane_option->size<< "!= sizeof(SANE_Word)";
+                    kDebug(51004) << "Can not handle:"<< sane_option->title;
+                    kDebug(51004) << "SANE_CONSTRAINT_NONE && SANE_TYPE_INT";
+                    kDebug(51004) << "size" << sane_option->size<< "!= sizeof(SANE_Word)";
                     break;
                 case SANE_TYPE_FIXED:
                     if (sane_option->size == sizeof(SANE_Word)) return SW_F_SLIDER_FIX;
-                    kDebug() << "Can not handle:"<< sane_option->title;
-                    kDebug() << "SANE_CONSTRAINT_NONE && SANE_TYPE_FIXED";
-                    kDebug() << "size" << sane_option->size<< "!= sizeof(SANE_Word)";
+                    kDebug(51004) << "Can not handle:"<< sane_option->title;
+                    kDebug(51004) << "SANE_CONSTRAINT_NONE && SANE_TYPE_FIXED";
+                    kDebug(51004) << "size" << sane_option->size<< "!= sizeof(SANE_Word)";
                     break;
                 case SANE_TYPE_BUTTON:
                     return SW_BUTTON;
@@ -252,20 +252,20 @@ SaneOptWidget_t SaneOption::getWidgetType()
                     {
                         return SW_GAMMA;
                     }
-                    kDebug() << "Can not handle:"<< sane_option->title;
-                    kDebug() << "SANE_CONSTRAINT_RANGE && SANE_TYPE_INT && !SANE_NAME_GAMMA_VECTOR...";
-                    kDebug() << "size" << sane_option->size<< "!= sizeof(SANE_Word)";
+                    kDebug(51004) << "Can not handle:"<< sane_option->title;
+                    kDebug(51004) << "SANE_CONSTRAINT_RANGE && SANE_TYPE_INT && !SANE_NAME_GAMMA_VECTOR...";
+                    kDebug(51004) << "size" << sane_option->size<< "!= sizeof(SANE_Word)";
                     break;
                 case SANE_TYPE_FIXED:
                     if (sane_option->size == sizeof(SANE_Word)) return SW_F_SLIDER;
-                    kDebug() << "Can not handle:"<< sane_option->title;
-                    kDebug() << "SANE_CONSTRAINT_RANGE && SANE_TYPE_FIXED";
-                    kDebug() << "size" << sane_option->size<< "!= sizeof(SANE_Word)";
-                    kDebug() << "Analog Gamma vector?";
+                    kDebug(51004) << "Can not handle:"<< sane_option->title;
+                    kDebug(51004) << "SANE_CONSTRAINT_RANGE && SANE_TYPE_FIXED";
+                    kDebug(51004) << "size" << sane_option->size<< "!= sizeof(SANE_Word)";
+                    kDebug(51004) << "Analog Gamma vector?";
                     break;
                 case SANE_TYPE_STRING:
-                    kDebug() << "Can not handle:" << sane_option->title;
-                    kDebug() << "SANE_CONSTRAINT_RANGE && SANE_TYPE_STRING";
+                    kDebug(51004) << "Can not handle:" << sane_option->title;
+                    kDebug(51004) << "SANE_CONSTRAINT_RANGE && SANE_TYPE_STRING";
                     return SW_DETECT_FAIL;
                 case SANE_TYPE_BUTTON:
                     return SW_BUTTON;
@@ -398,13 +398,13 @@ bool SaneOption::writeData(void *data)
 
     status = sane_control_option (sane_handle, opt_number, SANE_ACTION_SET_VALUE, data, &res);
     if (status != SANE_STATUS_GOOD) {
-        kDebug() << sane_option->name << "sane_control_option returned:" << sane_strstatus(status);
+        kDebug(51004) << sane_option->name << "sane_control_option returned:" << sane_strstatus(status);
         // write failed. re read the current setting
         readValue();
         return false;
     }
     if ((res & SANE_INFO_INEXACT) && (frame != 0)) {
-        //kDebug() << "write was inexact. Reload value just in case...";
+        //kDebug(51004) << "write was inexact. Reload value just in case...";
         readValue();
     }
 
@@ -450,7 +450,7 @@ void SaneOption::comboboxChangedIndex(int i)
             data_ptr = (void *)sane_option->constraint.string_list[i];
             break;
         default:
-            kDebug() << "can not handle type:" << sane_option->type;
+            kDebug(51004) << "can not handle type:" << sane_option->type;
             return;
     }
     writeData(data_ptr);
@@ -471,7 +471,7 @@ bool SaneOption::comboboxChanged(float value)
             fromSANE_Word(data, fixed);
             break;
         default:
-            kDebug() << "can only handle SANE_TYPE_INT and SANE_TYPE_FIXED";
+            kDebug(51004) << "can only handle SANE_TYPE_INT and SANE_TYPE_FIXED";
             return false;
     }
     writeData(data);
@@ -517,7 +517,7 @@ bool SaneOption::comboboxChanged(const QString &value)
             if (sane_option->constraint.string_list[i] == 0) return false;
             break;
         default:
-            kDebug() << "can only handle SANE_TYPE: INT, FIXED and STRING";
+            kDebug(51004) << "can only handle SANE_TYPE: INT, FIXED and STRING";
             return false;
     }
     return writeData(data_ptr);
@@ -539,7 +539,7 @@ void SaneOption::fsliderChanged(float val)
     SANE_Word fixed;
 
     if (((val-fVal) >= min_change) || ((fVal-val) >= min_change)) {
-        //kDebug() <<sane_option->name << fVal << "!=" << val;
+        //kDebug(51004) <<sane_option->name << fVal << "!=" << val;
         fVal = val;
         fixed = SANE_FIX(val);
         fromSANE_Word(data, fixed);
@@ -715,7 +715,7 @@ void SaneOption::readValue()
             // can not be read
             break;
         case SW_DETECT_FAIL:
-            // kDebug() << "Unhandeled";
+            // kDebug(51004) << "Unhandeled";
             break;
     }
 }
@@ -761,7 +761,7 @@ bool SaneOption::getMaxValue(float &max)
                         return true;
                     }
                 default:
-                    kDebug() << "Constraint must be range or word list!";
+                    kDebug(51004) << "Constraint must be range or word list!";
             }
             break;
         case SANE_TYPE_FIXED:
@@ -780,11 +780,11 @@ bool SaneOption::getMaxValue(float &max)
                         return true;
                     }
                 default:
-                    kDebug() << "Constraint must be range or word list!";
+                    kDebug(51004) << "Constraint must be range or word list!";
             }
             break;
         default:
-            kDebug() << "type must me INT or FIXED not:" << sane_option->type;
+            kDebug(51004) << "type must me INT or FIXED not:" << sane_option->type;
     }
     return false;
 }
@@ -801,7 +801,7 @@ bool SaneOption::getValue(float &val)
     SANE_Int res;
     status = sane_control_option (sane_handle, opt_number, SANE_ACTION_GET_VALUE, data.data(), &res);
     if (status != SANE_STATUS_GOOD) {
-        kDebug() << sane_option->name << "sane_control_option returned" << status;
+        kDebug(51004) << sane_option->name << "sane_control_option returned" << status;
         return false;
     }
 
@@ -814,14 +814,14 @@ bool SaneOption::getValue(float &val)
             val = SANE_UNFIX(toSANE_Word(data.data()));
             return true;
         default:
-            kDebug() << "Type" << sane_option->type << "not supported!";
+            kDebug(51004) << "Type" << sane_option->type << "not supported!";
     }
     return false;
 }
 
 bool SaneOption::setValue(float value)
 {
-    //kDebug() << sane_option->name << "set value" << value;
+    //kDebug(51004) << sane_option->name << "set value" << value;
     switch (type)
     {
         case SW_SLIDER:
@@ -849,14 +849,14 @@ bool SaneOption::setValue(float value)
             }
             return true;
         default:
-            kDebug() << "Only options of type slider, fslider and combo are supported";
+            kDebug(51004) << "Only options of type slider, fslider and combo are supported";
     }
     return false;
 }
 
 bool SaneOption::setChecked(bool check)
 {
-    //kDebug() << "=>" << check;
+    //kDebug(51004) << "=>" << check;
     switch (type)
     {
         case SW_CHECKBOX:
@@ -866,7 +866,7 @@ bool SaneOption::setChecked(bool check)
             }
             return true;
         default:
-            kDebug() << "Only works on boolean options";
+            kDebug(51004) << "Only works on boolean options";
     }
     return false;
 }
@@ -885,7 +885,7 @@ bool SaneOption::storeCurrentData()
     sane_data = (unsigned char *)malloc(sane_option->size);
     status = sane_control_option (sane_handle, opt_number, SANE_ACTION_GET_VALUE, sane_data, &res);
     if (status != SANE_STATUS_GOOD) {
-        kDebug() << sane_option->name << "sane_control_option returned" << status;
+        kDebug(51004) << sane_option->name << "sane_control_option returned" << status;
         return false;
     }
     return true;
@@ -918,7 +918,7 @@ bool SaneOption::getValue(QString &val)
     SANE_Int res;
     status = sane_control_option (sane_handle, opt_number, SANE_ACTION_GET_VALUE, data.data(), &res);
     if (status != SANE_STATUS_GOOD) {
-        kDebug() << sane_option->name << "sane_control_option returned" << status;
+        kDebug(51004) << sane_option->name << "sane_control_option returned" << status;
         return false;
     }
 
@@ -945,7 +945,7 @@ bool SaneOption::getValue(QString &val)
             break;
         case SW_GAMMA:
         case SW_DETECT_FAIL:
-            kDebug() << sane_option->name << "type:" << type << "is not supported";
+            kDebug(51004) << sane_option->name << "type:" << type << "is not supported";
         case SW_GROUP:
         case SW_BUTTON:
             return false;
@@ -1012,7 +1012,7 @@ bool SaneOption::setValue(const QString &val)
             break;
         case SW_GAMMA:
         case SW_DETECT_FAIL:
-            kDebug() << sane_option->name << "type:" << type << "is not supported";
+            kDebug(51004) << sane_option->name << "type:" << type << "is not supported";
         case SW_GROUP:
         case SW_BUTTON:
             return false;
@@ -1057,7 +1057,7 @@ void SaneOption::widgetSizeHints(int *lab_w, int *rest_w)
             }
             break;
         default:
-            kDebug() << sane_option->name << "type:" << type << "is not supported";
+            kDebug(51004) << sane_option->name << "type:" << type << "is not supported";
             return;
     }
 }
@@ -1099,7 +1099,7 @@ void SaneOption::setColumnWidths(int lab_w, int rest_w)
             }
             break;
         default:
-            kDebug() << sane_option->name << "type:" << type << "is not supported";
+            kDebug(51004) << sane_option->name << "type:" << type << "is not supported";
             return;
     }
 }

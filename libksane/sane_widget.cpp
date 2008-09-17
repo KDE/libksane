@@ -256,18 +256,18 @@ KSaneWidget::KSaneWidget(QWidget* parent)
     SANE_Int    version;
     SANE_Status status;
 
-    //kDebug() <<  "The language is:" << KGlobal::locale()->language();
-    //kDebug() <<  "Languagelist" << KGlobal::locale()->languageList();
+    //kDebug(51004) <<  "The language is:" << KGlobal::locale()->language();
+    //kDebug(51004) <<  "Languagelist" << KGlobal::locale()->languageList();
     KGlobal::locale()->insertCatalog("libksane");
     KGlobal::locale()->insertCatalog("sane-backends");
 
     status = sane_init(&version, 0);
     if (status != SANE_STATUS_GOOD) {
-        kDebug() << "libksane: sane_init() failed("
+        kDebug(51004) << "libksane: sane_init() failed("
                  << sane_strstatus(status) << ")";
     }
     else {
-        //kDebug() << "Sane Version = "
+        //kDebug(51004) << "Sane Version = "
         //         << SANE_VERSION_MAJOR(version) << "."
         //         << SANE_VERSION_MINOR(version) << "."
         //         << SANE_VERSION_BUILD(version);
@@ -315,7 +315,7 @@ QString KSaneWidget::selectDevice(QWidget* parent)
     status = sane_get_devices(&dev_list, SANE_TRUE);
 
     while(dev_list[i] != 0) {
-        //kDebug() << "i="       << i << " "
+        //kDebug(51004) << "i="       << i << " "
         //         << "name='"   << dev_list[i]->name   << "' "
         //         << "vendor='" << dev_list[i]->vendor << "' "
         //         << "model='"  << dev_list[i]->model  << "' "
@@ -340,7 +340,7 @@ QString KSaneWidget::selectDevice(QWidget* parent)
     RadioSelect sel;
     sel.setWindowTitle(qApp->applicationName());
     i = sel.getSelectedIndex(parent, i18n("Select Scanner"), dev_name_list, 0);
-    //kDebug() << "i=" << i;
+    //kDebug(51004) << "i=" << i;
 
     if ((i < 0) || (i >= dev_name_list.count())) {
         return QString();
@@ -383,7 +383,7 @@ bool KSaneWidget::openDevice(const QString &device_name)
 
     // Try to open the device
     if (sane_open(device_name.toLatin1(), &d->saneHandle) != SANE_STATUS_GOOD) {
-        //kDebug() << "sane_open(\"" << device_name << "\", &handle) failed!";
+        //kDebug(51004) << "sane_open(\"" << device_name << "\", &handle) failed!";
         return false;
     }
 
@@ -870,10 +870,10 @@ void KSaneWidget::setTLX(float ftlx)
 {
     float max, ratio;
 
-    //kDebug() << "setTLX " << ftlx;
+    //kDebug(51004) << "setTLX " << ftlx;
     d->optBrX->getMaxValue(max);
     ratio = ftlx / max;
-    //kDebug() << " -> " << ratio;
+    //kDebug(51004) << " -> " << ratio;
     d->previewArea->setTLX(ratio);
 }
 
@@ -881,10 +881,10 @@ void KSaneWidget::setTLY(float ftly)
 {
     float max, ratio;
 
-    //kDebug() << "setTLY " << ftly;
+    //kDebug(51004) << "setTLY " << ftly;
     d->optBrY->getMaxValue(max);
     ratio = ftly / max;
-    //kDebug() << " -> " << ratio;
+    //kDebug(51004) << " -> " << ratio;
     d->previewArea->setTLY(ratio);
 }
 
@@ -892,10 +892,10 @@ void KSaneWidget::setBRX(float fbrx)
 {
     float max, ratio;
 
-    //kDebug() << "setBRX " << fbrx;
+    //kDebug(51004) << "setBRX " << fbrx;
     d->optBrX->getMaxValue(max);
     ratio = fbrx / max;
-    //kDebug() << " -> " << ratio;
+    //kDebug(51004) << " -> " << ratio;
     d->previewArea->setBRX(ratio);
 }
 
@@ -903,10 +903,10 @@ void KSaneWidget::setBRY(float fbry)
 {
     float max, ratio;
 
-    //kDebug() << "setBRY " << fbry;
+    //kDebug(51004) << "setBRY " << fbry;
     d->optBrY->getMaxValue(max);
     ratio = fbry / max;
-    //kDebug() << " -> " << ratio;
+    //kDebug(51004) << " -> " << ratio;
     d->previewArea->setBRY(ratio);
 }
 
@@ -1021,7 +1021,7 @@ void KSaneWidget::scanPreview()
         //check what image size we would get in a scan
         status = sane_get_parameters(d->saneHandle, &d->params);
         if (status != SANE_STATUS_GOOD) {
-            kDebug() << "sane_get_parameters=" << sane_strstatus(status);
+            kDebug(51004) << "sane_get_parameters=" << sane_strstatus(status);
             scanDone();
             return;
         }
@@ -1120,7 +1120,7 @@ void KSaneWidget::startScan()
             KMessageBox::sorry(0, i18n(sane_strstatus(status)));
         }
         else {
-            kDebug() << "sane_start =" << status << "=" << sane_strstatus(status);
+            kDebug(51004) << "sane_start =" << status << "=" << sane_strstatus(status);
         }
         scanCancel();
         setBusy(false);
@@ -1133,7 +1133,7 @@ void KSaneWidget::startScan()
     // Read image parameters
     status = sane_get_parameters(d->saneHandle, &d->params);
     if (status != SANE_STATUS_GOOD) {
-        kDebug() << "sane_get_parameters=" << sane_strstatus(status);
+        kDebug(51004) << "sane_get_parameters=" << sane_strstatus(status);
         scanCancel();
         setBusy(false);
         return;
@@ -1262,7 +1262,7 @@ void KSaneWidget::processData()
 
         case SANE_STATUS_EOF:
             if (d->frameRead < d->frameSize) {
-                kDebug() << "frameRead =" << d->frameRead
+                kDebug(51004) << "frameRead =" << d->frameRead
                         << ", frameSize =" << d->frameSize;
                 d->readStatus = READ_ERROR;
                 scanDone();
@@ -1278,25 +1278,25 @@ void KSaneWidget::processData()
                 // start reading next frame
                 status = sane_start(d->saneHandle);
                 if (status != SANE_STATUS_GOOD) {
-                    kDebug() << "sane_start =" << sane_strstatus(status);
+                    kDebug(51004) << "sane_start =" << sane_strstatus(status);
                     d->readStatus = READ_ERROR;
                     scanDone();
                     return;
                 }
                 status = sane_get_parameters(d->saneHandle, &d->params);
                 if (status != SANE_STATUS_GOOD) {
-                    kDebug() << "sane_get_parameters =" << sane_strstatus(status);
+                    kDebug(51004) << "sane_get_parameters =" << sane_strstatus(status);
                     d->readStatus = READ_ERROR;
                     scanDone();
                     return;
                 }
-                kDebug() << "New Frame";
+                kDebug(51004) << "New Frame";
                 d->frameRead = 0;
                 d->frame_t_count++;
                 break;
             }
         default:
-            kDebug() << "sane_read=" << status << "=" << sane_strstatus(status);
+            kDebug(51004) << "sane_read=" << status << "=" << sane_strstatus(status);
             d->readStatus = READ_ERROR;
             scanDone();
             return;
@@ -1317,7 +1317,7 @@ void KSaneWidget::processData()
         new_progress = (int)((((float)new_progress / (float)d->dataSize) * 100.0) + 0.5);
 
         if (new_progress != d->progressBar->value()) {
-            //kDebug() << new_progress << d->frameRead << d->dataSize;
+            //kDebug(51004) << new_progress << d->frameRead << d->dataSize;
             if (d->isPreview) {
                 d->previewArea->updateScaledImg();
             }
@@ -1531,7 +1531,7 @@ void KSaneWidget::copyToPreview(int read_bytes)
     if (d->readStatus == READ_ERROR) {
         KMessageBox::error(0, i18n("The image format is not (yet?) supported by libksane!"));
     }
-    kDebug() << "Format" << d->params.format
+    kDebug(51004) << "Format" << d->params.format
             << "and depth" << d->params.format
             << "is not yet suppoeted by libksane!";
     d->readStatus = READ_ERROR;
@@ -1621,7 +1621,7 @@ void KSaneWidget::copyToScanData(int read_bytes)
     if (d->readStatus == READ_ERROR) {
         KMessageBox::error(0, i18n("The image format is not (yet?) supported by libksane!"));
     }
-    kDebug() << "Format" << d->params.format
+    kDebug(51004) << "Format" << d->params.format
             << "and depth" << d->params.format
             << "is not yet suppoeted by libksane!";
     d->readStatus = READ_ERROR;
@@ -1725,7 +1725,7 @@ QImage KSaneWidget::toQImage(const QByteArray &data,
         case FormatNone:
             break;
     }
-    kDebug() << "Unsupported conversion";
+    kDebug(51004) << "Unsupported conversion";
     return img;
 }
 

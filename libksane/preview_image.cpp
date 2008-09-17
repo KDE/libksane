@@ -128,24 +128,24 @@ void PreviewImage::zoomSel()
 
         parent_size = (float)(parent->size().width() - (SCALE_SELECT_MARGIN*2));
         if (parent_size < (SCALE_SELECT_MARGIN*2)) {
-            kDebug() << parent_size << "<" << (SCALE_SELECT_MARGIN*2);
+            kDebug(51004) << parent_size << "<" << (SCALE_SELECT_MARGIN*2);
             return;
         }
         select_size = (br_x_r - tl_x_r) * (float)(orig_img.width());
         if (select_size <= 50.0) {
-            kDebug() << select_size << "< 50.0";
+            kDebug(51004) << select_size << "< 50.0";
             return;
         }
         w_scale = parent_size / select_size;
 
         parent_size = (float)(parent->size().height() - (SCALE_SELECT_MARGIN*2));
         if (parent_size < (SCALE_SELECT_MARGIN*2)) {
-            kDebug() << parent_size << "< (2)" << (SCALE_SELECT_MARGIN*2);
+            kDebug(51004) << parent_size << "< (2)" << (SCALE_SELECT_MARGIN*2);
             return;
         }
         select_size = (br_y_r - tl_y_r) * (float)(orig_img.height());
         if (select_size <= 50.0) {
-            kDebug() << select_size << "< 50.0 (2)";
+            kDebug(51004) << select_size << "< 50.0 (2)";
             return;
         }
         h_scale = parent_size / select_size;
