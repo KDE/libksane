@@ -57,7 +57,7 @@ public:
     * Create the slider.
     *
     * \param parent parent widget
-    * \param text is the text describing the the slider value. If the text
+    * \param text is the text describing the slider value. If the text
     *        contains a '&', a buddy for the slider will be created.
     * \param min minimum slider value
     * \param max maximum slider value
