@@ -5,8 +5,6 @@ TODO list of new features:
 * Progressive final scan: scan can provide huge image especially in 16 bits color depth.
 Send image data to host application by block, not the whole image at once.
 * Use QGraphicsView for the preview (check Darkroom implementation)
-* Add labels to preview and scan
-* Ad method to set scan button text.
 * Test the batch scanning.
 * Be more verbose about errors (why did sane_open fail...)
 * Rework Scanner selection dialog.
