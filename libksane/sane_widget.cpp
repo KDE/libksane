@@ -474,9 +474,11 @@ bool KSaneWidget::openDevice(const QString &device_name)
     d->prevBtn = new QPushButton(this);
     d->prevBtn->setIcon(KIcon("document-import"));
     d->prevBtn->setToolTip(i18n("Scan Preview Image"));
+    d->prevBtn->setText(i18nc("Preview button text", "Preview"));
     d->scanBtn = new QPushButton(this);
     d->scanBtn->setIcon(KIcon("document-save"));
     d->scanBtn->setToolTip(i18n("Scan Final Image"));
+    d->scanBtn->setText(i18nc("Final scan button text", "Scan"));
 
     connect(d->zInBtn, SIGNAL(clicked()),
             d->previewArea, SLOT(zoomIn()));
