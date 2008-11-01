@@ -149,12 +149,23 @@ public:
      * @return this function returns true if the read was successful.
      */
     bool getOptVal(const QString &optname, QString &value);
+
     /** This function writes one parameter value into a string.
      * @param optname is the name of the parameter to write.
      * @param value is the string representation of the value.
      * @return this function returns true if the write was successful.
      */
     bool setOptVal(const QString &optname, const QString &value);
+
+    /** This function sets the label on the final scan button
+    * @param scanLabel is the new label for the button.
+    */
+    void setScanButtonText(const QString &scanLabel);
+
+    /** This function sets the label on the preview button
+    * @param scanLabel is the new label for the button.
+    */
+    void setPreviewButtonText(const QString &previewLabel);
 
 public Q_SLOTS:
     /** This method can be used to cancel a scan. */
@@ -184,7 +195,7 @@ public Q_SLOTS:
      */
     void scanProgress(int percent);
 
-    private Q_SLOTS:
+private Q_SLOTS:
 
     void scheduleValReload();
     void optReload();

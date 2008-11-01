@@ -1830,6 +1830,22 @@ bool KSaneWidget::setOptVal(const QString &option, const QString &value)
     return false;
 }
 
+void KSaneWidget::setScanButtonText(const QString &scanLabel)
+{
+    if (d->scanBtn == 0) {
+        kError() << "setScanButtonText was called before KSaneWidget was initialized";
+        return;
+    }
+    d->scanBtn->setText(scanLabel);
+}
 
+void KSaneWidget::setPreviewButtonText(const QString &previewLabel)
+{
+    if (d->scanBtn == 0) {
+        kError() << "setPreviewButtonText was called before KSaneWidget was initialized";
+        return;
+    }
+    d->prevBtn->setText(previewLabel);
+}
 
 }  // NameSpace KSaneIface
