@@ -53,7 +53,7 @@ extern "C"
 
 // Local includes.
 #include "sane_option.h"
-#include "preview_area.h"
+#include "ksane_viewer.h"
 #include "labeled_separator.h"
 #include "radio_select.h"
 #include "labeled_gamma.h"
@@ -88,13 +88,14 @@ public:
         optDepth      = 0;
         optRes        = 0;
         optResY       = 0;
-        optTl         = 0;
+        optTlX        = 0;
         optTlY        = 0;
         optBrX        = 0;
         optBrY        = 0;
         optGamR       = 0;
         optGamG       = 0;
         optGamB       = 0;
+        optPreview    = 0;
         colorOpts     = 0;
         remainOpts    = 0;
         scanBtn       = 0;
@@ -104,10 +105,7 @@ public:
         zSelBtn       = 0;
         zFitBtn       = 0;
         cancelBtn     = 0;
-        previewArea   = 0;
-        previewImg    = 0;
-        previewWidth  = 0;
-        previewHeight = 0;
+        previewViewer  = 0;
         pixel_x       = 0;
         pixel_y       = 0;
         isPreview     = false;
@@ -202,13 +200,14 @@ public:
     SaneOption         *optDepth;
     SaneOption         *optRes;
     SaneOption         *optResY;
-    SaneOption         *optTl;
+    SaneOption         *optTlX;
     SaneOption         *optTlY;
     SaneOption         *optBrX;
     SaneOption         *optBrY;
     SaneOption         *optGamR;
     SaneOption         *optGamG;
     SaneOption         *optGamB;
+    SaneOption         *optPreview;
     QWidget            *colorOpts;
     QWidget            *remainOpts;
     QTimer              readValsTmr;
@@ -227,10 +226,10 @@ public:
     QProgressBar       *progressBar;
 
     // preview variables
-    PreviewArea        *previewArea;
+    KSaneViewer        *previewViewer;
     float               previewWidth;
     float               previewHeight;
-    QImage             *previewImg;
+    QImage              previewImg;
     bool                isPreview;
     int                 pixel_x;
     int                 pixel_y;
@@ -436,10 +435,10 @@ bool KSaneWidget::openDevice(const QString &device_name)
     opt_lay->setMargin(0);
 
     // create the preview
-    d->previewArea = new PreviewArea(this);
-    connect(d->previewArea, SIGNAL(newSelection(float, float, float, float)),
+    d->previewViewer = new KSaneViewer(this);
+    connect(d->previewViewer, SIGNAL(newSelection(float, float, float, float)),
             this, SLOT(handleSelection(float, float, float, float)));
-    d->previewImg = d->previewArea->getImage();
+    //d->previewViewer->setPixmap();
 
     d->zInBtn  = new QPushButton(this);
     d->zInBtn->setIcon(KIcon("zoom-in"));
@@ -481,16 +480,16 @@ bool KSaneWidget::openDevice(const QString &device_name)
     d->scanBtn->setText(i18nc("Final scan button text", "Scan"));
 
     connect(d->zInBtn, SIGNAL(clicked()),
-            d->previewArea, SLOT(zoomIn()));
+            d->previewViewer, SLOT(zoomIn()));
 
     connect(d->zOutBtn, SIGNAL(clicked()),
-            d->previewArea, SLOT(zoomOut()));
+            d->previewViewer, SLOT(zoomOut()));
 
     connect(d->zSelBtn, SIGNAL(clicked()),
-            d->previewArea, SLOT(zoomSel()));
+            d->previewViewer, SLOT(zoomSel()));
 
     connect(d->zFitBtn, SIGNAL(clicked()),
-            d->previewArea, SLOT(zoom2Fit()));
+            d->previewViewer, SLOT(zoom2Fit()));
 
     connect(d->scanBtn, SIGNAL(clicked()),
             this, SLOT(scanFinal()));
@@ -504,7 +503,7 @@ bool KSaneWidget::openDevice(const QString &device_name)
     QHBoxLayout *zoom_layout = new QHBoxLayout;
     QHBoxLayout *progress_lay = new QHBoxLayout;
 
-    pr_layout->addWidget(d->previewArea, 100);
+    pr_layout->addWidget(d->previewViewer, 100);
     pr_layout->addLayout(progress_lay, 0);
     pr_layout->addLayout(zoom_layout, 0);
 
@@ -600,7 +599,7 @@ void KSaneWidget::createOptInterface()
     }
     // scan area (Do not add the widgets)
     if ((option = d->getOption(SANE_NAME_SCAN_TL_X)) != 0) {
-        d->optTl = option;
+        d->optTlX = option;
         connect (option, SIGNAL(fValueRead(float)),
                  this, SLOT(setTLX(float)));
     }
@@ -659,6 +658,7 @@ void KSaneWidget::createOptInterface()
         option->createWidget(gamma_frm);
         gam_frm_l->addWidget(option->widget());
     }
+
 
     if ((d->optGamR != 0) && (d->optGamG != 0) && (d->optGamB != 0)) {
         LabeledGamma *gamma = reinterpret_cast<LabeledGamma *>(d->optGamR->widget());
@@ -766,6 +766,13 @@ void KSaneWidget::createOptInterface()
         }
     }
     */
+
+    // save a pointer to the preview option if possible
+    if ((option = d->getOption(SANE_NAME_PREVIEW)) != 0) {
+        d->optPreview = option;
+    }
+    
+
     // add a stretch to the end to keep the parameters at the top
     other_layout->addStretch();
 
@@ -842,18 +849,18 @@ void KSaneWidget::valReload()
 
 void KSaneWidget::handleSelection(float tl_x, float tl_y, float br_x, float br_y) {
 
-    if ((d->optTl == 0) || (d->optTlY == 0) || (d->optBrX == 0) || (d->optBrY == 0)) {
+    if ((d->optTlX == 0) || (d->optTlY == 0) || (d->optBrX == 0) || (d->optBrY == 0)) {
         // clear the selection since we can not set one
-        d->previewArea->setTLX(0);
-        d->previewArea->setTLY(0);
-        d->previewArea->setBRX(0);
-        d->previewArea->setBRY(0);
+        d->previewViewer->setTLX(0);
+        d->previewViewer->setTLY(0);
+        d->previewViewer->setBRX(0);
+        d->previewViewer->setBRY(0);
         tl_x = tl_y = br_x = br_y = 0;
         return;
     }
     float max_x, max_y;
 
-    if ((d->previewImg->width()==0) || (d->previewImg->height()==0)) return;
+    if ((d->previewImg.width()==0) || (d->previewImg.height()==0)) return;
 
     d->optBrX->getMaxValue(max_x);
     d->optBrY->getMaxValue(max_y);
@@ -862,7 +869,7 @@ void KSaneWidget::handleSelection(float tl_x, float tl_y, float br_x, float br_y
     float fbr_x = br_x*max_x;
     float fbr_y = br_y*max_y;
 
-    d->optTl->setValue(ftl_x);
+    d->optTlX->setValue(ftl_x);
     d->optTlY->setValue(ftl_y);
     d->optBrX->setValue(fbr_x);
     d->optBrY->setValue(fbr_y);
@@ -876,7 +883,7 @@ void KSaneWidget::setTLX(float ftlx)
     d->optBrX->getMaxValue(max);
     ratio = ftlx / max;
     //kDebug(51004) << " -> " << ratio;
-    d->previewArea->setTLX(ratio);
+    d->previewViewer->setTLX(ratio);
 }
 
 void KSaneWidget::setTLY(float ftly)
@@ -887,7 +894,7 @@ void KSaneWidget::setTLY(float ftly)
     d->optBrY->getMaxValue(max);
     ratio = ftly / max;
     //kDebug(51004) << " -> " << ratio;
-    d->previewArea->setTLY(ratio);
+    d->previewViewer->setTLY(ratio);
 }
 
 void KSaneWidget::setBRX(float fbrx)
@@ -898,7 +905,7 @@ void KSaneWidget::setBRX(float fbrx)
     d->optBrX->getMaxValue(max);
     ratio = fbrx / max;
     //kDebug(51004) << " -> " << ratio;
-    d->previewArea->setBRX(ratio);
+    d->previewViewer->setBRX(ratio);
 }
 
 void KSaneWidget::setBRY(float fbry)
@@ -909,7 +916,7 @@ void KSaneWidget::setBRY(float fbry)
     d->optBrY->getMaxValue(max);
     ratio = fbry / max;
     //kDebug(51004) << " -> " << ratio;
-    d->previewArea->setBRY(ratio);
+    d->previewViewer->setBRY(ratio);
 }
 
 void KSaneWidget::updatePreviewSize()
@@ -917,7 +924,8 @@ void KSaneWidget::updatePreviewSize()
     float max_x=0, max_y=0;
     float ratio;
     int x,y;
-
+    kDebug() << "";
+    
     // check if an update is necessary
     if (d->optBrX != 0) {
         d->optBrX->getMaxValue(max_x);
@@ -926,14 +934,15 @@ void KSaneWidget::updatePreviewSize()
         d->optBrY->getMaxValue(max_y);
     }
     if ((max_x == d->previewWidth) && (max_y == d->previewHeight)) {
+        kDebug() << "no preview width";
         return;
     }
 
     d->previewWidth  = max_x;
     d->previewHeight = max_y;
     // set the scan area to the whole area
-    if (d->optTl != 0) {
-        d->optTl->setValue(0);
+    if (d->optTlX != 0) {
+        d->optTlX->setValue(0);
     }
     if (d->optTlY != 0) {
         d->optTlY->setValue(0);
@@ -957,14 +966,11 @@ void KSaneWidget::updatePreviewSize()
         x=(int)(SCALED_PREVIEW_MAX_SIDE/ratio);
     }
 
-    *d->previewImg = QImage(x, y, QImage::Format_RGB32);
-    d->previewImg->fill(0xFFFFFFFF);
+    d->previewImg = QImage(x, y, QImage::Format_RGB32);
+    d->previewImg.fill(0xFFFFFFFF);
 
-    // clear the selection
-    d->previewArea->clearSelection();
-
-    // update the size of the preview widget.
-    d->previewArea->updateScaledImg();
+    // set the new image
+    d->previewViewer->setQImage(&d->previewImg);
 }
 
 void KSaneWidget::scanPreview()
@@ -982,24 +988,15 @@ void KSaneWidget::scanPreview()
     if (d->optDepth != 0) d->optDepth->storeCurrentData();
     if (d->optRes != 0) d->optRes->storeCurrentData();
     if (d->optResY != 0) d->optResY->storeCurrentData();
-    if (d->optTl != 0) d->optTl->storeCurrentData();
+    if (d->optTlX != 0) d->optTlX->storeCurrentData();
     if (d->optTlY != 0) d->optTlY->storeCurrentData();
     if (d->optBrX != 0) d->optBrX->storeCurrentData();
     if (d->optBrY != 0) d->optBrY->storeCurrentData();
-
-    // set 8 bits per color if possible
-    //if (d->optDepth != 0) {
-    //    d->optDepth->setValue(8);
-    //}
-
+    if (d->optPreview != 0) d->optPreview->storeCurrentData();
+    
     // select the whole area
-    if (d->optTl != 0) {
-        d->optTl->setValue(0);
-    }
-    if (d->optTlY != 0) {
-        d->optTlY->setValue(0);
-    }
-
+    if (d->optTlX != 0) d->optTlX->setValue(0);
+    if (d->optTlY != 0) d->optTlY->setValue(0);
     if (d->optBrX != 0) {
         d->optBrX->getMaxValue(max);
         d->optBrX->setValue(max);
@@ -1031,6 +1028,9 @@ void KSaneWidget::scanPreview()
     }
     while ((d->params.pixels_per_line < 300) || (d->params.lines < 300));
 
+    // set preview option to true if possible
+    if (d->optPreview != 0) d->optPreview->setValue(1);
+    
     // execute valReload if there is a pending value reload
     while (d->readValsTmr.isActive()) {
         d->readValsTmr.stop();
@@ -1053,11 +1053,11 @@ void KSaneWidget::scanFinal()
     d->readStatus  = READ_ON_GOING;
     d->isPreview = false;
 
-    if ((d->optTl != 0) && (d->optBrX != 0)) {
-        d->optTl->getValue(v1);
+    if ((d->optTlX != 0) && (d->optBrX != 0)) {
+        d->optTlX->getValue(v1);
         d->optBrX->getValue(v2);
         if (v1 == v2) {
-            d->optTl->setValue(0);
+            d->optTlX->setValue(0);
             d->optBrX->getMaxValue(v2);
             d->optBrX->setValue(v2);
         }
@@ -1156,20 +1156,20 @@ void KSaneWidget::startScan()
     // make room for the new image
     if (d->isPreview) {
         // create a new image if necessary
-        if ((d->previewImg->height() != d->params.lines) ||
-             (d->previewImg->width() != d->params.pixels_per_line))
+        if ((d->previewImg.height() != d->params.lines) ||
+             (d->previewImg.width() != d->params.pixels_per_line))
         {
-            *d->previewImg = QImage(d->params.pixels_per_line,
+            d->previewImg = QImage(d->params.pixels_per_line,
                                     d->params.lines,
                                     QImage::Format_RGB32);
-            d->previewImg->fill(0xFFFFFFFF);
+            d->previewImg.fill(0xFFFFFFFF);
         }
 
         // update the size of the preview widget.
-        d->previewArea->zoom2Fit();
+        d->previewViewer->setQImage(&d->previewImg);
 
         // update the size of the preview widget.
-        d->previewArea->updateScaledImg();
+        d->previewViewer->zoom2Fit();
 
         // free unused buffer
         d->scanData.resize(0);
@@ -1191,7 +1191,7 @@ void KSaneWidget::startScan()
 void KSaneWidget::scanDone()
 {
     if (d->isPreview) {
-        d->previewArea->updateScaledImg();
+        d->previewViewer->updateImage();
 
         // even if the scan is finished successfully we need to call sane_cancel()
         sane_cancel(d->saneHandle);
@@ -1200,10 +1200,11 @@ void KSaneWidget::scanDone()
         if (d->optDepth != 0) d->optDepth->restoreSavedData();
         if (d->optRes != 0) d->optRes->restoreSavedData();
         if (d->optResY != 0) d->optResY->restoreSavedData();
-        if (d->optTl != 0) d->optTl->restoreSavedData();
+        if (d->optTlX != 0) d->optTlX->restoreSavedData();
         if (d->optTlY != 0) d->optTlY->restoreSavedData();
         if (d->optBrX != 0) d->optBrX->restoreSavedData();
         if (d->optBrY != 0) d->optBrY->restoreSavedData();
+        if (d->optPreview != 0) d->optPreview->restoreSavedData();
     }
     else {
         if (d->readStatus == READ_FINISHED) {
@@ -1321,7 +1322,7 @@ void KSaneWidget::processData()
         if (new_progress != d->progressBar->value()) {
             //kDebug(51004) << new_progress << d->frameRead << d->dataSize;
             if (d->isPreview) {
-                d->previewArea->updateScaledImg();
+                d->previewViewer->updateImage();
             }
             d->progressBar->setValue((int)new_progress);
             emit scanProgress(new_progress);
@@ -1330,7 +1331,7 @@ void KSaneWidget::processData()
         if (abs(new_progress - d->progress) > (d->dataSize/50)) {
             d->progress = new_progress;
             if (d->isPreview) {
-                d->previewArea->updateScaledImg();
+                d->previewViewer->updateScaledImg();
             }
             if (d->progress < d->progressBar->maximum()) {
                 d->progressBar->setValue(d->progress);
@@ -1378,13 +1379,13 @@ void KSaneWidget::copyToPreview(int read_bytes)
                 for (i=0; i<read_bytes; i++) {
                     for (j=7; j>=0; j--) {
                         if ((d->saneReadBuffer[i] & (1<<j)) == 0) {
-                            d->previewImg->setPixel(
+                            d->previewImg.setPixel(
                                     d->pixel_x,
                                     d->pixel_y,
                                     qRgb(255,255,255));
                         }
                         else {
-                            d->previewImg->setPixel(
+                            d->previewImg.setPixel(
                                     d->pixel_x,
                                     d->pixel_y,
                                     qRgb(0,0,0));
@@ -1404,9 +1405,9 @@ void KSaneWidget::copyToPreview(int read_bytes)
             else if (d->params.depth == 8) {
                 for (int i=0; i<read_bytes; i++) {
                     index = d->frameRead * 4;
-                    d->previewImg->bits()[index] = d->saneReadBuffer[i];
-                    d->previewImg->bits()[index + 1] = d->saneReadBuffer[i];
-                    d->previewImg->bits()[index + 2] = d->saneReadBuffer[i];
+                    d->previewImg.bits()[index] = d->saneReadBuffer[i];
+                    d->previewImg.bits()[index + 1] = d->saneReadBuffer[i];
+                    d->previewImg.bits()[index + 2] = d->saneReadBuffer[i];
                     d->frameRead++;
                 }
                 return;
@@ -1415,9 +1416,9 @@ void KSaneWidget::copyToPreview(int read_bytes)
                 for (int i=0; i<read_bytes; i++) {
                     if (d->frameRead%2 == 0) {
                         index = d->frameRead * 2;
-                        d->previewImg->bits()[index] = d->saneReadBuffer[i+1];
-                        d->previewImg->bits()[index + 1] = d->saneReadBuffer[i+1];
-                        d->previewImg->bits()[index + 2] = d->saneReadBuffer[i+1];
+                        d->previewImg.bits()[index] = d->saneReadBuffer[i+1];
+                        d->previewImg.bits()[index + 1] = d->saneReadBuffer[i+1];
+                        d->previewImg.bits()[index + 2] = d->saneReadBuffer[i+1];
                     }
                     d->frameRead++;
                 }
@@ -1432,7 +1433,7 @@ void KSaneWidget::copyToPreview(int read_bytes)
                     inc_color_index(d->px_c_index);
                     d->frameRead++;
                     if (d->px_c_index == 0) {
-                        d->previewImg->setPixel(d->pixel_x,
+                        d->previewImg.setPixel(d->pixel_x,
                                            d->pixel_y,
                                            qRgb(d->px_colors[0],
                                                    d->px_colors[1],
@@ -1451,7 +1452,7 @@ void KSaneWidget::copyToPreview(int read_bytes)
                         d->px_colors[d->px_c_index] = d->saneReadBuffer[i];
                         inc_color_index(d->px_c_index);
                         if (d->px_c_index == 0) {
-                            d->previewImg->setPixel(d->pixel_x,
+                            d->previewImg.setPixel(d->pixel_x,
                                     d->pixel_y,
                                     qRgb(d->px_colors[0],
                                          d->px_colors[1],
@@ -1469,7 +1470,7 @@ void KSaneWidget::copyToPreview(int read_bytes)
         case SANE_FRAME_RED:
             if (d->params.depth == 8) {
                 for (int i=0; i<read_bytes; i++) {
-                    d->previewImg->bits()[index_red8_to_argb8(d->frameRead)] =
+                    d->previewImg.bits()[index_red8_to_argb8(d->frameRead)] =
                             d->saneReadBuffer[i];
                     d->frameRead++;
                 }
@@ -1478,7 +1479,7 @@ void KSaneWidget::copyToPreview(int read_bytes)
             else if (d->params.depth == 16) {
                 for (int i=0; i<read_bytes; i++) {
                     if (d->frameRead%2 == 0) {
-                        d->previewImg->bits()[index_red16_to_argb8(d->frameRead)] =
+                        d->previewImg.bits()[index_red16_to_argb8(d->frameRead)] =
                                 d->saneReadBuffer[i+1];
                     }
                     d->frameRead++;
@@ -1490,7 +1491,7 @@ void KSaneWidget::copyToPreview(int read_bytes)
         case SANE_FRAME_GREEN:
             if (d->params.depth == 8) {
                 for (int i=0; i<read_bytes; i++) {
-                    d->previewImg->bits()[index_green8_to_argb8(d->frameRead)] =
+                    d->previewImg.bits()[index_green8_to_argb8(d->frameRead)] =
                             d->saneReadBuffer[i];
                     d->frameRead++;
                 }
@@ -1499,7 +1500,7 @@ void KSaneWidget::copyToPreview(int read_bytes)
             else if (d->params.depth == 16) {
                 for (int i=0; i<read_bytes; i++) {
                     if (d->frameRead%2 == 0) {
-                        d->previewImg->bits()[index_green16_to_argb8(d->frameRead)] =
+                        d->previewImg.bits()[index_green16_to_argb8(d->frameRead)] =
                                 d->saneReadBuffer[i+1];
                     }
                     d->frameRead++;
@@ -1511,7 +1512,7 @@ void KSaneWidget::copyToPreview(int read_bytes)
         case SANE_FRAME_BLUE:
             if (d->params.depth == 8) {
                 for (int i=0; i<read_bytes; i++) {
-                    d->previewImg->bits()[index_blue8_to_argb8(d->frameRead)] =
+                    d->previewImg.bits()[index_blue8_to_argb8(d->frameRead)] =
                             d->saneReadBuffer[i];
                     d->frameRead++;
                 }
@@ -1520,7 +1521,7 @@ void KSaneWidget::copyToPreview(int read_bytes)
             else if (d->params.depth == 16) {
                 for (int i=0; i<read_bytes; i++) {
                     if (d->frameRead%2 == 0) {
-                        d->previewImg->bits()[index_blue16_to_argb8(d->frameRead)] =
+                        d->previewImg.bits()[index_blue16_to_argb8(d->frameRead)] =
                                 d->saneReadBuffer[i+1];
                     }
                     d->frameRead++;
@@ -1755,7 +1756,7 @@ void KSaneWidget::scanCancel()
 void KSaneWidget::setBusy(bool busy)
 {
     d->optsWidget->setDisabled(busy);
-    d->previewArea->setDisabled(busy);
+    d->previewViewer->setDisabled(busy);
     d->zInBtn->setDisabled(busy);
     d->zOutBtn->setDisabled(busy);
     d->zSelBtn->setDisabled(busy);

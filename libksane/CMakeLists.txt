@@ -7,12 +7,12 @@ SET(ksane_LIB_SRCS gamma_disp.cpp
                    labeled_checkbox.cpp
                    labeled_entry.cpp
                    labeled_separator.cpp
-                   preview_image.cpp
                    sane_option.cpp
                    labeled_combo.cpp
                    labeled_fslider.cpp
                    labeled_slider.cpp
-                   preview_area.cpp
+                   ksane_viewer.cpp
+                   selectionitem.cpp
                    radio_select.cpp
                    ksane_button.cpp
                    sane_widget.cpp)
