@@ -2,7 +2,7 @@
 *
 * This file is part of the KDE project
 *
-* Date        : 2008-11-
+* Date        : 2008-11-15
 * Description : Preview image viewer that can handle a selection.
 *
 * Copyright (C) 2008 by Kare Sars <kare dot sars at iki dot fi>
