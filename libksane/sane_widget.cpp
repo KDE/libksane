@@ -6,7 +6,7 @@
  * Description : Sane interface for KDE
  *
  * Copyright (C) 2007-2008 by Kare Sars <kare dot sars at iki dot fi>
- * Copyright (C) 2007 by Gilles Caulier <caulier dot gilles at gmail dot com>
+ * Copyright (C) 2007-2008 by Gilles Caulier <caulier dot gilles at gmail dot com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,7 +25,9 @@
  * License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * ============================================================ */
+
 #include "ksane.h"
+#include "ksane.moc"
 
 // Sane includes.
 extern "C"
@@ -57,7 +59,6 @@ extern "C"
 #include "labeled_separator.h"
 #include "radio_select.h"
 #include "labeled_gamma.h"
-#include "ksane.moc"
 
 #define SCALED_PREVIEW_MAX_SIDE 400
 #define MAX_NUM_OPTIONS 100
@@ -105,14 +106,14 @@ public:
         zSelBtn       = 0;
         zFitBtn       = 0;
         cancelBtn     = 0;
-        previewViewer  = 0;
+        previewViewer = 0;
         pixel_x       = 0;
         pixel_y       = 0;
         isPreview     = false;
         frameSize     = 0;
         frameRead     = 0;
         dataSize      = 0;
-        readStatus  = READ_FINISHED;
+        readStatus    = READ_FINISHED;
         warmingUp     = 0;
         progressBar   = 0;
         px_c_index    = 0;
@@ -623,8 +624,8 @@ void KSaneWidget::createOptInterface()
     d->colorOpts = new QWidget(d->basic_options);
     basic_layout->addWidget(d->colorOpts);
     QVBoxLayout *color_lay = new QVBoxLayout(d->colorOpts);
-    color_lay->setSpacing(2);
-    color_lay->setMargin(0);
+    color_lay->setSpacing(4);
+    color_lay->setMargin(3);
 
     // Color correction
     if ((option = d->getOption(SANE_NAME_BRIGHTNESS)) != 0) {
@@ -640,8 +641,8 @@ void KSaneWidget::createOptInterface()
     QWidget *gamma_frm = new QWidget(d->colorOpts);
     color_lay->addWidget(gamma_frm);
     QVBoxLayout *gam_frm_l = new QVBoxLayout(gamma_frm);
-    gam_frm_l->setSpacing(2);
-    gam_frm_l->setMargin(0);
+    gam_frm_l->setSpacing(4);
+    gam_frm_l->setMargin(3);
 
     if ((option = d->getOption(SANE_NAME_GAMMA_VECTOR_R)) != 0) {
         d->optGamR= option;
@@ -732,8 +733,8 @@ void KSaneWidget::createOptInterface()
     other_area->setWidget(d->other_options);
 
     QVBoxLayout *other_layout = new QVBoxLayout(d->other_options);
-    other_layout->setSpacing(2);
-    other_layout->setMargin(0);
+    other_layout->setSpacing(4);
+    other_layout->setMargin(3);
 
     // add remaining parameters
     for (int i=0; i<d->optList.size(); i++) {
@@ -784,9 +785,7 @@ void KSaneWidget::createOptInterface()
 
     d->optsWidget->setMinimumWidth(min_width +
             basic_area->verticalScrollBar()->sizeHint().width() + 5);
-
 }
-
 
 void KSaneWidget::setDefaultValues()
 {
@@ -1043,7 +1042,6 @@ void KSaneWidget::scanPreview()
 
 }
 
-
 void KSaneWidget::scanFinal()
 {
     float v1,v2;
@@ -1083,7 +1081,6 @@ void KSaneWidget::scanFinal()
 
     d->startScanTmr.start(0);
 }
-
 
 void KSaneWidget::startScan()
 {
@@ -1631,8 +1628,6 @@ void KSaneWidget::copyToScanData(int read_bytes)
     return;
 }
 
-
-
 QImage KSaneWidget::toQImage(const QByteArray &data,
                               int width,
                               int height,
@@ -1751,7 +1746,6 @@ void KSaneWidget::scanCancel()
     d->progressBar->setValue(0);
     emit scanProgress(0);
 }
-
 
 void KSaneWidget::setBusy(bool busy)
 {
