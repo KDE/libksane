@@ -426,6 +426,12 @@ bool KSaneWidget::openDevice(const QString &device_name)
     base_layout->addLayout(opt_lay, 0);
     base_layout->addLayout(pr_layout, 100);
 
+    // create the preview
+    d->previewViewer = new KSaneViewer(this);
+    connect(d->previewViewer, SIGNAL(newSelection(float, float, float, float)),
+            this, SLOT(handleSelection(float, float, float, float)));
+    //d->previewViewer->setPixmap();
+
     // Create Options Widget
     d->optsWidget = new KTabWidget;
      // Create the options interface
@@ -434,12 +440,6 @@ bool KSaneWidget::openDevice(const QString &device_name)
     opt_lay->addWidget(d->optsWidget, 0);
     opt_lay->setSpacing(2);
     opt_lay->setMargin(0);
-
-    // create the preview
-    d->previewViewer = new KSaneViewer(this);
-    connect(d->previewViewer, SIGNAL(newSelection(float, float, float, float)),
-            this, SLOT(handleSelection(float, float, float, float)));
-    //d->previewViewer->setPixmap();
 
     d->zInBtn  = new QPushButton(this);
     d->zInBtn->setIcon(KIcon("zoom-in"));
