@@ -923,8 +923,7 @@ void KSaneWidget::updatePreviewSize()
     float max_x=0, max_y=0;
     float ratio;
     int x,y;
-    kDebug() << "";
-    
+
     // check if an update is necessary
     if (d->optBrX != 0) {
         d->optBrX->getMaxValue(max_x);
@@ -933,7 +932,7 @@ void KSaneWidget::updatePreviewSize()
         d->optBrY->getMaxValue(max_y);
     }
     if ((max_x == d->previewWidth) && (max_y == d->previewHeight)) {
-        kDebug() << "no preview width";
+        //kDebug(51004) << "no preview width";
         return;
     }
 
