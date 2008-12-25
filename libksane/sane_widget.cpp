@@ -1216,6 +1216,9 @@ void KSaneWidget::scanDone()
         if (d->readStatus != READ_ON_GOING) {
             sane_cancel(d->saneHandle);
         }
+        else {
+            return;
+        }
     }
     setBusy(false);
 }
