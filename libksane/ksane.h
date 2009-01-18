@@ -166,8 +166,14 @@ public:
     * @param scanLabel is the new label for the button.
     */
     void setPreviewButtonText(const QString &previewLabel);
-
-public Q_SLOTS:
+    
+    /** This function can be used to enable/disable automatic selections on previews.
+    * The default state is enabled.
+    * @param enable specifies if the auto selection should be turned on or off.
+    */
+    void enableAutoSelect(bool enable);
+    
+ public Q_SLOTS:
     /** This method can be used to cancel a scan. */
     void scanCancel();
 

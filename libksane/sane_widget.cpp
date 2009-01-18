@@ -110,6 +110,8 @@ public:
         pixel_x       = 0;
         pixel_y       = 0;
         isPreview     = false;
+        autoSelect    = true;
+        autoSelIndex  = 0;
         frameSize     = 0;
         frameRead     = 0;
         dataSize      = 0;
@@ -232,6 +234,8 @@ public:
     float               previewHeight;
     QImage              previewImg;
     bool                isPreview;
+    bool                autoSelect;
+    int                 autoSelIndex;
     int                 pixel_x;
     int                 pixel_y;
     int                 px_colors[3];
@@ -854,7 +858,6 @@ void KSaneWidget::handleSelection(float tl_x, float tl_y, float br_x, float br_y
         d->previewViewer->setTLY(0);
         d->previewViewer->setBRX(0);
         d->previewViewer->setBRY(0);
-        tl_x = tl_y = br_x = br_y = 0;
         return;
     }
     float max_x, max_y;
@@ -876,6 +879,9 @@ void KSaneWidget::handleSelection(float tl_x, float tl_y, float br_x, float br_y
 
 void KSaneWidget::setTLX(float ftlx)
 {
+    // ignore this during an active scan
+    if (d->readStatus == READ_ON_GOING) return;
+
     float max, ratio;
 
     //kDebug(51004) << "setTLX " << ftlx;
@@ -887,6 +893,9 @@ void KSaneWidget::setTLX(float ftlx)
 
 void KSaneWidget::setTLY(float ftly)
 {
+    // ignore this during an active scan
+    if (d->readStatus == READ_ON_GOING) return;
+
     float max, ratio;
 
     //kDebug(51004) << "setTLY " << ftly;
@@ -898,6 +907,9 @@ void KSaneWidget::setTLY(float ftly)
 
 void KSaneWidget::setBRX(float fbrx)
 {
+    // ignore this during an active scan
+    if (d->readStatus == READ_ON_GOING) return;
+
     float max, ratio;
 
     //kDebug(51004) << "setBRX " << fbrx;
@@ -909,6 +921,9 @@ void KSaneWidget::setBRX(float fbrx)
 
 void KSaneWidget::setBRY(float fbry)
 {
+    // ignore this during an active scan
+    if (d->readStatus == READ_ON_GOING) return;
+
     float max, ratio;
 
     //kDebug(51004) << "setBRY " << fbry;
@@ -923,7 +938,7 @@ void KSaneWidget::updatePreviewSize()
     float max_x=0, max_y=0;
     float ratio;
     int x,y;
-
+    
     // check if an update is necessary
     if (d->optBrX != 0) {
         d->optBrX->getMaxValue(max_x);
@@ -1037,37 +1052,55 @@ void KSaneWidget::scanPreview()
 
     setBusy(true);
 
+    //We could use:QMetaObject::invokeMethod(this, "scanFinal", Qt::QueuedConnection);
+    // but the timer is still needed so, we stick to that :)
     d->startScanTmr.start(0);
 
 }
 
 void KSaneWidget::scanFinal()
 {
-    float v1,v2;
-
     if (d->readStatus == READ_ON_GOING) return;
 
+    float x1=0,y1=0, x2=0,y2=0, mx, my;
+    
     d->readStatus  = READ_ON_GOING;
     d->isPreview = false;
 
-    if ((d->optTlX != 0) && (d->optBrX != 0)) {
-        d->optTlX->getValue(v1);
-        d->optBrX->getValue(v2);
-        if (v1 == v2) {
-            d->optTlX->setValue(0);
-            d->optBrX->getMaxValue(v2);
-            d->optBrX->setValue(v2);
-        }
-    }
+    // check if we can modify the selection
+    if ((d->optTlX != 0) && (d->optTlY != 0) &&
+        (d->optBrX != 0) && (d->optBrY != 0)) {
 
-    if ((d->optTlY != 0) && (d->optBrY != 0)) {
-        d->optTlY->getValue(v1);
-        d->optBrY->getValue(v2);
-        if (v1 == v2) {
-            d->optTlY->setValue(0);
-            d->optBrY->getMaxValue(v2);
-            d->optBrY->setValue(v2);
+        // get maximums
+        d->optBrX->getMaxValue(mx);
+        d->optBrY->getMaxValue(my);
+        
+        // are there any saved selections left?
+        if ((d->previewViewer->selListSize() > 0) &&
+            (d->previewViewer->selListSize() > d->autoSelIndex))
+        {
+            d->previewViewer->selectionAt(d->autoSelIndex, x1,y1,x2,y2);
+            d->autoSelIndex++;
         }
+        else {
+            d->autoSelIndex++; // selListSize() >= d->autoSelIndex is used to get here
+            d->previewViewer->activeSelection(x1,y1,x2,y2);
+            if ((x1==x2) || (y1==y2)) {
+                x1=0; y1=0;
+                x2=1; y2=1;
+            }
+        }
+        x1 *= mx; y1 *= my;
+        x2 *= mx; y2 *= my;
+
+        // now set the selection
+        d->optTlX->setValue(x1);
+        d->optTlY->setValue(y1);
+        d->optBrX->setValue(x2);
+        d->optBrY->setValue(y2);
+    }
+    else {
+        d->autoSelect = false;
     }
 
     // execute a pending value reload
@@ -1169,6 +1202,7 @@ void KSaneWidget::startScan()
 
         // free unused buffer
         d->scanData.resize(0);
+
     }
     else {
         d->scanData.resize(d->dataSize);
@@ -1201,6 +1235,11 @@ void KSaneWidget::scanDone()
         if (d->optBrX != 0) d->optBrX->restoreSavedData();
         if (d->optBrY != 0) d->optBrY->restoreSavedData();
         if (d->optPreview != 0) d->optPreview->restoreSavedData();
+
+        if (d->autoSelect) {
+            d->previewViewer->findSelections();
+            d->autoSelIndex = 0;
+        }
     }
     else {
         if (d->readStatus == READ_FINISHED) {
@@ -1215,6 +1254,24 @@ void KSaneWidget::scanDone()
         // READ_ON_GOING not READ_FINISHED or READ_ERROR
         if (d->readStatus != READ_ON_GOING) {
             sane_cancel(d->saneHandle);
+            float x1,x2,y1,y2;
+            if ((d->autoSelect == true) &&
+                ((d->previewViewer->selListSize() > 0) &&
+                (d->previewViewer->selListSize() > d->autoSelIndex)))
+            {
+                QMetaObject::invokeMethod(this, "scanFinal", Qt::QueuedConnection);
+            }
+            else if ((d->autoSelect == true) &&
+                (d->previewViewer->selListSize() > 0) &&
+                (d->previewViewer->selListSize() == d->autoSelIndex) &&
+                (d->previewViewer->activeSelection(x1,y1,x2,y2) == true))
+            {
+                QMetaObject::invokeMethod(this, "scanFinal", Qt::QueuedConnection);
+            }
+            else {
+                // we might want to rescan
+                d->autoSelIndex = 0;
+            }
         }
         else {
             return;
@@ -1843,6 +1900,11 @@ void KSaneWidget::setPreviewButtonText(const QString &previewLabel)
         return;
     }
     d->prevBtn->setText(previewLabel);
+}
+
+void KSaneWidget::enableAutoSelect(bool enable)
+{
+    d->autoSelect = enable;
 }
 
 }  // NameSpace KSaneIface

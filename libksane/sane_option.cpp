@@ -921,6 +921,9 @@ bool SaneOption::getValue(QString &val)
         kDebug(51004) << sane_option->name << "sane_control_option returned" << status;
         return false;
     }
+    int bri;
+    int con;
+    int gam;
 
     switch(type)
     {
@@ -938,12 +941,17 @@ bool SaneOption::getValue(QString &val)
             break;
         case SW_F_SLIDER:
         case SW_F_SLIDER_FIX:
-            val = QString().sprintf("%f", SANE_UNFIX( toSANE_Word(data.data())));
+            val = QString().sprintf("%f", SANE_UNFIX(toSANE_Word(data.data())));
             break;
         case SW_ENTRY:
             val = QLatin1String(reinterpret_cast<char*>(data.data()));
             break;
         case SW_GAMMA:
+            // returning the array would be a bit overkill -> return br,contr,gam
+            if (lgamma == 0) return false;
+            lgamma->getValues(bri, con, gam);
+            val = QString().sprintf("%d:%d:%d", bri, con, gam);
+            return true;
         case SW_DETECT_FAIL:
             kDebug(51004) << sane_option->name << "type:" << type << "is not supported";
         case SW_GROUP:
@@ -959,7 +967,10 @@ bool SaneOption::setValue(const QString &val)
     bool ok;
     int i;
     float f;
-
+    int bri;
+    int con;
+    int gam;
+    
     // check if we can vrite to the value
     if (type == SW_GROUP) return false;
     if (sw_state == SW_STATE_HIDDEN) return false;
@@ -968,6 +979,8 @@ bool SaneOption::setValue(const QString &val)
     // does it need updating?
     if (getValue(tmp) == false) return false;
     if (tmp == val) return true; // no update needed
+
+    QStringList gammaValues;
 
     switch(type)
     {
@@ -1011,6 +1024,17 @@ bool SaneOption::setValue(const QString &val)
             }
             break;
         case SW_GAMMA:
+            if (lgamma == 0) return false;
+            gammaValues = val.split(':');
+            if (gammaValues.size() != 3) return false;
+            bri = gammaValues.at(0).toInt(&ok);
+            if (ok == false) return false;
+            con = gammaValues.at(1).toInt(&ok);
+            if (ok == false) return false;
+            gam = gammaValues.at(2).toInt(&ok);
+            if (ok == false) return false;
+            lgamma->setValues(bri, con, gam);
+            break;
         case SW_DETECT_FAIL:
             kDebug(51004) << sane_option->name << "type:" << type << "is not supported";
         case SW_GROUP:

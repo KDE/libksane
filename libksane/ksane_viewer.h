@@ -43,14 +43,22 @@ class KSaneViewer : public QGraphicsView
 
         void setQImage(QImage *img);
         void updateImage();
-
+        void findSelections();
+        
     public Q_SLOTS:
         
-        void setTLX(float percent);
-        void setTLY(float percent);
-        void setBRX(float percent);
-        void setBRY(float percent);
-        void setSelection(float percent_tlx, float percent_tly, float percent_brx, float percent_bry);
+        void setTLX(float ratio);
+        void setTLY(float ratio);
+        void setBRX(float ratio);
+        void setBRY(float ratio);
+        /** This functiuon is used to set a selection without the user seting it.
+        * \note all parameters must be in the range 0.0 -> 1.0.
+        * \param tl_x is the x coordinate of the top left corner 0=0 1=image with.
+        * \param tl_y is the y coordinate of the top left corner 0=0 1=image with.
+        * \param br_x is the x coordinate of the bottom right corner 0=0 1=image with.
+        * \param br_y is the y coordinate of the bottom right corner 0=0 1=image with.
+        */
+        void setSelection(float tl_x, float tl_y, float b_rx, float b_ry);
         void clearSelection();
         
         void zoomIn();
@@ -58,6 +66,10 @@ class KSaneViewer : public QGraphicsView
         void zoomSel();
         void zoom2Fit();
 
+        int selListSize();
+        bool selectionAt(int index, float &tl_x, float &tl_y, float &br_x, float &br_y);
+        bool activeSelection(float &tl_x, float &tl_y, float &br_x, float &br_y);
+        
     Q_SIGNALS:
         void newSelection(float tl_x, float tl_y, float br_x, float br_y);
         
@@ -68,6 +80,7 @@ class KSaneViewer : public QGraphicsView
         void mouseMoveEvent(QMouseEvent *e);
         
     private:
+
         struct Private;
         Private * const d;
 

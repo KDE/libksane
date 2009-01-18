@@ -28,12 +28,13 @@
 #define SIDELINEITEM_H
 
 #include <QGraphicsPixmapItem>
+#include <QTransform>
 #include <QPainter>
 
 namespace KSaneIface
 {
 
-class SelectionItem : public QGraphicsItem
+class SelectionItem : public QObject, public QGraphicsItem
 {
     public:
         typedef enum
@@ -47,7 +48,8 @@ class SelectionItem : public QGraphicsItem
             BottomLeft,
             Left,
             TopLeft,
-            Move
+            Move,
+            AddRemove
         } Intersects;
         
         explicit SelectionItem(QRectF rect);
@@ -55,13 +57,17 @@ class SelectionItem : public QGraphicsItem
 
         void setMaxRight(qreal maxRight);
         void setMaxBottom(qreal maxBottom);
+        void setSaved(bool isSaved);
 
         Intersects intersects(QPointF point);
+
+        void saveZoom(qreal zoom);
 
         void setRect(QRectF rect);
         QPointF fixTranslation(QPointF dp);
         QRectF rect();
 
+    public:
         // Graphics Item methods
         QRectF boundingRect() const;
         void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
