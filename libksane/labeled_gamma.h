@@ -63,11 +63,13 @@ public:
 
     void setColor(const QColor &color);
     void setSize(int size);
-    const QVector<int> &gammaTablePtr() { return gam_tbl; }
-    int size() {return (int)(max_val+1);}
+    const QVector<int> &gammaTablePtr() { return m_gam_tbl; }
+    int size() {return (int)(m_max_val+1);}
     
     void widgetSizeHints(int *lab_w, int *rest_w);
     void setColumnWidths(int, int) {};
+
+    bool getValues(int &bri, int &con, int &gam);
 
 public Q_SLOTS:
 
@@ -84,14 +86,14 @@ Q_SIGNALS:
 
 private:
 
-    LabeledSlider *bri_slider;
-    LabeledSlider *con_slider;
-    LabeledSlider *gam_slider;
+    LabeledSlider *m_bri_slider;
+    LabeledSlider *m_con_slider;
+    LabeledSlider *m_gam_slider;
 
-    QVector<int>   gam_tbl;
-    double         max_val;
+    QVector<int>   m_gam_tbl;
+    double         m_max_val;
 
-    GammaDisp     *gamma_disp;
+    GammaDisp     *m_gamma_disp;
 };
 
 }  // NameSpace KSaneIface
