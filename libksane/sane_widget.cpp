@@ -483,6 +483,7 @@ bool KSaneWidget::openDevice(const QString &device_name)
     d->scanBtn->setIcon(KIcon("document-save"));
     d->scanBtn->setToolTip(i18n("Scan Final Image"));
     d->scanBtn->setText(i18nc("Final scan button text", "Scan"));
+    d->scanBtn->setFocus(Qt::OtherFocusReason);
 
     connect(d->zInBtn, SIGNAL(clicked()),
             d->previewViewer, SLOT(zoomIn()));
@@ -1816,6 +1817,7 @@ void KSaneWidget::setBusy(bool busy)
     d->zFitBtn->setDisabled(busy);
     d->prevBtn->setDisabled(busy);
     d->scanBtn->setDisabled(busy);
+    d->scanBtn->setFocus(Qt::OtherFocusReason);
 
     if (busy) {
         d->progressBar->show();
