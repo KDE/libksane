@@ -56,19 +56,10 @@ public:
     LabeledCombo(QWidget *parent, const QString& label, const QStringList& list);
 
    /**
-    * \return the active text
+    * Set the label
     */
-    QString currentText() const;
+    void setLabelText(const QString &text);
 
-   /**
-    * \return the text at position i
-    */
-    QString text(int i) const;
-
-   /**
-    * \return the number of list entries.
-    */
-    int count() const;
     void widgetSizeHints(int *lab_w, int *cmb_w);
     void setColumnWidths(int lab_w, int cmb_w);
 
@@ -77,12 +68,12 @@ public Q_SLOTS:
     /**
      * Add string entries to the combobox
      */
-    void addItems(const QStringList &list) { combo->addItems(list); }
+    void addItems(const QStringList &list) { m_combo->addItems(list); }
 
     /**
      * Remove all string entries
      */
-    void clear() { combo->clear(); }
+    void clear() { m_combo->clear(); }
 
    /**
     * If the given string can be found in the comobox, activate that entry.
@@ -114,9 +105,9 @@ Q_SIGNALS:
 
 private:
 
-    QLabel *label;
-    KComboBox *combo;
-    QGridLayout *layout;
+    QLabel      *m_label;
+    KComboBox   *m_combo;
+    QGridLayout *m_layout;
 };
 
 }  // NameSpace KSaneIface

@@ -41,81 +41,71 @@ LabeledCombo::LabeledCombo(QWidget *parent, const QString& ltext,
                            const QStringList& list)
             : QFrame(parent)
 {
-    layout = new QGridLayout(this);
-    label  = new QLabel(ltext, this);
-    combo  = new KComboBox(this);
-    combo->addItems(list);
+    m_layout = new QGridLayout(this);
+    m_label  = new QLabel(ltext, this);
+    m_combo  = new KComboBox(this);
+    m_combo->addItems(list);
 
-    label->setBuddy(combo);
+    m_label->setBuddy(m_combo);
 
-    connect(combo, SIGNAL(activated(const QString &)),
+    connect(m_combo, SIGNAL(activated(const QString &)),
             this, SLOT(prActivated(const QString &)));
 
-    connect(combo, SIGNAL(activated(int)),
+    connect(m_combo, SIGNAL(activated(int)),
             this, SLOT(prActivated(int)));
 
-    layout->setSpacing(3);
-    layout->setMargin(0);
-    layout->addWidget(label, 0, 0, Qt::AlignLeft);
-    layout->addWidget(combo, 0, 2);
-    layout->setColumnStretch(0, 0);
-    layout->setColumnStretch(1, 50);
-    layout->setColumnStretch(2, 0);
+    m_layout->setSpacing(3);
+    m_layout->setMargin(0);
+    m_layout->addWidget(m_label, 0, 0, Qt::AlignLeft);
+    m_layout->addWidget(m_combo, 0, 2);
+    m_layout->setColumnStretch(0, 0);
+    m_layout->setColumnStretch(1, 50);
+    m_layout->setColumnStretch(2, 0);
+}
+
+void LabeledCombo::setLabelText(const QString &text)
+{
+    m_label->setText(text);
 }
 
 void LabeledCombo::setCurrentText(const QString &t)
 {
     int i;
-    for (i=0; i<combo->count(); i++) {
-        if (combo->itemText(i) == t) {
-            combo->setCurrentIndex(i);
+    for (i=0; i<m_combo->count(); i++) {
+        if (m_combo->itemText(i) == t) {
+            m_combo->setCurrentIndex(i);
         }
     }
 }
 
 bool LabeledCombo::setIcon(const QIcon &icon, const QString& str)
 {
-    for (int i=0; i < combo->count(); i++) {
-        if (combo->itemText(i) == str) {
-            combo->setItemIcon(i, icon);
+    for (int i=0; i < m_combo->count(); i++) {
+        if (m_combo->itemText(i) == str) {
+            m_combo->setItemIcon(i, icon);
             return true;
         }
     }
     return false;
 }
 
-QString LabeledCombo::currentText() const
-{
-    return(combo->currentText());
-}
-
-QString LabeledCombo::text(int i) const
-{
-    return(combo->itemText(i));
-}
-
 void LabeledCombo::setCurrentIndex(int i)
 {
-    combo->setCurrentIndex(i);
+    m_combo->setCurrentIndex(i);
 }
 
 
 void LabeledCombo::widgetSizeHints(int *lab_w, int *cmb_w)
 {
-    if (lab_w != 0) *lab_w = label->sizeHint().width();
-    if (cmb_w != 0) *cmb_w = combo->sizeHint().width();;
+    if (lab_w != 0) *lab_w = m_label->sizeHint().width();
+    if (cmb_w != 0) *cmb_w = m_combo->sizeHint().width();;
 }
 
 void LabeledCombo::setColumnWidths(int lab_w, int cmb_w)
 {
     //kDebug(51004) << "lab_w =" << lab_w << "cmb_w =" << cmb_w;
-    layout->setColumnMinimumWidth(0, lab_w);
-    layout->setColumnMinimumWidth(2, cmb_w);
-}
-
-int LabeledCombo::count() const
-{
-    return(combo->count());
+    m_layout->setColumnMinimumWidth(0, lab_w);
+    m_layout->setColumnMinimumWidth(2, cmb_w);
 }
 
 void LabeledCombo::prActivated(const QString &t)

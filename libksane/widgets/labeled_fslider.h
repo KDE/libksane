@@ -67,14 +67,19 @@ public:
                    float min, float max, float st);
     ~LabeledFSlider();
 
+    /**
+    * Set the label
+    */
+    void setLabelText(const QString &text);
+    
     void widgetSizeHints(int *lab_w, int *spi_w);
     void setColumnWidths(int lab_w, int spi_w);
 
    /**
     * \return the slider value.
     */
-    float value() const {return (float)spinb->value();}
-    float step() const {return fstep;}
+    float value() const {return (float)m_spinb->value();}
+    float step() const {return m_fstep;}
 
 public Q_SLOTS:
 
@@ -104,12 +109,12 @@ Q_SIGNALS:
 
 private:
 
-    QLabel         *label;
-    QSlider        *slider;
-    QDoubleSpinBox *spinb;
-    QGridLayout    *layout;
-    float           fstep;
-    int             istep;
+    QLabel         *m_label;
+    QSlider        *m_slider;
+    QDoubleSpinBox *m_spinb;
+    QGridLayout    *m_layout;
+    float           m_fstep;
+    int             m_istep;
 };
 
 }  // NameSpace KSaneIface

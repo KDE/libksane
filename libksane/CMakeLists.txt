@@ -1,21 +1,34 @@
 CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/version.h)
 
-INCLUDE_DIRECTORIES(${SANE_INCLUDE_DIR})
+INCLUDE_DIRECTORIES(${SANE_INCLUDE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/options
+    ${CMAKE_CURRENT_SOURCE_DIR}/widgets
+)
 
-SET(ksane_LIB_SRCS gamma_disp.cpp
-                   labeled_gamma.cpp
-                   labeled_checkbox.cpp
-                   labeled_entry.cpp
-                   labeled_separator.cpp
-                   sane_option.cpp
-                   labeled_combo.cpp
-                   labeled_fslider.cpp
-                   labeled_slider.cpp
-                   ksane_viewer.cpp
-                   selectionitem.cpp
-                   radio_select.cpp
-                   ksane_button.cpp
-                   sane_widget.cpp)
+SET(ksane_LIB_SRCS
+    widgets/gamma_disp.cpp
+    widgets/labeled_gamma.cpp
+    widgets/labeled_checkbox.cpp
+    widgets/labeled_entry.cpp
+    widgets/labeled_separator.cpp
+    widgets/labeled_combo.cpp
+    widgets/labeled_fslider.cpp
+    widgets/labeled_slider.cpp
+    widgets/ksane_button.cpp
+    ksane_viewer.cpp
+    selectionitem.cpp
+    radio_select.cpp
+    ksane_widget.cpp
+    ksane_widget_private.cpp
+    options/ksane_option.cpp
+    options/ksane_opt_button.cpp
+    options/ksane_opt_checkbox.cpp
+    options/ksane_opt_entry.cpp
+    options/ksane_opt_gamma.cpp
+    options/ksane_opt_slider.cpp
+    options/ksane_opt_fslider.cpp
+    options/ksane_opt_combo.cpp
+    )
 
 KDE4_ADD_LIBRARY(ksane SHARED ${ksane_LIB_SRCS})
 

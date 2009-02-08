@@ -68,9 +68,14 @@ public:
                 int min, int max, int st);
     ~LabeledSlider();
 
+    /**
+    * Set the label
+    */
+    void setLabelText(const QString &text);
+    
     void widgetSizeHints(int *lab_w, int *spi_w);
     void setColumnWidths(int lab_w, int spi_w);
-    int value() const { return( slider->value()); }
+    int value() const { return( m_slider->value()); }
 
 public Q_SLOTS:
 
@@ -97,11 +102,11 @@ Q_SIGNALS:
 
 private:
 
-    QLabel      *label;
-    QSlider     *slider;
-    QSpinBox    *spinb;
-    int         step;
-    QGridLayout *layout;
+    QLabel      *m_label;
+    QSlider     *m_slider;
+    QSpinBox    *m_spinb;
+    int          m_step;
+    QGridLayout *m_layout;
 };
 
 }  // NameSpace KSaneIface

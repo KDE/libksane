@@ -30,11 +30,9 @@
 #define KSANE_H
 
 // Qt includes.
-
 #include <QtGui/QWidget>
 
 // Local includes.
-
 #include "libksane_export.h"
 
 /** This namespace collects all methods and classes in LibKSane. */
@@ -79,13 +77,18 @@ public:
      * device name of the selected scanner device is returned. */
     QString selectDevice(QWidget* parent=0);
 
-    /** This method opens the specified scanner device and adds the scan options and the
-     * preview window to the KSane QWidget.
+    /** This method opens the specified scanner device and adds the scan options to the
+     * KSane widget.
      * @param device_name is the libsane device name for the scanner to open.
      * @return 'true' if all goes well and 'false' if the specified scanner can not be opened.
      */
-    bool    openDevice(const QString &device_name);
+    bool openDevice(const QString &device_name);
 
+    /** This method closes the currently open scanner device.
+    * @return 'true' if all goes well and 'false' if no device is open.
+    */
+    bool closeDevice();
+    
     /**
      * This is a convenience method that can be used to create a QImage from the image data
      * returned by the imageReady(...) signal.Note: If the image data has 16 bits/color the
@@ -173,7 +176,7 @@ public:
     */
     void enableAutoSelect(bool enable);
     
- public Q_SLOTS:
+public Q_SLOTS:
     /** This method can be used to cancel a scan. */
     void scanCancel();
 
@@ -200,30 +203,6 @@ public:
      * @param percent is the percentage of the scan progress (0-100).
      */
     void scanProgress(int percent);
-
-private Q_SLOTS:
-
-    void scheduleValReload();
-    void optReload();
-    void valReload();
-    void handleSelection(float tl_x, float tl_y, float br_x, float br_y);
-    void scanPreview();
-    void setTLX(float x);
-    void setTLY(float y);
-    void setBRX(float x);
-    void setBRY(float y);
-    void startScan();
-    void processData();
-
-private:
-
-    void createOptInterface();
-    void updatePreviewSize();
-    void copyToScanData(int read_bytes);
-    void copyToPreview(int read_bytes);
-    void setDefaultValues();
-    void setBusy(bool busy);
-    void scanDone();
 
 private:
 
