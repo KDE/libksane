@@ -91,11 +91,11 @@ namespace KSaneIface
             int getBytesPerLines(SANE_Parameters &params);
             
         Q_SIGNALS:
-            void imageReady(QByteArray &data, int width, int height,
-                             int bytes_per_line, int format);
-                             
-                             void scanProgress(int percent);
-                             
+            void imageReady(QByteArray &data, int width, int height, int bytes_per_line, int format);
+            
+            void scanProgress(int percent);
+            void scanDone(int status, const QString &errStr);
+            
         public Q_SLOTS:
             void scanFinal();
             
@@ -140,6 +140,7 @@ namespace KSaneIface
             
             // Option variables
             QList<KSaneOption*> m_optList;
+            KSaneOption        *m_optSource;
             KSaneOption        *m_optMode;
             KSaneOption        *m_optDepth;
             KSaneOption        *m_optRes;

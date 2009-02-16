@@ -85,6 +85,7 @@ KSaneWidgetPrivate::KSaneWidgetPrivate()
 
 void KSaneWidgetPrivate::clearDeviceOptions()
 {
+    m_optSource     = 0;
     m_optMode       = 0;
     m_optDepth      = 0;
     m_optRes        = 0;
@@ -97,7 +98,7 @@ void KSaneWidgetPrivate::clearDeviceOptions()
     m_optGamG       = 0;
     m_optGamB       = 0;
     m_optPreview    = 0;
-
+    
     // delete all the options in the list.
     while (!m_optList.isEmpty()) {
         delete m_optList.takeFirst();
@@ -190,6 +191,7 @@ void KSaneWidgetPrivate::createOptInterface()
     KSaneOption *option;
     // Scan Source
     if ((option = getOption(SANE_NAME_SCAN_SOURCE)) != 0) {
+        m_optSource = option;
         option->createWidget(m_basicOptsTab);
         basic_layout->addWidget(option->widget());
     }
@@ -572,7 +574,7 @@ void KSaneWidgetPrivate::scanPreview()
 {
     SANE_Status status;
     float max;
-    int dpi;
+    float dpi;
     
     if (m_readStatus == READ_ON_GOING) return;
     
@@ -602,10 +604,10 @@ void KSaneWidgetPrivate::scanPreview()
     }
     
     // set the resopution to 100 dpi and increase if necessary
-    dpi = 0;
+    dpi = 0.0;
     do {
         // Increase the dpi value
-        dpi += 100;
+        dpi += 100.0;
         if (m_optRes != 0) {
             m_optRes->setValue(dpi);
         }
@@ -634,7 +636,7 @@ void KSaneWidgetPrivate::scanPreview()
     
     setBusy(true);
     
-    //We could use:QMetaObject::invokeMethod(this, "scanFinal", Qt::QueuedConnection);
+    //We could use:QMetaObject::invokeMethod(this, "startScan", Qt::QueuedConnection);
     // but the timer is still needed so, we stick to that :)
     m_startScanTmr.start(0);
     
@@ -651,35 +653,35 @@ void KSaneWidgetPrivate::scanFinal()
     
     // check if we can modify the selection
     if ((m_optTlX != 0) && (m_optTlY != 0) &&
-        (m_optBrX != 0) && (m_optBrY != 0)) {
-        
+        (m_optBrX != 0) && (m_optBrY != 0))
+    {
         // get maximums
         m_optBrX->getMaxValue(mx);
-    m_optBrY->getMaxValue(my);
+        m_optBrY->getMaxValue(my);
     
-    // are there any saved selections left?
-    if ((m_previewViewer->selListSize() > 0) &&
-        (m_previewViewer->selListSize() > m_autoSelIndex))
-    {
-        m_previewViewer->selectionAt(m_autoSelIndex, x1,y1,x2,y2);
-        m_autoSelIndex++;
-    }
-    else {
-        m_autoSelIndex++; // selListSize() >= m_autoSelIndex is used to get here
-        m_previewViewer->activeSelection(x1,y1,x2,y2);
-        if ((x1==x2) || (y1==y2)) {
-            x1=0; y1=0;
-            x2=1; y2=1;
+        // are there any saved selections left?
+        if ((m_previewViewer->selListSize() > 0) &&
+            (m_previewViewer->selListSize() > m_autoSelIndex))
+        {
+            m_previewViewer->selectionAt(m_autoSelIndex, x1,y1,x2,y2);
+            m_autoSelIndex++;
         }
-    }
-    x1 *= mx; y1 *= my;
-    x2 *= mx; y2 *= my;
-    
-    // now set the selection
-    m_optTlX->setValue(x1);
-    m_optTlY->setValue(y1);
-    m_optBrX->setValue(x2);
-    m_optBrY->setValue(y2);
+        else {
+            m_autoSelIndex++; // selListSize() >= m_autoSelIndex is used to get here
+            m_previewViewer->activeSelection(x1,y1,x2,y2);
+            if ((x1==x2) || (y1==y2)) {
+                x1=0; y1=0;
+                x2=1; y2=1;
+            }
+        }
+        x1 *= mx; y1 *= my;
+        x2 *= mx; y2 *= my;
+
+        // now set the selection
+        m_optTlX->setValue(x1);
+        m_optTlY->setValue(y1);
+        m_optBrX->setValue(x2);
+        m_optBrY->setValue(y2);
     }
     else {
         m_autoSelect = false;
@@ -701,43 +703,45 @@ void KSaneWidgetPrivate::startScan()
     SANE_Status status;
     // Start the scanning with sane_start
     status = sane_start(m_saneHandle);
-    
-    #ifndef SANE_CAP_ALWAYS_SETTABLE
-    // should better be done by detecting SANE's version in configure and providing a HAS_SANE_1_1
-    // FIXME remove these ifdefs and require sane 1.1.x as soon as possible
-    if (status == SANE_STATUS_WARMING_UP) {
-        m_warmingUp->show();
-        m_progressBar->hide();
-        if (m_readStatus == READ_ON_GOING) {
-            m_startScanTmr.start(20);
-        }
-        else {
-            m_warmingUp->hide();
-            scanDone();
-        }
-        return;
-    }
-    #endif
-    
+
     if (status != SANE_STATUS_GOOD) {
-        if ((status == SANE_STATUS_NO_DOCS)
-            || (status == SANE_STATUS_JAMMED)
-            || (status == SANE_STATUS_COVER_OPEN)
-            || (status == SANE_STATUS_DEVICE_BUSY)
-            || (status == SANE_STATUS_ACCESS_DENIED)
-            #ifndef SANE_CAP_ALWAYS_SETTABLE
-            || (status == SANE_STATUS_HW_LOCKED)
-            #endif
-            )
+        switch (status)
         {
-            KMessageBox::sorry(0, i18n(sane_strstatus(status)));
+            #ifndef SANE_CAP_ALWAYS_SETTABLE
+            // should better be done by detecting SANE's version in configure and providing a HAS_SANE_1_1
+            // FIXME remove these ifdefs and require sane 1.1.x as soon as possible
+            case SANE_STATUS_WARMING_UP:
+                m_warmingUp->show();
+                m_progressBar->hide();
+                if (m_readStatus == READ_ON_GOING) {
+                    m_startScanTmr.start(100);
+                }
+                else {
+                    m_warmingUp->hide();
+                    scanDone();
+                }
+                return;
+            #endif
+            case SANE_STATUS_NO_DOCS:
+                // if it is the first doc in batch mode this is an error
+                // do batch stuff here...
+            case SANE_STATUS_JAMMED:
+            case SANE_STATUS_COVER_OPEN:
+            case SANE_STATUS_DEVICE_BUSY:
+            case SANE_STATUS_ACCESS_DENIED:
+            #ifndef SANE_CAP_ALWAYS_SETTABLE
+            case SANE_STATUS_HW_LOCKED:
+            #endif
+                KMessageBox::sorry(0, i18n(sane_strstatus(status)));
+                scanCancel();
+                setBusy(false);
+                return;
+            default:
+                kDebug(51004) << "sane_start =" << status << "=" << sane_strstatus(status);
+                scanCancel();
+                setBusy(false);
+                return;
         }
-        else {
-            kDebug(51004) << "sane_start =" << status << "=" << sane_strstatus(status);
-        }
-        scanCancel();
-        setBusy(false);
-        return;
     }
     
     m_warmingUp->hide();
@@ -823,43 +827,81 @@ void KSaneWidgetPrivate::scanDone()
             m_autoSelIndex = 0;
         }
     }
-    else {
-        if (m_readStatus == READ_FINISHED) {
-            emit imageReady(m_scanData,
-                             m_params.pixels_per_line,
-                             m_params.lines,
-                             getBytesPerLines(m_params),
-                             (int)getImgFormat(m_params));
-        }
+    else if (m_readStatus == READ_FINISHED) {
+        emit imageReady(m_scanData,
+                         m_params.pixels_per_line,
+                         m_params.lines,
+                         getBytesPerLines(m_params),
+                         (int)getImgFormat(m_params));
         // if scanFinal has been called from the slot for imageReady,
-        // a new "batch" scan is wanted and m_readStatus will be
+        // a new forced "batch" scan is wanted and m_readStatus will be
         // READ_ON_GOING not READ_FINISHED or READ_ERROR
-        if (m_readStatus != READ_ON_GOING) {
-            sane_cancel(m_saneHandle);
-            float x1,x2,y1,y2;
-            if ((m_autoSelect == true) &&
-                ((m_previewViewer->selListSize() > 0) &&
-                (m_previewViewer->selListSize() > m_autoSelIndex)))
-            {
-                QMetaObject::invokeMethod(this, "scanFinal", Qt::QueuedConnection);
+        if (m_readStatus == READ_FINISHED) {
+            // check if we should have ADF automatic batch scaning
+            QString source;
+            if (m_optSource){
+                m_optSource->getValue(source);
             }
-            else if ((m_autoSelect == true) &&
-                (m_previewViewer->selListSize() > 0) &&
-                (m_previewViewer->selListSize() == m_autoSelIndex) &&
-                (m_previewViewer->activeSelection(x1,y1,x2,y2) == true))
-            {
+            if (source == "Automatic Document Feeder") {
+                // in batch mode only one area can be scanned per page
                 QMetaObject::invokeMethod(this, "scanFinal", Qt::QueuedConnection);
+                return;
             }
             else {
-                // we might want to rescan
-                m_autoSelIndex = 0;
+                // not batch scan -> call sane_cancel to be able to change parameters.
+                sane_cancel(m_saneHandle);
+                // check if we have multiple selections.
+                float x1,x2,y1,y2;
+                if ((m_autoSelect == true) &&
+                    ((m_previewViewer->selListSize() > 0) &&
+                    (m_previewViewer->selListSize() > m_autoSelIndex)))
+                {
+                    QMetaObject::invokeMethod(this, "scanFinal", Qt::QueuedConnection);
+                    return;
+                }
+                else if ((m_autoSelect == true) &&
+                    (m_previewViewer->selListSize() > 0) &&
+                    (m_previewViewer->selListSize() == m_autoSelIndex) &&
+                    (m_previewViewer->activeSelection(x1,y1,x2,y2) == true))
+                {
+                    QMetaObject::invokeMethod(this, "scanFinal", Qt::QueuedConnection);
+                    return;
+                }
+                else {
+                    // we might want to rescan
+                    m_autoSelIndex = 0;
+                }
             }
         }
-        else {
-            return;
-        }
     }
+    emit scanDone(KSaneWidget::NoError, "");
     setBusy(false);
+}
+
+
+void KSaneWidgetPrivate::scanCancel()
+{
+    sane_cancel(m_saneHandle);
+    m_readStatus = READ_CANCEL;
+    m_progressBar->setValue(0);
+}
+
+void KSaneWidgetPrivate::setBusy(bool busy)
+{
+    m_optsTabWidget->setDisabled(busy);
+    m_previewViewer->setDisabled(busy);
+    m_zInBtn->setDisabled(busy);
+    m_zOutBtn->setDisabled(busy);
+    m_zSelBtn->setDisabled(busy);
+    m_zFitBtn->setDisabled(busy);
+    m_prevBtn->setDisabled(busy);
+    m_scanBtn->setDisabled(busy);
+    m_scanBtn->setFocus(Qt::OtherFocusReason);
+    
+    m_progressBar->setVisible(busy);
+    m_cancelBtn->setVisible(busy);
+    m_progressBar->setDisabled(!busy);
+    m_cancelBtn->setDisabled(!busy);
 }
 
 #define index_rgb8_to_argb8(i)   ((i*4)/3)
@@ -1245,38 +1287,6 @@ void KSaneWidgetPrivate::copyToScanData(int read_bytes)
     << "is not yet suppoeted by libksane!";
     m_readStatus = READ_ERROR;
     return;
-}
-
-void KSaneWidgetPrivate::scanCancel()
-{
-    sane_cancel(m_saneHandle);
-    m_readStatus = READ_CANCEL;
-    m_progressBar->setValue(0);
-}
-
-void KSaneWidgetPrivate::setBusy(bool busy)
-{
-    m_optsTabWidget->setDisabled(busy);
-    m_previewViewer->setDisabled(busy);
-    m_zInBtn->setDisabled(busy);
-    m_zOutBtn->setDisabled(busy);
-    m_zSelBtn->setDisabled(busy);
-    m_zFitBtn->setDisabled(busy);
-    m_prevBtn->setDisabled(busy);
-    m_scanBtn->setDisabled(busy);
-    m_scanBtn->setFocus(Qt::OtherFocusReason);
-    
-    if (busy) {
-        m_progressBar->show();
-        m_cancelBtn->show();
-    }
-    else {
-        m_progressBar->hide();
-        m_cancelBtn->hide();
-    }
-    
-    m_progressBar->setDisabled(!busy);
-    m_cancelBtn->setDisabled(!busy);
 }
 
 }  // NameSpace KSaneIface

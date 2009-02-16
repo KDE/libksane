@@ -149,8 +149,9 @@ KSaneWidget::KSaneWidget(QWidget* parent)
     // Forward signals from the private class
     connect(d, SIGNAL(scanProgress(int)), this, SIGNAL(scanProgress(int)));
     connect(d, SIGNAL(imageReady(QByteArray &, int, int, int, int)),
-             this, SIGNAL(imageReady(QByteArray &, int, int, int, int)));
-
+            this, SIGNAL(imageReady(QByteArray &, int, int, int, int)));
+    connect(d, SIGNAL(scanDone(int, QString)), this, SIGNAL(scanDone(int, QString)));
+    
     // Create the static UI
     QHBoxLayout *base_layout = new QHBoxLayout;
     base_layout->setSpacing(2);
@@ -605,6 +606,17 @@ void KSaneWidget::setPreviewButtonText(const QString &previewLabel)
 void KSaneWidget::enableAutoSelect(bool enable)
 {
     d->m_autoSelect = enable;
+}
+
+float KSaneWidget::currentDPI()
+{
+    if (d->m_optRes) {
+        float value;
+        if (d->m_optRes->getValue(value)) {
+            return value;
+        }
+    }
+    return 0.0;
 }
 
 }  // NameSpace KSaneIface

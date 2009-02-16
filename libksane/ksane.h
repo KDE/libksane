@@ -66,6 +66,15 @@ public:
         FormatNone = 0xFFFF /**< This enumeration value should never be returned to the user */
     } ImageFormat;
 
+    typedef enum
+    {
+        NoError,            /**< The scanning was finished successfully.*/
+        ErrorCannotSegment, /**< If this error status is returned libksane can not segment the
+                             * returned data. Scanning without segmentation should work.
+                             * @note segmentation is not implemented yet.*/
+        ErrorGeneral        /**< The error string should contain an error message. */
+    } ScanStatus;
+
     /** This constructor initializes the private class variables, but the widget is left empty.
      * The options and the preview are added with the call to openDevice(). */
     KSaneWidget(QWidget* parent=0);
@@ -134,6 +143,13 @@ public:
     /** This methos returns the model of the scanner. */
     QString model() const;
 
+    /** This method returns the current resolution of the aquired image,
+    * in dots per inch.
+    * @note This function should be called from the slot connected
+    * to the imageReady signal.
+    * @return the resolution used for scanning or 0.0 on failure. */
+    float currentDPI();
+
     /** This method reads the available parameters and their values and
      * returns them in a QMap (Name, value)
      * @param opts is a QMap with the parameter names and values.
@@ -177,10 +193,14 @@ public:
     void enableAutoSelect(bool enable);
     
 public Q_SLOTS:
-    /** This method can be used to cancel a scan. */
+    /** This method can be used to cancel a scan or prevent an automatic new scan. */
     void scanCancel();
 
-    /** This method can be used to start a scan (if no GUI is needed). */
+    /** This method can be used to start a scan (if no GUI is needed).
+    * @note libksane may return one or more images as a result of one invocation of this slot.
+    * If no more images are wanted scanCancel should be called in the slot handling the
+    * imageReady signal.
+    */
     void scanFinal();
 
     Q_SIGNALS:
@@ -195,6 +215,14 @@ public Q_SLOTS:
      */
     void imageReady(QByteArray &data, int width, int height,
                     int bytes_per_line, int format);
+
+    /**
+     * This signal is emitted when the scanning has ended.
+     * @param status contains a ScanStatus status code.
+     * @param strStatus If an error has occurred this string will contain an error message.
+     * otherwise the string is empty.
+     */
+    void scanDone(int status, const QString &strStatus);
 
     /**
      * This Signal is emitted for progress information during a scan.
