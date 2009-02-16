@@ -222,8 +222,70 @@ void KSaneOptCombo::comboboxChangedIndex(int i)
 }
 
 
-bool KSaneOptCombo::getValue(float &) {return false;}
-bool KSaneOptCombo::setValue(float) {return false;}
+bool KSaneOptCombo::getValue(float &val)
+{
+    if (state() == STATE_HIDDEN) return false;
+
+    // read that current value
+    QVarLengthArray<unsigned char> data(m_optDesc->size);
+    SANE_Status status;
+    SANE_Int res;
+    status = sane_control_option (m_handle, m_index, SANE_ACTION_GET_VALUE, data.data(), &res);
+    if (status != SANE_STATUS_GOOD) {
+        kDebug(51004) << m_optDesc->name << "sane_control_option returned" << status;
+        return false;
+    }
+    
+    switch (m_optDesc->type)
+    {
+        case SANE_TYPE_INT:
+            val = (float)toSANE_Word(data.data());
+            return true;
+        case SANE_TYPE_FIXED:
+            val = SANE_UNFIX(toSANE_Word(data.data()));
+            return true;
+        default:
+            kDebug(51004) << "Type" << m_optDesc->type << "not supported!";
+    }
+    return false;
+}
+
+bool KSaneOptCombo::setValue(float value)
+{
+    unsigned char data[4];
+    float tmp;
+    int i;
+    
+    switch (m_optDesc->type)
+    {
+        case SANE_TYPE_INT:
+            for (i=1; i<=m_optDesc->constraint.word_list[0]; i++) {
+                tmp = (float)m_optDesc->constraint.word_list[i];
+                if (qAbs(tmp - value) < 0.01) {
+                    fromSANE_Word(data, m_optDesc->constraint.word_list[i]);
+                    writeData(data);
+                    readValue();
+                    return true;
+                }
+            }
+            break;
+        case SANE_TYPE_FIXED:
+            for (i=1; i<=m_optDesc->constraint.word_list[0]; i++) {
+                tmp = (float)SANE_UNFIX(m_optDesc->constraint.word_list[i]);
+                if (qAbs(tmp - value) < 0.01) {
+                    fromSANE_Word(data, m_optDesc->constraint.word_list[i]);
+                    writeData(data);
+                    readValue();
+                    return true;
+                }
+            }
+            break;
+        default:
+            kDebug(51004) << "can not handle type:" << m_optDesc->type;
+            break;
+    }
+    return false;
+}
 
 bool KSaneOptCombo::getValue(QString &val)
 {
