@@ -196,7 +196,7 @@ bool KSaneOption::restoreSavedData()
     if (state() == STATE_DISABLED) return false;
     
     writeData(m_data);
-    
+    readValue();
     return true;
 }
 
