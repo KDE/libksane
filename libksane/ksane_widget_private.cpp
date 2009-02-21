@@ -26,6 +26,7 @@
  *
  * ============================================================ */
 
+// Local includes.
 #include "ksane_widget_private.h"
 #include "ksane_widget_private.moc"
 
@@ -36,15 +37,14 @@
 #include <QList>
 #include <QCheckBox>
 #include <QLabel>
-#include <KPushButton>
 
 // KDE includes
-#include <kglobal.h>
-
-// Local includes.
+#include <KPushButton>
 
 #define SCALED_PREVIEW_MAX_SIDE 400
 #define MAX_NUM_OPTIONS 100
+
+static const int ActiveSelection = 100000;
 
 namespace KSaneIface
 {
@@ -65,7 +65,7 @@ KSaneWidgetPrivate::KSaneWidgetPrivate()
     m_cancelBtn     = 0;
     m_previewViewer = 0;
     m_autoSelect    = true;
-    m_autoSelIndex  = 0;
+    m_selIndex      = ActiveSelection;
     m_warmingUp     = 0;
     m_progressBar   = 0;
 
@@ -77,7 +77,7 @@ KSaneWidgetPrivate::KSaneWidgetPrivate()
     m_frameSize     = 0;
     m_frameRead     = 0;
     m_dataSize      = 0;
-    m_readStatus    = READ_FINISHED;
+    m_readStatus    = READ_READY;
     m_isPreview     = false;
     
     clearDeviceOptions();
@@ -573,7 +573,7 @@ void KSaneWidgetPrivate::updatePreviewSize()
 void KSaneWidgetPrivate::scanPreview()
 {
     SANE_Status status;
-    float max;
+    float max_x, max_y;
     float dpi;
     
     if (m_readStatus == READ_ON_GOING) return;
@@ -591,16 +591,23 @@ void KSaneWidgetPrivate::scanPreview()
     if (m_optBrY != 0) m_optBrY->storeCurrentData();
     if (m_optPreview != 0) m_optPreview->storeCurrentData();
     
-    // select the whole area
-    if (m_optTlX != 0) m_optTlX->setValue(0);
-    if (m_optTlY != 0) m_optTlY->setValue(0);
-    if (m_optBrX != 0) {
-        m_optBrX->getMaxValue(max);
-        m_optBrX->setValue(max);
+    // check if we can modify the selection
+    if ((m_optTlX != 0) && (m_optTlY != 0) &&
+        (m_optBrX != 0) && (m_optBrY != 0))
+    {
+        // get maximums
+        m_optBrX->getMaxValue(max_x);
+        m_optBrY->getMaxValue(max_y);
+        // select the whole area
+        m_optTlX->setValue(0);
+        m_optTlY->setValue(0);
+        m_optBrX->setValue(max_x);
+        m_optBrY->setValue(max_y);
+        
     }
-    if (m_optBrY != 0) {
-        m_optBrY->getMaxValue(max);
-        m_optBrY->setValue(max);
+    else {
+        // no use to try auto selections if you can not use them
+        m_autoSelect = false;
     }
     
     // set the resopution to 100 dpi and increase if necessary
@@ -639,52 +646,65 @@ void KSaneWidgetPrivate::scanPreview()
     //We could use:QMetaObject::invokeMethod(this, "startScan", Qt::QueuedConnection);
     // but the timer is still needed so, we stick to that :)
     m_startScanTmr.start(0);
-    
 }
 
 void KSaneWidgetPrivate::scanFinal()
 {
     if (m_readStatus == READ_ON_GOING) return;
     
-    float x1=0,y1=0, x2=0,y2=0, mx, my;
+    float x1=0,y1=0, x2=0,y2=0, max_x, max_y;
     
-    m_readStatus  = READ_ON_GOING;
     m_isPreview = false;
-    
-    // check if we can modify the selection
-    if ((m_optTlX != 0) && (m_optTlY != 0) &&
-        (m_optBrX != 0) && (m_optBrY != 0))
-    {
-        // get maximums
-        m_optBrX->getMaxValue(mx);
-        m_optBrY->getMaxValue(my);
-    
-        // are there any saved selections left?
-        if ((m_previewViewer->selListSize() > 0) &&
-            (m_previewViewer->selListSize() > m_autoSelIndex))
+
+    if ((m_readStatus == READ_READY) || (m_readStatus == READ_CANCEL) || (m_readStatus == READ_READY_SEL)) {
+        // This is not a batch "continue" scan
+        // check if we can modify the selection
+        if ((m_optTlX != 0) && (m_optTlY != 0) &&
+            (m_optBrX != 0) && (m_optBrY != 0))
         {
-            m_previewViewer->selectionAt(m_autoSelIndex, x1,y1,x2,y2);
-            m_autoSelIndex++;
-        }
-        else {
-            m_autoSelIndex++; // selListSize() >= m_autoSelIndex is used to get here
-            m_previewViewer->activeSelection(x1,y1,x2,y2);
+            // get maximums
+            m_optBrX->getMaxValue(max_x);
+            m_optBrY->getMaxValue(max_y);
+
+            if (m_readStatus != READ_READY_SEL) {
+                if (m_optTlX != 0) m_optTlX->storeCurrentData();
+                if (m_optTlY != 0) m_optTlY->storeCurrentData();
+                if (m_optBrX != 0) m_optBrX->storeCurrentData();
+                if (m_optBrY != 0) m_optBrY->storeCurrentData();
+                m_selIndex = ActiveSelection;
+            }
+
+            if (m_selIndex == ActiveSelection) {
+                m_selIndex = 0;
+                // try the active selection?
+                m_previewViewer->activeSelection(x1,y1,x2,y2);
+            }
+            
+            if ((x1==x2) || (y1==y2)) {
+                // try a saved selection if the selection is invalid
+                m_previewViewer->selectionAt(m_selIndex, x1,y1,x2,y2);
+                kDebug() << m_selIndex;
+                m_selIndex++;
+            }
+
+            // Select the whole area if the selection is broken.
             if ((x1==x2) || (y1==y2)) {
                 x1=0; y1=0;
                 x2=1; y2=1;
             }
-        }
-        x1 *= mx; y1 *= my;
-        x2 *= mx; y2 *= my;
+            x1 *= max_x; y1 *= max_y;
+            x2 *= max_x; y2 *= max_y;
 
-        // now set the selection
-        m_optTlX->setValue(x1);
-        m_optTlY->setValue(y1);
-        m_optBrX->setValue(x2);
-        m_optBrY->setValue(y2);
+            // now set the selection
+            m_readStatus = READ_ON_GOING;
+            m_optTlX->setValue(x1);
+            m_optTlY->setValue(y1);
+            m_optBrX->setValue(x2);
+            m_optBrY->setValue(y2);
+        }
     }
     else {
-        m_autoSelect = false;
+        m_readStatus = READ_ON_GOING;
     }
     
     // execute a pending value reload
@@ -808,10 +828,8 @@ void KSaneWidgetPrivate::scanDone()
 {
     if (m_isPreview) {
         m_previewViewer->updateImage();
-        
         // even if the scan is finished successfully we need to call sane_cancel()
         sane_cancel(m_saneHandle);
-        
         // restore the original settings of the changed parameters
         if (m_optDepth != 0) m_optDepth->restoreSavedData();
         if (m_optRes != 0) m_optRes->restoreSavedData();
@@ -824,58 +842,65 @@ void KSaneWidgetPrivate::scanDone()
         
         if (m_autoSelect) {
             m_previewViewer->findSelections();
-            m_autoSelIndex = 0;
         }
+        m_readStatus = READ_READY;
+        setBusy(false);
+        return;
     }
-    else if (m_readStatus == READ_FINISHED) {
+
+    if (m_readStatus == READ_FINISHED) {
+        // scan finished OK
         emit imageReady(m_scanData,
                          m_params.pixels_per_line,
                          m_params.lines,
                          getBytesPerLines(m_params),
                          (int)getImgFormat(m_params));
-        // if scanFinal has been called from the slot for imageReady,
-        // a new forced "batch" scan is wanted and m_readStatus will be
-        // READ_ON_GOING not READ_FINISHED or READ_ERROR
-        if (m_readStatus == READ_FINISHED) {
-            // check if we should have ADF automatic batch scaning
-            QString source;
-            if (m_optSource){
-                m_optSource->getValue(source);
-            }
-            if (source == "Automatic Document Feeder") {
-                // in batch mode only one area can be scanned per page
-                QMetaObject::invokeMethod(this, "scanFinal", Qt::QueuedConnection);
-                return;
-            }
-            else {
-                // not batch scan -> call sane_cancel to be able to change parameters.
-                sane_cancel(m_saneHandle);
-                // check if we have multiple selections.
-                float x1,x2,y1,y2;
-                if ((m_autoSelect == true) &&
-                    ((m_previewViewer->selListSize() > 0) &&
-                    (m_previewViewer->selListSize() > m_autoSelIndex)))
-                {
-                    QMetaObject::invokeMethod(this, "scanFinal", Qt::QueuedConnection);
-                    return;
-                }
-                else if ((m_autoSelect == true) &&
-                    (m_previewViewer->selListSize() > 0) &&
-                    (m_previewViewer->selListSize() == m_autoSelIndex) &&
-                    (m_previewViewer->activeSelection(x1,y1,x2,y2) == true))
-                {
-                    QMetaObject::invokeMethod(this, "scanFinal", Qt::QueuedConnection);
-                    return;
-                }
-                else {
-                    // we might want to rescan
-                    m_autoSelIndex = 0;
-                }
-            }
+
+        if (m_readStatus == READ_ON_GOING) {
+            // scanFinal() has been called in the imageReady slot.
+            // a new "batch" scan is wanted.
+            return;
+        }
+        
+        // now check if we should have automatic ADF batch scaning
+        QString source;
+        if (m_optSource){
+            m_optSource->getValue(source);
+        }
+        if (source == "Automatic Document Feeder") {
+            // in batch mode only one area can be scanned per page
+            kDebug() << "source == \"Automatic Document Feeder\"";
+            scanFinal();
+            return;
+        }
+
+        // not batch scan, call sane_cancel to be able to change parameters.
+        sane_cancel(m_saneHandle);
+
+        // check if we have multiple selections.
+        if ((m_autoSelect == true) && (m_previewViewer->selListSize() > m_selIndex))
+        {
+            m_readStatus = READ_READY_SEL;
+            scanFinal();
+            return;
         }
     }
-    emit scanDone(KSaneWidget::NoError, "");
+    
     setBusy(false);
+    if (m_optTlX != 0) m_optTlX->restoreSavedData();
+    if (m_optTlY != 0) m_optTlY->restoreSavedData();
+    if (m_optBrX != 0) m_optBrX->restoreSavedData();
+    if (m_optBrY != 0) m_optBrY->restoreSavedData();
+
+    bool error = (m_readStatus == READ_ERROR);
+    m_readStatus = READ_READY;
+    
+    if (error) {
+        emit scanDone(KSaneWidget::ErrorGeneral, "");
+    }
+    else {
+        emit scanDone(KSaneWidget::NoError, "");
+    }
 }
 
 
@@ -1037,16 +1062,14 @@ void KSaneWidgetPrivate::copyToPreview(int read_bytes)
                 for (i=0; i<read_bytes; i++) {
                     for (j=7; j>=0; j--) {
                         if ((m_saneReadBuffer[i] & (1<<j)) == 0) {
-                            m_previewImg.setPixel(
-                            m_pixel_x,
-                                                     m_pixel_y,
-                                                     qRgb(255,255,255));
+                            m_previewImg.setPixel(m_pixel_x,
+                                                   m_pixel_y,
+                                                   qRgb(255,255,255));
                         }
                         else {
-                            m_previewImg.setPixel(
-                            m_pixel_x,
-                                                     m_pixel_y,
-                                                     qRgb(0,0,0));
+                            m_previewImg.setPixel(m_pixel_x,
+                                                   m_pixel_y,
+                                                   qRgb(0,0,0));
                         }
                         m_pixel_x++;
                         if(m_pixel_x >= m_params.pixels_per_line) {
@@ -1092,13 +1115,11 @@ void KSaneWidgetPrivate::copyToPreview(int read_bytes)
                         m_frameRead++;
                         if (m_px_c_index == 0) {
                             m_previewImg.setPixel(m_pixel_x,
-                                                      m_pixel_y,
-                                                      qRgb(m_px_colors[0],
-                                                            m_px_colors[1],
-                                                            m_px_colors[2]));
-                                                            inc_pixel(m_pixel_x,
-                                                                       m_pixel_y,
-                                                                       m_params.pixels_per_line);
+                                                  m_pixel_y,
+                                                  qRgb(m_px_colors[0],
+                                                       m_px_colors[1],
+                                                       m_px_colors[2]));
+                            inc_pixel(m_pixel_x, m_pixel_y, m_params.pixels_per_line);
                         }
                     }
                     return;
@@ -1111,13 +1132,11 @@ void KSaneWidgetPrivate::copyToPreview(int read_bytes)
                             inc_color_index(m_px_c_index);
                             if (m_px_c_index == 0) {
                                 m_previewImg.setPixel(m_pixel_x,
-                                                          m_pixel_y,
-                                                          qRgb(m_px_colors[0],
-                                                                m_px_colors[1],
-                                                                m_px_colors[2]));
-                                                                inc_pixel(m_pixel_x,
-                                                                           m_pixel_y,
-                                                                           m_params.pixels_per_line);
+                                                      m_pixel_y,
+                                                      qRgb(m_px_colors[0],
+                                                           m_px_colors[1],
+                                                           m_px_colors[2]));
+                                inc_pixel(m_pixel_x, m_pixel_y, m_params.pixels_per_line);
                             }
                         }
                     }
@@ -1189,9 +1208,7 @@ void KSaneWidgetPrivate::copyToPreview(int read_bytes)
                 break;
     }
     
-    if (m_readStatus == READ_ERROR) {
-        KMessageBox::error(0, i18n("The image format is not (yet?) supported by libksane!"));
-    }
+    KMessageBox::error(0, i18n("The image format is not (yet?) supported by libksane!"));
     kDebug(51004) << "Format" << m_params.format
     << "and depth" << m_params.format
     << "is not yet suppoeted by libksane!";
@@ -1279,9 +1296,7 @@ void KSaneWidgetPrivate::copyToScanData(int read_bytes)
             break;
     }
     
-    if (m_readStatus == READ_ERROR) {
-        KMessageBox::error(0, i18n("The image format is not (yet?) supported by libksane!"));
-    }
+    KMessageBox::error(0, i18n("The image format is not (yet?) supported by libksane!"));
     kDebug(51004) << "Format" << m_params.format
     << "and depth" << m_params.format
     << "is not yet suppoeted by libksane!";

@@ -72,7 +72,9 @@ namespace KSaneIface
             READ_ON_GOING,
             READ_ERROR,
             READ_CANCEL,
-            READ_FINISHED
+            READ_FINISHED,
+            READ_READY_SEL,
+            READ_READY
         } ReadStatus;
         
         public:
@@ -159,7 +161,7 @@ namespace KSaneIface
             float               m_previewHeight;
             QImage              m_previewImg;
             bool                m_autoSelect;
-            int                 m_autoSelIndex;
+            int                 m_selIndex;
             
             // final image data
             QByteArray          m_scanData;
