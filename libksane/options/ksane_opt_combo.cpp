@@ -219,6 +219,7 @@ void KSaneOptCombo::comboboxChangedIndex(int i)
             return;
     }
     writeData(dataPtr);
+    readValue();
 }
 
 

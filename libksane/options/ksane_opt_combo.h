@@ -50,7 +50,6 @@ public:
     void readValue();
     void readOption();
 
-    //bool getMaxValue(float &max);
     bool getValue(float &val);
     bool setValue(float val);
     bool getValue(QString &val);
@@ -65,8 +64,6 @@ private:
     QString getSaneComboString(int ival);
     QString getSaneComboString(float fval);
     QString getSaneComboString(unsigned char *data);
-    bool comboboxChanged(const QString &value);
-    
     
     LabeledCombo *m_combo;
     QString       m_currentText;
