@@ -256,7 +256,10 @@ int KSaneViewer::selListSize() {
 // ------------------------------------------------------------------------
 bool KSaneViewer::selectionAt(int index, float &tl_x, float &tl_y, float &br_x, float &br_y)
 {
-    if (index >= d->selectionList.size()) return false;
+    if ((index < 0) || (index >= d->selectionList.size())) {
+        tl_x = br_x;
+        return false;
+    }
     tl_x = d->selectionList[index]->rect().left()   / d->pixmapItem->pixmap().width();
     tl_y = d->selectionList[index]->rect().top()    / d->pixmapItem->pixmap().height();
     br_x = d->selectionList[index]->rect().right()  / d->pixmapItem->pixmap().width();
