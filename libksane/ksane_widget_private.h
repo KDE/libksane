@@ -39,6 +39,7 @@ extern "C"
 #include <QtGui/QWidget>
 #include <QTimer>
 #include <QProgressBar>
+#include <QThread>
 
 // KDE includes
 #include <KTabWidget>
@@ -54,7 +55,6 @@ extern "C"
 #include "radio_select.h"
 #include "labeled_gamma.h"
 
-#define inc_color_index(index) { index++; if (index==3) index=0;}
 #define inc_pixel(x,y,ppl) { x++; if (x>=ppl) { y++; x=0;} }
 
 #define IMG_DATA_R_SIZE 100000
@@ -62,6 +62,18 @@ extern "C"
 /** This namespace collects all methods and classes in LibKSane. */
 namespace KSaneIface
 {
+    class KSaneReadThread: public QThread
+    {
+        public:
+            KSaneReadThread(SANE_Handle handle, SANE_Byte *data, SANE_Int maxBytes);
+            void run();
+            SANE_Status    status;
+            SANE_Int       readBytes;
+        private:
+            SANE_Byte     *m_data;
+            const SANE_Int m_maxBytes;
+            SANE_Handle    m_saneHandle;
+    };
 
     class KSaneWidgetPrivate: public QObject
     {
@@ -169,8 +181,8 @@ namespace KSaneIface
             // option handling
             QTimer              m_readValsTmr;
             QTimer              m_startScanTmr;
-            QTimer              m_readDataTmr;
-
+            KSaneReadThread    *m_readThread;
+            
             // general scanning
             bool                m_isPreview;
             ReadStatus          m_readStatus;
@@ -185,7 +197,7 @@ namespace KSaneIface
             int                 m_px_colors[3];
             int                 m_px_c_index;
     };
-    
+
 
 }  // NameSpace KSaneIface
 

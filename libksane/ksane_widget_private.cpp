@@ -42,7 +42,6 @@
 #include <KPushButton>
 
 #define SCALED_PREVIEW_MAX_SIDE 400
-#define MAX_NUM_OPTIONS 100
 
 static const int ActiveSelection = 100000;
 
@@ -79,6 +78,7 @@ KSaneWidgetPrivate::KSaneWidgetPrivate()
     m_dataSize      = 0;
     m_readStatus    = READ_READY;
     m_isPreview     = false;
+    m_readThread    = 0;
     
     clearDeviceOptions();
 }
@@ -104,12 +104,15 @@ void KSaneWidgetPrivate::clearDeviceOptions()
         delete m_optList.takeFirst();
     }
 
-    // remove the remaining layouts/widgets
+    // remove the remaining layouts/widgets and read thread
     delete m_basicOptsTab;
     m_basicOptsTab = 0;
 
     delete m_otherOptsTab;
     m_otherOptsTab = 0;
+
+    delete m_readThread;
+    m_readThread = 0;
 }
 
 KSaneWidget::ImageFormat KSaneWidgetPrivate::getImgFormat(SANE_Parameters &params)
@@ -180,7 +183,6 @@ KSaneOption *KSaneWidgetPrivate::getOption(const QString &name)
 
 void KSaneWidgetPrivate::createOptInterface()
 {
-    
     m_basicOptsTab = new QWidget;
     m_basicScrollA->setWidget(m_basicOptsTab);
 
@@ -630,7 +632,7 @@ void KSaneWidgetPrivate::scanPreview()
         }
         if (dpi > 800) break;
     }
-    while ((m_params.pixels_per_line < 300) || (m_params.lines < 300));
+    while ((m_params.pixels_per_line < 1000) || (m_params.lines < 1000));
     
     // set preview option to true if possible
     if (m_optPreview != 0) m_optPreview->setValue(1);
@@ -821,7 +823,7 @@ void KSaneWidgetPrivate::startScan()
     m_frame_t_count = 0;
     m_progressBar->setValue(0);
     
-    m_readDataTmr.start(0);
+    m_readThread->start();
 }
 
 void KSaneWidgetPrivate::scanDone()
@@ -896,6 +898,7 @@ void KSaneWidgetPrivate::scanDone()
     m_readStatus = READ_READY;
     
     if (error) {
+        sane_cancel(m_saneHandle);
         emit scanDone(KSaneWidget::ErrorGeneral, "");
     }
     else {
@@ -929,6 +932,8 @@ void KSaneWidgetPrivate::setBusy(bool busy)
     m_cancelBtn->setDisabled(!busy);
 }
 
+#define inc_color_index(index) { index++; if (index==3) index=0;}
+
 #define index_rgb8_to_argb8(i)   ((i*4)/3)
 #define index_rgb16_to_argb8(i)  ((i*2)/3)
 #define index_rgb16_to_argb16(i) ((i*4)/3)
@@ -956,14 +961,12 @@ void KSaneWidgetPrivate::setBusy(bool busy)
 #define index_green16_to_rgb16(i) ((i/2)*6 + i%2 + 2)
 #define index_blue16_to_rgb16(i)  ((i/2)*6 + i%2 + 4)
 
+/** This slot is called when the read thread is finished.
+* Here we check the status of the read and depending on the status either
+* react on an error or go to the actual copying functions. */
 void KSaneWidgetPrivate::processData()
 {
-    SANE_Status status = SANE_STATUS_GOOD;
-    SANE_Int read_bytes = 0;
-    
-    status = sane_read(m_saneHandle, m_saneReadBuffer, IMG_DATA_R_SIZE, &read_bytes);
-    
-    switch (status) {
+    switch (m_readThread->status) {
         case SANE_STATUS_GOOD:
             // continue to parsing the data
             break;
@@ -984,7 +987,7 @@ void KSaneWidgetPrivate::processData()
             }
             else {
                 // start reading next frame
-                status = sane_start(m_saneHandle);
+                SANE_Status status = sane_start(m_saneHandle);
                 if (status != SANE_STATUS_GOOD) {
                     kDebug(51004) << "sane_start =" << sane_strstatus(status);
                     m_readStatus = READ_ERROR;
@@ -1004,7 +1007,7 @@ void KSaneWidgetPrivate::processData()
                 break;
             }
         default:
-            kDebug(51004) << "sane_read=" << status << "=" << sane_strstatus(status);
+            kDebug(51004) << "sane_read=" << m_readThread->status << "=" << sane_strstatus(m_readThread->status);
             m_readStatus = READ_ERROR;
             scanDone();
             return;
@@ -1037,14 +1040,14 @@ void KSaneWidgetPrivate::processData()
     
     // copy the data to the buffer
     if (m_isPreview) {
-        copyToPreview((int)read_bytes);
+        copyToPreview((int)m_readThread->readBytes);
     }
     else {
-        copyToScanData((int)read_bytes);
+        copyToScanData((int)m_readThread->readBytes);
     }
     
     if (m_readStatus == READ_ON_GOING) {
-        m_readDataTmr.start(0);
+        m_readThread->start();
     }
     else {
         scanDone();
@@ -1054,6 +1057,7 @@ void KSaneWidgetPrivate::processData()
 void KSaneWidgetPrivate::copyToPreview(int read_bytes)
 {
     int index;
+    uchar *imgBits = m_previewImg.bits();
     switch (m_params.format)
     {
         case SANE_FRAME_GRAY:
@@ -1086,9 +1090,9 @@ void KSaneWidgetPrivate::copyToPreview(int read_bytes)
             else if (m_params.depth == 8) {
                 for (int i=0; i<read_bytes; i++) {
                     index = m_frameRead * 4;
-                    m_previewImg.bits()[index] = m_saneReadBuffer[i];
-                    m_previewImg.bits()[index + 1] = m_saneReadBuffer[i];
-                    m_previewImg.bits()[index + 2] = m_saneReadBuffer[i];
+                    imgBits[index] = m_saneReadBuffer[i];
+                    imgBits[index + 1] = m_saneReadBuffer[i];
+                    imgBits[index + 2] = m_saneReadBuffer[i];
                     m_frameRead++;
                 }
                 return;
@@ -1097,9 +1101,9 @@ void KSaneWidgetPrivate::copyToPreview(int read_bytes)
                 for (int i=0; i<read_bytes; i++) {
                     if (m_frameRead%2 == 0) {
                         index = m_frameRead * 2;
-                        m_previewImg.bits()[index] = m_saneReadBuffer[i+1];
-                        m_previewImg.bits()[index + 1] = m_saneReadBuffer[i+1];
-                        m_previewImg.bits()[index + 2] = m_saneReadBuffer[i+1];
+                        imgBits[index] = m_saneReadBuffer[i+1];
+                        imgBits[index + 1] = m_saneReadBuffer[i+1];
+                        imgBits[index + 2] = m_saneReadBuffer[i+1];
                     }
                     m_frameRead++;
                 }
@@ -1147,8 +1151,7 @@ void KSaneWidgetPrivate::copyToPreview(int read_bytes)
             case SANE_FRAME_RED:
                 if (m_params.depth == 8) {
                     for (int i=0; i<read_bytes; i++) {
-                        m_previewImg.bits()[index_red8_to_argb8(m_frameRead)] =
-                        m_saneReadBuffer[i];
+                        imgBits[index_red8_to_argb8(m_frameRead)] = m_saneReadBuffer[i];
                         m_frameRead++;
                     }
                     return;
@@ -1156,8 +1159,7 @@ void KSaneWidgetPrivate::copyToPreview(int read_bytes)
                 else if (m_params.depth == 16) {
                     for (int i=0; i<read_bytes; i++) {
                         if (m_frameRead%2 == 0) {
-                            m_previewImg.bits()[index_red16_to_argb8(m_frameRead)] =
-                            m_saneReadBuffer[i+1];
+                            imgBits[index_red16_to_argb8(m_frameRead)] = m_saneReadBuffer[i+1];
                         }
                         m_frameRead++;
                     }
@@ -1168,8 +1170,7 @@ void KSaneWidgetPrivate::copyToPreview(int read_bytes)
             case SANE_FRAME_GREEN:
                 if (m_params.depth == 8) {
                     for (int i=0; i<read_bytes; i++) {
-                        m_previewImg.bits()[index_green8_to_argb8(m_frameRead)] =
-                        m_saneReadBuffer[i];
+                        imgBits[index_green8_to_argb8(m_frameRead)] = m_saneReadBuffer[i];
                         m_frameRead++;
                     }
                     return;
@@ -1177,8 +1178,7 @@ void KSaneWidgetPrivate::copyToPreview(int read_bytes)
                 else if (m_params.depth == 16) {
                     for (int i=0; i<read_bytes; i++) {
                         if (m_frameRead%2 == 0) {
-                            m_previewImg.bits()[index_green16_to_argb8(m_frameRead)] =
-                            m_saneReadBuffer[i+1];
+                            imgBits[index_green16_to_argb8(m_frameRead)] = m_saneReadBuffer[i+1];
                         }
                         m_frameRead++;
                     }
@@ -1189,8 +1189,7 @@ void KSaneWidgetPrivate::copyToPreview(int read_bytes)
             case SANE_FRAME_BLUE:
                 if (m_params.depth == 8) {
                     for (int i=0; i<read_bytes; i++) {
-                        m_previewImg.bits()[index_blue8_to_argb8(m_frameRead)] =
-                        m_saneReadBuffer[i];
+                        imgBits[index_blue8_to_argb8(m_frameRead)] = m_saneReadBuffer[i];
                         m_frameRead++;
                     }
                     return;
@@ -1198,8 +1197,7 @@ void KSaneWidgetPrivate::copyToPreview(int read_bytes)
                 else if (m_params.depth == 16) {
                     for (int i=0; i<read_bytes; i++) {
                         if (m_frameRead%2 == 0) {
-                            m_previewImg.bits()[index_blue16_to_argb8(m_frameRead)] =
-                            m_saneReadBuffer[i+1];
+                            imgBits[index_blue16_to_argb8(m_frameRead)] = m_saneReadBuffer[i+1];
                         }
                         m_frameRead++;
                     }
@@ -1218,30 +1216,25 @@ void KSaneWidgetPrivate::copyToPreview(int read_bytes)
 
 void KSaneWidgetPrivate::copyToScanData(int read_bytes)
 {
+    char *data = m_scanData.data();
     switch (m_params.format)
     {
         case SANE_FRAME_GRAY:
-            for (int i=0; i<read_bytes; i++) {
-                m_scanData[m_frameRead] =
-                m_saneReadBuffer[i];
-                m_frameRead++;
-            }
+            memcpy(&(data[m_frameRead]), m_saneReadBuffer, read_bytes);
+            m_frameRead += read_bytes;
             return;
         case SANE_FRAME_RGB:
             if (m_params.depth == 1) {
                 break;
             }
-            for (int i=0; i<read_bytes; i++) {
-                m_scanData[m_frameRead] =
-                m_saneReadBuffer[i];
-                m_frameRead++;
-            }
+            memcpy(&(data[m_frameRead]), m_saneReadBuffer, read_bytes);
+            m_frameRead += read_bytes;
             return;
             
         case SANE_FRAME_RED:
             if (m_params.depth == 8) {
                 for (int i=0; i<read_bytes; i++) {
-                    m_scanData[index_red8_to_rgb8(m_frameRead)] =
+                    data[index_red8_to_rgb8(m_frameRead)] =
                     m_saneReadBuffer[i];
                     m_frameRead++;
                 }
@@ -1249,7 +1242,7 @@ void KSaneWidgetPrivate::copyToScanData(int read_bytes)
             }
             else if (m_params.depth == 16) {
                 for (int i=0; i<read_bytes; i++) {
-                    m_scanData[index_red16_to_rgb16(m_frameRead)] =
+                    data[index_red16_to_rgb16(m_frameRead)] =
                     m_saneReadBuffer[i];
                     m_frameRead++;
                 }
@@ -1260,7 +1253,7 @@ void KSaneWidgetPrivate::copyToScanData(int read_bytes)
         case SANE_FRAME_GREEN:
             if (m_params.depth == 8) {
                 for (int i=0; i<read_bytes; i++) {
-                    m_scanData[index_green8_to_rgb8(m_frameRead)] =
+                    data[index_green8_to_rgb8(m_frameRead)] =
                     m_saneReadBuffer[i];
                     m_frameRead++;
                 }
@@ -1268,7 +1261,7 @@ void KSaneWidgetPrivate::copyToScanData(int read_bytes)
             }
             else if (m_params.depth == 16) {
                 for (int i=0; i<read_bytes; i++) {
-                    m_scanData[index_green16_to_rgb16(m_frameRead)] =
+                    data[index_green16_to_rgb16(m_frameRead)] =
                     m_saneReadBuffer[i];
                     m_frameRead++;
                 }
@@ -1279,7 +1272,7 @@ void KSaneWidgetPrivate::copyToScanData(int read_bytes)
         case SANE_FRAME_BLUE:
             if (m_params.depth == 8) {
                 for (int i=0; i<read_bytes; i++) {
-                    m_scanData[index_blue8_to_rgb8(m_frameRead)] =
+                    data[index_blue8_to_rgb8(m_frameRead)] =
                     m_saneReadBuffer[i];
                     m_frameRead++;
                 }
@@ -1287,7 +1280,7 @@ void KSaneWidgetPrivate::copyToScanData(int read_bytes)
             }
             else if (m_params.depth == 16) {
                 for (int i=0; i<read_bytes; i++) {
-                    m_scanData[index_blue16_to_rgb16(m_frameRead)] =
+                    data[index_blue16_to_rgb16(m_frameRead)] =
                     m_saneReadBuffer[i];
                     m_frameRead++;
                 }
@@ -1302,6 +1295,20 @@ void KSaneWidgetPrivate::copyToScanData(int read_bytes)
     << "is not yet suppoeted by libksane!";
     m_readStatus = READ_ERROR;
     return;
+}
+
+KSaneReadThread::KSaneReadThread(SANE_Handle handle, SANE_Byte *data, SANE_Int maxBytes):
+QThread(),
+status(SANE_STATUS_GOOD),
+readBytes(0),
+m_data(data),
+m_maxBytes(maxBytes),
+m_saneHandle(handle)
+{}
+
+void KSaneReadThread::run()
+{
+    status = sane_read(m_saneHandle, m_data, m_maxBytes, &readBytes);
 }
 
 }  // NameSpace KSaneIface

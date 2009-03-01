@@ -54,10 +54,6 @@
 #include "radio_select.h"
 #include "labeled_gamma.h"
 
-#define SCALED_PREVIEW_MAX_SIDE 400
-#define MAX_NUM_OPTIONS 100
-#define IMG_DATA_R_SIZE 100000
-
 namespace KSaneIface
 {
 
@@ -141,10 +137,8 @@ KSaneWidget::KSaneWidget(QWidget* parent)
 
     d->m_readValsTmr.setSingleShot(true);
     d->m_startScanTmr.setSingleShot(true);
-    d->m_readDataTmr.setSingleShot(true);
     connect(&d->m_readValsTmr,   SIGNAL(timeout()), d, SLOT(valReload()));
     connect(&d->m_startScanTmr,  SIGNAL(timeout()), d, SLOT(startScan()));
-    connect(&d->m_readDataTmr,   SIGNAL(timeout()), d, SLOT(processData()));
 
     // Forward signals from the private class
     connect(d, SIGNAL(scanProgress(int)), this, SIGNAL(scanProgress(int)));
@@ -397,6 +391,10 @@ bool KSaneWidget::openDevice(const QString &device_name)
         connect (d->m_optList.at(i), SIGNAL(optsNeedReload()), d, SLOT(optReload()));
         connect (d->m_optList.at(i), SIGNAL(valsNeedReload()), d, SLOT(scheduleValReload()));
     }
+
+    // Create the read thread
+    d->m_readThread = new KSaneReadThread(d->m_saneHandle, d->m_saneReadBuffer, IMG_DATA_R_SIZE);
+    connect(d->m_readThread, SIGNAL(finished()), d, SLOT(processData()));
 
     // Create the options interface
     d->createOptInterface();
