@@ -1206,7 +1206,7 @@ void KSaneWidgetPrivate::copyToPreview(int read_bytes)
                 break;
     }
     
-    KMessageBox::error(0, i18n("The image format is not (yet?) supported by libksane!"));
+    KMessageBox::error(0, i18n("The image format is not (yet?) supported by libksane."));
     kDebug(51004) << "Format" << m_params.format
     << "and depth" << m_params.format
     << "is not yet suppoeted by libksane!";
@@ -1289,7 +1289,7 @@ void KSaneWidgetPrivate::copyToScanData(int read_bytes)
             break;
     }
     
-    KMessageBox::error(0, i18n("The image format is not (yet?) supported by libksane!"));
+    KMessageBox::error(0, i18n("The image format is not (yet?) supported by libksane."));
     kDebug(51004) << "Format" << m_params.format
     << "and depth" << m_params.format
     << "is not yet suppoeted by libksane!";

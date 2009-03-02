@@ -180,7 +180,7 @@ KSaneWidget::KSaneWidget(QWidget* parent)
     d->m_zFitBtn->setToolTip(i18n("Zoom to Fit"));
 
     d->m_warmingUp = new QLabel(this);
-    d->m_warmingUp->setText(i18n("The lamp is warming up!"));
+    d->m_warmingUp->setText(i18n("The lamp is warming up."));
     d->m_warmingUp->setAlignment(Qt::AlignCenter);
     d->m_warmingUp->setAutoFillBackground(true);
     d->m_warmingUp->setBackgroundRole(QPalette::Highlight);
