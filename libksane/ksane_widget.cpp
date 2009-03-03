@@ -413,9 +413,11 @@ bool KSaneWidget::openDevice(const QString &device_name)
 
 bool KSaneWidget::closeDevice()
 {
-    d->scanCancel();
+    if (d->m_saneHandle) {
+        d->scanCancel();
+        sane_close(d->m_saneHandle);
+    }
     d->clearDeviceOptions();
-    sane_close(d->m_saneHandle);
     return true;
 }
 

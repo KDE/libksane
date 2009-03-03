@@ -78,6 +78,7 @@ KSaneWidgetPrivate::KSaneWidgetPrivate()
     m_dataSize      = 0;
     m_readStatus    = READ_READY;
     m_isPreview     = false;
+    m_saneHandle    = 0;
     m_readThread    = 0;
     
     clearDeviceOptions();
