@@ -37,6 +37,7 @@ extern "C"
 
 // Qt includes.
 #include <QtGui/QWidget>
+#include <QCheckBox>
 #include <QTimer>
 #include <QProgressBar>
 #include <QThread>
@@ -166,6 +167,8 @@ namespace KSaneIface
             KSaneOption        *m_optGamR;
             KSaneOption        *m_optGamG;
             KSaneOption        *m_optGamB;
+            QCheckBox          *m_splitGamChB;
+            LabeledGamma       *m_commonGamma;
             KSaneOption        *m_optPreview;
             
             // preview variables

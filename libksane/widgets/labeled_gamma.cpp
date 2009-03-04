@@ -132,6 +132,36 @@ void LabeledGamma::setValues(int bri, int con, int gam)
     m_gam_slider->blockSignals(false);
 }
 
+void LabeledGamma::setValues(const QString &values)
+{
+    m_bri_slider->blockSignals(true);
+    m_con_slider->blockSignals(true);
+    m_gam_slider->blockSignals(true);
+
+    QStringList gammaValues;
+    int bri;
+    int con;
+    int gam;
+    bool ok = true;
+    
+    gammaValues = values.split(':');
+    bri = gammaValues.at(0).toInt(&ok);
+    if (ok) con = gammaValues.at(1).toInt(&ok);
+    if (ok) gam = gammaValues.at(2).toInt(&ok);
+    
+    if (ok) {
+        m_bri_slider->setValue(bri);
+        m_con_slider->setValue(con);
+        m_gam_slider->setValue(gam);
+        calculateGT();
+    }
+    
+    m_bri_slider->blockSignals(false);
+    m_con_slider->blockSignals(false);
+    m_gam_slider->blockSignals(false);
+}
+
+
 bool LabeledGamma::getValues(int &bri, int &con, int &gam)
 {
 

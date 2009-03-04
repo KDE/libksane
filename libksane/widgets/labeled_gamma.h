@@ -72,11 +72,10 @@ public:
     bool getValues(int &bri, int &con, int &gam);
 
 public Q_SLOTS:
-
     void setValues(int bri, int con, int gam);
-
+    void setValues(const QString &values);
+    
 private Q_SLOTS:
-
     void calculateGT();
 
 Q_SIGNALS:

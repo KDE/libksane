@@ -111,22 +111,8 @@ bool KSaneOptGamma::setValue(const QString &val)
 {
     if (!m_gamma) return false;
     if (state() == STATE_HIDDEN) return false;
-    
-    QStringList gammaValues;
-    int bri;
-    int con;
-    int gam;
-    bool ok;
-    
-    gammaValues = val.split(':');
-    if (gammaValues.size() != 3) return false;
-    bri = gammaValues.at(0).toInt(&ok);
-    if (ok == false) return false;
-    con = gammaValues.at(1).toInt(&ok);
-    if (ok == false) return false;
-    gam = gammaValues.at(2).toInt(&ok);
-    if (ok == false) return false;
-    m_gamma->setValues(bri, con, gam);
+
+    m_gamma->setValues(val);
     return true;
 }
 

@@ -35,7 +35,6 @@
 #include <QScrollArea>
 #include <QScrollBar>
 #include <QList>
-#include <QCheckBox>
 #include <QLabel>
 
 // KDE includes
@@ -80,6 +79,8 @@ KSaneWidgetPrivate::KSaneWidgetPrivate()
     m_isPreview     = false;
     m_saneHandle    = 0;
     m_readThread    = 0;
+    m_splitGamChB   = 0;
+    m_commonGamma   = 0;
     
     clearDeviceOptions();
 }
@@ -114,6 +115,12 @@ void KSaneWidgetPrivate::clearDeviceOptions()
 
     delete m_readThread;
     m_readThread = 0;
+
+    delete m_splitGamChB;
+    m_splitGamChB = 0;
+
+    delete m_commonGamma;
+    m_commonGamma = 0;
 }
 
 KSaneWidget::ImageFormat KSaneWidgetPrivate::getImgFormat(SANE_Parameters &params)
@@ -304,22 +311,22 @@ void KSaneWidgetPrivate::createOptInterface()
     
     if ((m_optGamR != 0) && (m_optGamG != 0) && (m_optGamB != 0)) {
         LabeledGamma *gamma = reinterpret_cast<LabeledGamma *>(m_optGamR->widget());
-        LabeledGamma *one_gamma = new LabeledGamma(m_colorOpts, i18n(SANE_TITLE_GAMMA_VECTOR), gamma->size());
+        m_commonGamma = new LabeledGamma(m_colorOpts, i18n(SANE_TITLE_GAMMA_VECTOR), gamma->size());
         
-        color_lay->addWidget(one_gamma);
+        color_lay->addWidget(m_commonGamma);
         
-        one_gamma->setToolTip(i18n(SANE_DESC_GAMMA_VECTOR));
+        m_commonGamma->setToolTip(i18n(SANE_DESC_GAMMA_VECTOR));
         
-        connect(one_gamma, SIGNAL(gammaChanged(int,int,int)), m_optGamR->widget(), SLOT(setValues(int,int,int)));
-        connect(one_gamma, SIGNAL(gammaChanged(int,int,int)), m_optGamG->widget(), SLOT(setValues(int,int,int)));
-        connect(one_gamma, SIGNAL(gammaChanged(int,int,int)), m_optGamB->widget(), SLOT(setValues(int,int,int)));
-        
-        QCheckBox *split_gam_btn = new QCheckBox(i18n("Separate color intensity tables"),
+        connect(m_commonGamma, SIGNAL(gammaChanged(int,int,int)), m_optGamR->widget(), SLOT(setValues(int,int,int)));
+        connect(m_commonGamma, SIGNAL(gammaChanged(int,int,int)), m_optGamG->widget(), SLOT(setValues(int,int,int)));
+        connect(m_commonGamma, SIGNAL(gammaChanged(int,int,int)), m_optGamB->widget(), SLOT(setValues(int,int,int)));
+
+        m_splitGamChB = new QCheckBox(i18n("Separate color intensity tables"),
                                                   m_basicOptsTab);
-                                                  color_lay->addWidget(split_gam_btn);
+                                                  color_lay->addWidget(m_splitGamChB);
         
-        connect (split_gam_btn, SIGNAL(toggled(bool)), gamma_frm, SLOT(setVisible(bool)));
-        connect (split_gam_btn, SIGNAL(toggled(bool)), one_gamma, SLOT(setHidden(bool)));
+        connect (m_splitGamChB, SIGNAL(toggled(bool)), gamma_frm, SLOT(setVisible(bool)));
+        connect (m_splitGamChB, SIGNAL(toggled(bool)), m_commonGamma, SLOT(setHidden(bool)));
         
         gamma_frm->hide();
     }

@@ -569,6 +569,29 @@ int KSaneWidget::setOptVals(const QMap <QString, QString> &opts)
             }
         }
     }
+    if ((d->m_splitGamChB) &&
+        (d->m_optGamR) &&
+        (d->m_optGamG) &&
+        (d->m_optGamB))
+    {
+        // check if the current gamma values are identical. if they are identical,
+        // uncheck the "Separate color intensity tables" checkbox
+        QString redGamma;
+        QString greenGamma;
+        QString blueGamma;
+        d->m_optGamR->getValue(redGamma);
+        d->m_optGamG->getValue(greenGamma);
+        d->m_optGamB->getValue(blueGamma);
+        if ((redGamma == greenGamma) && (greenGamma == blueGamma)) {
+            d->m_splitGamChB->setChecked(false);
+            // set the values to the common gamma widget
+            d->m_commonGamma->setValues(redGamma);
+        }
+        else {
+            d->m_splitGamChB->setChecked(true);
+        }
+    }
+    
     return ret;
 }
 
@@ -578,6 +601,31 @@ bool KSaneWidget::setOptVal(const QString &option, const QString &value)
 
     if ((opt = d->getOption(option)) != 0) {
         if (opt->setValue(value)) {
+            if ((d->m_splitGamChB) &&
+                (d->m_optGamR) &&
+                (d->m_optGamG) &&
+                (d->m_optGamB) &&
+                ((opt == d->m_optGamR) ||
+                (opt == d->m_optGamG) ||
+                (opt == d->m_optGamB)))
+            {
+                // check if the current gamma values are identical. if they are identical,
+                // uncheck the "Separate color intensity tables" checkbox
+                QString redGamma;
+                QString greenGamma;
+                QString blueGamma;
+                d->m_optGamR->getValue(redGamma);
+                d->m_optGamG->getValue(greenGamma);
+                d->m_optGamB->getValue(blueGamma);
+                if ((redGamma == greenGamma) && (greenGamma == blueGamma)) {
+                    d->m_splitGamChB->setChecked(false);
+                    // set the values to the common gamma widget
+                    d->m_commonGamma->setValues(redGamma);
+                }
+                else {
+                    d->m_splitGamChB->setChecked(true);
+                }
+            }
             return true;
         }
     }
