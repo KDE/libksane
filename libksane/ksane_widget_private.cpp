@@ -640,7 +640,7 @@ void KSaneWidgetPrivate::scanPreview()
         }
         if (dpi > 800) break;
     }
-    while ((m_params.pixels_per_line < 1000) || (m_params.lines < 1000));
+    while ((m_params.pixels_per_line < 300) || (m_params.lines < 300));
     
     // set preview option to true if possible
     if (m_optPreview != 0) m_optPreview->setValue(1);
