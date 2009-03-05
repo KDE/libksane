@@ -107,6 +107,12 @@ void KSaneWidgetPrivate::clearDeviceOptions()
     }
 
     // remove the remaining layouts/widgets and read thread
+    delete m_commonGamma;
+    m_commonGamma = 0;
+
+    delete m_splitGamChB;
+    m_splitGamChB = 0;
+
     delete m_basicOptsTab;
     m_basicOptsTab = 0;
 
@@ -115,12 +121,6 @@ void KSaneWidgetPrivate::clearDeviceOptions()
 
     delete m_readThread;
     m_readThread = 0;
-
-    delete m_splitGamChB;
-    m_splitGamChB = 0;
-
-    delete m_commonGamma;
-    m_commonGamma = 0;
 }
 
 KSaneWidget::ImageFormat KSaneWidgetPrivate::getImgFormat(SANE_Parameters &params)
