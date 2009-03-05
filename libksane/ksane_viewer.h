@@ -59,7 +59,9 @@ class KSaneViewer : public QGraphicsView
         * \param br_y is the y coordinate of the bottom right corner 0=0 1=image with.
         */
         void setSelection(float tl_x, float tl_y, float b_rx, float b_ry);
-        void clearSelection();
+        void clearActiveSelection();
+        void clearSavedSelections();
+        void clearSelections();
         
         void zoomIn();
         void zoomOut();
@@ -80,7 +82,8 @@ class KSaneViewer : public QGraphicsView
         void mouseMoveEvent(QMouseEvent *e);
         
     private:
-
+        void updateSelVisibility();
+        
         struct Private;
         Private * const d;
 

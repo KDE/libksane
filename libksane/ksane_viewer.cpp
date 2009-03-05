@@ -62,6 +62,7 @@ struct KSaneViewer::Private
     QAction *zoomOutAction;
     QAction *zoomSelAction;
     QAction *zoom2FitAction;
+    QAction *clrSelAction;
 };
 
 KSaneViewer::KSaneViewer(QWidget *parent) : QGraphicsView(parent), d(new Private)
@@ -99,10 +100,14 @@ KSaneViewer::KSaneViewer(QWidget *parent) : QGraphicsView(parent), d(new Private
     d->zoom2FitAction = new QAction(KIcon("document-preview"), i18n("Zoom to Fit"), this);
     connect(d->zoom2FitAction, SIGNAL(triggered()), this, SLOT(zoom2Fit()));
     
+    d->clrSelAction = new QAction(KIcon("edit-clear"), i18n("Clear Selections"), this);
+    connect(d->clrSelAction, SIGNAL(triggered()), this, SLOT(clearSelections()));
+    
     addAction(d->zoomInAction);
     addAction(d->zoomOutAction);
     addAction(d->zoomSelAction);
     addAction(d->zoom2FitAction);
+    addAction(d->clrSelAction);
     setContextMenuPolicy(Qt::ActionsContextMenu);
 }
 
@@ -110,13 +115,7 @@ KSaneViewer::KSaneViewer(QWidget *parent) : QGraphicsView(parent), d(new Private
 KSaneViewer::~KSaneViewer()
 {
     // first remove any old saved selections
-    SelectionItem *tmp;
-    for (int i=0; i<d->selectionList.size(); ++i) {
-        d->scene->removeItem(d->selectionList[i]);
-        tmp = d->selectionList[i];
-        d->selectionList.removeAt(i);
-        delete tmp;
-    }
+    clearSavedSelections();
 
     delete d;
 }
@@ -127,13 +126,7 @@ void KSaneViewer::setQImage(QImage *img)
     if (img == 0) return;
 
     // first remove any old saved selections
-    SelectionItem *tmp;
-    for (int i=d->selectionList.size()-1; i>=0; --i) {
-        d->scene->removeItem(d->selectionList[i]);
-        tmp = d->selectionList[i];
-        d->selectionList.removeAt(i);
-        delete tmp;
-    }
+    clearSavedSelections();
 
     d->pixmapItem->setPixmap(QPixmap::fromImage(*img));
     d->pixmapItem->setShapeMode(QGraphicsPixmapItem::BoundingRectShape);
@@ -175,10 +168,15 @@ void KSaneViewer::zoomOut()
 // ------------------------------------------------------------------------
 void KSaneViewer::zoomSel()
 {
-    fitInView(d->selection->boundingRect() , Qt::KeepAspectRatio);
-    d->selection->saveZoom(transform().m11());
-    for (int i=0; i<d->selectionList.size(); ++i) {
-        d->selectionList[i]->saveZoom(transform().m11());
+    if (d->selection->isVisible()) {
+        fitInView(d->selection->boundingRect() , Qt::KeepAspectRatio);
+        d->selection->saveZoom(transform().m11());
+        for (int i=0; i<d->selectionList.size(); ++i) {
+            d->selectionList[i]->saveZoom(transform().m11());
+        }
+    }
+    else {
+        zoom2Fit();
     }
 }
 
@@ -198,9 +196,7 @@ void KSaneViewer::setTLX(float ratio)
     QRectF rect = d->selection->rect();
     rect.setLeft(ratio * d->pixmapItem->pixmap().width());
     d->selection->setRect(rect);
-    if (rect.left() > 0.001) {
-        d->selection->setVisible(true);
-    }
+    updateSelVisibility();
 }
 
 // ------------------------------------------------------------------------
@@ -209,9 +205,7 @@ void KSaneViewer::setTLY(float ratio)
     QRectF rect = d->selection->rect();
     rect.setTop(ratio * d->pixmapItem->pixmap().height());
     d->selection->setRect(rect);
-    if (rect.top() > 0.001) {
-        d->selection->setVisible(true);
-    }
+    updateSelVisibility();
 }
 
 // ------------------------------------------------------------------------
@@ -220,9 +214,7 @@ void KSaneViewer::setBRX(float ratio)
     QRectF rect = d->selection->rect();
     rect.setRight(ratio * d->pixmapItem->pixmap().width());
     d->selection->setRect(rect);
-    if (d->pixmapItem->pixmap().width() - rect.right() > 0.001) {
-        d->selection->setVisible(true);
-    }
+    updateSelVisibility();
 }
 
 // ------------------------------------------------------------------------
@@ -231,9 +223,7 @@ void KSaneViewer::setBRY(float ratio)
     QRectF rect = d->selection->rect();
     rect.setBottom(ratio * d->pixmapItem->pixmap().height());
     d->selection->setRect(rect);
-    if (d->pixmapItem->pixmap().height() - rect.bottom() > 0.001) {
-        d->selection->setVisible(true);
-    }
+    updateSelVisibility();
 }
 
 // ------------------------------------------------------------------------
@@ -246,7 +236,22 @@ void KSaneViewer::setSelection(float tl_x, float tl_y, float br_x, float br_y)
                     br_y * d->pixmapItem->pixmap().height());
 
     d->selection->setRect(rect);
-    d->selection->setVisible(true);
+    updateSelVisibility();
+}
+
+// ------------------------------------------------------------------------
+void KSaneViewer::updateSelVisibility()
+{
+    if ((d->selection->rect().width() >0.001) &&
+        (d->selection->rect().height() > 0.001) &&
+        (d->pixmapItem->pixmap().width() - d->selection->rect().width() > 0.001) &&
+        (d->pixmapItem->pixmap().height() - d->selection->rect().height() > 0.001))
+    {
+        d->selection->setVisible(true);
+    }
+    else {
+        d->selection->setVisible(false);
+    }
 }
 
 // ------------------------------------------------------------------------
@@ -283,11 +288,30 @@ bool KSaneViewer::activeSelection(float &tl_x, float &tl_y, float &br_x, float &
 }
 
 // ------------------------------------------------------------------------
-void KSaneViewer::clearSelection()
+void KSaneViewer::clearActiveSelection()
 {
     d->selection->setRect(QRectF(0,0,0,0));
     d->selection->intersects(QPointF(100,100)); // don't show the add sign
     d->selection->setVisible(false);
+}
+
+// ------------------------------------------------------------------------
+void KSaneViewer::clearSavedSelections()
+{
+    // first remove any old saved selections
+    SelectionItem *tmp;
+    while (!d->selectionList.isEmpty()) {
+        tmp = d->selectionList.takeFirst();
+        d->scene->removeItem(tmp);
+        delete tmp;
+    }
+}
+
+// ------------------------------------------------------------------------
+void KSaneViewer::clearSelections()
+{
+    clearActiveSelection();
+    clearSavedSelections();
 }
 
 // ------------------------------------------------------------------------
@@ -338,7 +362,7 @@ void KSaneViewer::mouseReleaseEvent(QMouseEvent *e)
             (d->selection->rect().height() < 0.001))
         {
             emit newSelection(0.0,0.0, 0.0, 0.0);
-            clearSelection();
+            clearActiveSelection();
         }
 
         QPointF scenePoint = mapToScene(e->pos());
@@ -367,7 +391,7 @@ void KSaneViewer::mouseReleaseEvent(QMouseEvent *e)
 
             // clear the old one
             emit newSelection(0.0,0.0, 0.0, 0.0);
-            clearSelection();
+            clearActiveSelection();
         }
     }
     
