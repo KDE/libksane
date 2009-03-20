@@ -47,13 +47,13 @@ extern "C"
 #include <klocale.h>
 #include <kdebug.h>
 #include <kmessagebox.h>
+#include <KPushButton>
 
 // Local includes
 #include "ksane.h"
 #include "ksane_option.h"
 #include "ksane_viewer.h"
 #include "labeled_separator.h"
-#include "radio_select.h"
 #include "labeled_gamma.h"
 
 #define inc_pixel(x,y,ppl) { x++; if (x>=ppl) { y++; x=0;} }

@@ -51,7 +51,7 @@
 #include "ksane_opt_gamma.h"
 #include "ksane_opt_slider.h"
 #include "labeled_separator.h"
-#include "radio_select.h"
+#include "ksane_device_dialog.h"
 #include "labeled_gamma.h"
 
 namespace KSaneIface
@@ -60,7 +60,7 @@ namespace KSaneIface
     static QString sane_password;
 
 /** static function called by sane_open to get authorization from user */
-static void getSaneAuthorization(SANE_String_Const resource, SANE_Char *username, SANE_Char *password) {
+static void getSaneAuthorization(SANE_String_Const, SANE_Char *username, SANE_Char *password) {
     qstrncpy(username, sane_username.toUtf8(), SANE_MAX_USERNAME_LEN);
     qstrncpy(password, sane_password.toUtf8(), SANE_MAX_PASSWORD_LEN );
 }
@@ -217,7 +217,7 @@ QString KSaneWidget::model() const {return d->m_model;}
 QString KSaneWidget::selectDevice(QWidget* parent)
 {
   QString selected_name("");
-  SaneDeviceDialog sel(parent);
+  KSaneDeviceDialog sel(parent);
 
   // sel.setDefault(prev_backend); // set default scanner - perhaps application using libksane should remember that                                                
   if(sel.exec()) {

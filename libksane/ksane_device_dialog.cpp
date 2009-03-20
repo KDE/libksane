@@ -26,8 +26,8 @@
  * ============================================================ */
 
 // Local includes.
-#include "radio_select.h"
-#include "radio_select.moc"
+#include "ksane_device_dialog.h"
+#include "ksane_device_dialog.moc"
 
 
 // Sane includes.
@@ -44,7 +44,7 @@ extern "C"
 namespace KSaneIface
 {
 
-SaneDeviceDialog::SaneDeviceDialog(QWidget *parent)
+KSaneDeviceDialog::KSaneDeviceDialog(QWidget *parent)
     : KDialog(parent)
 {
 
@@ -79,18 +79,18 @@ SaneDeviceDialog::SaneDeviceDialog(QWidget *parent)
 
 }
 
-SaneDeviceDialog::~SaneDeviceDialog() {
+KSaneDeviceDialog::~KSaneDeviceDialog() {
     ///@todo wait for thread to finish if its running
 }
 
-void SaneDeviceDialog::setupActions()
+void KSaneDeviceDialog::setupActions()
 {
     connect(this, SIGNAL(user1Clicked()),
             this, SLOT(reloadDevicesList()) );
 }
 
 
-void SaneDeviceDialog::reloadDevicesList()
+void KSaneDeviceDialog::reloadDevicesList()
 {
     if(!find_devices_thread->isRunning()) {
         setAvailable(false);
@@ -101,7 +101,7 @@ void SaneDeviceDialog::reloadDevicesList()
     }
 }
 
-void SaneDeviceDialog::updateDevicesList()
+void KSaneDeviceDialog::updateDevicesList()
 {
     QMap<QString,QString> devices_list;
     find_devices_thread->getDevicesList(devices_list);
@@ -110,7 +110,7 @@ void SaneDeviceDialog::updateDevicesList()
     enableButton(KDialog::User1, true);
 }
 
-void SaneDeviceDialog::setAvailable(bool avail)
+void KSaneDeviceDialog::setAvailable(bool avail)
 {
     enableButtonOk(avail);
     if(avail) {
@@ -119,19 +119,19 @@ void SaneDeviceDialog::setAvailable(bool avail)
     }
 }
 
-void SaneDeviceDialog::setDefault(QString default_backend)
+void KSaneDeviceDialog::setDefault(QString default_backend)
 {
         m_selected_device = default_backend;
 }
 
-QString SaneDeviceDialog::getSelectedName() {
+QString KSaneDeviceDialog::getSelectedName() {
     QAbstractButton *selected_button = btn_group->checkedButton();
     if(selected_button)
         return selected_button->objectName();
     return QString();
 }
 
-bool SaneDeviceDialog::setDevicesList(const QMap<QString, QString>& items)
+bool KSaneDeviceDialog::setDevicesList(const QMap<QString, QString>& items)
 {
     QRadioButton *b;
 

@@ -17,7 +17,7 @@ SET(ksane_LIB_SRCS
     widgets/ksane_button.cpp
     ksane_viewer.cpp
     selectionitem.cpp
-    radio_select.cpp
+    ksane_device_dialog.cpp
     ksane_find_devices_thread.cpp
     ksane_widget.cpp
     ksane_widget_private.cpp

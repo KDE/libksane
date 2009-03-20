@@ -25,8 +25,8 @@
  *
  * ============================================================ */
 
-#ifndef RADIO_SELECT_H
-#define RADIO_SELECT_H
+#ifndef KSANE_DEVICE_DIAG_H
+#define KSANE_DEVICE_DIAG_H
 
 #include "ksane_find_devices_thread.h"
 
@@ -48,14 +48,14 @@
 namespace KSaneIface
 {
 
-class SaneDeviceDialog : public KDialog
+class KSaneDeviceDialog : public KDialog
 {
     Q_OBJECT
 
 public:
 
-    SaneDeviceDialog(QWidget *parent=0);
-    ~SaneDeviceDialog();
+    KSaneDeviceDialog(QWidget *parent=0);
+    ~KSaneDeviceDialog();
 
     QString getSelectedName();
     void setDefault(QString);
