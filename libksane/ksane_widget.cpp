@@ -443,7 +443,7 @@ QImage KSaneWidget::toQImage(const QByteArray &data,
             for (int i=0; i<img.height()*img.bytesPerLine(); i++) {
                 img.bits()[i] = ~img.bits()[i];
             }
-            return img;
+            break;
 
         case FormatGrayScale8:
             img = QImage(width,
@@ -456,7 +456,7 @@ QImage KSaneWidget::toQImage(const QByteArray &data,
                 img.bits()[j+2] = data.data()[i];
                 j+=4;
             }
-            return img;
+            break;
 
         case FormatGrayScale16:
             img = QImage(width,
@@ -471,7 +471,7 @@ QImage KSaneWidget::toQImage(const QByteArray &data,
             }
             KMessageBox::sorry(0, i18n("The image data contained 16 bits per color, "
                     "but the color depth has been truncated to 8 bits per color."));
-            return img;
+            break;
 
         case FormatRGB_8_C:
             pixel_x = 0;
@@ -490,7 +490,7 @@ QImage KSaneWidget::toQImage(const QByteArray &data,
 
                 inc_pixel(pixel_x, pixel_y, width);
             }
-            return img;
+            break;
 
         case FormatRGB_16_C:
             pixel_x = 0;
@@ -511,12 +511,16 @@ QImage KSaneWidget::toQImage(const QByteArray &data,
             }
             KMessageBox::sorry(0, i18n("The image data contained 16 bits per color, "
                     "but the color depth has been truncated to 8 bits per color."));
-            return img;
+            break;
 
         case FormatNone:
+        default:
+            kDebug(51004) << "Unsupported conversion";
             break;
     }
-    kDebug(51004) << "Unsupported conversion";
+    float dpm = currentDPI() * (1000.0 / 25.4);
+    img.setDotsPerMeterX(dpm);
+    img.setDotsPerMeterY(dpm);
     return img;
 }
 
