@@ -25,60 +25,40 @@
  *
  * ============================================================ */
 
-#ifndef RADIO_SELECT_H
-#define RADIO_SELECT_H
+#ifndef FIND_SANE_DEVICES_H
+#define FIND_SANE_DEVICES_H
 
-#include "ksane_find_devices_thread.h"
+// #include "ksane.h"
 
-// Qt includes.
-#include <QGroupBox>
-#include <QStringList>
-#include <QButtonGroup>
-#include <QToolTip>
-#include <QRadioButton>
-#include <QCheckBox>
-#include <QPushButton>
-#include <QBoxLayout>
+#include <QObject>
+#include <QThread>
+#include <QMap>
 
-
-// KDE includes
-#include <KDialog>
-#include <klocale.h>
+// Sane includes.
+extern "C"
+{
+#include <sane/saneopts.h>
+#include <sane/sane.h>
+}
 
 namespace KSaneIface
 {
 
-class SaneDeviceDialog : public KDialog
-{
+class FindSaneDevicesThread : public QThread {
     Q_OBJECT
 
-public:
+    public:
+        FindSaneDevicesThread(QObject *parent);
+        ~FindSaneDevicesThread();
+        void run();
+        void getDevicesList(QMap<QString, QString> &devices_list);
 
-    SaneDeviceDialog(QWidget *parent=0);
-    ~SaneDeviceDialog();
-
-    QString getSelectedName();
-    void setDefault(QString);
-
-public slots:
-    void reloadDevicesList();
-    void setAvailable(bool avail);
-    void updateDevicesList();
-
-private:
-    QWidget                *page;
-    QGroupBox              *btn_box;
-    QButtonGroup           *btn_group;
-    QVBoxLayout            *btn_layout;
-    QString                 m_default_backend;
-    QString                 m_selected_device;
-    FindSaneDevicesThread  *find_devices_thread;
-
-    void setupActions();
-    bool setDevicesList(const QMap<QString, QString>& list);
-    QMap<QString, QString> getDevicesList();
+//     private:
+        SANE_Status         status;
+        SANE_Device const   **dev_list;
+        QMap<QString, QString> devices_map;
 };
 
-}  // NameSpace KSaneIface
+}
 
-#endif // RADIO_SELECT_H
+#endif // FIND_SANE_DEVICES_H

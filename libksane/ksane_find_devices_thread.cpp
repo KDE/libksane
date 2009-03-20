@@ -5,7 +5,7 @@
  * Date        : 2007-09-13
  * Description : Sane interface for KDE
  *
- * Copyright (C) 2007-2008 by Kare Sars <kare dot sars at iki dot fi>
+ * Copyright (C) 2009 by Grzegorz Kurtyka <grzegorz dot kurtyka at gmail dot com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,60 +25,45 @@
  *
  * ============================================================ */
 
-#ifndef RADIO_SELECT_H
-#define RADIO_SELECT_H
-
 #include "ksane_find_devices_thread.h"
+#include "ksane_find_devices_thread.moc"
 
-// Qt includes.
-#include <QGroupBox>
-#include <QStringList>
-#include <QButtonGroup>
-#include <QToolTip>
-#include <QRadioButton>
-#include <QCheckBox>
-#include <QPushButton>
-#include <QBoxLayout>
+// KDE includes.
+#include <KDebug>
 
-
-// KDE includes
-#include <KDialog>
-#include <klocale.h>
 
 namespace KSaneIface
 {
 
-class SaneDeviceDialog : public KDialog
+FindSaneDevicesThread::FindSaneDevicesThread(QObject *parent)
+     : QThread(parent)
 {
-    Q_OBJECT
+}
 
-public:
+FindSaneDevicesThread::~FindSaneDevicesThread()
+{
+}
 
-    SaneDeviceDialog(QWidget *parent=0);
-    ~SaneDeviceDialog();
 
-    QString getSelectedName();
-    void setDefault(QString);
+void FindSaneDevicesThread::run()
+{
+    QString tmp;
+    int     i = 0;
 
-public slots:
-    void reloadDevicesList();
-    void setAvailable(bool avail);
-    void updateDevicesList();
+    status = sane_get_devices(&dev_list, SANE_FALSE);
 
-private:
-    QWidget                *page;
-    QGroupBox              *btn_box;
-    QButtonGroup           *btn_group;
-    QVBoxLayout            *btn_layout;
-    QString                 m_default_backend;
-    QString                 m_selected_device;
-    FindSaneDevicesThread  *find_devices_thread;
+    while(dev_list[i] != 0) {
+        tmp = QString(dev_list[i]->vendor);
+        tmp += " : " + QString(dev_list[i]->model);
+        tmp += "\n " + QString(dev_list[i]->name);
+//         kDebug(51004) << "FindSaneDevicesThread::found device: " << dev_list[i]->name;
+        devices_map.insert( dev_list[i]->name, tmp );
+        i++;
+    }
+}
 
-    void setupActions();
-    bool setDevicesList(const QMap<QString, QString>& list);
-    QMap<QString, QString> getDevicesList();
-};
+void FindSaneDevicesThread::getDevicesList(QMap<QString, QString> &devices_list) {
+    devices_list = devices_map;
+}
 
-}  // NameSpace KSaneIface
-
-#endif // RADIO_SELECT_H
+}

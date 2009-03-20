@@ -56,62 +56,15 @@
 
 namespace KSaneIface
 {
+    static QString sane_username;
+    static QString sane_password;
 
 /** static function called by sane_open to get authorization from user */
 static void getSaneAuthorization(SANE_String_Const resource, SANE_Char *username, SANE_Char *password) {
-    KWallet::Wallet *sane_wallet;
-    QString my_folder_name("ksane");
-    QMap<QString, QString> wallet_entry;
-    QString wallet_entry_key, resource_rest;
-    wallet_entry_key = QString(resource).section(":", 0, 1);
-    resource_rest = QString(resource).section(":", 2);
-
-    QStringList resource_rest_list = resource_rest.split("$");
-    wallet_entry_key.append(":").append(resource_rest_list.at(0) );
-
-    qDebug() << "sane resource " << QString(resource) << " resource_rest " << resource_rest;
-
-    KPasswordDialog *dlg;
-
-    ///FIXME Skanlite(7539) KWallet::Wallet::openWallet: Pass a valid window to KWallet::Wallet::openWallet().
-    sane_wallet = KWallet::Wallet::openWallet(KWallet::Wallet::LocalWallet(), 0);
-
-    if(sane_wallet) {
-        dlg = new KPasswordDialog(0, KPasswordDialog::ShowUsernameLine | KPasswordDialog::ShowKeepPassword);
-        if(!sane_wallet->hasFolder(my_folder_name)) {
-            sane_wallet->createFolder(my_folder_name);
-        }
-
-        sane_wallet->setFolder(my_folder_name);
-        sane_wallet->readMap(wallet_entry_key, wallet_entry);
-        if(!wallet_entry.empty() || true) {
-            dlg->setUsername( wallet_entry["username"] );
-            dlg->setPassword( wallet_entry["password"] );
-            dlg->setKeepPassword( true );
-        }
-    } else {
-        dlg = new KPasswordDialog(0, KPasswordDialog::ShowUsernameLine);
-    }
-
-    dlg->setPrompt(i18n("Authentication required for: %1", wallet_entry_key ) );
-
-    if( !dlg->exec() )
-        return; //the user canceled
-
-    if(dlg->keepPassword()) {
-      QMap<QString, QString> entry;
-      entry["username"] = dlg->username().toUtf8();
-      entry["password"] = dlg->password().toUtf8();
-      sane_wallet->writeMap(wallet_entry_key, entry);
-
-    }
-
-    qstrncpy(username, dlg->username().toUtf8(), SANE_MAX_USERNAME_LEN );
-    qstrncpy(password, dlg->password().toUtf8(), SANE_MAX_PASSWORD_LEN );
-    delete dlg;
+    qstrncpy(username, sane_username.toUtf8(), SANE_MAX_USERNAME_LEN);
+    qstrncpy(password, sane_password.toUtf8(), SANE_MAX_PASSWORD_LEN );
 }
 
-    
 KSaneWidget::KSaneWidget(QWidget* parent)
     : QWidget(parent), d(new KSaneWidgetPrivate)
 {
@@ -131,7 +84,7 @@ KSaneWidget::KSaneWidget(QWidget* parent)
     else {
         //kDebug(51004) << "Sane Version = "
         //         << SANE_VERSION_MAJOR(version) << "."
-        //         << SANE_VERSION_MINOR(version) << "."
+        //         << SANE_VERSION_MINORparent(version) << "."
         //         << SANE_VERSION_BUILD(version);
     }
 
@@ -263,47 +216,14 @@ QString KSaneWidget::model() const {return d->m_model;}
 
 QString KSaneWidget::selectDevice(QWidget* parent)
 {
-    int                 i=0;
-    QStringList         dev_name_list;
-    QString             tmp;
-    SANE_Status         status;
-    SANE_Device const **dev_list;
+  QString selected_name("");
+  SaneDeviceDialog sel(parent);
 
-    status = sane_get_devices(&dev_list, SANE_TRUE);
-
-    while(dev_list[i] != 0) {
-        //kDebug(51004) << "i="       << i << " "
-        //         << "name='"   << dev_list[i]->name   << "' "
-        //         << "vendor='" << dev_list[i]->vendor << "' "
-        //         << "model='"  << dev_list[i]->model  << "' "
-        //         << "type='"   << dev_list[i]->type   << "'";
-        tmp = QString(dev_list[i]->name);
-        tmp += '\n' + QString(dev_list[i]->vendor);
-        tmp += " : " + QString(dev_list[i]->model);
-        dev_name_list += tmp;
-        i++;
-    }
-
-    if (dev_name_list.isEmpty()) {
-        KMessageBox::sorry(0, i18n("No scanner device has been found."));
-        return QString();
-    }
-
-    if (dev_name_list.count() == 1) {
-        // don't bother asking the user: we only have one choice!
-        return dev_list[0]->name;
-    }
-
-    RadioSelect sel;
-    sel.setWindowTitle(qApp->applicationName());
-    i = sel.getSelectedIndex(parent, i18n("Select Scanner"), dev_name_list, 0);
-    //kDebug(51004) << "i=" << i;
-
-    if ((i < 0) || (i >= dev_name_list.count())) {
-        return QString();
-    }
-
-    return QString(dev_list[i]->name);
+  // sel.setDefault(prev_backend); // set default scanner - perhaps application using libksane should remember that                                                
+  if(sel.exec()) {
+      return selected_name = sel.getSelectedName();
+  }
+  return selected_name;
 }
 
 bool KSaneWidget::openDevice(const QString &device_name)
@@ -314,11 +234,16 @@ bool KSaneWidget::openDevice(const QString &device_name)
     SANE_Word                      num_sane_options;
     SANE_Int                       res;
     SANE_Device const            **dev_list;
+    KPasswordDialog               *dlg;
+    KWallet::Wallet               *sane_wallet;
+    QString                        my_folder_name("ksane");
+    QMap<QString, QString>         wallet_entry;
 
     // don't bother trying to open if the device string is empty
     if (device_name.isEmpty()) {
         return false;
     }
+
     // get the device list to get the vendor and model info
     status = sane_get_devices(&dev_list, SANE_TRUE);
 
@@ -338,9 +263,65 @@ bool KSaneWidget::openDevice(const QString &device_name)
         d->m_model     = "Scanner";
     }
 
+    status = sane_open(device_name.toLatin1(), &d->m_saneHandle);
+
     // Try to open the device
-    if (sane_open(device_name.toLatin1(), &d->m_saneHandle) != SANE_STATUS_GOOD) {
-        //kDebug(51004) << "sane_open(\"" << device_name << "\", &handle) failed!";
+
+    bool password_dialog_ok = true;
+
+    // prepare wallet for authentication and create password dialog
+    if(status == SANE_STATUS_ACCESS_DENIED) {
+        sane_wallet = KWallet::Wallet::openWallet(KWallet::Wallet::LocalWallet(), winId() );
+
+        if(sane_wallet) {
+            dlg = new KPasswordDialog(this, KPasswordDialog::ShowUsernameLine | KPasswordDialog::ShowKeepPassword);
+            if(!sane_wallet->hasFolder(my_folder_name)) {
+                sane_wallet->createFolder(my_folder_name);
+            }
+            sane_wallet->setFolder(my_folder_name);
+            sane_wallet->readMap(device_name.toLatin1(), wallet_entry);
+            if(!wallet_entry.empty() || true) {
+                dlg->setUsername( wallet_entry["username"] );
+                dlg->setPassword( wallet_entry["password"] );
+                dlg->setKeepPassword( true );
+            }
+        } else {
+            dlg = new KPasswordDialog(this, KPasswordDialog::ShowUsernameLine);
+        }
+        dlg->setPrompt(i18n("Authentication required for resource: %1", device_name ) );
+
+    }
+
+    // sane_open failed due to insufficient authorization
+    // retry opening device with user provided data assisted with kwallet records
+    while (status == SANE_STATUS_ACCESS_DENIED) {
+
+        password_dialog_ok = dlg->exec();
+        if(!password_dialog_ok) {
+            delete dlg;
+            return false; //the user canceled
+        }
+
+        sane_username = dlg->username();
+        sane_password = dlg->password();
+
+        status = sane_open(device_name.toLatin1(), &d->m_saneHandle);
+
+        // store password in wallet on sucessful auth
+        if(dlg->keepPassword() && status != SANE_STATUS_ACCESS_DENIED) {
+            QMap<QString, QString> entry;
+            entry["username"] = dlg->username().toUtf8();
+            entry["password"] = dlg->password().toUtf8();
+            sane_wallet->writeMap(device_name.toLatin1(), entry);
+        }
+    }
+
+    // clear static members in library
+    sane_username = "";
+    sane_password = "";
+
+    if (status != SANE_STATUS_GOOD) {
+        qDebug() << "sane_open(\"" << device_name << "\", &handle) failed! status = " << status;
         return false;
     }
 

@@ -29,11 +29,14 @@
 #include "radio_select.h"
 #include "radio_select.moc"
 
-// Qt includes.
-#include <QRadioButton>
-#include <QPushButton>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
+
+// Sane includes.
+extern "C"
+{
+#include <sane/saneopts.h>
+#include <sane/sane.h>
+}
+
 
 // KDE includes.
 #include <KDebug>
@@ -41,65 +44,124 @@
 namespace KSaneIface
 {
 
-RadioSelect::RadioSelect(QWidget *parent)
+SaneDeviceDialog::SaneDeviceDialog(QWidget *parent)
     : KDialog(parent)
 {
-    setButtons(KDialog::Ok | KDialog::Cancel);
 
-    QWidget *page = new QWidget(this);
+    setButtons(KDialog::User1 | KDialog::Ok | KDialog::Cancel);
+    setButtonText( User1, i18n("Reload devices list") );
+
+    page = new QWidget(this);
     setMainWidget(page);
     QVBoxLayout *layout = new QVBoxLayout(page);
 
-    radio_group = new QGroupBox(this);
-    layout->addWidget(radio_group, 100);
+    btn_layout = new QVBoxLayout();
+    btn_layout->setDirection(QBoxLayout::TopToBottom);
 
-    QHBoxLayout *btn_layout = new QHBoxLayout;
-    layout->addLayout(btn_layout, 0);
+    btn_box = new QGroupBox(this);
+    btn_box->setMinimumHeight(210);
+    btn_box->setMinimumWidth(220);
+    btn_box->setLayout(btn_layout);
+
+    layout->addWidget(btn_box);
+
+    btn_group = new QButtonGroup(this);
+
+    find_devices_thread = new FindSaneDevicesThread(this);
+
+    connect(find_devices_thread, SIGNAL( finished() ),
+            this, SLOT( updateDevicesList() ) );
+    setAvailable(false);
+
+    setupActions();
+
+    emit(reloadDevicesList());
+
 }
 
-int RadioSelect::getSelectedIndex(QWidget *parent,
-                                  const QString& group_name,
-                                  const QStringList& items,
-                                  int default_index)
+SaneDeviceDialog::~SaneDeviceDialog() {
+    ///@todo wait for thread to finish if its running
+}
+
+void SaneDeviceDialog::setupActions()
 {
-    int i;
-    if (items.size() == 0) return -2;
+    connect(this, SIGNAL(user1Clicked()),
+            this, SLOT(reloadDevicesList()) );
+}
 
-    setParent(parent);
-    radio_group->setTitle(group_name);
 
-    // Create the RadioButton list
-    QList<QRadioButton *> btn_list;
-    for (i=0; i < items.size(); i++) {
-        btn_list.append(new QRadioButton(items.at(i), radio_group));
+void SaneDeviceDialog::reloadDevicesList()
+{
+    if(!find_devices_thread->isRunning()) {
+        setAvailable(false);
+        find_devices_thread->start();
+        btn_box->setEnabled(false);
+        btn_box->setTitle( i18n("Looking for devices. Please wait.") );
+        enableButton(KDialog::User1, false);
+    }
+}
+
+void SaneDeviceDialog::updateDevicesList()
+{
+    QMap<QString,QString> devices_list;
+    find_devices_thread->getDevicesList(devices_list);
+    setDevicesList( devices_list );
+    btn_box->setEnabled(true);
+    enableButton(KDialog::User1, true);
+}
+
+void SaneDeviceDialog::setAvailable(bool avail)
+{
+    enableButtonOk(avail);
+    if(avail) {
+        m_selected_device = getSelectedName();
+        setButtonFocus(KDialog::Ok);
+    }
+}
+
+void SaneDeviceDialog::setDefault(QString default_backend)
+{
+        m_selected_device = default_backend;
+}
+
+QString SaneDeviceDialog::getSelectedName() {
+    QAbstractButton *selected_button = btn_group->checkedButton();
+    if(selected_button)
+        return selected_button->objectName();
+    return QString();
+}
+
+bool SaneDeviceDialog::setDevicesList(const QMap<QString, QString>& items)
+{
+    QRadioButton *b;
+
+    while (!btn_group->buttons().isEmpty()) {
+        delete btn_group->buttons().takeFirst();
     }
 
-    // Add the device list to the layout
-    QVBoxLayout *radio_layout = new QVBoxLayout(radio_group);
-    for (i=0; i < btn_list.size(); i++) {
-        radio_layout->addWidget(btn_list.at(i));
+    if (items.size() == 0) {
+        btn_box->setTitle( i18n("Sorry. No devices found.") );
+        return false;
     }
 
-    int radio_index = default_index;
-    if (radio_index >= btn_list.size()) radio_index = btn_list.size()-1;
-    if (radio_index < 0) radio_index = 0;
-
-    btn_list.at(radio_index)->toggle();
-
-    // show the dialog and get the selection
-    if (exec()) {
-        // check which one is selected
-        for (i = 0; i < btn_list.size(); i++) {
-            if (btn_list.at(i)->isChecked()) break;
+    btn_box->setTitle( i18n("Found devices:") );
+    QMapIterator<QString, QString> itr(items);
+    while (itr.hasNext()) {
+        itr.next();
+        b = new QRadioButton(itr.value(), this );
+        b->setObjectName(itr.key());
+        b->setToolTip( itr.key() );
+        btn_layout->addWidget(b);
+        btn_group->addButton(b);
+        connect(b, SIGNAL(clicked(bool)), this, SLOT(setAvailable(bool)) );
+        if(itr.key() == m_selected_device) {
+            b->setChecked(true);
+            setAvailable(true);
         }
-        if (i == btn_list.size()) {
-            kDebug(51004) << "This is a bad index..." << endl;
-            return -1;
-        }
-        return i;
     }
 
-    return -1;
+    adjustSize();
+    return true;
 }
 
 }  // NameSpace KSaneIface
