@@ -1640,6 +1640,7 @@ QImage KSaneWidget::toQImage(const QByteArray &data,
     int j=0;
     int pixel_x = 0;
     int pixel_y = 0;
+    QVector<QRgb> table;
 
     switch (format)
     {
@@ -1649,9 +1650,10 @@ QImage KSaneWidget::toQImage(const QByteArray &data,
                           height,
                           bytes_per_line,
                           QImage::Format_Mono);
-            for (int i=0; i<img.height()*img.bytesPerLine(); i++) {
-                img.bits()[i] = ~img.bits()[i];
-            }
+            // The color table must be set
+            table.append(0xFFFFFFFF);
+            table.append(0xFF000000);
+            img.setColorTable(table);
             return img;
 
         case FormatGrayScale8:
