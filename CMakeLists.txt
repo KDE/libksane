@@ -7,6 +7,7 @@ PROJECT(libksane)
 # API      ABI
 # 0.1.0 => 0.1.0
 # 0.1.1 => 0.1.1
+# 0.1.1 => 0.1.2
 
 # Library API version
 SET(KSANE_LIB_MAJOR_VERSION "0")
@@ -26,7 +27,7 @@ SET(KSANE_LIB_SUFFIX_VERSION "")
 # For details : http://www.gnu.org/software/libtool/manual.html#Updating-version-info
 SET(KSANE_LIB_SO_CUR_VERSION "0")
 SET(KSANE_LIB_SO_REV_VERSION "1")
-SET(KSANE_LIB_SO_AGE_VERSION "1")
+SET(KSANE_LIB_SO_AGE_VERSION "2")
 
 # =======================================================
 # Set env. variables accordinly.
