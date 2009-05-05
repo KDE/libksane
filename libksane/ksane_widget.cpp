@@ -207,6 +207,7 @@ KSaneWidget::KSaneWidget(QWidget* parent)
 KSaneWidget::~KSaneWidget()
 {
     closeDevice();
+    sane_exit();
     delete d;
 }
 
