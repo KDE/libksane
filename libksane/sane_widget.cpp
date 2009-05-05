@@ -285,6 +285,7 @@ KSaneWidget::KSaneWidget(QWidget* parent)
 KSaneWidget::~KSaneWidget()
 {
     d->optList.clear();
+    sane_close(d->saneHandle);
     sane_exit();
     delete d;
 }
