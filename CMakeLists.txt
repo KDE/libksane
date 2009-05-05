@@ -1,5 +1,17 @@
 PROJECT(libksane)
 
+# building separately or as part of kdegraphics ?
+if(NOT KDE4_FOUND)
+    find_package(KDE4 REQUIRED)
+    find_package(Sane REQUIRED)
+    
+    include_directories(
+        ${KDE4_INCLUDES} 
+        ${CMAKE_CURRENT_BINARY_DIR}/libksane
+    )
+endif(NOT KDE4_FOUND)
+    
+    
 # =======================================================
 # Information to update before to release this library.
 
