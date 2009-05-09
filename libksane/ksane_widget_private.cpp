@@ -737,7 +737,7 @@ void KSaneWidgetPrivate::startScan()
     if (status != SANE_STATUS_GOOD) {
         switch (status)
         {
-            #ifndef SANE_CAP_ALWAYS_SETTABLE
+            #if !defined(SANE_CAP_ALWAYS_SETTABLE) && defined(SANE_STATUS_WARMING_UP) 
             // should better be done by detecting SANE's version in configure and providing a HAS_SANE_1_1
             // FIXME remove these ifdefs and require sane 1.1.x as soon as possible
             case SANE_STATUS_WARMING_UP:
@@ -759,7 +759,7 @@ void KSaneWidgetPrivate::startScan()
             case SANE_STATUS_COVER_OPEN:
             case SANE_STATUS_DEVICE_BUSY:
             case SANE_STATUS_ACCESS_DENIED:
-            #ifndef SANE_CAP_ALWAYS_SETTABLE
+            #if !defined(SANE_CAP_ALWAYS_SETTABLE) && defined(SANE_STATUS_HW_LOCKED) 
             case SANE_STATUS_HW_LOCKED:
             #endif
                 KMessageBox::sorry(0, i18n(sane_strstatus(status)));
