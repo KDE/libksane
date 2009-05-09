@@ -1088,22 +1088,22 @@ void KSaneWidget::startScan()
     // Start the scanning with sane_start
     status = sane_start(d->saneHandle);
 
-#ifndef SANE_CAP_ALWAYS_SETTABLE
-    // should better be done by detecting SANE's version in configure and providing a HAS_SANE_1_1
-    // FIXME remove these ifdefs and require sane 1.1.x as soon as possible
-    if (status == SANE_STATUS_WARMING_UP) {
-        d->warmingUp->show();
-        d->progressBar->hide();
-        if (d->readStatus == READ_ON_GOING) {
-            d->startScanTmr.start(20);
-        }
-        else {
-            d->warmingUp->hide();
-            scanDone();
-        }
-        return;
-    }
-#endif
+// #ifndef SANE_CAP_ALWAYS_SETTABLE
+//     // should better be done by detecting SANE's version in configure and providing a HAS_SANE_1_1
+//     // FIXME remove these ifdefs and require sane 1.1.x as soon as possible
+//     if (status == SANE_STATUS_WARMING_UP) {
+//         d->warmingUp->show();
+//         d->progressBar->hide();
+//         if (d->readStatus == READ_ON_GOING) {
+//             d->startScanTmr.start(20);
+//         }
+//         else {
+//             d->warmingUp->hide();
+//             scanDone();
+//         }
+//         return;
+//     }
+// #endif
 
     if (status != SANE_STATUS_GOOD) {
         if ((status == SANE_STATUS_NO_DOCS)
@@ -1111,9 +1111,9 @@ void KSaneWidget::startScan()
              || (status == SANE_STATUS_COVER_OPEN)
              || (status == SANE_STATUS_DEVICE_BUSY)
              || (status == SANE_STATUS_ACCESS_DENIED)
-#ifndef SANE_CAP_ALWAYS_SETTABLE
-             || (status == SANE_STATUS_HW_LOCKED)
-#endif
+// #ifndef SANE_CAP_ALWAYS_SETTABLE
+//              || (status == SANE_STATUS_HW_LOCKED)
+// #endif
            )
         {
             KMessageBox::sorry(0, i18n(sane_strstatus(status)));
