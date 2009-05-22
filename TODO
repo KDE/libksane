@@ -4,10 +4,5 @@ TODO list of new features:
 
 * Progressive final scan: scan can provide huge image especially in 16 bits color depth.
 Send image data to host application by block, not the whole image at once.
-* Use QGraphicsView for the preview (check Darkroom implementation)
-* Test the batch scanning.
-* Be more verbose about errors (why did sane_open fail...)
 * Rework Scanner selection dialog.
-* Added methods to get strings info from scanner device to be hosted later in
-  image metadata (dpi, color mode, etc)
-* Move the scan reading to a thread to get a more responcive UI.
+* Add public api to get a list of all available devices.
