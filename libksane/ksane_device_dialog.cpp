@@ -40,6 +40,7 @@ extern "C"
 
 // KDE includes.
 #include <KDebug>
+#include <KPushButton>
 
 namespace KSaneIface
 {
@@ -93,6 +94,10 @@ void KSaneDeviceDialog::setupActions()
 void KSaneDeviceDialog::reloadDevicesList()
 {
     if(!find_devices_thread->isRunning()) {
+        while (!btn_group->buttons().isEmpty()) {
+            delete btn_group->buttons().takeFirst();
+        }
+
         setAvailable(false);
         find_devices_thread->start();
         btn_box->setEnabled(false);
@@ -133,8 +138,6 @@ QString KSaneDeviceDialog::getSelectedName() {
 
 bool KSaneDeviceDialog::setDevicesList(const QMap<QString, QString>& items)
 {
-    QRadioButton *b;
-
     while (!btn_group->buttons().isEmpty()) {
         delete btn_group->buttons().takeFirst();
     }
@@ -144,23 +147,35 @@ bool KSaneDeviceDialog::setDevicesList(const QMap<QString, QString>& items)
         return false;
     }
 
+    delete btn_layout;
+    btn_layout = new QVBoxLayout();
+    btn_layout->setDirection(QBoxLayout::TopToBottom);
+    btn_box->setLayout(btn_layout);
+
     btn_box->setTitle( i18n("Found devices:") );
     QMapIterator<QString, QString> itr(items);
     while (itr.hasNext()) {
+        bool first = !itr.hasPrevious();
         itr.next();
-        b = new QRadioButton(itr.value(), this );
+        QRadioButton *b = new QRadioButton(itr.value(), this );
         b->setObjectName(itr.key());
         b->setToolTip( itr.key() );
         btn_layout->addWidget(b);
         btn_group->addButton(b);
         connect(b, SIGNAL(clicked(bool)), this, SLOT(setAvailable(bool)) );
-        if(itr.key() == m_selected_device) {
+        if(first || itr.key() == m_selected_device) {
             b->setChecked(true);
             setAvailable(true);
         }
     }
 
+    btn_layout->addStretch();
     adjustSize();
+
+    if(items.size() == 1) {
+        //button(KDialog::Ok)->animateClick();
+    }
+
     return true;
 }
 
