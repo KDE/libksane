@@ -52,11 +52,12 @@ void FindSaneDevicesThread::run()
 
     status = sane_get_devices(&dev_list, SANE_FALSE);
 
+    devices_map.clear();
     while(dev_list[i] != 0) {
         tmp = QString(dev_list[i]->vendor);
         tmp += " : " + QString(dev_list[i]->model);
         tmp += "\n " + QString(dev_list[i]->name);
-//         kDebug(51004) << "FindSaneDevicesThread::found device: " << dev_list[i]->name;
+        //kDebug(51004) << "FindSaneDevicesThread::found device: " << dev_list[i]->name;
         devices_map.insert( dev_list[i]->name, tmp );
         i++;
     }
