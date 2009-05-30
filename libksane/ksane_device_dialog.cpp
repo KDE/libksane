@@ -173,7 +173,7 @@ bool KSaneDeviceDialog::setDevicesList(const QMap<QString, QString>& items)
     adjustSize();
 
     if(items.size() == 1) {
-        //button(KDialog::Ok)->animateClick();
+        button(KDialog::Ok)->animateClick();
     }
 
     return true;
