@@ -6,6 +6,7 @@
  * Description : Sane interface for KDE
  *
  * Copyright (C) 2007-2008 by Kare Sars <kare dot sars at iki dot fi>
+ * Copyright (C) 2009 by Grzegorz Kurtyka <grzegorz dot kurtyka at gmail dot com>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
