@@ -29,8 +29,10 @@
 #include "labeled_slider.h"
 #include "labeled_slider.moc"
 
+// KDE includes.
+#include <KNumInput>
+
 // Qt includes.
-#include <QSpinBox>
 #include <QLabel>
 #include <QSlider>
 
@@ -52,7 +54,7 @@ LabeledSlider::LabeledSlider(QWidget *parent, const QString& ltext,
     m_slider->setMaximum(max);
     m_slider->setSingleStep(m_step);
 
-    m_spinb = new QSpinBox(this);
+    m_spinb = new KIntSpinBox(this);
     m_spinb->setMinimum(min);
     m_spinb->setMaximum(max);
     m_slider->setSingleStep(m_step);

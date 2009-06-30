@@ -38,7 +38,7 @@
   *@author Kåre Särs
   */
 
-class QSpinBox;
+class KIntSpinBox;
 class QLabel;
 
 namespace KSaneIface
@@ -104,7 +104,7 @@ private:
 
     QLabel      *m_label;
     QSlider     *m_slider;
-    QSpinBox    *m_spinb;
+    KIntSpinBox *m_spinb;
     int          m_step;
     QGridLayout *m_layout;
 };
