@@ -77,6 +77,7 @@ KSaneWidgetPrivate::KSaneWidgetPrivate()
     m_dataSize      = 0;
     m_readStatus    = READ_READY;
     m_isPreview     = false;
+    m_timeSinceUpd.restart();
     m_saneHandle    = 0;
     m_readThread    = 0;
     m_splitGamChB   = 0;
@@ -805,9 +806,9 @@ void KSaneWidgetPrivate::startScan()
             (m_previewImg.width() != m_params.pixels_per_line))
         {
             m_previewImg = QImage(m_params.pixels_per_line,
-                                      m_params.lines,
-                                      QImage::Format_RGB32);
-                                      m_previewImg.fill(0xFFFFFFFF);
+                                  m_params.lines,
+                                  QImage::Format_RGB32);
+            m_previewImg.fill(0xFFFFFFFF);
         }
         
         // update the size of the preview widget.
@@ -1021,6 +1022,14 @@ void KSaneWidgetPrivate::processData()
             return;
     }
     
+    // copy the data to the buffer
+    if (m_isPreview) {
+        copyToPreview((int)m_readThread->readBytes);
+    }
+    else {
+        copyToScanData((int)m_readThread->readBytes);
+    }
+    
     // update progressBar
     if (m_params.lines > 0) {
         long int new_progress;
@@ -1037,21 +1046,14 @@ void KSaneWidgetPrivate::processData()
         
         if (new_progress != m_progressBar->value()) {
             //kDebug(51004) << new_progress << m_frameRead << m_dataSize;
-            if (m_isPreview) {
+            if (m_isPreview && (m_timeSinceUpd.elapsed() > 300)) { // update the preview only every 300ms
                 m_previewViewer->updateImage();
+                m_timeSinceUpd.restart();
             }
             m_progressBar->setValue((int)new_progress);
             emit scanProgress(new_progress);
         }
         
-    }
-    
-    // copy the data to the buffer
-    if (m_isPreview) {
-        copyToPreview((int)m_readThread->readBytes);
-    }
-    else {
-        copyToScanData((int)m_readThread->readBytes);
     }
     
     if (m_readStatus == READ_ON_GOING) {

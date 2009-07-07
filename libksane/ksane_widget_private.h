@@ -39,6 +39,7 @@ extern "C"
 #include <QtGui/QWidget>
 #include <QCheckBox>
 #include <QTimer>
+#include <QTime>
 #include <QProgressBar>
 #include <QThread>
 
@@ -185,6 +186,7 @@ namespace KSaneIface
             QTimer              m_readValsTmr;
             QTimer              m_startScanTmr;
             KSaneReadThread    *m_readThread;
+            QTime               m_timeSinceUpd;
             
             // general scanning
             bool                m_isPreview;
