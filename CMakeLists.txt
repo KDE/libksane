@@ -3,7 +3,11 @@ PROJECT(libksane)
 # building separately or as part of kdegraphics ?
 if(NOT KDE4_FOUND)
     find_package(KDE4 REQUIRED)
-    find_package(Sane REQUIRED)
+    if (NOT WIN32)
+        find_package(Sane REQUIRED)
+    else (NOT WIN32)
+        find_package(Sane)
+    endif (NOT WIN32)
     
     include_directories(
         ${KDE4_INCLUDES} 
@@ -51,8 +55,11 @@ SET(KSANE_LIB_SO_VERSION_STRING "${KSANE_LIB_SO_CUR_VERSION}.${KSANE_LIB_SO_REV_
 
 # =======================================================
 
-
-SUBDIRS(libksane)
+IF (SANE_FOUND)
+    SUBDIRS(libksane)
+ELSE (SANE_FOUND)
+    SUBDIRS(ksanetwain)
+ENDIF (SANE_FOUND)
 
 IF(NOT WIN32)
   CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/libksane.pc.cmake ${CMAKE_CURRENT_BINARY_DIR}/libksane.pc)

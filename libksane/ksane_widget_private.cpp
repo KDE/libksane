@@ -140,20 +140,20 @@ KSaneWidget::ImageFormat KSaneWidgetPrivate::getImgFormat(SANE_Parameters &param
                 default:
                     return KSaneWidget::FormatNone;
             }
-                case SANE_FRAME_RGB:
-                case SANE_FRAME_RED:
-                case SANE_FRAME_GREEN:
-                case SANE_FRAME_BLUE:
-                    switch (params.depth)
-                    {
-                        case 8:
-                            return KSaneWidget::FormatRGB_8_C;
-                        case 16:
-                            return KSaneWidget::FormatRGB_16_C;
-                        default:
-                            return KSaneWidget::FormatNone;
-                    }
-    }
+        case SANE_FRAME_RGB:
+        case SANE_FRAME_RED:
+        case SANE_FRAME_GREEN:
+        case SANE_FRAME_BLUE:
+            switch (params.depth)
+            {
+                case 8:
+                    return KSaneWidget::FormatRGB_8_C;
+                case 16:
+                    return KSaneWidget::FormatRGB_16_C;
+                default:
+                    return KSaneWidget::FormatNone;
+            }
+}
     return KSaneWidget::FormatNone;
 }
 
@@ -173,6 +173,7 @@ int KSaneWidgetPrivate::getBytesPerLines(SANE_Parameters &params)
             return params.pixels_per_line*8;
 
         case KSaneWidget::FormatNone:
+        case KSaneWidget::FormatBMP: // to remove warning (BMP is omly valid in the twain wrapper)
             return 0;
     }
     return 0;

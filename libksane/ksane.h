@@ -63,6 +63,7 @@ public:
         FormatRGB_16_C,     /**< Every pixel consists of three colors in the order Read,
                              * Grean and Blue, with two bytes per color(no alpha channel).
                              * The byte order is the one provided by libsane. */
+        FormatBMP,          /**< The image data  is returned as a BMP. */
         FormatNone = 0xFFFF /**< This enumeration value should never be returned to the user */
     } ImageFormat;
 
