@@ -61,21 +61,20 @@ public:
     QString getSelectedName();
     void setDefault(QString);
 
-public slots:
+public Q_SLOTS:
     void reloadDevicesList();
     void setAvailable(bool avail);
     void updateDevicesList();
 
 private:
-    QWidget                *page;
-    QGroupBox              *btn_box;
-    QButtonGroup           *btn_group;
-    QVBoxLayout            *btn_layout;
+    QWidget                *m_btn_container;
+    QGroupBox              *m_btn_box;
+    QButtonGroup           *m_btn_group;
+    QVBoxLayout            *m_btn_layout;
     QString                 m_default_backend;
     QString                 m_selected_device;
-    FindSaneDevicesThread  *find_devices_thread;
+    FindSaneDevicesThread  *m_find_devices_thread;
 
-    void setupActions();
     bool setDevicesList(const QMap<QString, QString>& list);
     QMap<QString, QString> getDevicesList();
 };

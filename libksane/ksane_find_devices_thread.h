@@ -53,7 +53,7 @@ class FindSaneDevicesThread : public QThread {
         void run();
         void getDevicesList(QMap<QString, QString> &devices_list);
 
-//     private:
+    private:
         SANE_Status         status;
         SANE_Device const   **dev_list;
         QMap<QString, QString> devices_map;
