@@ -1,4 +1,4 @@
-CONFIGURE_FILE(${CMAKE_SOURCE_DIR}/libksane/version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/version.h)
+CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/../libksane/version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/version.h)
 
 
 INCLUDE_DIRECTORIES(
