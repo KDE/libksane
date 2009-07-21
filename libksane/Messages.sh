@@ -1,3 +1,3 @@
 #! /bin/sh
-$XGETTEXT `find . -name \*.cpp` -o $podir/libksane.pot
+$XGETTEXT `find . -name \*.cpp` ../ksanetwain/*.cpp -o $podir/libksane.pot
 
