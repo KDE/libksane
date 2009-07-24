@@ -143,13 +143,13 @@ bool KSaneDeviceDialog::setDevicesList(const QMap<QString, QString>& items)
     while (!m_btn_group->buttons().isEmpty()) {
         delete m_btn_group->buttons().takeFirst();
     }
-    delete m_btn_layout;
 
     if (items.size() == 0) {
         m_btn_box->setTitle( i18n("Sorry. No devices found.") );
         return false;
     }
 
+    delete m_btn_layout;
     m_btn_layout = new QVBoxLayout;
     m_btn_container->setLayout(m_btn_layout);
     m_btn_box->setTitle( i18n("Found devices:") );
