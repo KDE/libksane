@@ -419,6 +419,7 @@ bool KSaneWidgetPrivate::SetImageCount(TW_INT16 nCount)
 bool KSaneWidgetPrivate::OpenDialog()
 {
     EnableSource(true);
+	return true;
 }
 
 /** Called to enable the Twain Acquire Dialog. This too can be 
