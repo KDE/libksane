@@ -35,6 +35,7 @@
 #include <QDebug>
 
 // KDE includes
+#include <klocalizedstring.h>
 #include <kpushbutton.h>
 
 // Local includes.
