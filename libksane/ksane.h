@@ -112,12 +112,12 @@ public:
      * @param format is the KSane image format of the data.
      * @param img is the QImage reference to the image to fill.
      */
-    bool makeQImage(const QByteArray &data,
-                    int width,
-                    int height,
-                    int bytes_per_line,
-                    ImageFormat format,
-                    QImage &img) KDE_DEPRECATED;
+     KDE_DEPRECATED bool makeQImage(const QByteArray &data,
+									int width,
+									int height,
+									int bytes_per_line,
+									ImageFormat format,
+									QImage &img);
     /**
      * This is a convenience method that can be used to create a QImage from the image data
      * returned by the imageReady(...) signal. Note: If the image data has 16 bits/color the
