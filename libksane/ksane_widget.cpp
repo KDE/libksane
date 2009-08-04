@@ -6,6 +6,7 @@
  * Description : Sane interface for KDE
  *
  * Copyright (C) 2007-2009 by Kare Sars <kare dot sars at iki dot fi>
+ * Copyright (C) 2009 by Matthias Nagl <matthias at nagl dot info>
  * Copyright (C) 2009 by Grzegorz Kurtyka <grzegorz dot kurtyka at gmail dot com>
  * Copyright (C) 2007-2008 by Gilles Caulier <caulier dot gilles at gmail dot com>
  *
@@ -654,5 +655,86 @@ float KSaneWidget::currentDPI()
     }
     return 0.0;
 }
+
+float KSaneWidget::scanAreaWidth()
+{
+    float result = 0.0;
+    if (d->m_optBrX) {
+        if (d->m_optBrX->getUnit() == SANE_UNIT_PIXEL) {
+            d->m_optBrX->getMaxValue(result);
+            result = result / currentDPI() / 25.4;
+        }
+        else if (d->m_optBrX->getUnit() == SANE_UNIT_MM) {
+            d->m_optBrX->getMaxValue(result);
+        }
+    }
+    return result;
+}
+
+float KSaneWidget::scanAreaHeight()
+{
+    float result = 0.0;
+    if (d->m_optBrY) {
+        if (d->m_optBrY->getUnit() == SANE_UNIT_PIXEL) {
+            d->m_optBrY->getMaxValue(result);
+            result = result / currentDPI() / 25.4;
+        }
+        else if (d->m_optBrY->getUnit() == SANE_UNIT_MM) {
+            d->m_optBrY->getMaxValue(result);
+        }
+    }
+    return result;
+}
+
+void KSaneWidget::setSelection(QPointF lefttop, QPointF rightbottom)
+{
+    if (!d->m_optBrX || !d->m_optBrY || !d->m_optTlX || !d->m_optTlY) {
+        return;
+    }
+    float xmax, ymax;
+    d->m_optBrX->getMaxValue(xmax);
+    d->m_optBrY->getMaxValue(ymax);
+    if (lefttop.x() < 0.0 || lefttop.y() < 0.0 || rightbottom.x() < 0.0 || rightbottom.y() < 0.0) {
+        d->m_previewViewer->clearActiveSelection();
+        d->m_optTlX->setValue(0.0);
+        d->m_optTlY->setValue(0.0);
+        d->m_optBrX->setValue(xmax);
+        d->m_optBrY->setValue(ymax);
+    }
+
+    if (d->m_optBrY->getUnit() == SANE_UNIT_MM) {
+        // clear selection if values are out of bounds
+        if (lefttop.x() > xmax || lefttop.y() > ymax || rightbottom.x() > xmax || rightbottom.y() > ymax) {
+            d->m_previewViewer->clearActiveSelection();
+            d->m_optTlX->setValue(0.0);
+            d->m_optTlY->setValue(0.0);
+            d->m_optBrX->setValue(xmax);
+            d->m_optBrY->setValue(ymax);
+        }
+        d->m_previewViewer->setSelection(lefttop.x(), lefttop.y(), rightbottom.x(), rightbottom.y());
+        d->m_optTlX->setValue(lefttop.x());
+        d->m_optTlY->setValue(lefttop.y());
+        d->m_optBrX->setValue(rightbottom.x());
+        d->m_optBrY->setValue(rightbottom.y());
+    }
+    else if (d->m_optBrY->getUnit() == SANE_UNIT_PIXEL) {
+        const float mmperinch = 25.4;
+        const float dpi = currentDPI();
+        const float m = dpi / mmperinch;
+        if (m*lefttop.x() > xmax || m*lefttop.y() > ymax || m*rightbottom.x() > xmax || m*rightbottom.y() > ymax) {
+            d->m_previewViewer->clearActiveSelection();
+            d->m_optTlX->setValue(0.0);
+            d->m_optTlY->setValue(0.0);
+            d->m_optBrX->setValue(xmax);
+            d->m_optBrY->setValue(ymax);
+        }
+        d->m_previewViewer->setSelection(m*lefttop.x(), m*lefttop.y(), m*rightbottom.x(), m*rightbottom.y());
+        d->m_optTlX->setValue(m*lefttop.x());
+        d->m_optTlY->setValue(m*lefttop.y());
+        d->m_optBrX->setValue(m*rightbottom.x());
+        d->m_optBrY->setValue(m*rightbottom.y());
+    }
+}
+
 
 }  // NameSpace KSaneIface

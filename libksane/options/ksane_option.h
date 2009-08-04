@@ -78,6 +78,7 @@ public:
     virtual bool setValue(float val);
     virtual bool getValue(QString &val);
     virtual bool setValue(const QString &val);
+    virtual int  getUnit();
 
     bool storeCurrentData();
     bool restoreSavedData();

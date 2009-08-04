@@ -164,6 +164,7 @@ bool KSaneOption::getValue(float &) {return false;}
 bool KSaneOption::setValue(float) {return false;}
 bool KSaneOption::getValue(QString &) {return false;}
 bool KSaneOption::setValue(const QString &) {return false;}
+int  KSaneOption::getUnit() {return m_optDesc->unit;}
 
 bool KSaneOption::storeCurrentData()
 {
