@@ -244,8 +244,8 @@ void KSaneViewer::updateSelVisibility()
 {
     if ((d->selection->rect().width() >0.001) &&
         (d->selection->rect().height() > 0.001) &&
-        (d->pixmapItem->pixmap().width() - d->selection->rect().width() > 0.001) &&
-        (d->pixmapItem->pixmap().height() - d->selection->rect().height() > 0.001))
+        ((d->pixmapItem->pixmap().width() - d->selection->rect().width() > 0.001) ||
+        (d->pixmapItem->pixmap().height() - d->selection->rect().height() > 0.001)))
     {
         d->selection->setVisible(true);
     }
