@@ -621,10 +621,10 @@ void KSaneWidgetPrivate::scanPreview()
     }
     
     // set the resopution to 100 dpi and increase if necessary
-    dpi = 0.0;
+    dpi = 25.0;
     do {
         // Increase the dpi value
-        dpi += 100.0;
+        dpi += 25.0;
         if (m_optRes != 0) {
             m_optRes->setValue(dpi);
         }
