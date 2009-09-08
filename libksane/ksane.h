@@ -156,10 +156,16 @@ public:
     float scanAreaHeight();
 
     /** This method sets the selection according to the given points
-    * @note The points are defined with respect to the scan areas origin in mm
+    * @note The points are defined with respect to the scan areas top-left corner in mm
     * @param lefttop Left upper corner of the selection (in mm)
     * @param rightbottom Right lower corner of the selection (in mm) */
     void setSelection(QPointF lefttop, QPointF rightbottom);
+    
+    /** This function is used to set the preferred resolution for scanning the preview.
+    * @param dpi is the wanted scan resolution for the preview
+    * @note if the set value is not supported, the cloasest one is used
+    * @note setting the value 0 means that the default calculated value should be used */
+    void setPreviewResolution(float dpi);
 
     /** This method reads the available parameters and their values and
      * returns them in a QMap (Name, value)

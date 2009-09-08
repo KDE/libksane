@@ -534,6 +534,11 @@ void KSaneWidget::getOptVals(QMap <QString, QString> &opts)
     }
 }
 
+void KSaneWidget::setPreviewResolution(float dpi)
+{
+    d->m_previewDPI = dpi;
+}
+
 bool KSaneWidget::getOptVal(const QString &optname, QString &value)
 {
     KSaneOption *option;

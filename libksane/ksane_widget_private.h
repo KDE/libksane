@@ -175,6 +175,7 @@ namespace KSaneIface
             // preview variables
             float               m_previewWidth;
             float               m_previewHeight;
+            float               m_previewDPI;
             QImage              m_previewImg;
             bool                m_autoSelect;
             int                 m_selIndex;

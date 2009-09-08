@@ -101,6 +101,7 @@ void KSaneWidgetPrivate::clearDeviceOptions()
     m_optGamG       = 0;
     m_optGamB       = 0;
     m_optPreview    = 0;
+    m_previewDPI    = 0;
     
     // delete all the options in the list.
     while (!m_optList.isEmpty()) {
@@ -252,6 +253,12 @@ void KSaneWidgetPrivate::createOptInterface()
             basic_layout->addWidget(option->widget());
         }
     }
+    
+    // save a pointer to the preview option if possible
+    if ((option = getOption(SANE_NAME_PREVIEW)) != 0) {
+        m_optPreview = option;
+    }
+
     // scan area (Do not add the widgets)
     if ((option = getOption(SANE_NAME_SCAN_TL_X)) != 0) {
         m_optTlX = option;
@@ -361,16 +368,12 @@ void KSaneWidgetPrivate::createOptInterface()
             (m_optList.at(i)->name() != SANE_NAME_SCAN_TL_Y) &&
             (m_optList.at(i)->name() != SANE_NAME_SCAN_BR_X) &&
             (m_optList.at(i)->name() != SANE_NAME_SCAN_BR_Y) &&
+            (m_optList.at(i)->name() != SANE_NAME_PREVIEW) &&
             (m_optList.at(i)->hasGui()))
         {
             m_optList.at(i)->createWidget(m_otherOptsTab);
             other_layout->addWidget(m_optList.at(i)->widget());
         }
-    }
-    
-    // save a pointer to the preview option if possible
-    if ((option = getOption(SANE_NAME_PREVIEW)) != 0) {
-        m_optPreview = option;
     }
     
     // add a stretch to the end to keep the parameters at the top
@@ -621,31 +624,41 @@ void KSaneWidgetPrivate::scanPreview()
         // no use to try auto selections if you can not use them
         m_autoSelect = false;
     }
-    
-    // set the resopution to 100 dpi and increase if necessary
-    dpi = 25.0;
-    do {
-        // Increase the dpi value
-        dpi += 25.0;
+
+    if (m_previewDPI >= 25.0) {
         if (m_optRes != 0) {
-            m_optRes->setValue(dpi);
+            m_optRes->setValue(m_previewDPI);
+            if ((m_optResY != 0) && (m_optRes->name() == SANE_NAME_SCAN_X_RESOLUTION)) {
+                m_optResY->setValue(m_previewDPI);
+            }
         }
-        if (m_optResY != 0) {
-            m_optResY->setValue(dpi);
-        }
-        //check what image size we would get in a scan
-        status = sane_get_parameters(m_saneHandle, &m_params);
-        if (status != SANE_STATUS_GOOD) {
-            kDebug(51004) << "sane_get_parameters=" << sane_strstatus(status);
-            scanDone();
-            return;
-        }
-        if (dpi > 800) break;
     }
-    while ((m_params.pixels_per_line < 300) || (m_params.lines < 300));
+    else {
+        // set the resopution to 50 dpi and increase if necessary
+        dpi = 25.0;
+        do {
+            // Increase the dpi value
+            dpi += 25.0;
+            if (m_optRes != 0) {
+                m_optRes->setValue(dpi);
+                if ((m_optResY != 0) && (m_optRes->name() == SANE_NAME_SCAN_X_RESOLUTION)) {
+                    m_optResY->setValue(dpi);
+                }
+            }
+            //check what image size we would get in a scan
+            status = sane_get_parameters(m_saneHandle, &m_params);
+            if (status != SANE_STATUS_GOOD) {
+                kDebug(51004) << "sane_get_parameters=" << sane_strstatus(status);
+                scanDone();
+                return;
+            }
+            if (dpi > 800) break;
+        }
+        while ((m_params.pixels_per_line < 300) || (m_params.lines < 300));
+    }
     
     // set preview option to true if possible
-    if (m_optPreview != 0) m_optPreview->setValue(1);
+    if (m_optPreview != 0) m_optPreview->setValue(SANE_TRUE);
     
     // execute valReload if there is a pending value reload
     while (m_readValsTmr.isActive()) {
