@@ -79,8 +79,13 @@ public Q_SLOTS:
     * If the given string can be found in the comobox, activate that entry.
     * If not, the entry is not changed.
     */
-    void setCurrentText(const QString &);
-
+   void setCurrentText(const QString &);
+   
+   /** 
+    * This function is used to read the current string of the combobox
+    */
+   QString currentText();
+   
    /**
     * set the current item of the combobox.
     */

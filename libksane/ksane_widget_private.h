@@ -45,10 +45,11 @@ extern "C"
 
 // KDE includes
 #include <KTabWidget>
-#include <klocale.h>
-#include <kdebug.h>
-#include <kmessagebox.h>
+#include <KLocale>
+#include <KDebug>
+#include <KMessageBox>
 #include <KPushButton>
+#include <KToolBar>
 
 // Local includes
 #include "ksane.h"
@@ -56,6 +57,8 @@ extern "C"
 #include "ksane_viewer.h"
 #include "labeled_separator.h"
 #include "labeled_gamma.h"
+#include "labeled_checkbox.h"
+#include "splittercollapser.h"
 
 #define inc_pixel(x,y,ppl) { x++; if (x>=ppl) { y++; x=0;} }
 
@@ -127,6 +130,9 @@ namespace KSaneIface
             void setBRY(float y);
             void startScan();
             void processData();
+            void checkInvert();
+            void invertPreview();
+            
             
         public:
             // backend independent
@@ -136,17 +142,22 @@ namespace KSaneIface
             QWidget            *m_colorOpts;
             QScrollArea        *m_otherScrollA;
             QWidget            *m_otherOptsTab;
+            LabeledCheckbox    *m_invertColors;
             
+            QSplitter          *m_splitter;
+            SplitterCollapser  *m_optionsCollapser;
+            
+            QWidget            *m_previewFrame;
             KSaneViewer        *m_previewViewer;
+            QWidget            *m_btnFrame;
+            KToolBar           *m_zoomBar;
             KPushButton        *m_scanBtn;
             KPushButton        *m_prevBtn;
-            KPushButton        *m_zInBtn;
-            KPushButton        *m_zOutBtn;
-            KPushButton        *m_zSelBtn;
-            KPushButton        *m_zFitBtn;
-            KPushButton        *m_cancelBtn;
+            
+            QWidget            *m_activityFrame;
             QLabel             *m_warmingUp;
             QProgressBar       *m_progressBar;
+            KPushButton        *m_cancelBtn;
             
             // device info
             SANE_Handle         m_saneHandle;
@@ -157,6 +168,8 @@ namespace KSaneIface
             // Option variables
             QList<KSaneOption*> m_optList;
             KSaneOption        *m_optSource;
+            KSaneOption        *m_optNegative;
+            KSaneOption        *m_optFilmType;
             KSaneOption        *m_optMode;
             KSaneOption        *m_optDepth;
             KSaneOption        *m_optRes;
@@ -165,12 +178,12 @@ namespace KSaneIface
             KSaneOption        *m_optTlY;
             KSaneOption        *m_optBrX;
             KSaneOption        *m_optBrY;
+            KSaneOption        *m_optPreview;
             KSaneOption        *m_optGamR;
             KSaneOption        *m_optGamG;
             KSaneOption        *m_optGamB;
             QCheckBox          *m_splitGamChB;
             LabeledGamma       *m_commonGamma;
-            KSaneOption        *m_optPreview;
             
             // preview variables
             float               m_previewWidth;

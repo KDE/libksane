@@ -21,6 +21,7 @@ SET(ksane_LIB_SRCS
     ksane_find_devices_thread.cpp
     ksane_widget.cpp
     ksane_widget_private.cpp
+    splittercollapser.cpp
     options/ksane_option.cpp
     options/ksane_opt_button.cpp
     options/ksane_opt_checkbox.cpp

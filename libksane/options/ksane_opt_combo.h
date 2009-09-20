@@ -58,6 +58,9 @@ public:
     
 private Q_SLOTS:
     void comboboxChangedIndex(int val);
+    
+Q_SIGNALS:
+    void valueChanged();
 
 private:
     QStringList &genComboStringList();

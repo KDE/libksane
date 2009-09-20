@@ -78,6 +78,12 @@ void LabeledCombo::setCurrentText(const QString &t)
     }
 }
 
+QString LabeledCombo::currentText()
+{
+    return m_combo->currentText();
+}
+
+
 bool LabeledCombo::setIcon(const QIcon &icon, const QString& str)
 {
     for (int i=0; i < m_combo->count(); i++) {

@@ -88,7 +88,11 @@ void KSaneOptCombo::readValue()
     
     m_currentText = getSaneComboString(data.data());
     if (m_combo != 0) {
-        m_combo->setCurrentText(m_currentText);
+        if (m_combo->currentText() != m_currentText) {
+            m_combo->setCurrentText(m_currentText);
+            emit valueChanged();
+        }
+        else m_combo->setCurrentText(m_currentText);
     }
 }
 

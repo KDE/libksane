@@ -56,10 +56,7 @@ KSaneWidgetPrivate::KSaneWidgetPrivate()
     m_colorOpts     = 0;
     m_scanBtn       = 0;
     m_prevBtn       = 0;
-    m_zInBtn        = 0;
-    m_zOutBtn       = 0;
-    m_zSelBtn       = 0;
-    m_zFitBtn       = 0;
+    m_zoomBar       = 0;
     m_cancelBtn     = 0;
     m_previewViewer = 0;
     m_autoSelect    = true;
@@ -82,6 +79,7 @@ KSaneWidgetPrivate::KSaneWidgetPrivate()
     m_readThread    = 0;
     m_splitGamChB   = 0;
     m_commonGamma   = 0;
+    m_previewDPI    = 0;
     
     clearDeviceOptions();
 }
@@ -89,6 +87,8 @@ KSaneWidgetPrivate::KSaneWidgetPrivate()
 void KSaneWidgetPrivate::clearDeviceOptions()
 {
     m_optSource     = 0;
+    m_optNegative   = 0;
+    m_optFilmType   = 0;
     m_optMode       = 0;
     m_optDepth      = 0;
     m_optRes        = 0;
@@ -101,7 +101,9 @@ void KSaneWidgetPrivate::clearDeviceOptions()
     m_optGamG       = 0;
     m_optGamB       = 0;
     m_optPreview    = 0;
-    m_previewDPI    = 0;
+
+    delete m_invertColors;
+    m_invertColors = 0;
     
     // delete all the options in the list.
     while (!m_optList.isEmpty()) {
@@ -207,13 +209,17 @@ void KSaneWidgetPrivate::createOptInterface()
         m_optSource = option;
         option->createWidget(m_basicOptsTab);
         basic_layout->addWidget(option->widget());
+        connect(m_optSource, SIGNAL(valueChanged()), this, SLOT(checkInvert()), Qt::QueuedConnection);
     }
     // film-type (note: No translation)
     if ((option = getOption(QString("film-type"))) != 0) {
+        m_optFilmType = option;
         option->createWidget(m_basicOptsTab);
         basic_layout->addWidget(option->widget());
+        connect(m_optSource, SIGNAL(valueChanged()), this, SLOT(checkInvert()), Qt::QueuedConnection);
     }
     else if ((option = getOption(SANE_NAME_NEGATIVE)) != 0) {
+        m_optNegative = option;
         option->createWidget(m_basicOptsTab);
         basic_layout->addWidget(option->widget());
     }
@@ -349,6 +355,11 @@ void KSaneWidgetPrivate::createOptInterface()
         color_lay->addWidget(option->widget());
     }
     
+    m_invertColors = new LabeledCheckbox(m_colorOpts, i18n("Invert colors"));
+    color_lay->addWidget(m_invertColors);
+    m_invertColors->setChecked(false);
+    connect(m_invertColors, SIGNAL(toggled(bool)), this, SLOT(invertPreview()));
+    
     // add a stretch to the end to keep the parameters at the top
     basic_layout->addStretch();
 
@@ -447,6 +458,7 @@ void KSaneWidgetPrivate::valReload()
     for (i=0; i<m_optList.size(); i++) {
         m_optList.at(i)->readValue();
     }
+    
 }
 
 void KSaneWidgetPrivate::handleSelection(float tl_x, float tl_y, float br_x, float br_y) {
@@ -845,7 +857,7 @@ void KSaneWidgetPrivate::startScan()
     m_px_c_index  = 0;
     m_frame_t_count = 0;
     m_progressBar->setValue(0);
-    
+        
     m_readThread->start();
 }
 
@@ -872,7 +884,7 @@ void KSaneWidgetPrivate::scanDone()
         setBusy(false);
         return;
     }
-
+    // else this is a final scan
     if (m_readStatus == READ_FINISHED) {
         // scan finished OK
         emit imageReady(m_scanData,
@@ -941,18 +953,10 @@ void KSaneWidgetPrivate::setBusy(bool busy)
 {
     m_optsTabWidget->setDisabled(busy);
     m_previewViewer->setDisabled(busy);
-    m_zInBtn->setDisabled(busy);
-    m_zOutBtn->setDisabled(busy);
-    m_zSelBtn->setDisabled(busy);
-    m_zFitBtn->setDisabled(busy);
-    m_prevBtn->setDisabled(busy);
-    m_scanBtn->setDisabled(busy);
-    m_scanBtn->setFocus(Qt::OtherFocusReason);
+    m_btnFrame->setVisible(!busy);
+    m_activityFrame->setVisible(busy);
     
-    m_progressBar->setVisible(busy);
-    m_cancelBtn->setVisible(busy);
-    m_progressBar->setDisabled(!busy);
-    m_cancelBtn->setDisabled(!busy);
+    m_scanBtn->setFocus(Qt::OtherFocusReason);
 }
 
 #define inc_color_index(index) { index++; if (index==3) index=0;}
@@ -1082,6 +1086,18 @@ void KSaneWidgetPrivate::copyToPreview(int read_bytes)
 {
     int index;
     uchar *imgBits = m_previewImg.bits();
+    if (m_invertColors->isChecked()) {
+        if (m_params.depth >= 8) {
+            for(int i=0; i<read_bytes; i++) {
+                m_saneReadBuffer[i] = 255 - m_saneReadBuffer[i];
+            }
+        }
+        if (m_params.depth == 1) {
+            for(int i=0; i<read_bytes; i++) {
+                m_saneReadBuffer[i] = ~m_saneReadBuffer[i];
+            }
+        }
+    }
     switch (m_params.format)
     {
         case SANE_FRAME_GRAY:
@@ -1241,6 +1257,25 @@ void KSaneWidgetPrivate::copyToPreview(int read_bytes)
 void KSaneWidgetPrivate::copyToScanData(int read_bytes)
 {
     char *data = m_scanData.data();
+    if (m_invertColors->isChecked()) {
+        if (m_params.depth == 16) {
+            //if (read_bytes%2) qDebug() << "read_bytes=" << read_bytes;
+            quint16 *u16ptr = reinterpret_cast<quint16*>(m_saneReadBuffer);
+            for(int i=0; i<read_bytes/2; i++) {
+                u16ptr[i] = 0xFFFF - u16ptr[i];
+            }
+        }
+        else if (m_params.depth == 8) {
+            for(int i=0; i<read_bytes; i++) {
+                m_saneReadBuffer[i] = 0xFF - m_saneReadBuffer[i];
+            }
+        }
+        else if (m_params.depth == 1) {
+            for(int i=0; i<read_bytes; i++) {
+                m_saneReadBuffer[i] = ~m_saneReadBuffer[i];
+            }
+        }
+    }
     switch (m_params.format)
     {
         case SANE_FRAME_GRAY:
@@ -1258,16 +1293,14 @@ void KSaneWidgetPrivate::copyToScanData(int read_bytes)
         case SANE_FRAME_RED:
             if (m_params.depth == 8) {
                 for (int i=0; i<read_bytes; i++) {
-                    data[index_red8_to_rgb8(m_frameRead)] =
-                    m_saneReadBuffer[i];
+                    data[index_red8_to_rgb8(m_frameRead)] = m_saneReadBuffer[i];
                     m_frameRead++;
                 }
                 return;
             }
             else if (m_params.depth == 16) {
                 for (int i=0; i<read_bytes; i++) {
-                    data[index_red16_to_rgb16(m_frameRead)] =
-                    m_saneReadBuffer[i];
+                    data[index_red16_to_rgb16(m_frameRead)] = m_saneReadBuffer[i];
                     m_frameRead++;
                 }
                 return;
@@ -1277,16 +1310,14 @@ void KSaneWidgetPrivate::copyToScanData(int read_bytes)
         case SANE_FRAME_GREEN:
             if (m_params.depth == 8) {
                 for (int i=0; i<read_bytes; i++) {
-                    data[index_green8_to_rgb8(m_frameRead)] =
-                    m_saneReadBuffer[i];
+                    data[index_green8_to_rgb8(m_frameRead)] = m_saneReadBuffer[i];
                     m_frameRead++;
                 }
                 return;
             }
             else if (m_params.depth == 16) {
                 for (int i=0; i<read_bytes; i++) {
-                    data[index_green16_to_rgb16(m_frameRead)] =
-                    m_saneReadBuffer[i];
+                    data[index_green16_to_rgb16(m_frameRead)] = m_saneReadBuffer[i];
                     m_frameRead++;
                 }
                 return;
@@ -1296,16 +1327,14 @@ void KSaneWidgetPrivate::copyToScanData(int read_bytes)
         case SANE_FRAME_BLUE:
             if (m_params.depth == 8) {
                 for (int i=0; i<read_bytes; i++) {
-                    data[index_blue8_to_rgb8(m_frameRead)] =
-                    m_saneReadBuffer[i];
+                    data[index_blue8_to_rgb8(m_frameRead)] = m_saneReadBuffer[i];
                     m_frameRead++;
                 }
                 return;
             }
             else if (m_params.depth == 16) {
                 for (int i=0; i<read_bytes; i++) {
-                    data[index_blue16_to_rgb16(m_frameRead)] =
-                    m_saneReadBuffer[i];
+                    data[index_blue16_to_rgb16(m_frameRead)] = m_saneReadBuffer[i];
                     m_frameRead++;
                 }
                 return;
@@ -1334,5 +1363,35 @@ void KSaneReadThread::run()
 {
     status = sane_read(m_saneHandle, m_data, m_maxBytes, &readBytes);
 }
+
+
+void KSaneWidgetPrivate::checkInvert()
+{
+    if (!m_optSource) return;
+    if (!m_optFilmType) return;
+    
+    QString source;
+    QString filmtype;
+    m_optSource->getValue(source);
+    m_optFilmType->getValue(filmtype);
+    
+    if ((source.contains(i18nc("This is compared to the option string returned by sane", 
+        "Transparency"), Qt::CaseInsensitive)) &&
+        (filmtype.contains(i18nc("This is compared to the option string returned by sane", 
+        "Negative"), Qt::CaseInsensitive)))
+    {
+        m_invertColors->setChecked(true);
+    }
+    else {
+        m_invertColors->setChecked(false);
+    }
+}
+
+void KSaneWidgetPrivate::invertPreview()
+{
+    m_previewImg.invertPixels();
+    m_previewViewer->updateImage();
+}
+
 
 }  // NameSpace KSaneIface

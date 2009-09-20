@@ -58,6 +58,7 @@ public:
     LabeledCheckbox(QWidget *parent, const QString& text);
     ~LabeledCheckbox();
     void setChecked(bool);
+    bool isChecked();
     void widgetSizeHints(int *lab_w, int *chb_w);
     void setColumnWidths(int lab_w, int rest_w);
 

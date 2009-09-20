@@ -35,6 +35,7 @@
 #include <QApplication>
 #include <QVarLengthArray>
 #include <QLabel>
+#include <QSplitter>
 
 // KDE includes
 #include <kpassworddialog.h>
@@ -101,39 +102,13 @@ KSaneWidget::KSaneWidget(QWidget* parent)
     connect(d, SIGNAL(scanDone(int, QString)), this, SIGNAL(scanDone(int, QString)));
     
     // Create the static UI
-    QHBoxLayout *base_layout = new QHBoxLayout;
-    base_layout->setSpacing(2);
-    base_layout->setMargin(0);
-    setLayout(base_layout);
-    QVBoxLayout *options_layout = new QVBoxLayout;
-    options_layout->setSpacing(2);
-    options_layout->setMargin(0);
-    QVBoxLayout *preview_layout = new QVBoxLayout;
-    preview_layout->setSpacing(2);
-    preview_layout->setMargin(0);
-    
-    base_layout->addLayout(options_layout, 0);
-    base_layout->addLayout(preview_layout, 100);
-
     // create the preview
     d->m_previewViewer = new KSaneViewer(this);
     connect(d->m_previewViewer, SIGNAL(newSelection(float, float, float, float)),
             d, SLOT(handleSelection(float, float, float, float)));
 
-    d->m_zInBtn  = new KPushButton(this);
-    d->m_zInBtn->setIcon(KIcon("zoom-in"));
-    d->m_zInBtn->setToolTip(i18n("Zoom In"));
-    d->m_zOutBtn = new KPushButton(this);
-    d->m_zOutBtn->setIcon(KIcon("zoom-out"));
-    d->m_zOutBtn->setToolTip(i18n("Zoom Out"));
-    d->m_zSelBtn = new KPushButton(this);
-    d->m_zSelBtn->setIcon(KIcon("zoom-fit-best"));
-    d->m_zSelBtn->setToolTip(i18n("Zoom to Selection"));
-    d->m_zFitBtn = new KPushButton(this);
-    d->m_zFitBtn->setIcon(KIcon("document-preview"));
-    d->m_zFitBtn->setToolTip(i18n("Zoom to Fit"));
-
-    d->m_warmingUp = new QLabel(this);
+    
+    d->m_warmingUp = new QLabel;
     d->m_warmingUp->setText(i18n("The lamp is warming up."));
     d->m_warmingUp->setAlignment(Qt::AlignCenter);
     d->m_warmingUp->setAutoFillBackground(true);
@@ -141,15 +116,20 @@ KSaneWidget::KSaneWidget(QWidget* parent)
     //d->m_warmingUp->setForegroundRole(QPalette::HighlightedText);
     d->m_warmingUp->hide();
 
-    d->m_progressBar = new QProgressBar(this);
-    d->m_progressBar->hide();
+    d->m_progressBar = new QProgressBar;
     d->m_progressBar->setMaximum(100);
 
-    d->m_cancelBtn   = new KPushButton(this);
+    d->m_cancelBtn   = new KPushButton;
     d->m_cancelBtn->setIcon(KIcon("process-stop"));
     d->m_cancelBtn->setToolTip(i18n("Cancel current scan operation"));
-    d->m_cancelBtn->hide();
-
+    
+    d->m_activityFrame = new QWidget;
+    QHBoxLayout *progress_lay = new QHBoxLayout(d->m_activityFrame);
+    progress_lay->setContentsMargins(0,0,0,0);
+    progress_lay->addWidget(d->m_progressBar, 100);
+    progress_lay->addWidget(d->m_cancelBtn, 0);
+    d->m_activityFrame->hide();
+    
     d->m_prevBtn = new KPushButton(this);
     d->m_prevBtn->setIcon(KIcon("document-import"));
     d->m_prevBtn->setToolTip(i18n("Scan Preview Image"));
@@ -160,36 +140,35 @@ KSaneWidget::KSaneWidget(QWidget* parent)
     d->m_scanBtn->setText(i18nc("Final scan button text", "Scan"));
     d->m_scanBtn->setFocus(Qt::OtherFocusReason);
 
-    connect(d->m_zInBtn,    SIGNAL(clicked()), d->m_previewViewer, SLOT(zoomIn()));
-    connect(d->m_zOutBtn,   SIGNAL(clicked()), d->m_previewViewer, SLOT(zoomOut()));
-    connect(d->m_zSelBtn,   SIGNAL(clicked()), d->m_previewViewer, SLOT(zoomSel()));
-    connect(d->m_zFitBtn,   SIGNAL(clicked()), d->m_previewViewer, SLOT(zoom2Fit()));
-    connect(d->m_scanBtn,   SIGNAL(clicked()), d, SLOT(scanFinal()));
     connect(d->m_prevBtn,   SIGNAL(clicked()), d, SLOT(scanPreview()));
+    connect(d->m_scanBtn,   SIGNAL(clicked()), d, SLOT(scanFinal()));
     connect(d->m_cancelBtn, SIGNAL(clicked()), this, SLOT(scanCancel()));
 
-    QHBoxLayout *zoom_layout = new QHBoxLayout;
-    QHBoxLayout *progress_lay = new QHBoxLayout;
+    d->m_zoomBar = new KToolBar("Zoom", this, false);
+    d->m_zoomBar->addAction(KIcon("zoom-in"), i18n("Zoom In"), d->m_previewViewer, SLOT(zoomIn()));
+    d->m_zoomBar->addAction(KIcon("zoom-out"), i18n("Zoom Out"), d->m_previewViewer, SLOT(zoomOut()));
+    d->m_zoomBar->addAction(KIcon("zoom-fit-best"), i18n("Zoom to Selection"), d->m_previewViewer, SLOT(zoomSel()));
+    d->m_zoomBar->addAction(KIcon("document-preview"), i18n("Zoom to Fit"), d->m_previewViewer, SLOT(zoom2Fit()));
+    d->m_zoomBar->setToolButtonStyle(Qt::ToolButtonIconOnly);
 
+    d->m_btnFrame = new QWidget;
+    QHBoxLayout *btn_lay = new QHBoxLayout(d->m_btnFrame);
+    btn_lay->setContentsMargins(0,0,0,0);
+    btn_lay->addWidget(d->m_zoomBar);
+    btn_lay->addStretch(100);
+    btn_lay->addWidget(d->m_prevBtn);
+    btn_lay->addWidget(d->m_scanBtn);
+
+    d->m_previewFrame = new QWidget;
+    QVBoxLayout *preview_layout = new QVBoxLayout(d->m_previewFrame);
+    preview_layout->setContentsMargins(0,0,0,0);
     preview_layout->addWidget(d->m_previewViewer, 100);
-    preview_layout->addLayout(progress_lay, 0);
-    preview_layout->addLayout(zoom_layout, 0);
-
-    progress_lay->addWidget(d->m_warmingUp, 100);
-    progress_lay->addWidget(d->m_progressBar, 100);
-    progress_lay->addWidget(d->m_cancelBtn, 0);
-
-    zoom_layout->addWidget(d->m_zInBtn);
-    zoom_layout->addWidget(d->m_zOutBtn);
-    zoom_layout->addWidget(d->m_zSelBtn);
-    zoom_layout->addWidget(d->m_zFitBtn);
-    zoom_layout->addStretch(100);
-    zoom_layout->addWidget(d->m_prevBtn);
-    zoom_layout->addWidget(d->m_scanBtn);
-
+    preview_layout->addWidget(d->m_warmingUp, 100);
+    preview_layout->addWidget(d->m_activityFrame, 0);
+    preview_layout->addWidget(d->m_btnFrame, 0);
+    
     // Create Options Widget
     d->m_optsTabWidget = new KTabWidget;
-    options_layout->addWidget(d->m_optsTabWidget, 0);
     
     // Add the basic options tab
     d->m_basicScrollA = new QScrollArea;
@@ -202,7 +181,19 @@ KSaneWidget::KSaneWidget(QWidget* parent)
     d->m_otherScrollA->setWidgetResizable(true);
     d->m_otherScrollA->setFrameShape(QFrame::NoFrame);
     d->m_optsTabWidget->addTab(d->m_otherScrollA, i18n("Other Options"));
-
+    
+    
+    d->m_splitter = new QSplitter(this);
+    d->m_splitter->addWidget(d->m_optsTabWidget);
+    d->m_splitter->setStretchFactor(0,0);
+    d->m_splitter->addWidget(d->m_previewFrame);
+    d->m_splitter->setStretchFactor(1,100);
+    
+    d->m_optionsCollapser = new SplitterCollapser(d->m_splitter, d->m_optsTabWidget);
+    
+    QHBoxLayout *base_layout = new QHBoxLayout(this);
+    base_layout->addWidget(d->m_splitter);
+    base_layout->setContentsMargins(0,0,0,0);
 }
 
 KSaneWidget::~KSaneWidget()
