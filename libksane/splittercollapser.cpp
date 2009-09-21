@@ -2,6 +2,7 @@
 /*
 Gwenview: an image viewer
 Copyright 2009 Aurélien Gâteau <agateau@kde.org>
+Copyright 2009 Kåre Sårs <kare.sars@iki.fi>
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -71,9 +72,22 @@ struct SplitterCollapserPrivate {
 	QWidget* mWidget;
 	Direction mDirection;
 	QTimeLine* mOpacityTimeLine;
+	int mSizeAtCollaps;
 	
 	bool isVertical() const {
 		return mDirection & Vertical;
+	}
+	
+	bool isVisible() const {
+		bool isVisible = mWidget->isVisible();
+		QRect widgetRect = mWidget->geometry();
+		if (isVisible) {
+			QPoint br = widgetRect.bottomRight();
+			if ((br.x() <= 0) || (br.y() <=0)) {
+				isVisible = false;
+			}
+		}
+		return isVisible;
 	}
 	
 	void updatePosition() {
@@ -83,25 +97,17 @@ struct SplitterCollapserPrivate {
 		int handleWidth = mSplitter->handleWidth();
 		int width = q->width();
 		
-		bool isVisible = mWidget->isVisible();
-		if (isVisible) {
-			QPoint br = widgetRect.bottomRight();
-			if ((br.x() <= 0) || (br.y() <=0)) {
-				isVisible = false;
-			}
-		}
-		
 		if (!isVertical()) {
 			// FIXME: Make this configurable
 			y = 30;
 			if (mDirection == LTR) {
-				if (isVisible) {
+				if (isVisible()) {
 					x = widgetRect.right() + handleWidth;
 				} else {
 					x = 0;
 				}
 			} else { // RTL
-				if (isVisible) {
+				if (isVisible()) {
 					x = widgetRect.left() - handleWidth - width;
 				} else {
 					x = splitterWidth - handleWidth - width;
@@ -124,21 +130,18 @@ struct SplitterCollapserPrivate {
 			arrowForDirection[TTB] = ArrowTypes(Qt::UpArrow,    Qt::DownArrow);
 			arrowForDirection[BTT] = ArrowTypes(Qt::DownArrow,  Qt::UpArrow);
 		}
-		q->setArrowType(arrowForDirection[mDirection].get(mWidget->isVisible()));
+		q->setArrowType(arrowForDirection[mDirection].get(isVisible()));
 	}
 
 
 	void widgetEventFilter(QEvent* event) {
 		switch (event->type()) {
-			case QEvent::Move:
-				updatePosition();
-				updateOpacity();
-				break;
 			case QEvent::Resize:
 				updatePosition();
 				updateOpacity();
 				break;
 				
+			case QEvent::Move:
 			case QEvent::Show:
 			case QEvent::Hide:
 				updatePosition();
@@ -241,9 +244,27 @@ QSize SplitterCollapser::sizeHint() const {
 
 
 void SplitterCollapser::slotClicked() {
-	d->mWidget->setVisible(!d->mWidget->isVisible());
+	QList<int> sizes = d->mSplitter->sizes();
+	int index = d->mSplitter->indexOf(d->mWidget);
+	if (d->isVisible()) {
+		d->mSizeAtCollaps = sizes[index];
+		sizes[index] = 0;
+	}
+	else {
+		if (d->mSizeAtCollaps != 0) {
+			sizes[index] = d->mSizeAtCollaps;
+		}
+		else {
+			if (d->isVertical()) {
+				sizes[index] = d->mWidget->sizeHint().height();
+			}
+			else {
+				sizes[index] = d->mWidget->sizeHint().width();
+			}
+		}
+	}
+	d->mSplitter->setSizes(sizes);
 }
-
 
 void SplitterCollapser::paintEvent(QPaintEvent*) {
 	QStylePainter painter(this);
