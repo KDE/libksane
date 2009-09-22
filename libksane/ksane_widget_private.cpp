@@ -80,6 +80,7 @@ KSaneWidgetPrivate::KSaneWidgetPrivate()
     m_splitGamChB   = 0;
     m_commonGamma   = 0;
     m_previewDPI    = 0;
+	m_invertColors  = 0;
     
     clearDeviceOptions();
 }
