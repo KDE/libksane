@@ -166,12 +166,12 @@ QString KSaneOptCombo::getSaneComboString(float fval)
     switch(m_optDesc->unit)
     {
         case SANE_UNIT_NONE:        break;
-        case SANE_UNIT_PIXEL:       return i18nc("Parameter and Unit","%1 Pixels", fval);
-        case SANE_UNIT_BIT:         return i18nc("Parameter and Unit","%1 Bits", fval);
+        case SANE_UNIT_PIXEL:       return i18ncp("Parameter and Unit","%1 Pixel", "%1 Pixels", fval);
+        case SANE_UNIT_BIT:         return i18ncp("Parameter and Unit","%1 Bit","%1 Bits", fval);
         case SANE_UNIT_MM:          return i18nc("Parameter and Unit","%1 mm", fval);
         case SANE_UNIT_DPI:         return i18nc("Parameter and Unit","%1 DPI", fval);
         case SANE_UNIT_PERCENT:     return i18nc("Parameter and Unit","%1 %", fval);
-        case SANE_UNIT_MICROSECOND: return i18nc("Parameter and Unit","%1 usec", fval);
+        case SANE_UNIT_MICROSECOND: return i18ncp("Parameter and Unit","%1 usec","%1 usec", fval);
     }
     return QString::number(fval, 'F', 4);
 }

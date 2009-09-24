@@ -288,12 +288,12 @@ QString KSaneOption::unitString()
     switch(m_optDesc->unit)
     {
         case SANE_UNIT_NONE:        return QString("");
-        case SANE_UNIT_PIXEL:       return i18nc("SpinBox parameter unit"," Pixels");
-        case SANE_UNIT_BIT:         return i18nc("SpinBox parameter unit"," Bits");
-        case SANE_UNIT_MM:          return i18nc("SpinBox parameter unit"," mm");
-        case SANE_UNIT_DPI:         return i18nc("SpinBox parameter unit"," DPI");
-        case SANE_UNIT_PERCENT:     return i18nc("SpinBox parameter unit"," %");
-        case SANE_UNIT_MICROSECOND: return i18nc("SpinBox parameter unit"," usec");
+        case SANE_UNIT_PIXEL:       return i18ncp("SpinBox parameter unit", " Pixel", " Pixels");
+        case SANE_UNIT_BIT:         return i18ncp("SpinBox parameter unit", " Bit", " Bits");
+        case SANE_UNIT_MM:          return i18nc("SpinBox parameter unit", " mm");
+        case SANE_UNIT_DPI:         return i18nc("SpinBox parameter unit", " DPI");
+        case SANE_UNIT_PERCENT:     return i18nc("SpinBox parameter unit", " %");
+        case SANE_UNIT_MICROSECOND: return i18ncp("SpinBox parameter unit", " usec", " usec");
     }
     return QString("");
 }
