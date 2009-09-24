@@ -92,7 +92,7 @@ void KSaneOptFSlider::readOption()
         m_slider->setStep(MIN_FIXED_STEP);
     }
     m_minChange = m_slider->step()/2;
-    m_slider->setSuffix(unitString());
+    m_slider->setSuffix(unitDoubleString());
     m_slider->setLabelText(i18n(m_optDesc->title));
 }
 

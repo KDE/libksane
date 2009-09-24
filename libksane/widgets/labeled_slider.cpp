@@ -89,7 +89,7 @@ void LabeledSlider::setLabelText(const QString &text)
     m_label->setText(text);
 }
 
-void LabeledSlider::setSuffix(const QString &text)
+void LabeledSlider::setSuffix(const KLocalizedString &text)
 {
     m_spinb->setSuffix(text);
 }

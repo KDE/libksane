@@ -39,6 +39,7 @@
   */
 
 class KIntSpinBox;
+class KLocalizedString;
 class QLabel;
 
 namespace KSaneIface
@@ -84,7 +85,7 @@ public Q_SLOTS:
     void setRange(int min, int max);
     void setStep(int);
     /** Set the unit */
-    void setSuffix(const QString &text);
+    void setSuffix(const KLocalizedString &text);
 
 private Q_SLOTS:
 

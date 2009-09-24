@@ -283,17 +283,32 @@ KSaneOption::KSaneOptType KSaneOption::otpionType(const SANE_Option_Descriptor *
     return TYPE_DETECT_FAIL;
 }
 
-QString KSaneOption::unitString()
+KLocalizedString KSaneOption::unitString()
+{
+    switch(m_optDesc->unit)
+    {
+        case SANE_UNIT_NONE:        return ki18n("");
+        case SANE_UNIT_PIXEL:       return ki18ncp("SpinBox parameter unit", " Pixel", " Pixels");
+        case SANE_UNIT_BIT:         return ki18ncp("SpinBox parameter unit", " Bit", " Bits");
+        case SANE_UNIT_MM:          return ki18nc("SpinBox parameter unit", " mm");
+        case SANE_UNIT_DPI:         return ki18nc("SpinBox parameter unit", " DPI");
+        case SANE_UNIT_PERCENT:     return ki18nc("SpinBox parameter unit", " %");
+        case SANE_UNIT_MICROSECOND: return ki18ncp("SpinBox parameter unit", " usec", " usecs");
+    }
+    return ki18n("");
+}
+
+QString KSaneOption::unitDoubleString()
 {
     switch(m_optDesc->unit)
     {
         case SANE_UNIT_NONE:        return QString("");
-        case SANE_UNIT_PIXEL:       return i18ncp("SpinBox parameter unit", " Pixel", " Pixels");
-        case SANE_UNIT_BIT:         return i18ncp("SpinBox parameter unit", " Bit", " Bits");
-        case SANE_UNIT_MM:          return i18nc("SpinBox parameter unit", " mm");
-        case SANE_UNIT_DPI:         return i18nc("SpinBox parameter unit", " DPI");
-        case SANE_UNIT_PERCENT:     return i18nc("SpinBox parameter unit", " %");
-        case SANE_UNIT_MICROSECOND: return i18ncp("SpinBox parameter unit", " usec", " usec");
+        case SANE_UNIT_PIXEL:       return i18nc("Double numbers. SpinBox parameter unit", " Pixels");
+        case SANE_UNIT_BIT:         return i18nc("Double numbers. SpinBox parameter unit", " Bits");
+        case SANE_UNIT_MM:          return i18nc("Double numbers. SpinBox parameter unit", " mm");
+        case SANE_UNIT_DPI:         return i18nc("Double numbers. SpinBox parameter unit", " DPI");
+        case SANE_UNIT_PERCENT:     return i18nc("Double numbers. SpinBox parameter unit", " %");
+        case SANE_UNIT_MICROSECOND: return i18nc("Double numbers. SpinBox parameter unit", " usec");
     }
     return QString("");
 }

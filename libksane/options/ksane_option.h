@@ -30,7 +30,9 @@
 
 // Qt includes.
 #include <QFrame>
-#include <QString>
+
+//KDE includes
+#include <KLocalizedString>
 
 // Sane includes.
 extern "C"
@@ -101,7 +103,8 @@ protected:
     SANE_Word toSANE_Word(unsigned char *data);
     void fromSANE_Word(unsigned char *data, SANE_Word from);
     bool writeData(void *data);
-    QString unitString();
+    KLocalizedString unitString();
+    QString unitDoubleString();
     KSaneOptWState state();
     void updateVisibility();
     
