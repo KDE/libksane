@@ -287,7 +287,7 @@ KLocalizedString KSaneOption::unitString()
 {
     switch(m_optDesc->unit)
     {
-        case SANE_UNIT_NONE:        return ki18n("");
+        case SANE_UNIT_NONE:        return KLocalizedString();
         case SANE_UNIT_PIXEL:       return ki18ncp("SpinBox parameter unit", " Pixel", " Pixels");
         case SANE_UNIT_BIT:         return ki18ncp("SpinBox parameter unit", " Bit", " Bits");
         case SANE_UNIT_MM:          return ki18nc("SpinBox parameter unit", " mm");
@@ -295,7 +295,7 @@ KLocalizedString KSaneOption::unitString()
         case SANE_UNIT_PERCENT:     return ki18nc("SpinBox parameter unit", " %");
         case SANE_UNIT_MICROSECOND: return ki18ncp("SpinBox parameter unit", " usec", " usecs");
     }
-    return ki18n("");
+    return KLocalizedString();
 }
 
 QString KSaneOption::unitDoubleString()
