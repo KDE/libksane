@@ -89,12 +89,13 @@ void LabeledSlider::setLabelText(const QString &text)
     m_label->setText(text);
 }
 
-/** Remove #if tags when KDE 4.2 becomes unpopular**/
-#if KDE_IS_VERSION(4, 2, 80)
 void LabeledSlider::setSuffix(const KLocalizedString &text)
-#else
+{
+    m_spinb->setSuffix(text);
+}
+
+/** Remove "setSuffix1" method when KDE 4.2 becomes unpopular**/
 void LabeledSlider::setSuffix1(const QString &text)
-#endif
 {
     m_spinb->setSuffix(text);
 }
