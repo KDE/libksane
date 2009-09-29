@@ -108,7 +108,12 @@ void KSaneOptSlider::readOption()
         m_slider->setRange(KSW_INT_MIN, KSW_INT_MAX);
         m_slider->setStep(1);
     }
+/** Remove #if tags when KDE 4.2 becomes unpopular**/
+#if KDE_IS_VERSION(4, 2, 80)
     m_slider->setSuffix(unitString());
+#else
+    m_slider->setSuffix1(unitDoubleString());
+#endif
     m_slider->setLabelText(i18n(m_optDesc->title));
 }
 

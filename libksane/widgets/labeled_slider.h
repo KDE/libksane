@@ -34,6 +34,9 @@
 #include <QSlider>
 #include <QGridLayout>
 
+/** Remove #if tags when KDE 4.2 becomes unpopular**/
+#include <kdeversion.h>
+
 /**
   *@author Kåre Särs
   */
@@ -86,6 +89,7 @@ public Q_SLOTS:
     void setStep(int);
     /** Set the unit */
     void setSuffix(const KLocalizedString &text);
+    void setSuffix1(const QString &text); /** Remove this compatibility hack when KDE 4.2 becomes unpopular **/
 
 private Q_SLOTS:
 
