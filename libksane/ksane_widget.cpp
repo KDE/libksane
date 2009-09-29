@@ -144,7 +144,13 @@ KSaneWidget::KSaneWidget(QWidget* parent)
     connect(d->m_scanBtn,   SIGNAL(clicked()), d, SLOT(scanFinal()));
     connect(d->m_cancelBtn, SIGNAL(clicked()), this, SLOT(scanCancel()));
 
+/** Remove #if tags when KDE 4.2 becomes unpopular */
+#if KDE_IS_VERSION(4, 2, 80)
     d->m_zoomBar = new KToolBar("Zoom", this, false);
+#else
+    d->m_zoomBar = new KToolBar(this, false, false);
+    d->m_zoomBar->setObjectName("Zoom");
+#endif
     d->m_zoomBar->addAction(KIcon("zoom-in"), i18n("Zoom In"), d->m_previewViewer, SLOT(zoomIn()));
     d->m_zoomBar->addAction(KIcon("zoom-out"), i18n("Zoom Out"), d->m_previewViewer, SLOT(zoomOut()));
     d->m_zoomBar->addAction(KIcon("zoom-fit-best"), i18n("Zoom to Selection"), d->m_previewViewer, SLOT(zoomSel()));
