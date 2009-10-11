@@ -82,6 +82,9 @@ KSaneWidgetPrivate::KSaneWidgetPrivate()
     m_previewDPI    = 0;
 	m_invertColors  = 0;
     
+    m_previewWidth  = 0;
+    m_previewHeight = 0;
+    
     clearDeviceOptions();
 }
 

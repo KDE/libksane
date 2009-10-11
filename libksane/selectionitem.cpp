@@ -80,6 +80,8 @@ SelectionItem::SelectionItem(QRectF rect) : QGraphicsItem(), d(new Private)
     d->showAddRem = false;
     d->invZoom = 1;
     d->selMargin = selMargin;
+    
+    d->addRemRect = QRectF(0,0,0,0);
 }
 
 SelectionItem::~SelectionItem()
