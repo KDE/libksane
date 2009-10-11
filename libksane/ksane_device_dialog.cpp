@@ -54,7 +54,7 @@ KSaneDeviceDialog::KSaneDeviceDialog(QWidget *parent)
     setButtons(KDialog::User1 | KDialog::Ok | KDialog::Cancel);
     setButtonText( User1, i18n("Reload devices list") );
     
-    m_btn_group = new QButtonGroup;
+    m_btn_group = new QButtonGroup(this);
     
     m_btn_box = new QGroupBox;
     m_btn_layout = new QVBoxLayout;
