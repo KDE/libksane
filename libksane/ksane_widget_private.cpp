@@ -880,7 +880,7 @@ void KSaneWidgetPrivate::scanDone()
         if (m_optBrX != 0) m_optBrX->restoreSavedData();
         if (m_optBrY != 0) m_optBrY->restoreSavedData();
         if (m_optPreview != 0) m_optPreview->restoreSavedData();
-        
+
         if (m_autoSelect) {
             m_previewViewer->findSelections();
         }
@@ -927,6 +927,8 @@ void KSaneWidgetPrivate::scanDone()
         }
     }
     
+    sane_cancel(m_saneHandle);
+
     setBusy(false);
     if (m_optTlX != 0) m_optTlX->restoreSavedData();
     if (m_optTlY != 0) m_optTlY->restoreSavedData();
@@ -937,7 +939,6 @@ void KSaneWidgetPrivate::scanDone()
     m_readStatus = READ_READY;
     
     if (error) {
-        sane_cancel(m_saneHandle);
         emit scanDone(KSaneWidget::ErrorGeneral, "");
     }
     else {
@@ -948,7 +949,6 @@ void KSaneWidgetPrivate::scanDone()
 
 void KSaneWidgetPrivate::scanCancel()
 {
-    sane_cancel(m_saneHandle);
     m_readStatus = READ_CANCEL;
     m_progressBar->setValue(0);
 }
