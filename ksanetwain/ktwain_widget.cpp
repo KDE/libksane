@@ -108,6 +108,12 @@ void KSaneWidget::scanFinal()
 {
 }
 
+void KSaneWidget::setPreviewResolution(float dpi)
+{
+    Q_UNUSED(dpi);
+}
+
+
 void KSaneWidget::scanCancel()
 {
     emit scanProgress(0);
