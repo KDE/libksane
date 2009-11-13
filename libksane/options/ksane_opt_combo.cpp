@@ -219,7 +219,7 @@ void KSaneOptCombo::comboboxChangedIndex(int i)
             dataPtr = (void *)m_optDesc->constraint.string_list[i];
             break;
         default:
-            kDebug(51004) << "can not handle type:" << m_optDesc->type;
+            kDebug() << "can not handle type:" << m_optDesc->type;
             return;
     }
     writeData(dataPtr);
@@ -237,7 +237,7 @@ bool KSaneOptCombo::getValue(float &val)
     SANE_Int res;
     status = sane_control_option (m_handle, m_index, SANE_ACTION_GET_VALUE, data.data(), &res);
     if (status != SANE_STATUS_GOOD) {
-        kDebug(51004) << m_optDesc->name << "sane_control_option returned" << status;
+        kDebug() << m_optDesc->name << "sane_control_option returned" << status;
         return false;
     }
     
@@ -250,7 +250,7 @@ bool KSaneOptCombo::getValue(float &val)
             val = SANE_UNFIX(toSANE_Word(data.data()));
             return true;
         default:
-            kDebug(51004) << "Type" << m_optDesc->type << "not supported!";
+            kDebug() << "Type" << m_optDesc->type << "not supported!";
     }
     return false;
 }
@@ -294,7 +294,7 @@ bool KSaneOptCombo::setValue(float value)
             readValue();
             return (minDiff < 1.0);
         default:
-            kDebug(51004) << "can not handle type:" << m_optDesc->type;
+            kDebug() << "can not handle type:" << m_optDesc->type;
             break;
     }
     return false;
@@ -351,7 +351,7 @@ bool KSaneOptCombo::setValue(const QString &val)
             if (m_optDesc->constraint.string_list[i] == 0) return false;
             break;
         default:
-            kDebug(51004) << "can only handle SANE_TYPE: INT, FIXED and STRING";
+            kDebug() << "can only handle SANE_TYPE: INT, FIXED and STRING";
             return false;
     }
     writeData(data_ptr);

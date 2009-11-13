@@ -73,18 +73,18 @@ KSaneWidget::KSaneWidget(QWidget* parent)
     SANE_Int    version;
     SANE_Status status;
 
-    //kDebug(51004) <<  "The language is:" << KGlobal::locale()->language();
-    //kDebug(51004) <<  "Languagelist" << KGlobal::locale()->languageList();
+    //kDebug() <<  "The language is:" << KGlobal::locale()->language();
+    //kDebug() <<  "Languagelist" << KGlobal::locale()->languageList();
     KGlobal::locale()->insertCatalog("libksane");
     KGlobal::locale()->insertCatalog("sane-backends");
 
     status = sane_init(&version, &getSaneAuthorization);
     if (status != SANE_STATUS_GOOD) {
-        kDebug(51004) << "libksane: sane_init() failed("
+        kDebug() << "libksane: sane_init() failed("
                  << sane_strstatus(status) << ")";
     }
     else {
-        //kDebug(51004) << "Sane Version = "
+        //kDebug() << "Sane Version = "
         //         << SANE_VERSION_MAJOR(version) << "."
         //         << SANE_VERSION_MINORparent(version) << "."
         //         << SANE_VERSION_BUILD(version);
@@ -497,7 +497,7 @@ QImage KSaneWidget::toQImage(const QByteArray &data,
 
         case FormatNone:
         default:
-            kDebug(51004) << "Unsupported conversion";
+            kDebug() << "Unsupported conversion";
             break;
     }
     float dpm = currentDPI() * (1000.0 / 25.4);

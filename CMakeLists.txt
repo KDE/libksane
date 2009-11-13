@@ -54,7 +54,9 @@ SET(KSANE_LIB_VERSION_ID "0x0${KSANE_LIB_MAJOR_VERSION}0${KSANE_LIB_MINOR_VERSIO
 SET(KSANE_LIB_SO_VERSION_STRING "${KSANE_LIB_SO_CUR_VERSION}.${KSANE_LIB_SO_REV_VERSION}.${KSANE_LIB_SO_AGE_VERSION}")
 
 # =======================================================
+ADD_DEFINITIONS(-DKDE_DEFAULT_DEBUG_AREA=51004) 
 
+# =======================================================
 IF (SANE_FOUND)
     SUBDIRS(libksane)
 ELSE (SANE_FOUND)

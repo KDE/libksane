@@ -109,7 +109,7 @@ void LabeledCombo::widgetSizeHints(int *lab_w, int *cmb_w)
 
 void LabeledCombo::setColumnWidths(int lab_w, int cmb_w)
 {
-    //kDebug(51004) << "lab_w =" << lab_w << "cmb_w =" << cmb_w;
+    //kDebug() << "lab_w =" << lab_w << "cmb_w =" << cmb_w;
     m_layout->setColumnMinimumWidth(0, lab_w);
     m_layout->setColumnMinimumWidth(2, cmb_w);
 }

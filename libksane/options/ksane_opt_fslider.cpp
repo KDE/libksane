@@ -126,7 +126,7 @@ void KSaneOptFSlider::sliderChanged(float val)
     if (((val-m_fVal) >= m_minChange) || ((m_fVal-val) >= m_minChange)) {
         unsigned char data[4];
         SANE_Word fixed;
-        //kDebug(51004) <<m_optDesc->name << fVal << "!=" << val;
+        //kDebug() <<m_optDesc->name << fVal << "!=" << val;
         m_fVal = val;
         fixed = SANE_FIX(val);
         fromSANE_Word(data, fixed);

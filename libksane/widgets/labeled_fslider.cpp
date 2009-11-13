@@ -123,8 +123,8 @@ void LabeledFSlider::setSuffix(const QString &text)
 
 void LabeledFSlider::setRange(float min, float max)
 {
-    //kDebug(51004) << "min,max(" << m_spinb->minimum() << " - " << m_spinb->maximum();
-    //kDebug(51004) << ") -> (" << min << " - " << max << ")" << std::endl;
+    //kDebug() << "min,max(" << m_spinb->minimum() << " - " << m_spinb->maximum();
+    //kDebug() << ") -> (" << min << " - " << max << ")" << std::endl;
     int imin=TO_FIX(min);
     int imax=TO_FIX(max);
     m_slider->setRange(imin, imax);

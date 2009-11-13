@@ -499,10 +499,10 @@ void KSaneWidgetPrivate::setTLX(float ftlx)
     
     float max, ratio;
     
-    //kDebug(51004) << "setTLX " << ftlx;
+    //kDebug() << "setTLX " << ftlx;
     m_optBrX->getMaxValue(max);
     ratio = ftlx / max;
-    //kDebug(51004) << " -> " << ratio;
+    //kDebug() << " -> " << ratio;
     m_previewViewer->setTLX(ratio);
 }
 
@@ -513,10 +513,10 @@ void KSaneWidgetPrivate::setTLY(float ftly)
     
     float max, ratio;
     
-    //kDebug(51004) << "setTLY " << ftly;
+    //kDebug() << "setTLY " << ftly;
     m_optBrY->getMaxValue(max);
     ratio = ftly / max;
-    //kDebug(51004) << " -> " << ratio;
+    //kDebug() << " -> " << ratio;
     m_previewViewer->setTLY(ratio);
 }
 
@@ -527,10 +527,10 @@ void KSaneWidgetPrivate::setBRX(float fbrx)
     
     float max, ratio;
     
-    //kDebug(51004) << "setBRX " << fbrx;
+    //kDebug() << "setBRX " << fbrx;
     m_optBrX->getMaxValue(max);
     ratio = fbrx / max;
-    //kDebug(51004) << " -> " << ratio;
+    //kDebug() << " -> " << ratio;
     m_previewViewer->setBRX(ratio);
 }
 
@@ -541,10 +541,10 @@ void KSaneWidgetPrivate::setBRY(float fbry)
     
     float max, ratio;
     
-    //kDebug(51004) << "setBRY " << fbry;
+    //kDebug() << "setBRY " << fbry;
     m_optBrY->getMaxValue(max);
     ratio = fbry / max;
-    //kDebug(51004) << " -> " << ratio;
+    //kDebug() << " -> " << ratio;
     m_previewViewer->setBRY(ratio);
 }
 
@@ -562,7 +562,7 @@ void KSaneWidgetPrivate::updatePreviewSize()
         m_optBrY->getMaxValue(max_y);
     }
     if ((max_x == m_previewWidth) && (max_y == m_previewHeight)) {
-        //kDebug(51004) << "no preview width";
+        //kDebug() << "no preview width";
         return;
     }
     
@@ -664,7 +664,7 @@ void KSaneWidgetPrivate::scanPreview()
             //check what image size we would get in a scan
             status = sane_get_parameters(m_saneHandle, &m_params);
             if (status != SANE_STATUS_GOOD) {
-                kDebug(51004) << "sane_get_parameters=" << sane_strstatus(status);
+                kDebug() << "sane_get_parameters=" << sane_strstatus(status);
                 scanDone();
                 return;
             }
@@ -798,7 +798,7 @@ void KSaneWidgetPrivate::startScan()
                 setBusy(false);
                 return;
             default:
-                kDebug(51004) << "sane_start =" << status << "=" << sane_strstatus(status);
+                kDebug() << "sane_start =" << status << "=" << sane_strstatus(status);
                 scanCancel();
                 setBusy(false);
                 return;
@@ -811,7 +811,7 @@ void KSaneWidgetPrivate::startScan()
     // Read image parameters
     status = sane_get_parameters(m_saneHandle, &m_params);
     if (status != SANE_STATUS_GOOD) {
-        kDebug(51004) << "sane_get_parameters=" << sane_strstatus(status);
+        kDebug() << "sane_get_parameters=" << sane_strstatus(status);
         scanCancel();
         setBusy(false);
         return;
@@ -1004,7 +1004,7 @@ void KSaneWidgetPrivate::processData()
             
         case SANE_STATUS_EOF:
             if (m_frameRead < m_frameSize) {
-                kDebug(51004) << "frameRead =" << m_frameRead
+                kDebug() << "frameRead =" << m_frameRead
                 << ", frameSize =" << m_frameSize;
                 m_readStatus = READ_ERROR;
                 scanDone();
@@ -1020,25 +1020,25 @@ void KSaneWidgetPrivate::processData()
                 // start reading next frame
                 SANE_Status status = sane_start(m_saneHandle);
                 if (status != SANE_STATUS_GOOD) {
-                    kDebug(51004) << "sane_start =" << sane_strstatus(status);
+                    kDebug() << "sane_start =" << sane_strstatus(status);
                     m_readStatus = READ_ERROR;
                     scanDone();
                     return;
                 }
                 status = sane_get_parameters(m_saneHandle, &m_params);
                 if (status != SANE_STATUS_GOOD) {
-                    kDebug(51004) << "sane_get_parameters =" << sane_strstatus(status);
+                    kDebug() << "sane_get_parameters =" << sane_strstatus(status);
                     m_readStatus = READ_ERROR;
                     scanDone();
                     return;
                 }
-                kDebug(51004) << "New Frame";
+                kDebug() << "New Frame";
                 m_frameRead = 0;
                 m_frame_t_count++;
                 break;
             }
         default:
-            kDebug(51004) << "sane_read=" << m_readThread->status << "=" << sane_strstatus(m_readThread->status);
+            kDebug() << "sane_read=" << m_readThread->status << "=" << sane_strstatus(m_readThread->status);
             m_readStatus = READ_ERROR;
             scanDone();
             return;
@@ -1067,7 +1067,7 @@ void KSaneWidgetPrivate::processData()
         new_progress = (int)((((float)new_progress / (float)m_dataSize) * 100.0) + 0.5);
         
         if (new_progress != m_progressBar->value()) {
-            //kDebug(51004) << new_progress << m_frameRead << m_dataSize;
+            //kDebug() << new_progress << m_frameRead << m_dataSize;
             if (m_isPreview && (m_timeSinceUpd.elapsed() > 300)) { // update the preview only every 300ms
                 m_previewViewer->updateImage();
                 m_timeSinceUpd.restart();
@@ -1251,7 +1251,7 @@ void KSaneWidgetPrivate::copyToPreview(int read_bytes)
     }
     
     KMessageBox::error(0, i18n("The image format is not (yet?) supported by libksane."));
-    kDebug(51004) << "Format" << m_params.format
+    kDebug() << "Format" << m_params.format
     << "and depth" << m_params.format
     << "is not yet suppoeted by libksane!";
     m_readStatus = READ_ERROR;
@@ -1347,7 +1347,7 @@ void KSaneWidgetPrivate::copyToScanData(int read_bytes)
     }
     
     KMessageBox::error(0, i18n("The image format is not (yet?) supported by libksane."));
-    kDebug(51004) << "Format" << m_params.format
+    kDebug() << "Format" << m_params.format
     << "and depth" << m_params.format
     << "is not yet suppoeted by libksane!";
     m_readStatus = READ_ERROR;

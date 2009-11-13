@@ -80,7 +80,7 @@ void LabeledCheckbox::widgetSizeHints(int *lab_w, int *rest_w)
 
 void LabeledCheckbox::setColumnWidths(int lab_w, int rest_w)
 {
-    //kDebug(51004) << "lab_w =" << lab_w << "rest_w =" << rest_w;
+    //kDebug() << "lab_w =" << lab_w << "rest_w =" << rest_w;
     layout->setColumnMinimumWidth(0, lab_w);
     layout->setColumnMinimumWidth(1, rest_w);
 }
