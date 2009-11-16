@@ -737,17 +737,15 @@ void KSaneWidgetPrivate::scanFinal()
             x2 *= max_x; y2 *= max_y;
 
             // now set the selection
-            m_readStatus = READ_ON_GOING;
             m_optTlX->setValue(x1);
             m_optTlY->setValue(y1);
             m_optBrX->setValue(x2);
             m_optBrY->setValue(y2);
         }
     }
-    else {
-        m_readStatus = READ_ON_GOING;
-    }
-    
+
+    m_readStatus = READ_ON_GOING;
+
     // execute a pending value reload
     while (m_readValsTmr.isActive()) {
         m_readValsTmr.stop();
