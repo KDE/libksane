@@ -69,8 +69,8 @@ class KSaneViewer : public QGraphicsView
         void zoom2Fit();
 
         int selListSize();
+        /* This function returns the active visible selection in index 0 and after that the "saved" ones */
         bool selectionAt(int index, float &tl_x, float &tl_y, float &br_x, float &br_y);
-        bool activeSelection(float &tl_x, float &tl_y, float &br_x, float &br_y);
         
     Q_SIGNALS:
         void newSelection(float tl_x, float tl_y, float br_x, float br_y);
@@ -83,6 +83,7 @@ class KSaneViewer : public QGraphicsView
         
     private:
         void updateSelVisibility();
+        bool activeSelection(float &tl_x, float &tl_y, float &br_x, float &br_y);
         
         struct Private;
         Private * const d;

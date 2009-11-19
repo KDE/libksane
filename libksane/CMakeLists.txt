@@ -20,6 +20,8 @@ SET(ksane_LIB_SRCS
     ksane_device_dialog.cpp
     ksane_find_devices_thread.cpp
     ksane_widget.cpp
+    ksane_scan_thread.cpp
+    ksane_preview_thread.cpp
     ksane_widget_private.cpp
     splittercollapser.cpp
     options/ksane_option.cpp

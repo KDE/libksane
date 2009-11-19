@@ -91,10 +91,12 @@ KSaneWidget::KSaneWidget(QWidget* parent)
     }
 
     d->m_readValsTmr.setSingleShot(true);
-    d->m_startScanTmr.setSingleShot(true);
     connect(&d->m_readValsTmr,   SIGNAL(timeout()), d, SLOT(valReload()));
-    connect(&d->m_startScanTmr,  SIGNAL(timeout()), d, SLOT(startScan()));
 
+    d->m_updProgressTmr.setSingleShot(false);
+    d->m_updProgressTmr.setInterval(300);
+    connect(&d->m_updProgressTmr, SIGNAL(timeout()), d, SLOT(updateProgress()));
+    
     // Forward signals from the private class
     connect(d, SIGNAL(scanProgress(int)), this, SIGNAL(scanProgress(int)));
     connect(d, SIGNAL(imageReady(QByteArray &, int, int, int, int)),
@@ -109,7 +111,7 @@ KSaneWidget::KSaneWidget(QWidget* parent)
 
     
     d->m_warmingUp = new QLabel;
-    d->m_warmingUp->setText(i18n("The lamp is warming up."));
+    d->m_warmingUp->setText(i18n("Waiting for the scan to start."));
     d->m_warmingUp->setAlignment(Qt::AlignCenter);
     d->m_warmingUp->setAutoFillBackground(true);
     d->m_warmingUp->setBackgroundRole(QPalette::Highlight);
@@ -140,8 +142,8 @@ KSaneWidget::KSaneWidget(QWidget* parent)
     d->m_scanBtn->setText(i18nc("Final scan button text", "Scan"));
     d->m_scanBtn->setFocus(Qt::OtherFocusReason);
 
-    connect(d->m_prevBtn,   SIGNAL(clicked()), d, SLOT(scanPreview()));
-    connect(d->m_scanBtn,   SIGNAL(clicked()), d, SLOT(scanFinal()));
+    connect(d->m_prevBtn,   SIGNAL(clicked()), d, SLOT(startPreviewScan()));
+    connect(d->m_scanBtn,   SIGNAL(clicked()), d, SLOT(startFinalScan()));
     connect(d->m_cancelBtn, SIGNAL(clicked()), this, SLOT(scanCancel()));
 
 /** Remove #if tags when KDE 4.2 becomes unpopular */
@@ -164,12 +166,20 @@ KSaneWidget::KSaneWidget(QWidget* parent)
     btn_lay->addStretch(100);
     btn_lay->addWidget(d->m_prevBtn);
     btn_lay->addWidget(d->m_scanBtn);
-
+    
+    // calculate the height of the waiting/scanning/buttons frames to avoid jumpiness.
+    int minHeight = d->m_btnFrame->sizeHint().height();
+    if (d->m_activityFrame->sizeHint().height() > minHeight) minHeight = d->m_activityFrame->sizeHint().height();
+    if (d->m_warmingUp->sizeHint().height() > minHeight)     minHeight = d->m_warmingUp->sizeHint().height();
+    d->m_btnFrame->setMinimumHeight(minHeight);
+    d->m_activityFrame->setMinimumHeight(minHeight);
+    d->m_warmingUp->setMinimumHeight(minHeight);
+    
     d->m_previewFrame = new QWidget;
     QVBoxLayout *preview_layout = new QVBoxLayout(d->m_previewFrame);
     preview_layout->setContentsMargins(0,0,0,0);
     preview_layout->addWidget(d->m_previewViewer, 100);
-    preview_layout->addWidget(d->m_warmingUp, 100);
+    preview_layout->addWidget(d->m_warmingUp, 0);
     preview_layout->addWidget(d->m_activityFrame, 0);
     preview_layout->addWidget(d->m_btnFrame, 0);
     
@@ -218,7 +228,7 @@ QString KSaneWidget::selectDevice(QWidget* parent)
   QString selected_name("");
   KSaneDeviceDialog sel(parent);
 
-  // sel.setDefault(prev_backend); // set default scanner - perhaps application using libksane should remember that                                                
+  // sel.setDefault(prev_backend); // set default scanner - perhaps application using libksane should remember that
   if(sel.exec()) {
       return selected_name = sel.getSelectedName();
   }
@@ -371,14 +381,18 @@ bool KSaneWidget::openDevice(const QString &device_name)
         connect (d->m_optList.at(i), SIGNAL(optsNeedReload()), d, SLOT(optReload()));
         connect (d->m_optList.at(i), SIGNAL(valsNeedReload()), d, SLOT(scheduleValReload()));
     }
-
+    
+    // Create the preview thread
+    d->m_previewThread = new KSanePreviewThread(d->m_saneHandle, &d->m_previewImg);
+    connect(d->m_previewThread, SIGNAL(finished()), d, SLOT(previewScanDone()));
+    
     // Create the read thread
-    d->m_readThread = new KSaneReadThread(d->m_saneHandle, d->m_saneReadBuffer, IMG_DATA_R_SIZE);
-    connect(d->m_readThread, SIGNAL(finished()), d, SLOT(processData()));
-
+    d->m_scanThread = new KSaneScanThread(d->m_saneHandle, &d->m_scanData);
+    connect(d->m_scanThread, SIGNAL(finished()), d, SLOT(oneFinalScanDone()));
+    
     // Create the options interface
     d->createOptInterface();
-
+    
     // try to set KSaneWidget default values
     d->setDefaultValues();
 
@@ -393,13 +407,28 @@ bool KSaneWidget::openDevice(const QString &device_name)
 
 bool KSaneWidget::closeDevice()
 {
-    if (d->m_saneHandle) {
-        d->scanCancel();
-        sane_close(d->m_saneHandle);
+    if (!d->m_saneHandle) {
+        return true;
     }
+    
+    if (d->m_scanThread->isRunning()) {
+        d->m_scanThread->cancelScan();
+        d->m_closeDevicePending = true;
+        return false;
+    }
+    
+    if (d->m_previewThread->isRunning()) {
+        d->m_previewThread->cancelScan();
+        d->m_closeDevicePending = true;
+        return false;
+    }
+    // else 
+    sane_close(d->m_saneHandle);
     d->clearDeviceOptions();
     return true;
 }
+
+#define inc_pixel(x,y,ppl) { x++; if (x>=ppl) { y++; x=0;} }
 
 QImage KSaneWidget::toQImage(const QByteArray &data,
                               int width,
@@ -508,13 +537,18 @@ QImage KSaneWidget::toQImage(const QByteArray &data,
 
 void KSaneWidget::scanFinal()
 {
-    d->scanFinal();
+    d->startFinalScan();
 }
 
 void KSaneWidget::scanCancel()
 {
-    d->scanCancel();
-    emit scanProgress(0);
+    if (d->m_scanThread->isRunning()) {
+        d->m_scanThread->cancelScan();
+    }
+    
+    if (d->m_previewThread->isRunning()) {
+        d->m_previewThread->cancelScan();
+    }
 }
 
 void KSaneWidget::getOptVals(QMap <QString, QString> &opts)

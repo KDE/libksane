@@ -244,8 +244,8 @@ void KSaneViewer::updateSelVisibility()
 {
     if ((d->selection->rect().width() >0.001) &&
         (d->selection->rect().height() > 0.001) &&
-        ((d->pixmapItem->pixmap().width() - d->selection->rect().width() > 0.001) ||
-        (d->pixmapItem->pixmap().height() - d->selection->rect().height() > 0.001)))
+        ((d->pixmapItem->pixmap().width() - d->selection->rect().width() > 0.1) ||
+        (d->pixmapItem->pixmap().height() - d->selection->rect().height() > 0.1)))
     {
         d->selection->setVisible(true);
     }
@@ -254,17 +254,27 @@ void KSaneViewer::updateSelVisibility()
     }
 }
 
-// ------------------------------------------------------------------------
+// ---- Return the saved selection list size + 1 if the selection is visible -
 int KSaneViewer::selListSize() {
-    return d->selectionList.size();
+    if (d->selection->isVisible()) {
+        return (d->selectionList.size() + 1);
+    }
+    else {
+        return d->selectionList.size();
+    }
 }
-// ------------------------------------------------------------------------
+
+// ---- First return the "saved" selection sthen the active selection -----------
 bool KSaneViewer::selectionAt(int index, float &tl_x, float &tl_y, float &br_x, float &br_y)
 {
-    if ((index < 0) || (index >= d->selectionList.size())) {
-        tl_x = br_x;
+    if ((index < 0) || (index > d->selectionList.size())) {
+        activeSelection(tl_x, tl_y, br_x, br_y);
         return false;
     }
+    if  (index == d->selectionList.size()) {
+        return activeSelection(tl_x, tl_y, br_x, br_y);
+    }
+
     tl_x = d->selectionList[index]->rect().left()   / d->pixmapItem->pixmap().width();
     tl_y = d->selectionList[index]->rect().top()    / d->pixmapItem->pixmap().height();
     br_x = d->selectionList[index]->rect().right()  / d->pixmapItem->pixmap().width();
@@ -276,14 +286,25 @@ bool KSaneViewer::selectionAt(int index, float &tl_x, float &tl_y, float &br_x, 
 bool KSaneViewer::activeSelection(float &tl_x, float &tl_y, float &br_x, float &br_y)
 {
     if (!d->selection->isVisible()) {
-        tl_x = br_x; // just incase
-        return false;
+        tl_x = 0.0;
+        tl_y = 0.0;
+        br_x = 1.0;
+        br_y = 1.0;
+        return true;
     }
+    
     tl_x = d->selection->rect().left()   / d->pixmapItem->pixmap().width();
     tl_y = d->selection->rect().top()    / d->pixmapItem->pixmap().height();
     br_x = d->selection->rect().right()  / d->pixmapItem->pixmap().width();
     br_y = d->selection->rect().bottom() / d->pixmapItem->pixmap().height();
-    if ((tl_x == br_x) || (tl_y == br_y)) return false; // FIXME this should not be needed
+    
+    if ((tl_x == br_x) || (tl_y == br_y)) {
+        tl_x = 0.0;
+        tl_y = 0.0;
+        br_x = 1.0;
+        br_y = 1.0;
+        return false; // just precaution
+    }
     return true;
 }
 

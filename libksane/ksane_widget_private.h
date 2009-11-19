@@ -41,7 +41,6 @@ extern "C"
 #include <QTimer>
 #include <QTime>
 #include <QProgressBar>
-#include <QThread>
 
 // KDE includes
 #include <KTabWidget>
@@ -59,52 +58,25 @@ extern "C"
 #include "labeled_gamma.h"
 #include "labeled_checkbox.h"
 #include "splittercollapser.h"
-
-#define inc_pixel(x,y,ppl) { x++; if (x>=ppl) { y++; x=0;} }
+#include "ksane_scan_thread.h"
+#include "ksane_preview_thread.h"
 
 #define IMG_DATA_R_SIZE 100000
 
 /** This namespace collects all methods and classes in LibKSane. */
 namespace KSaneIface
 {
-    class KSaneReadThread: public QThread
-    {
-        public:
-            KSaneReadThread(SANE_Handle handle, SANE_Byte *data, SANE_Int maxBytes);
-            void run();
-            SANE_Status    status;
-            SANE_Int       readBytes;
-        private:
-            SANE_Byte     *m_data;
-            const SANE_Int m_maxBytes;
-            SANE_Handle    m_saneHandle;
-    };
-
     class KSaneWidgetPrivate: public QObject
     {
         Q_OBJECT
 
-        typedef enum
-        {
-            READ_ON_GOING,
-            READ_ERROR,
-            READ_CANCEL,
-            READ_FINISHED,
-            READ_READY_SEL,
-            READ_READY
-        } ReadStatus;
-        
         public:
             KSaneWidgetPrivate();
             void clearDeviceOptions();
             void createOptInterface();
             void updatePreviewSize();
-            void copyToScanData(int read_bytes);
-            void copyToPreview(int read_bytes);
             void setDefaultValues();
             void setBusy(bool busy);
-            void scanDone();
-            void scanCancel();
             KSaneOption *getOption(const QString &name);
             KSaneWidget::ImageFormat getImgFormat(SANE_Parameters &params);
             int getBytesPerLines(SANE_Parameters &params);
@@ -116,20 +88,23 @@ namespace KSaneIface
             void scanDone(int status, const QString &errStr);
             
         public Q_SLOTS:
-            void scanFinal();
+            void startFinalScan();
+            void previewScanDone();
+            void oneFinalScanDone();
+            void updateProgress();
             
         private Q_SLOTS:
             void scheduleValReload();
             void optReload();
             void valReload();
             void handleSelection(float tl_x, float tl_y, float br_x, float br_y);
-            void scanPreview();
             void setTLX(float x);
             void setTLY(float y);
             void setBRX(float x);
             void setBRY(float y);
-            void startScan();
-            void processData();
+            
+            void startPreviewScan();
+            
             void checkInvert();
             void invertPreview();
             
@@ -190,31 +165,23 @@ namespace KSaneIface
             float               m_previewHeight;
             float               m_previewDPI;
             QImage              m_previewImg;
+            bool                m_isPreview;
             bool                m_autoSelect;
+            
             int                 m_selIndex;
+            
+            bool                m_scanOngoing;
+            bool                m_closeDevicePending;
+            
             
             // final image data
             QByteArray          m_scanData;
             
             // option handling
             QTimer              m_readValsTmr;
-            QTimer              m_startScanTmr;
-            KSaneReadThread    *m_readThread;
-            QTime               m_timeSinceUpd;
-            
-            // general scanning
-            bool                m_isPreview;
-            ReadStatus          m_readStatus;
-            SANE_Parameters     m_params;
-            SANE_Byte           m_saneReadBuffer[IMG_DATA_R_SIZE];
-            int                 m_frameSize;
-            int                 m_frameRead;
-            int                 m_dataSize;
-            int                 m_frame_t_count;
-            int                 m_pixel_x;
-            int                 m_pixel_y;
-            int                 m_px_colors[3];
-            int                 m_px_c_index;
+            QTimer              m_updProgressTmr;
+            KSaneScanThread    *m_scanThread;
+            KSanePreviewThread *m_previewThread;
     };
 
 
