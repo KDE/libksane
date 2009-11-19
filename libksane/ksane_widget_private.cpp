@@ -54,9 +54,12 @@ KSaneWidgetPrivate::KSaneWidgetPrivate()
     m_basicOptsTab  = 0;
     m_otherOptsTab  = 0;
     m_colorOpts     = 0;
-    m_scanBtn       = 0;
+    m_zInBtn        = 0;
+    m_zOutBtn       = 0;
+    m_zSelBtn       = 0;
+    m_zFitBtn       = 0;
     m_prevBtn       = 0;
-    m_zoomBar       = 0;
+    m_scanBtn       = 0;
     m_cancelBtn     = 0;
     m_previewViewer = 0;
     m_autoSelect    = true;

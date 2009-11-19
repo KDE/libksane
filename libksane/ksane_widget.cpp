@@ -124,6 +124,7 @@ KSaneWidget::KSaneWidget(QWidget* parent)
     d->m_cancelBtn   = new KPushButton;
     d->m_cancelBtn->setIcon(KIcon("process-stop"));
     d->m_cancelBtn->setToolTip(i18n("Cancel current scan operation"));
+    connect(d->m_cancelBtn, SIGNAL(clicked()), this, SLOT(scanCancel()));
     
     d->m_activityFrame = new QWidget;
     QHBoxLayout *progress_lay = new QHBoxLayout(d->m_activityFrame);
@@ -132,37 +133,46 @@ KSaneWidget::KSaneWidget(QWidget* parent)
     progress_lay->addWidget(d->m_cancelBtn, 0);
     d->m_activityFrame->hide();
     
+    d->m_zInBtn  = new KPushButton(this);
+    d->m_zInBtn->setIcon(KIcon("zoom-in"));
+    d->m_zInBtn->setToolTip(i18n("Zoom In"));
+    connect(d->m_zInBtn, SIGNAL(clicked()), d->m_previewViewer, SLOT(zoomIn()));
+    
+    d->m_zOutBtn = new KPushButton(this);
+    d->m_zOutBtn->setIcon(KIcon("zoom-out"));
+    d->m_zOutBtn->setToolTip(i18n("Zoom Out"));
+    connect(d->m_zOutBtn, SIGNAL(clicked()), d->m_previewViewer, SLOT(zoomOut()));
+    
+    d->m_zSelBtn = new KPushButton(this);
+    d->m_zSelBtn->setIcon(KIcon("zoom-fit-best"));
+    d->m_zSelBtn->setToolTip(i18n("Zoom to Selection"));
+    connect(d->m_zSelBtn, SIGNAL(clicked()), d->m_previewViewer, SLOT(zoomSel()));
+    
+    d->m_zFitBtn = new KPushButton(this);
+    d->m_zFitBtn->setIcon(KIcon("document-preview"));
+    d->m_zFitBtn->setToolTip(i18n("Zoom to Fit"));
+    connect(d->m_zFitBtn, SIGNAL(clicked()), d->m_previewViewer, SLOT(zoom2Fit()));
+    
     d->m_prevBtn = new KPushButton(this);
     d->m_prevBtn->setIcon(KIcon("document-import"));
     d->m_prevBtn->setToolTip(i18n("Scan Preview Image"));
     d->m_prevBtn->setText(i18nc("Preview button text", "Preview"));
+    connect(d->m_prevBtn,   SIGNAL(clicked()), d, SLOT(startPreviewScan()));
+    
     d->m_scanBtn = new KPushButton(this);
     d->m_scanBtn->setIcon(KIcon("document-save"));
     d->m_scanBtn->setToolTip(i18n("Scan Final Image"));
     d->m_scanBtn->setText(i18nc("Final scan button text", "Scan"));
     d->m_scanBtn->setFocus(Qt::OtherFocusReason);
-
-    connect(d->m_prevBtn,   SIGNAL(clicked()), d, SLOT(startPreviewScan()));
     connect(d->m_scanBtn,   SIGNAL(clicked()), d, SLOT(startFinalScan()));
-    connect(d->m_cancelBtn, SIGNAL(clicked()), this, SLOT(scanCancel()));
-
-/** Remove #if tags when KDE 4.2 becomes unpopular */
-#if KDE_IS_VERSION(4, 2, 80)
-    d->m_zoomBar = new KToolBar("Zoom", this, false);
-#else
-    d->m_zoomBar = new KToolBar(this, false, false);
-    d->m_zoomBar->setObjectName("Zoom");
-#endif
-    d->m_zoomBar->addAction(KIcon("zoom-in"), i18n("Zoom In"), d->m_previewViewer, SLOT(zoomIn()));
-    d->m_zoomBar->addAction(KIcon("zoom-out"), i18n("Zoom Out"), d->m_previewViewer, SLOT(zoomOut()));
-    d->m_zoomBar->addAction(KIcon("zoom-fit-best"), i18n("Zoom to Selection"), d->m_previewViewer, SLOT(zoomSel()));
-    d->m_zoomBar->addAction(KIcon("document-preview"), i18n("Zoom to Fit"), d->m_previewViewer, SLOT(zoom2Fit()));
-    d->m_zoomBar->setToolButtonStyle(Qt::ToolButtonIconOnly);
-
+    
     d->m_btnFrame = new QWidget;
     QHBoxLayout *btn_lay = new QHBoxLayout(d->m_btnFrame);
     btn_lay->setContentsMargins(0,0,0,0);
-    btn_lay->addWidget(d->m_zoomBar);
+    btn_lay->addWidget(d->m_zInBtn);
+    btn_lay->addWidget(d->m_zOutBtn);
+    btn_lay->addWidget(d->m_zSelBtn);
+    btn_lay->addWidget(d->m_zFitBtn);
     btn_lay->addStretch(100);
     btn_lay->addWidget(d->m_prevBtn);
     btn_lay->addWidget(d->m_scanBtn);

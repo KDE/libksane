@@ -125,7 +125,10 @@ namespace KSaneIface
             QWidget            *m_previewFrame;
             KSaneViewer        *m_previewViewer;
             QWidget            *m_btnFrame;
-            KToolBar           *m_zoomBar;
+            KPushButton        *m_zInBtn;
+            KPushButton        *m_zOutBtn;
+            KPushButton        *m_zSelBtn;
+            KPushButton        *m_zFitBtn;
             KPushButton        *m_scanBtn;
             KPushButton        *m_prevBtn;
             
