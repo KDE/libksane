@@ -46,7 +46,7 @@ namespace KSaneIface
     m_readStatus(READ_READY)
     {}
     
-    void KSaneScanThread::setPreviewInverted(bool inverted)
+    void KSaneScanThread::setImageInverted(bool inverted)
     {
         m_invertColors = inverted;
     }

@@ -56,7 +56,7 @@ namespace KSaneIface
             
             KSaneScanThread(SANE_Handle handle, QByteArray *data);
             void run();
-            void setPreviewInverted(bool);
+            void setImageInverted(bool);
             void cancelScan();
             int scanProgress();
             

@@ -769,7 +769,7 @@ void KSaneWidgetPrivate::startFinalScan()
     
     setBusy(true);
     m_updProgressTmr.start();
-    
+    m_scanThread->setImageInverted(m_invertColors->isChecked());
     m_scanThread->start();
 }
 
