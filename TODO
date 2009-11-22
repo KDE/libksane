@@ -1,7 +1,8 @@
 TODO list of new features:
 
-* Add a prefered preview resolution.
 * Progressive final scan: scan can provide huge image especially in 16 bits color depth.
 Send image data to host application by block, not the whole image at once.
 * Add public api to get a list of all available devices.
 * Make it possible to hide the final scan button. (could be used for multi page scanning)
+* Rename "Other options" to "Scanner specific options"
+
