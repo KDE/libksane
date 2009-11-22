@@ -638,38 +638,37 @@ void KSaneWidgetPrivate::startPreviewScan()
         // no use to try auto selections if you can not use them
         m_autoSelect = false;
     }
-
-    if (m_previewDPI >= 25.0) {
-        if (m_optRes != 0) {
+    
+    if (m_optRes != 0) {
+        if (m_previewDPI >= 25.0) {
             m_optRes->setValue(m_previewDPI);
             if ((m_optResY != 0) && (m_optRes->name() == SANE_NAME_SCAN_X_RESOLUTION)) {
                 m_optResY->setValue(m_previewDPI);
             }
         }
-    }
-    else {
-        // set the resopution to 50 dpi and increase if necessary
-        SANE_Parameters params;
-        dpi = 25.0;
-        do {
-            // Increase the dpi value
-            dpi += 25.0;
-            if (m_optRes != 0) {
+        else {
+            // set the resopution to getMinValue and increase if necessary
+            SANE_Parameters params;
+            m_optRes->getMinValue(dpi);
+            do {
                 m_optRes->setValue(dpi);
                 if ((m_optResY != 0) && (m_optRes->name() == SANE_NAME_SCAN_X_RESOLUTION)) {
                     m_optResY->setValue(dpi);
                 }
+                //check what image size we would get in a scan
+                status = sane_get_parameters(m_saneHandle, &params);
+                if (status != SANE_STATUS_GOOD) {
+                    kDebug() << "sane_get_parameters=" << sane_strstatus(status);
+                    previewScanDone();
+                    return;
+                }
+                // Increase the dpi value
+                dpi += 25.0;
+                
+                if (dpi > 300) break;
             }
-            //check what image size we would get in a scan
-            status = sane_get_parameters(m_saneHandle, &params);
-            if (status != SANE_STATUS_GOOD) {
-                kDebug() << "sane_get_parameters=" << sane_strstatus(status);
-                previewScanDone();
-                return;
-            }
-            if (dpi > 300) break;
+            while ((params.pixels_per_line < 300) || (params.lines < 300));
         }
-        while ((params.pixels_per_line < 300) || (params.lines < 300));
     }
     
     // set preview option to true if possible
@@ -942,22 +941,25 @@ void KSaneWidgetPrivate::updateProgress()
     int progress;
     if (m_isPreview) {
         progress = m_previewThread->scanProgress();
-        if ((progress > 0) && (m_progressBar->value() == 0)) {
+        if (!m_progressBar->isVisible() && (m_previewThread->saneStartDone())) {
+            m_warmingUp->hide();
+            m_activityFrame->show();
             m_previewViewer->setQImage(&m_previewImg);
             m_previewViewer->zoom2Fit();
+            
         }
         else {
             m_previewViewer->updateImage();
         }
     }
     else {
+        if (!m_progressBar->isVisible() && (m_scanThread->saneStartDone())) {
+            m_warmingUp->hide();
+            m_activityFrame->show();
+        }
         progress = m_scanThread->scanProgress();
     }
     
-    if ((progress > 0) && (!m_progressBar->isVisible())) {
-        m_warmingUp->hide();
-        m_activityFrame->show();
-    }
     m_progressBar->setValue(progress);
 }
 

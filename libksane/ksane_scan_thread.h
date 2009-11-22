@@ -59,6 +59,7 @@ namespace KSaneIface
             void setImageInverted(bool);
             void cancelScan();
             int scanProgress();
+            bool saneStartDone();
             
             ReadStatus frameStatus();
             SANE_Status saneStatus();
@@ -78,8 +79,8 @@ namespace KSaneIface
             int             m_dataSize;
             SANE_Status     m_saneStatus;
             ReadStatus      m_readStatus;
-            
             bool            m_invertColors;
+            bool            m_saneStartDone;
     };
 }
 

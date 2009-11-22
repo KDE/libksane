@@ -126,13 +126,24 @@ void KSaneOptSlider::sliderChanged(int val)
     writeData(data);
 }
 
-bool KSaneOptSlider::getMaxValue(float &max)
+bool KSaneOptSlider::getMinValue(float &val)
 {
     if (m_optDesc->constraint_type == SANE_CONSTRAINT_RANGE) {
-        max = (float)m_optDesc->constraint.range->max;
+        val = (float)m_optDesc->constraint.range->min;
     }
     else {
-        max = (float)KSW_INT_MAX;
+        val = (float)KSW_INT_MIN;
+    }
+    return true;
+}
+
+bool KSaneOptSlider::getMaxValue(float &val)
+{
+    if (m_optDesc->constraint_type == SANE_CONSTRAINT_RANGE) {
+        val = (float)m_optDesc->constraint.range->max;
+    }
+    else {
+        val = (float)KSW_INT_MAX;
     }
     return true;
 }

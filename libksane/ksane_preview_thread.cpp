@@ -47,7 +47,8 @@ namespace KSaneIface
     m_saneHandle(handle),
     m_invertColors(false),
     m_readStatus(READ_READY),
-    m_scanProgress(0)
+    m_scanProgress(0),
+    m_saneStartDone(false)
     {
         m_px_colors[0] = 0;
         m_px_colors[1] = 0;
@@ -68,9 +69,12 @@ namespace KSaneIface
     {
         m_dataSize = 0;
         m_readStatus = READ_ON_GOING;
+        m_saneStartDone = false;
 
         // Start the scanning with sane_start
         status = sane_start(m_saneHandle);
+        
+        m_saneStartDone = true;
         
         if (status != SANE_STATUS_GOOD) {
             kDebug() << "sane_start=" << sane_strstatus(status);
@@ -377,7 +381,10 @@ namespace KSaneIface
         return;
     }
     
-    
+    bool KSanePreviewThread::saneStartDone()
+    {
+        return   m_saneStartDone;
+    }
     
     }  // NameSpace KSaneIface
     

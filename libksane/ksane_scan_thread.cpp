@@ -43,7 +43,8 @@ namespace KSaneIface
     m_frame_t_count(0),
     m_dataSize(0),
     m_saneStatus(SANE_STATUS_GOOD),
-    m_readStatus(READ_READY)
+    m_readStatus(READ_READY),
+    m_saneStartDone(false)
     {}
     
     void KSaneScanThread::setImageInverted(bool inverted)
@@ -91,9 +92,12 @@ namespace KSaneIface
     {
         m_dataSize = 0;
         m_readStatus = READ_ON_GOING;
+        m_saneStartDone = false;
         
         // Start the scanning with sane_start
         m_saneStatus = sane_start(m_saneHandle);
+        
+        m_saneStartDone = true;
         
         if (m_saneStatus != SANE_STATUS_GOOD) {
             kDebug() << "sane_start=" << sane_strstatus(m_saneStatus);
@@ -287,6 +291,11 @@ namespace KSaneIface
         << "is not yet suppoeted by libksane!";
         m_readStatus = READ_ERROR;
         return;
+    }
+    
+    bool KSaneScanThread::saneStartDone()
+    {
+        return   m_saneStartDone;
     }
     
 }  // NameSpace KSaneIface

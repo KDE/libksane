@@ -50,6 +50,7 @@ public:
     void readValue();
     void readOption();
 
+    bool getMinValue(float &max);
     bool getValue(float &val);
     bool setValue(float val);
     bool getValue(QString &val);
