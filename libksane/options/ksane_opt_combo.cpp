@@ -222,6 +222,29 @@ void KSaneOptCombo::comboboxChangedIndex(int i)
     readValue();
 }
 
+bool KSaneOptCombo::getMinValue(float &val)
+{
+    if (state() == STATE_HIDDEN) return false;
+    switch (m_optDesc->type)
+    {
+        case SANE_TYPE_INT:
+            val = (float)m_optDesc->constraint.word_list[1];
+            for (int i=2; i<=m_optDesc->constraint.word_list[0]; i++) {
+                val = qMin((float)m_optDesc->constraint.word_list[i], val);
+            }
+            break;
+        case SANE_TYPE_FIXED:
+            val = (float)SANE_UNFIX(m_optDesc->constraint.word_list[1]);
+            for (int i=2; i<=m_optDesc->constraint.word_list[0]; i++) {
+                val = qMin((float)SANE_UNFIX(m_optDesc->constraint.word_list[i]), val);
+            }
+            break;
+        default:
+            kDebug() << "can not handle type:" << m_optDesc->type;
+            return false;
+    }
+    return true;
+}
 
 bool KSaneOptCombo::getValue(float &val)
 {

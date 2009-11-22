@@ -159,6 +159,7 @@ void KSaneOption::fromSANE_Word(unsigned char *data, SANE_Word from)
     data[3] = (from & 0xFF000000)>>24;
 }
 
+bool KSaneOption::getMinValue(float &) {return false;}
 bool KSaneOption::getMaxValue(float &) {return false;}
 bool KSaneOption::getValue(float &) {return false;}
 bool KSaneOption::setValue(float) {return false;}

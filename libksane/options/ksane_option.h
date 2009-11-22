@@ -73,6 +73,7 @@ public:
     virtual void readOption();
     virtual void readValue();
     
+    virtual bool getMinValue(float &max);
     virtual bool getMaxValue(float &max);
     virtual bool getValue(float &val);
     virtual bool setValue(float val);

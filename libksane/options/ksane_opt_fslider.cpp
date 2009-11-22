@@ -134,6 +134,17 @@ void KSaneOptFSlider::sliderChanged(float val)
     }
 }
 
+bool KSaneOptFSlider::getMinValue(float &val)
+{
+    if (m_optDesc->constraint_type == SANE_CONSTRAINT_RANGE) {
+        val = SANE_UNFIX(m_optDesc->constraint.range->min);
+    }
+    else {
+        val = FIXED_MIN;
+    }
+    return true;
+}
+
 bool KSaneOptFSlider::getMaxValue(float &max)
 {
     if (m_optDesc->constraint_type == SANE_CONSTRAINT_RANGE) {

@@ -622,14 +622,12 @@ void KSaneWidgetPrivate::scanPreview()
     }
     
     // set the resopution to 100 dpi and increase if necessary
-    dpi = 25.0;
+    m_optRes->getMinValue(dpi);
     do {
-        // Increase the dpi value
-        dpi += 25.0;
         if (m_optRes != 0) {
             m_optRes->setValue(dpi);
         }
-        if (m_optResY != 0) {
+        if ((m_optResY != 0) && (m_optRes->name() == SANE_NAME_SCAN_X_RESOLUTION)) {
             m_optResY->setValue(dpi);
         }
         //check what image size we would get in a scan
@@ -639,7 +637,9 @@ void KSaneWidgetPrivate::scanPreview()
             scanDone();
             return;
         }
-        if (dpi > 800) break;
+        if (dpi > 300) break;
+        // Increase the dpi value
+        dpi += 25.0;
     }
     while ((m_params.pixels_per_line < 300) || (m_params.lines < 300));
     
