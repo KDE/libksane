@@ -206,7 +206,7 @@ KSaneWidget::KSaneWidget(QWidget* parent)
     d->m_otherScrollA = new QScrollArea;
     d->m_otherScrollA->setWidgetResizable(true);
     d->m_otherScrollA->setFrameShape(QFrame::NoFrame);
-    d->m_optsTabWidget->addTab(d->m_otherScrollA, i18n("Other Options"));
+    d->m_optsTabWidget->addTab(d->m_otherScrollA, i18n("Scanner Specific Options"));
     
     
     d->m_splitter = new QSplitter(this);
