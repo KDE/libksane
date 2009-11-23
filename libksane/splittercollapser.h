@@ -44,6 +44,11 @@ public:
 
 	virtual QSize sizeHint() const;
 
+public Q_SLOTS:
+    void slotCollapse();
+    void slotRestore();
+    void slotSetCollapsed(bool collapsed);
+    
 protected:
 	virtual bool eventFilter(QObject*, QEvent*);
 

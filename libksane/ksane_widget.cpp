@@ -782,5 +782,14 @@ void KSaneWidget::setSelection(QPointF lefttop, QPointF rightbottom)
     }
 }
 
+void KSaneWidget::setOptionsCollapsed(bool collapse)
+{
+    if (collapse) {
+        QTimer::singleShot(0, d->m_optionsCollapser, SLOT(slotCollapse()));
+    }
+    else {
+        QTimer::singleShot(0, d->m_optionsCollapser, SLOT(slotRestore()));
+    }
+}
 
 }  // NameSpace KSaneIface

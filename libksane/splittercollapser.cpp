@@ -266,6 +266,21 @@ void SplitterCollapser::slotClicked() {
 	d->mSplitter->setSizes(sizes);
 }
 
+void SplitterCollapser::slotCollapse() {
+    if (d->isVisible()) slotClicked();
+    // else do nothing
+}
+
+void SplitterCollapser::slotRestore() {
+    if (!d->isVisible()) slotClicked();
+    // else do nothing
+}
+
+void SplitterCollapser::slotSetCollapsed(bool collapse) {
+    if (collapse == d->isVisible()) slotClicked();
+    // else do nothing
+}
+
 void SplitterCollapser::paintEvent(QPaintEvent*) {
 	QStylePainter painter(this);
 	qreal opacity = d->mOpacityTimeLine->currentFrame() / 1000.;

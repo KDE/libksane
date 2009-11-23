@@ -202,6 +202,10 @@ public:
     * @param enable specifies if the auto selection should be turned on or off. */
     void enableAutoSelect(bool enable);
     
+    /** This function is used to programatically collapse/restore the options.
+    * @param collapse defines the state to set. */
+    void setOptionsCollapsed(bool collapse);
+    
 public Q_SLOTS:
     /** This method can be used to cancel a scan or prevent an automatic new scan. */
     void scanCancel();
