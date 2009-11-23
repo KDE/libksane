@@ -157,9 +157,9 @@ public:
 
     /** This method sets the selection according to the given points
     * @note The points are defined with respect to the scan areas top-left corner in mm
-    * @param lefttop Left upper corner of the selection (in mm)
-    * @param rightbottom Right lower corner of the selection (in mm) */
-    void setSelection(QPointF lefttop, QPointF rightbottom);
+    * @param topLeft Upper left corner of the selection (in mm)
+    * @param bottomRight Lower right corner of the selection (in mm) */
+    void setSelection(QPointF topLeft, QPointF bottomRight);
     
     /** This function is used to set the preferred resolution for scanning the preview.
     * @param dpi is the wanted scan resolution for the preview

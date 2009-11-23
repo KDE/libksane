@@ -732,7 +732,7 @@ float KSaneWidget::scanAreaHeight()
     return result;
 }
 
-void KSaneWidget::setSelection(QPointF lefttop, QPointF rightbottom)
+void KSaneWidget::setSelection(QPointF topLeft, QPointF bottomRight)
 {
     if (!d->m_optBrX || !d->m_optBrY || !d->m_optTlX || !d->m_optTlY) {
         return;
@@ -740,7 +740,7 @@ void KSaneWidget::setSelection(QPointF lefttop, QPointF rightbottom)
     float xmax, ymax;
     d->m_optBrX->getMaxValue(xmax);
     d->m_optBrY->getMaxValue(ymax);
-    if (lefttop.x() < 0.0 || lefttop.y() < 0.0 || rightbottom.x() < 0.0 || rightbottom.y() < 0.0) {
+    if (topLeft.x() < 0.0 || topLeft.y() < 0.0 || bottomRight.x() < 0.0 || bottomRight.y() < 0.0) {
         d->m_previewViewer->clearActiveSelection();
         d->m_optTlX->setValue(0.0);
         d->m_optTlY->setValue(0.0);
@@ -750,35 +750,35 @@ void KSaneWidget::setSelection(QPointF lefttop, QPointF rightbottom)
 
     if (d->m_optBrY->getUnit() == SANE_UNIT_MM) {
         // clear selection if values are out of bounds
-        if (lefttop.x() > xmax || lefttop.y() > ymax || rightbottom.x() > xmax || rightbottom.y() > ymax) {
+        if (topLeft.x() > xmax || topLeft.y() > ymax || bottomRight.x() > xmax || bottomRight.y() > ymax) {
             d->m_previewViewer->clearActiveSelection();
             d->m_optTlX->setValue(0.0);
             d->m_optTlY->setValue(0.0);
             d->m_optBrX->setValue(xmax);
             d->m_optBrY->setValue(ymax);
         }
-        d->m_previewViewer->setSelection(lefttop.x(), lefttop.y(), rightbottom.x(), rightbottom.y());
-        d->m_optTlX->setValue(lefttop.x());
-        d->m_optTlY->setValue(lefttop.y());
-        d->m_optBrX->setValue(rightbottom.x());
-        d->m_optBrY->setValue(rightbottom.y());
+        d->m_previewViewer->setSelection(topLeft.x(), topLeft.y(), bottomRight.x(), bottomRight.y());
+        d->m_optTlX->setValue(topLeft.x());
+        d->m_optTlY->setValue(topLeft.y());
+        d->m_optBrX->setValue(bottomRight.x());
+        d->m_optBrY->setValue(bottomRight.y());
     }
     else if (d->m_optBrY->getUnit() == SANE_UNIT_PIXEL) {
         const float mmperinch = 25.4;
         const float dpi = currentDPI();
         const float m = dpi / mmperinch;
-        if (m*lefttop.x() > xmax || m*lefttop.y() > ymax || m*rightbottom.x() > xmax || m*rightbottom.y() > ymax) {
+        if (m*topLeft.x() > xmax || m*topLeft.y() > ymax || m*bottomRight.x() > xmax || m*bottomRight.y() > ymax) {
             d->m_previewViewer->clearActiveSelection();
             d->m_optTlX->setValue(0.0);
             d->m_optTlY->setValue(0.0);
             d->m_optBrX->setValue(xmax);
             d->m_optBrY->setValue(ymax);
         }
-        d->m_previewViewer->setSelection(m*lefttop.x(), m*lefttop.y(), m*rightbottom.x(), m*rightbottom.y());
-        d->m_optTlX->setValue(m*lefttop.x());
-        d->m_optTlY->setValue(m*lefttop.y());
-        d->m_optBrX->setValue(m*rightbottom.x());
-        d->m_optBrY->setValue(m*rightbottom.y());
+        d->m_previewViewer->setSelection(m*topLeft.x(), m*topLeft.y(), m*bottomRight.x(), m*bottomRight.y());
+        d->m_optTlX->setValue(m*topLeft.x());
+        d->m_optTlY->setValue(m*topLeft.y());
+        d->m_optBrX->setValue(m*bottomRight.x());
+        d->m_optBrY->setValue(m*bottomRight.y());
     }
 }
 
