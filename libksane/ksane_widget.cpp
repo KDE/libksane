@@ -792,4 +792,9 @@ void KSaneWidget::setOptionsCollapsed(bool collapse)
     }
 }
 
+void KSaneWidget::setScanButtonHidden(bool hidden)
+{
+    d->m_scanBtn->setHidden(hidden);
+}
+
 }  // NameSpace KSaneIface

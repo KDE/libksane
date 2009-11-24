@@ -128,5 +128,7 @@ float KSaneWidget::currentDPI() {return 0.0;}
 void KSaneWidget::setPreviewResolution(float dpi){Q_UNUSED(dpi);}
 void KSaneWidget::setSelection(QPointF lefttop, QPointF rightbottom){Q_UNUSED(lefttop); Q_UNUSED(rightbottom);}
 void KSaneWidget::setOptionsCollapsed(bool){}
+void KSaneWidget::setScanButtonHidden(bool){}
+
 
 }  // NameSpace KSaneIface
