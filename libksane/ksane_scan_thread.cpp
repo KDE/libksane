@@ -127,7 +127,10 @@ namespace KSaneIface
             m_dataSize = m_frameSize;
         }
         
-        m_data->resize(m_dataSize);
+        m_data->clear();
+        if (m_dataSize > 0) {
+            m_data->reserve(m_dataSize);
+        }
         
         m_frameRead     = 0;
         m_frame_t_count = 0;
@@ -200,7 +203,6 @@ namespace KSaneIface
     
     void KSaneScanThread::copyToScanData(int readBytes)
     {
-        char *data = m_data->data();
         if (m_invertColors) {
             if (m_params.depth == 16) {
                 //if (readBytes%2) qDebug() << "readBytes=" << readBytes;
@@ -223,28 +225,28 @@ namespace KSaneIface
         switch (m_params.format)
         {
             case SANE_FRAME_GRAY:
-                memcpy(&(data[m_frameRead]), m_readData, readBytes);
+                m_data->append((const char*)m_readData, readBytes);
                 m_frameRead += readBytes;
                 return;
             case SANE_FRAME_RGB:
                 if (m_params.depth == 1) {
                     break;
                 }
-                memcpy(&(data[m_frameRead]), m_readData, readBytes);
+                m_data->append((const char*)m_readData, readBytes);
                 m_frameRead += readBytes;
                 return;
                 
             case SANE_FRAME_RED:
                 if (m_params.depth == 8) {
                     for (int i=0; i<readBytes; i++) {
-                        data[index_red8_to_rgb8(m_frameRead)] = m_readData[i];
+                        (*m_data)[index_red8_to_rgb8(m_frameRead)] = m_readData[i];
                         m_frameRead++;
                     }
                     return;
                 }
                 else if (m_params.depth == 16) {
                     for (int i=0; i<readBytes; i++) {
-                        data[index_red16_to_rgb16(m_frameRead)] = m_readData[i];
+                        (*m_data)[index_red16_to_rgb16(m_frameRead)] = m_readData[i];
                         m_frameRead++;
                     }
                     return;
@@ -254,14 +256,14 @@ namespace KSaneIface
             case SANE_FRAME_GREEN:
                 if (m_params.depth == 8) {
                     for (int i=0; i<readBytes; i++) {
-                        data[index_green8_to_rgb8(m_frameRead)] = m_readData[i];
+                        (*m_data)[index_green8_to_rgb8(m_frameRead)] = m_readData[i];
                         m_frameRead++;
                     }
                     return;
                 }
                 else if (m_params.depth == 16) {
                     for (int i=0; i<readBytes; i++) {
-                        data[index_green16_to_rgb16(m_frameRead)] = m_readData[i];
+                        (*m_data)[index_green16_to_rgb16(m_frameRead)] = m_readData[i];
                         m_frameRead++;
                     }
                     return;
@@ -271,14 +273,14 @@ namespace KSaneIface
             case SANE_FRAME_BLUE:
                 if (m_params.depth == 8) {
                     for (int i=0; i<readBytes; i++) {
-                        data[index_blue8_to_rgb8(m_frameRead)] = m_readData[i];
+                        (*m_data)[index_blue8_to_rgb8(m_frameRead)] = m_readData[i];
                         m_frameRead++;
                     }
                     return;
                 }
                 else if (m_params.depth == 16) {
                     for (int i=0; i<readBytes; i++) {
-                        data[index_blue16_to_rgb16(m_frameRead)] = m_readData[i];
+                        (*m_data)[index_blue16_to_rgb16(m_frameRead)] = m_readData[i];
                         m_frameRead++;
                     }
                     return;

@@ -175,10 +175,10 @@ int KSaneWidgetPrivate::getBytesPerLines(SANE_Parameters &params)
             return params.bytes_per_line;
 
         case KSaneWidget::FormatRGB_8_C:
-            return params.pixels_per_line*4;
+            return params.pixels_per_line*3;
 
         case KSaneWidget::FormatRGB_16_C:
-            return params.pixels_per_line*8;
+            return params.pixels_per_line*6;
 
         case KSaneWidget::FormatNone:
         case KSaneWidget::FormatBMP: // to remove warning (BMP is omly valid in the twain wrapper)
@@ -667,7 +667,7 @@ void KSaneWidgetPrivate::startPreviewScan()
                 
                 if (dpi > 300) break;
             }
-            while ((params.pixels_per_line < 300) || (params.lines < 300));
+            while ((params.pixels_per_line < 300) || ((params.lines > 0) && (params.lines < 300)));
         }
     }
     
@@ -787,9 +787,15 @@ void KSaneWidgetPrivate::oneFinalScanDone()
     {
         // scan finished OK
         SANE_Parameters params = m_scanThread->saneParameters();
+        int lines = params.lines;
+        if (lines == -1) {
+            // this is probably a handscanner -> calculate the size from the read data
+            int bytesPerLine = qMax(getBytesPerLines(params), 1); // ensure no div by 0
+            lines = m_scanData.size() / bytesPerLine;
+        }
         emit imageReady(m_scanData,
                          params.pixels_per_line,
-                         params.lines,
+                         lines,
                          getBytesPerLines(params),
                          (int)getImgFormat(params));
 
