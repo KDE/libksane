@@ -697,6 +697,7 @@ void KSaneWidgetPrivate::previewScanDone()
         setBusy(false);
         sane_close(m_saneHandle);
         clearDeviceOptions();
+        emit scanDone(KSaneWidget::NoError, "");
         return;
     }
     
@@ -725,6 +726,8 @@ void KSaneWidgetPrivate::previewScanDone()
     else {
         m_previewViewer->updateImage();
     }
+    
+    emit scanDone(KSaneWidget::NoError, "");
     
     return;
 }
@@ -967,6 +970,7 @@ void KSaneWidgetPrivate::updateProgress()
     }
     
     m_progressBar->setValue(progress);
+    emit scanProgress(progress);
 }
 
 }  // NameSpace KSaneIface
