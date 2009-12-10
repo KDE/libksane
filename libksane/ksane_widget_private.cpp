@@ -662,12 +662,20 @@ void KSaneWidgetPrivate::startPreviewScan()
                     previewScanDone();
                     return;
                 }
+                
+                if (dpi > 600) break;
+            
                 // Increase the dpi value
                 dpi += 25.0;
-                
-                if (dpi > 300) break;
             }
             while ((params.pixels_per_line < 300) || ((params.lines > 0) && (params.lines < 300)));
+            
+            if (params.pixels_per_line == 0) {
+                // This is a security measure for broken backends
+                m_optRes->getMinValue(dpi);
+                m_optRes->setValue(dpi);
+                kDebug() << "Setting minimum DPI value for a broken back-end"; 
+            }
         }
     }
     
