@@ -97,6 +97,10 @@ namespace KSaneIface
         // Start the scanning with sane_start
         m_saneStatus = sane_start(m_saneHandle);
         
+        if (m_readStatus == READ_CANCEL) {
+            return;
+        }
+        
         m_saneStartDone = true;
         
         if (m_saneStatus != SANE_STATUS_GOOD) {
