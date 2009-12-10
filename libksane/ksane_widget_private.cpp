@@ -643,6 +643,13 @@ void KSaneWidgetPrivate::scanPreview()
     }
     while ((m_params.pixels_per_line < 300) || (m_params.lines < 300));
     
+    if (m_params.pixels_per_line == 0) {
+        // This is a security measure for broken backends
+        m_optRes->getMinValue(dpi);
+        m_optRes->setValue(dpi);
+        kDebug() << "Setting minimum DPI value for a broken back-end"; 
+    }
+    
     // set preview option to true if possible
     if (m_optPreview != 0) m_optPreview->setValue(1);
     
