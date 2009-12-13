@@ -48,11 +48,7 @@ LabeledCombo::LabeledCombo(QWidget *parent, const QString& ltext,
 
     m_label->setBuddy(m_combo);
 
-    connect(m_combo, SIGNAL(activated(const QString &)),
-            this, SLOT(prActivated(const QString &)));
-
-    connect(m_combo, SIGNAL(activated(int)),
-            this, SLOT(prActivated(int)));
+    connect(m_combo, SIGNAL(activated(int)), this, SLOT(prActivated(int)));
 
     m_layout->setSpacing(3);
     m_layout->setMargin(0);
@@ -112,11 +108,6 @@ void LabeledCombo::setColumnWidths(int lab_w, int cmb_w)
     //kDebug() << "lab_w =" << lab_w << "cmb_w =" << cmb_w;
     m_layout->setColumnMinimumWidth(0, lab_w);
     m_layout->setColumnMinimumWidth(2, cmb_w);
-}
-
-void LabeledCombo::prActivated(const QString &t)
-{
-    emit activated(t);
 }
 
 void LabeledCombo::prActivated(int i)

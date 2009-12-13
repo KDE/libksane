@@ -92,7 +92,6 @@ void KSaneOptCombo::readValue()
             m_combo->setCurrentText(m_currentText);
             emit valueChanged();
         }
-        else m_combo->setCurrentText(m_currentText);
     }
 }
 
@@ -101,6 +100,8 @@ void KSaneOptCombo::readOption()
     KSaneOption::readOption();
     
     if (!m_combo) return;
+    
+    QString saved = m_combo->currentText();
     
     m_strList = genComboStringList();
     m_combo->clear();
@@ -113,6 +114,9 @@ void KSaneOptCombo::readOption()
                      getSaneComboString((unsigned char*)SANE_VALUE_SCAN_MODE_LINEART));
                      // The epkowa/epson backend uses "Binary" which is the same as "Lineart"
     m_combo->setIcon(KIcon("black-white"), i18n(tmp_binary));
+    
+    // set the previous value
+    m_combo->setCurrentText(saved);
 }
 
 
@@ -205,6 +209,10 @@ QString KSaneOptCombo::getSaneComboString(unsigned char *data)
 
 void KSaneOptCombo::comboboxChangedIndex(int i)
 {
+    if (m_combo && (m_combo->currentText() == m_currentText)) {
+        return;
+    }
+    
     unsigned char data[4];
     void *dataPtr;
     
@@ -224,6 +232,7 @@ void KSaneOptCombo::comboboxChangedIndex(int i)
     }
     writeData(dataPtr);
     readValue();
+    emit valueChanged();
 }
 
 bool KSaneOptCombo::getMinValue(float &val)

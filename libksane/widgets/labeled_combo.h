@@ -100,13 +100,11 @@ public Q_SLOTS:
 
 private Q_SLOTS:
 
-    void prActivated(const QString &);
     void prActivated(int);
 
 Q_SIGNALS:
 
     void activated(int);
-    void activated(const QString&);
 
 private:
 

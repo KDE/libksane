@@ -218,7 +218,7 @@ void KSaneWidgetPrivate::createOptInterface()
         m_optFilmType = option;
         option->createWidget(m_basicOptsTab);
         basic_layout->addWidget(option->widget());
-        connect(m_optSource, SIGNAL(valueChanged()), this, SLOT(checkInvert()), Qt::QueuedConnection);
+        connect(m_optFilmType, SIGNAL(valueChanged()), this, SLOT(checkInvert()), Qt::QueuedConnection);
     }
     else if ((option = getOption(SANE_NAME_NEGATIVE)) != 0) {
         m_optNegative = option;
@@ -914,21 +914,11 @@ void KSaneWidgetPrivate::setBusy(bool busy)
     m_scanBtn->setFocus(Qt::OtherFocusReason);
 }
 
-// #define index_rgb8_to_argb8(i)   ((i*4)/3)
-// #define index_rgb16_to_argb8(i)  ((i*2)/3)
-// #define index_rgb16_to_argb16(i) ((i*4)/3)
-// 
-// 
-// #define index_red16_to_argb16(i)   ((i/2)*8 + i%2)
-// #define index_green16_to_argb16(i) ((i/2)*8 + i%2 + 2)
-// #define index_blue16_to_argb16(i)  ((i/2)*8 + i%2 + 4)
-
-
-
 void KSaneWidgetPrivate::checkInvert()
 {
     if (!m_optSource) return;
     if (!m_optFilmType) return;
+    if (m_scanOngoing) return;
     
     QString source;
     QString filmtype;
