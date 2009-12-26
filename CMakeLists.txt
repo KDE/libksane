@@ -27,7 +27,7 @@ endif(NOT KDE4_FOUND)
 
 # Library API version
 SET(KSANE_LIB_MAJOR_VERSION "0")
-SET(KSANE_LIB_MINOR_VERSION "2")
+SET(KSANE_LIB_MINOR_VERSION "3")
 SET(KSANE_LIB_PATCH_VERSION "0")
 
 # Suffix to add at end of version string. Usual values are:

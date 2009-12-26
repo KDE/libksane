@@ -25,4 +25,6 @@
 
 static const char ksane_version[] = "${KSANE_LIB_VERSION_STRING}";
 
+#define KSANE_VERSION ${KSANE_LIB_VERSION_ID}
+
 #endif // KSANE_VERSION_H
