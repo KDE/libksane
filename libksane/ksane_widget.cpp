@@ -36,6 +36,7 @@
 #include <QVarLengthArray>
 #include <QLabel>
 #include <QSplitter>
+#include <QMutex>
 
 // KDE includes
 #include <kpassworddialog.h>
@@ -58,18 +59,24 @@
 
 namespace KSaneIface
 {
-    static QString sane_username;
-    static QString sane_password;
+static QString s_sane_username;
+static QString s_sane_password;
+static int     s_objectCount = 0;
+static QMutex  s_objectMutex;
 
 /** static function called by sane_open to get authorization from user */
 static void getSaneAuthorization(SANE_String_Const, SANE_Char *username, SANE_Char *password) {
-    qstrncpy(username, sane_username.toUtf8(), SANE_MAX_USERNAME_LEN);
-    qstrncpy(password, sane_password.toUtf8(), SANE_MAX_PASSWORD_LEN );
+    qstrncpy(username, s_sane_username.toUtf8(), SANE_MAX_USERNAME_LEN);
+    qstrncpy(password, s_sane_password.toUtf8(), SANE_MAX_PASSWORD_LEN );
 }
 
 KSaneWidget::KSaneWidget(QWidget* parent)
     : QWidget(parent), d(new KSaneWidgetPrivate)
 {
+    s_objectMutex.lock();
+    s_objectCount++;
+    s_objectMutex.unlock();
+
     SANE_Int    version;
     SANE_Status status;
 
@@ -225,7 +232,13 @@ KSaneWidget::KSaneWidget(QWidget* parent)
 KSaneWidget::~KSaneWidget()
 {
     closeDevice();
-    sane_exit();
+    s_objectMutex.lock();
+    s_objectCount--;
+    if (s_objectCount <= 0) {
+        // Only call sane_exit if this is the last object.
+        sane_exit();
+    }
+    s_objectMutex.unlock();
     delete d;
 }
 
@@ -321,8 +334,8 @@ bool KSaneWidget::openDevice(const QString &device_name)
             return false; //the user canceled
         }
 
-        sane_username = dlg->username();
-        sane_password = dlg->password();
+        s_sane_username = dlg->username();
+        s_sane_password = dlg->password();
 
         status = sane_open(device_name.toLatin1(), &d->m_saneHandle);
 
@@ -336,11 +349,11 @@ bool KSaneWidget::openDevice(const QString &device_name)
     }
 
     // clear static members in library
-    sane_username = "";
-    sane_password = "";
+    s_sane_username = "";
+    s_sane_password = "";
 
     if (status != SANE_STATUS_GOOD) {
-        qDebug() << "sane_open(\"" << device_name << "\", &handle) failed! status = " << status;
+        kDebug() << "sane_open(\"" << device_name << "\", &handle) failed! status = " << sane_strstatus(status);
         return false;
     }
 
