@@ -42,6 +42,7 @@ FindSaneDevicesThread::FindSaneDevicesThread(QObject *parent)
 
 FindSaneDevicesThread::~FindSaneDevicesThread()
 {
+    wait();
 }
 
 
