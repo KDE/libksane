@@ -227,6 +227,12 @@ KSaneWidget::KSaneWidget(QWidget* parent)
     QHBoxLayout *base_layout = new QHBoxLayout(this);
     base_layout->addWidget(d->m_splitter);
     base_layout->setContentsMargins(0,0,0,0);
+
+    // disable the interface in case no device is opened.
+    d->m_optsTabWidget->setDisabled(true);
+    d->m_previewViewer->setDisabled(true);
+    d->m_btnFrame->setDisabled(true);
+    
 }
 
 KSaneWidget::~KSaneWidget()
@@ -418,6 +424,11 @@ bool KSaneWidget::openDevice(const QString &device_name)
     
     // try to set KSaneWidget default values
     d->setDefaultValues();
+    
+    // Enable the interface
+    d->m_optsTabWidget->setDisabled(false);
+    d->m_previewViewer->setDisabled(false);
+    d->m_btnFrame->setDisabled(false);
 
     // estimate the preview size and create an empty image
     // this is done so that you can select scanarea without
@@ -448,6 +459,12 @@ bool KSaneWidget::closeDevice()
     // else 
     sane_close(d->m_saneHandle);
     d->clearDeviceOptions();
+
+    // disable the interface until a new device is opened.
+    d->m_optsTabWidget->setDisabled(true);
+    d->m_previewViewer->setDisabled(true);
+    d->m_btnFrame->setDisabled(true);
+    
     return true;
 }
 
@@ -560,7 +577,13 @@ QImage KSaneWidget::toQImage(const QByteArray &data,
 
 void KSaneWidget::scanFinal()
 {
-    d->startFinalScan();
+    if (d->m_btnFrame->isEnabled()) {
+        d->startFinalScan();
+    }
+    else {
+        // if the button frame is disabled, there is no open device to scan from
+        emit scanDone(KSaneWidget::ErrorGeneral, "");
+    }
 }
 
 void KSaneWidget::scanCancel()
