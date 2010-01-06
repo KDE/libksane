@@ -146,7 +146,7 @@ namespace KSaneIface
     
     void KSaneScanThread::readData()
     {
-        SANE_Int readBytes;
+        SANE_Int readBytes = 0;
         m_saneStatus = sane_read(m_saneHandle, m_readData, SCAN_READ_CHUNK_SIZE, &readBytes);
         
         switch (m_saneStatus) 
@@ -157,8 +157,12 @@ namespace KSaneIface
                 
             case SANE_STATUS_EOF:
                 if (m_frameRead < m_frameSize) {
-                    kDebug() << "frameRead =" << m_frameRead  << ", frameSize =" << m_frameSize;
-                    m_readStatus = READ_ERROR;
+                    kDebug() << "frameRead =" << m_frameRead  << ", frameSize =" << m_frameSize << "readBytes =" << readBytes;
+                    if ((readBytes > 0) && ((m_frameRead + readBytes) <= m_frameSize)) {
+                        kDebug() << "This is not a standard compliant backend";
+                        copyToScanData(readBytes);
+                    }
+                    m_readStatus = READ_READY; // It is better to return a broken image than nothing
                     return;
                 }
                 if (m_params.last_frame == SANE_TRUE) {
