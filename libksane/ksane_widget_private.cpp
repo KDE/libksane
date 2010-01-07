@@ -622,32 +622,32 @@ void KSaneWidgetPrivate::scanPreview()
     }
     
     // set the resopution to 100 dpi and increase if necessary
-    m_optRes->getMinValue(dpi);
-    do {
-        if (m_optRes != 0) {
-            m_optRes->setValue(dpi);
-        }
-        if ((m_optResY != 0) && (m_optRes->name() == SANE_NAME_SCAN_X_RESOLUTION)) {
-            m_optResY->setValue(dpi);
-        }
-        //check what image size we would get in a scan
-        status = sane_get_parameters(m_saneHandle, &m_params);
-        if (status != SANE_STATUS_GOOD) {
-            kDebug(51004) << "sane_get_parameters=" << sane_strstatus(status);
-            scanDone();
-            return;
-        }
-        if (dpi > 300) break;
-        // Increase the dpi value
-        dpi += 25.0;
-    }
-    while ((m_params.pixels_per_line < 300) || (m_params.lines < 300));
-    
-    if (m_params.pixels_per_line == 0) {
-        // This is a security measure for broken backends
+    if (m_optRes != 0) {
         m_optRes->getMinValue(dpi);
-        m_optRes->setValue(dpi);
-        kDebug() << "Setting minimum DPI value for a broken back-end"; 
+        do {
+            m_optRes->setValue(dpi);
+            if ((m_optResY != 0) && (m_optRes->name() == SANE_NAME_SCAN_X_RESOLUTION)) {
+                m_optResY->setValue(dpi);
+            }
+            //check what image size we would get in a scan
+            status = sane_get_parameters(m_saneHandle, &m_params);
+            if (status != SANE_STATUS_GOOD) {
+                kDebug(51004) << "sane_get_parameters=" << sane_strstatus(status);
+                scanDone();
+                return;
+            }
+            if (dpi > 300) break;
+            // Increase the dpi value
+            dpi += 25.0;
+        }
+        while ((m_params.pixels_per_line < 300) || (m_params.lines < 300));
+        
+        if (m_params.pixels_per_line == 0) {
+            // This is a security measure for broken backends
+            m_optRes->getMinValue(dpi);
+            m_optRes->setValue(dpi);
+            kDebug() << "Setting minimum DPI value for a broken back-end"; 
+        }
     }
     
     // set preview option to true if possible
