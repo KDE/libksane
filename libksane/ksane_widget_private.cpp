@@ -989,7 +989,7 @@ void KSaneWidgetPrivate::processData()
             if (m_frameRead < m_frameSize) {
                 kDebug(51004) << "frameRead =" << m_frameRead
                 << ", frameSize =" << m_frameSize;
-                m_readStatus = READ_ERROR;
+                m_readStatus = READ_FINISHED; // It is better to return a broken image than nothing
                 scanDone();
                 return;
             }
