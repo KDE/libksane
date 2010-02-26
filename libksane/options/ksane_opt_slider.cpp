@@ -99,7 +99,7 @@ void KSaneOptSlider::readOption()
     KSaneOption::readOption();
 
     if (!m_slider) return;
-    
+
     if (m_optDesc->constraint_type == SANE_CONSTRAINT_RANGE) {
         m_slider->setRange(m_optDesc->constraint.range->min, m_optDesc->constraint.range->max);
         m_slider->setStep(m_optDesc->constraint.range->quant);
@@ -108,7 +108,6 @@ void KSaneOptSlider::readOption()
         m_slider->setRange(KSW_INT_MIN, KSW_INT_MAX);
         m_slider->setStep(1);
     }
-/** Remove #if tags when KDE 4.2 becomes unpopular**/
     m_slider->setSuffix(unitString());
     m_slider->setLabelText(i18n(m_optDesc->title));
 }
