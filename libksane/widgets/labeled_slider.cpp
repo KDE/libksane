@@ -94,12 +94,6 @@ void LabeledSlider::setSuffix(const KLocalizedString &text)
     m_spinb->setSuffix(text);
 }
 
-/** Remove "setSuffix1" method when KDE 4.2 becomes unpopular**/
-void LabeledSlider::setSuffix1(const QString &text)
-{
-    m_spinb->setSuffix(text);
-}
-
 void LabeledSlider::widgetSizeHints(int *lab_w, int *spi_w)
 {
     if (lab_w != 0) *lab_w = m_label->sizeHint().width();
