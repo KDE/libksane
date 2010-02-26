@@ -758,6 +758,7 @@ void KSaneWidgetPrivate::startFinalScan()
 
         // reead the selection from the viewer
         m_previewViewer->selectionAt(m_selIndex, x1,y1,x2,y2);
+        m_previewViewer->setHighlightArea(x1,y1,x2,y2);
         m_selIndex++;
  
         // calculate the option values
@@ -839,6 +840,9 @@ void KSaneWidgetPrivate::oneFinalScanDone()
                 
                 // reead the selection from the viewer
                 m_previewViewer->selectionAt(m_selIndex, x1,y1,x2,y2);
+
+                // set the highlight
+                m_previewViewer->setHighlightArea(x1,y1,x2,y2);
                 
                 // calculate the option values
                 x1 *= max_x; y1 *= max_y;

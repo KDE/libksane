@@ -58,11 +58,20 @@ class KSaneViewer : public QGraphicsView
         * \param br_x is the x coordinate of the bottom right corner 0=0 1=image with.
         * \param br_y is the y coordinate of the bottom right corner 0=0 1=image with.
         */
-        void setSelection(float tl_x, float tl_y, float b_rx, float b_ry);
+        void setSelection(float tl_x, float tl_y, float br_x, float br_y);
         void clearActiveSelection();
         void clearSavedSelections();
         void clearSelections();
         
+        /** This functiuon is used to set a selection without the user seting it.
+        * \note all parameters must be in the range 0.0 -> 1.0.
+        * \param tl_x is the x coordinate of the top left corner 0=0 1=image with.
+        * \param tl_y is the y coordinate of the top left corner 0=0 1=image with.
+        * \param br_x is the x coordinate of the bottom right corner 0=0 1=image with.
+        * \param br_y is the y coordinate of the bottom right corner 0=0 1=image with.
+        */
+        void setHighlightArea(float tl_x, float tl_y, float br_x, float br_y);
+
         void zoomIn();
         void zoomOut();
         void zoomSel();
@@ -83,6 +92,7 @@ class KSaneViewer : public QGraphicsView
         
     private:
         void updateSelVisibility();
+        void updateHighlight();
         bool activeSelection(float &tl_x, float &tl_y, float &br_x, float &br_y);
         
         struct Private;

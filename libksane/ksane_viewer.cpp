@@ -31,6 +31,7 @@
 
 #include <QGraphicsPixmapItem>
 #include <QGraphicsScene>
+#include <QGraphicsRectItem>
 #include <QWheelEvent>
 #include <QScrollBar>
 #include <QAction>
@@ -63,6 +64,11 @@ struct KSaneViewer::Private
     QAction *zoomSelAction;
     QAction *zoom2FitAction;
     QAction *clrSelAction;
+    
+    QGraphicsRectItem *hideLeft;
+    QGraphicsRectItem *hideRight;
+    QGraphicsRectItem *hideTop;
+    QGraphicsRectItem *hideBottom;
 };
 
 KSaneViewer::KSaneViewer(QWidget *parent) : QGraphicsView(parent), d(new Private)
@@ -80,13 +86,37 @@ KSaneViewer::KSaneViewer(QWidget *parent) : QGraphicsView(parent), d(new Private
     d->selection->setZValue(10);
     d->selection->setSaved(false);
 
+    d->hideTop = new QGraphicsRectItem;
+    d->hideBottom = new QGraphicsRectItem;
+    d->hideRight = new QGraphicsRectItem;
+    d->hideLeft = new QGraphicsRectItem;
+
+    d->hideTop->setOpacity(0.4);
+    d->hideBottom->setOpacity(0.4);
+    d->hideRight->setOpacity(0.4);
+    d->hideLeft->setOpacity(0.4);
+    
+    d->hideTop->setPen(Qt::NoPen);
+    d->hideBottom->setPen(Qt::NoPen);
+    d->hideRight->setPen(Qt::NoPen);
+    d->hideLeft->setPen(Qt::NoPen);
+
+    d->hideTop->setBrush(QBrush(Qt::black));
+    d->hideBottom->setBrush(QBrush(Qt::black));
+    d->hideRight->setBrush(QBrush(Qt::black));
+    d->hideLeft->setBrush(QBrush(Qt::black));
+
     d->scene->addItem(d->pixmapItem);
     d->scene->addItem(d->selection);
+    d->scene->addItem(d->hideLeft);
+    d->scene->addItem(d->hideRight);
+    d->scene->addItem(d->hideTop);
+    d->scene->addItem(d->hideBottom);
     d->scene->setBackgroundBrush(Qt::gray);
 
     d->change = SelectionItem::None;
     d->selectionList.clear();
-
+    
     // create context menu
     d->zoomInAction = new QAction(KIcon("zoom-in"), i18n("Zoom In"), this);
     connect(d->zoomInAction, SIGNAL(triggered()), this, SLOT(zoomIn()));
@@ -240,6 +270,84 @@ void KSaneViewer::setSelection(float tl_x, float tl_y, float br_x, float br_y)
 }
 
 // ------------------------------------------------------------------------
+void KSaneViewer::setHighlightArea(float tl_x, float tl_y, float br_x, float br_y)
+{
+    QRectF rect;
+    // Left 
+    rect.setCoords(0,0, tl_x * d->pixmapItem->pixmap().width(), d->pixmapItem->pixmap().height());
+    d->hideLeft->setRect(rect);
+    
+    // Right
+    rect.setCoords(br_x * d->pixmapItem->pixmap().width(), 
+                   0,
+                   d->pixmapItem->pixmap().width(), 
+                   d->pixmapItem->pixmap().height());
+    d->hideRight->setRect(rect);
+
+    // Top
+    rect.setCoords(tl_x * d->pixmapItem->pixmap().width(), 
+                   0,
+                   br_x * d->pixmapItem->pixmap().width(), 
+                   tl_y * d->pixmapItem->pixmap().height());
+    d->hideTop->setRect(rect);
+
+    // Bottom
+    rect.setCoords(tl_x * d->pixmapItem->pixmap().width(), 
+                   br_y * d->pixmapItem->pixmap().height(),
+                   br_x * d->pixmapItem->pixmap().width(), 
+                   d->pixmapItem->pixmap().height());
+    d->hideBottom->setRect(rect);
+
+    d->hideLeft->show();
+    d->hideRight->show();
+    d->hideTop->show();
+    d->hideBottom->show();
+}
+
+// ------------------------------------------------------------------------
+void KSaneViewer::updateHighlight()
+{
+    if (d->selection->isVisible()) {
+        QRectF rect;
+        // Left 
+        rect.setCoords(0,0, d->selection->rect().left(), d->pixmapItem->pixmap().height());
+        d->hideLeft->setRect(rect);
+        
+        // Right
+        rect.setCoords(d->selection->rect().right(), 
+                       0,
+                       d->pixmapItem->pixmap().width(), 
+                       d->pixmapItem->pixmap().height());
+        d->hideRight->setRect(rect);
+        
+        // Top
+        rect.setCoords(d->selection->rect().left(), 
+                       0,
+                       d->selection->rect().right(),
+                       d->selection->rect().top());
+        d->hideTop->setRect(rect);
+        
+        // Bottom
+        rect.setCoords(d->selection->rect().left(), 
+                       d->selection->rect().bottom(),
+                       d->selection->rect().right(),
+                       d->pixmapItem->pixmap().height());
+        d->hideBottom->setRect(rect);
+        
+        d->hideLeft->show();
+        d->hideRight->show();
+        d->hideTop->show();
+        d->hideBottom->show();
+    }
+    else {
+        d->hideLeft->hide();
+        d->hideRight->hide();
+        d->hideTop->hide();
+        d->hideBottom->hide();
+    }
+}
+
+// ------------------------------------------------------------------------
 void KSaneViewer::updateSelVisibility()
 {
     if ((d->selection->rect().width() >0.001) &&
@@ -252,6 +360,7 @@ void KSaneViewer::updateSelVisibility()
     else {
         d->selection->setVisible(false);
     }
+    updateHighlight();
 }
 
 // ---- Return the saved selection list size + 1 if the selection is visible -
@@ -369,6 +478,7 @@ void KSaneViewer::mousePressEvent(QMouseEvent *e)
                 d->selection->setRect(QRectF(scenePoint, QSizeF(0,0)));
                 d->change = SelectionItem::BottomRight;
             }
+            updateHighlight();
         }
     }
     QGraphicsView::mousePressEvent(e);
@@ -428,7 +538,7 @@ void KSaneViewer::mouseReleaseEvent(QMouseEvent *e)
         
         emit newSelection(tlx, tly, brx, bry);
     }
-
+    updateHighlight();
     QGraphicsView::mouseReleaseEvent(e);
 }
 
@@ -594,6 +704,7 @@ void KSaneViewer::mouseMoveEvent(QMouseEvent *e)
     }
 
     d->lastSPoint = scenePoint;
+    updateHighlight();
     QGraphicsView::mouseMoveEvent(e);
 }
 
