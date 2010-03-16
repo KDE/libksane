@@ -102,6 +102,7 @@ void KSaneWidgetPrivate::clearDeviceOptions()
     m_optGamG       = 0;
     m_optGamB       = 0;
     m_optPreview    = 0;
+    m_optWaitForBtn = 0;
     m_scanOngoing   = false;
     m_closeDevicePending = false;
     
@@ -261,10 +262,15 @@ void KSaneWidgetPrivate::createOptInterface()
             basic_layout->addWidget(option->widget());
         }
     }
-    
+
     // save a pointer to the preview option if possible
     if ((option = getOption(SANE_NAME_PREVIEW)) != 0) {
         m_optPreview = option;
+    }
+
+    // save a pointer to the "wait-for-button" option if possible (Note: No translation)
+    if ((option = getOption("wait-for-button")) != 0) {
+        m_optWaitForBtn = option;
     }
 
     // scan area (Do not add the widgets)
@@ -812,16 +818,33 @@ void KSaneWidgetPrivate::oneFinalScanDone()
                          (int)getImgFormat(params));
 
         // now check if we should have automatic ADF batch scaning
-        QString source;
         if (m_optSource){
+            QString source;
             m_optSource->getValue(source);
+
+            if (source == "Automatic Document Feeder") {
+                // in batch mode only one area can be scanned per page
+                //kDebug() << "source == \"Automatic Document Feeder\"";
+                m_updProgressTmr.start();
+                m_scanThread->start();
+                return;
+            }
         }
-        if (source == "Automatic Document Feeder") {
-            // in batch mode only one area can be scanned per page
-            //kDebug() << "source == \"Automatic Document Feeder\"";
-            m_updProgressTmr.start();
-            m_scanThread->start();
-            return;
+
+        // Check if we have a "wait for button" batch scanning
+        if (m_optWaitForBtn) {
+            kDebug() << m_optWaitForBtn->name();
+            QString wait;
+            m_optWaitForBtn->getValue(wait);
+
+            kDebug() << "wait ==" << wait;
+            if (wait == "true") {
+                // in batch mode only one area can be scanned per page
+                //kDebug() << "source == \"Automatic Document Feeder\"";
+                m_updProgressTmr.start();
+                m_scanThread->start();
+                return;
+            }
         }
 
         // not batch scan, call sane_cancel to be able to change parameters.

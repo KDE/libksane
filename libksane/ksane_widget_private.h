@@ -162,6 +162,7 @@ namespace KSaneIface
             KSaneOption        *m_optGamB;
             QCheckBox          *m_splitGamChB;
             LabeledGamma       *m_commonGamma;
+            KSaneOption        *m_optWaitForBtn;
             
             // preview variables
             float               m_previewWidth;

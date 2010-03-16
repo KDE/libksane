@@ -407,6 +407,7 @@ bool KSaneWidget::openDevice(const QString &device_name)
 
     // do the connections of the option parameters
     for (i=1; i<d->m_optList.size(); i++) {
+        //kDebug() << d->m_optList.at(i)->name();
         connect (d->m_optList.at(i), SIGNAL(optsNeedReload()), d, SLOT(optReload()));
         connect (d->m_optList.at(i), SIGNAL(valsNeedReload()), d, SLOT(scheduleValReload()));
     }
