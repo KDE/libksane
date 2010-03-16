@@ -42,6 +42,12 @@ TARGET_LINK_LIBRARIES(ksane ${KDE4_KDEUI_LIBS}
 
 SET_TARGET_PROPERTIES(ksane PROPERTIES VERSION ${KSANE_LIB_SO_VERSION_STRING} SOVERSION ${KSANE_LIB_SO_CUR_VERSION})
 
+if (${COMPILE_VIEWER_TESTAPP} STREQUAL "YES")
+    message("Compile testapp")
+    kde4_add_executable(viewer_test ksane_viewer.cpp ksane_viewer_test.cpp selectionitem.cpp)
+    target_link_libraries(viewer_test ${KDE4_KDEUI_LIBS})
+endif()
+
 install(TARGETS ksane ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 INSTALL(FILES ksane.h

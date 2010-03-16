@@ -42,6 +42,8 @@
 
 #include <KDebug>
 
+#include <math.h>
+
 namespace KSaneIface
 {
 
@@ -112,7 +114,7 @@ KSaneViewer::KSaneViewer(QWidget *parent) : QGraphicsView(parent), d(new Private
     d->scene->addItem(d->hideRight);
     d->scene->addItem(d->hideTop);
     d->scene->addItem(d->hideBottom);
-    d->scene->setBackgroundBrush(Qt::gray);
+    d->scene->setBackgroundBrush(QColor(0x70, 0x70, 0x70));
 
     d->change = SelectionItem::None;
     d->selectionList.clear();
@@ -708,64 +710,108 @@ void KSaneViewer::mouseMoveEvent(QMouseEvent *e)
     QGraphicsView::mouseMoveEvent(e);
 }
 
+// Area in pixels for the selection calculation
+#define SELECTION_AREA 30000.0
+
+// The change trigger before adding to the sum
+#define DIFF_TRIGGER 10
+
+// The selection start/stop level trigger
+#define SUM_TRIGGER 4
+
+// The selection start/stop margin 
+#define SEL_MARGIN 5
+
 // ------------------------------------------------------------------------
 void KSaneViewer::findSelections()
 {
-    QVector<int> rowSums(d->img->height());
-    QVector<int> colSums(d->img->width());
-    rowSums.fill(0);
+    // Reduce the size of the image to decrease noise and calculation time
+    float multiplier = sqrt(SELECTION_AREA/(d->img->height() * d->img->width()));
+    int width  = (int)(d->img->width() * multiplier);
+    int height = (int)(d->img->height() * multiplier);
+
+    QImage img = d->img->scaled(width, height, Qt::KeepAspectRatio);
+    height = img.height(); // the size was probably not exact
+    width  = img.width();
+
+    QVector<qint64> colSums(width + SEL_MARGIN);
+    qint64 rowSum;
     colSums.fill(0);
     int pix;
-    int average;
     int diff = 0;
-    int y_sel_start=2;
-    int x_sel_start=2;
-    for (int y=2; y<d->img->height()-2; y++) {
-        for (int x=2; x<d->img->width()-2; x++) {
-            pix = qGray(d->img->pixel(x, y));
-            diff = 0;
-            // how much does the pixel differ from the surrounding
-            diff += qAbs(pix - qGray(d->img->pixel(x-1, y)));
-            diff += qAbs(pix - qGray(d->img->pixel(x-2, y)));
-            diff += qAbs(pix - qGray(d->img->pixel(x+1, y)));
-            diff += qAbs(pix - qGray(d->img->pixel(x+2, y)));
-            diff += qAbs(pix - qGray(d->img->pixel(x, y-1)));
-            diff += qAbs(pix - qGray(d->img->pixel(x, y-2)));
-            diff += qAbs(pix - qGray(d->img->pixel(x, y+1)));
-            diff += qAbs(pix - qGray(d->img->pixel(x, y+2)));
-            if (diff > 30 ) { // a limit to tweek
-                rowSums[y] += diff;
-                colSums[x] += diff;
+    int hSelStart=-1;
+    int hSelMargin = 0;
+    int wSelStart=-1;
+    int wSelMargin = 0;
+
+    for (int h=1; h < (height-1+SEL_MARGIN); h++) {
+        rowSum = 0;
+        for (int w=1; w < width-1; w++) {
+            if (h < height-1) {
+                pix = qGray(img.pixel(w, h));
+                diff = 0;
+                // how much does the pixel differ from the surrounding
+                diff += qAbs(pix - qGray(img.pixel(w-1, h)));
+                diff += qAbs(pix - qGray(img.pixel(w+1, h)));
+                diff += qAbs(pix - qGray(img.pixel(w, h-1)));
+                diff += qAbs(pix - qGray(img.pixel(w, h+1)));
+                if (diff > DIFF_TRIGGER) {
+                    colSums[w] += diff;
+                    rowSum += diff;
+                }
             }
         }
-        average = rowSums[y-2]+rowSums[y-1]+rowSums[y]+rowSums[y+1]+rowSums[y+2];
-        if (average < d->img->width()) { // this limit seems to be OK here.
-            if ((y-y_sel_start) > 20) {
-                // the selection ends here Y
-                x_sel_start = 2;
-                for (int x=2; x<d->img->width()-2; x++) {
-                    average = colSums[x-1]+colSums[x-2]+colSums[x]+colSums[x+1]+colSums[x+2];
-                    if (average < (y-y_sel_start)*2){ // *2 seems OK here.
-                        // the selection ends here X
-                        if ((x-x_sel_start) > 20) {
-                            SelectionItem *tmp = new SelectionItem(QRect(x_sel_start, y_sel_start,
-                                                                          x-x_sel_start, y-y_sel_start));
+        if ((rowSum/width) > SUM_TRIGGER) {
+            //for (int w=0; w < 5; w++) img.setPixel(w, h, qRgb(255, 255, 0));
+            if (hSelStart < 0) {
+                if (hSelMargin < SEL_MARGIN) hSelMargin++;
+                if (hSelMargin == SEL_MARGIN) hSelStart = h - SEL_MARGIN;
+            }
+        }
+        else {
+            if (hSelStart >= 0) {
+                if (hSelMargin > 0) hSelMargin--;
+            }
+            if ((hSelStart > -1) && (hSelMargin == 0)) {
+                // We have the end of the vertical selection
+                // now figure out the horizontal part of the selection
+                for (int w=0; w < (width-1+SEL_MARGIN); w++) {
+                    if ((colSums[w]/(h - hSelStart)) > SUM_TRIGGER) {
+                        if (wSelStart < 0) {
+                            if (wSelMargin < SEL_MARGIN) wSelMargin++;
+                            if (wSelMargin == SEL_MARGIN) wSelStart = w - SEL_MARGIN;
+                        }
+                    }
+                    else {
+                        if (wSelStart >= 0) {
+                            if (wSelMargin > 0) wSelMargin--;
+                        }
+                        if ((wSelStart > -1) && (wSelMargin == 0)) {
+                            // we have the end of a horizontal selection
+                            // calculate the coordinates in the original size
+                            int x1 = wSelStart / multiplier;
+                            int y1 = hSelStart / multiplier;
+                            int x2 = (w - SEL_MARGIN + 1) / multiplier;
+                            int y2 = (h - SEL_MARGIN + 1) / multiplier;
+                            SelectionItem *tmp = new SelectionItem(QRect(QPoint(x1, y1), QPoint(x2, y2)));
                             d->selectionList.push_back(tmp);
                             d->selectionList.back()->setSaved(true);
                             d->selectionList.back()->saveZoom(transform().m11());
                             d->scene->addItem(d->selectionList.back());
                             d->selectionList.back()->setZValue(9);
+                            wSelStart = -1;
                         }
-                        x_sel_start = x;
                     }
                 }
-            }
-            if ((y-y_sel_start) > 2) {
+                hSelStart = -1;
                 colSums.fill(0);
             }
-            y_sel_start = y;
         }
     }
+    
+    
+    // Now adjust the selections on the preview sized image
+    // FIXME To do
 }
 
 }  // NameSpace KSaneIface

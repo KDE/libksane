@@ -30,6 +30,8 @@
 
 #include <KDebug>
 
+#include <QMutexLocker>
+
 namespace KSaneIface
 {
 
@@ -65,6 +67,13 @@ namespace KSaneIface
     void KSaneScanThread::cancelScan()
     {
         m_readStatus = READ_CANCEL;
+        if (m_cancelMutex.tryLock()) {
+            kDebug() << "pre cancel";
+            sane_cancel(m_saneHandle);
+            kDebug() << "post cancel";
+            // wait for sane_cancel to return before any other sane function is called.
+            m_cancelMutex.unlock();
+        }
     }
     
     int KSaneScanThread::scanProgress()
@@ -90,18 +99,23 @@ namespace KSaneIface
         
     void KSaneScanThread::run()
     {
+        // sane cancel can only be called once and must return before any other call is done
+        QMutexLocker locker(&m_cancelMutex);
         m_dataSize = 0;
         m_readStatus = READ_ON_GOING;
         m_saneStartDone = false;
-        
+
+        locker.unlock();
         // Start the scanning with sane_start
         m_saneStatus = sane_start(m_saneHandle);
+        // if sane_cancel is called do not continue before it is done.
+        locker.relock();
         
+        m_saneStartDone = true;
+                
         if (m_readStatus == READ_CANCEL) {
             return;
         }
-        
-        m_saneStartDone = true;
         
         if (m_saneStatus != SANE_STATUS_GOOD) {
             kDebug() << "sane_start=" << sane_strstatus(m_saneStatus);
@@ -147,7 +161,9 @@ namespace KSaneIface
     void KSaneScanThread::readData()
     {
         SANE_Int readBytes = 0;
+        kDebug() << "pre read";
         m_saneStatus = sane_read(m_saneHandle, m_readData, SCAN_READ_CHUNK_SIZE, &readBytes);
+        kDebug() << "post read";
         
         switch (m_saneStatus) 
         {
