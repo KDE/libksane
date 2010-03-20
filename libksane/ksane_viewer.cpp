@@ -710,23 +710,31 @@ void KSaneViewer::mouseMoveEvent(QMouseEvent *e)
     QGraphicsView::mouseMoveEvent(e);
 }
 
-// Area in pixels for the selection calculation
-#define SELECTION_AREA 30000.0
-
 // The change trigger before adding to the sum
-#define DIFF_TRIGGER 10
+#define DIFF_TRIGGER 8
 
 // The selection start/stop level trigger
 #define SUM_TRIGGER 4
 
+// The selection start/stop level trigger for the floating  average
+#define AVERAGE_TRIGGER 7
+
 // The selection start/stop margin 
-#define SEL_MARGIN 5
+#define SEL_MARGIN 3
+
+// Maximum number of allowed selections (this could be a settable variable)
+#define MAX_NUM_SELECTIONS 8
+
+// floating average 'div' must be one less than 'count'
+#define AVERAGE_COUNT 50
+#define AVERAGE_MULT 49
 
 // ------------------------------------------------------------------------
-void KSaneViewer::findSelections()
+void KSaneViewer::findSelections(float area)
 {
     // Reduce the size of the image to decrease noise and calculation time
-    float multiplier = sqrt(SELECTION_AREA/(d->img->height() * d->img->width()));
+    float multiplier = sqrt(area/(d->img->height() * d->img->width()));
+
     int width  = (int)(d->img->width() * multiplier);
     int height = (int)(d->img->height() * multiplier);
 
@@ -734,84 +742,276 @@ void KSaneViewer::findSelections()
     height = img.height(); // the size was probably not exact
     width  = img.width();
 
-    QVector<qint64> colSums(width + SEL_MARGIN);
+    QVector<qint64> colSums(width + SEL_MARGIN + 1);
     qint64 rowSum;
     colSums.fill(0);
     int pix;
-    int diff = 0;
+    int diff;
     int hSelStart=-1;
+    int hSelEnd=-1;
     int hSelMargin = 0;
     int wSelStart=-1;
+    int wSelEnd=-1;
     int wSelMargin = 0;
 
-    for (int h=1; h < (height-1+SEL_MARGIN); h++) {
+    for (int h=1; h<height; h++) {
         rowSum = 0;
-        for (int w=1; w < width-1; w++) {
-            if (h < height-1) {
+        if (h<height-1) {
+            // Special case for the left most pixel
+            pix = qGray(img.pixel(0, h));
+            diff  = qAbs(pix - qGray(img.pixel(1, h)));
+            diff += qAbs(pix - qGray(img.pixel(0, h-1)));
+            diff += qAbs(pix - qGray(img.pixel(0, h+1)));
+            if (diff > DIFF_TRIGGER) {
+                colSums[0] += diff;
+                rowSum += diff;
+            }
+            
+            // Special case for the right most pixel
+            pix = qGray(img.pixel(width - 1, h));
+            diff  = qAbs(pix - qGray(img.pixel(width - 2, h)));
+            diff += qAbs(pix - qGray(img.pixel(width - 1, h-1)));
+            diff += qAbs(pix - qGray(img.pixel(width - 1, h+1)));
+            if (diff > DIFF_TRIGGER) {
+                colSums[width - 1] += diff;
+                rowSum += diff;
+            }
+            
+            for (int w=1; w < (width - 1); w++) {
                 pix = qGray(img.pixel(w, h));
                 diff = 0;
                 // how much does the pixel differ from the surrounding
-                diff += qAbs(pix - qGray(img.pixel(w-1, h)));
-                diff += qAbs(pix - qGray(img.pixel(w+1, h)));
-                diff += qAbs(pix - qGray(img.pixel(w, h-1)));
-                diff += qAbs(pix - qGray(img.pixel(w, h+1)));
+                diff += qAbs(pix - qGray(img.pixel(w - 1, h)));
+                diff += qAbs(pix - qGray(img.pixel(w + 1, h)));
+                diff += qAbs(pix - qGray(img.pixel(w, h - 1)));
+                diff += qAbs(pix - qGray(img.pixel(w, h + 1)));
                 if (diff > DIFF_TRIGGER) {
                     colSums[w] += diff;
                     rowSum += diff;
                 }
             }
         }
+        
         if ((rowSum/width) > SUM_TRIGGER) {
-            //for (int w=0; w < 5; w++) img.setPixel(w, h, qRgb(255, 255, 0));
             if (hSelStart < 0) {
                 if (hSelMargin < SEL_MARGIN) hSelMargin++;
-                if (hSelMargin == SEL_MARGIN) hSelStart = h - SEL_MARGIN;
+                if (hSelMargin == SEL_MARGIN) hSelStart = h - SEL_MARGIN + 1;
             }
         }
         else {
             if (hSelStart >= 0) {
                 if (hSelMargin > 0) hSelMargin--;
             }
-            if ((hSelStart > -1) && (hSelMargin == 0)) {
+            if ((hSelStart > -1) && ((hSelMargin == 0) || (h==height-1))) {
+                if (h==height-1) {
+                    hSelEnd = h - hSelMargin;
+                }
+                else {
+                    hSelEnd = h - SEL_MARGIN;
+                }
                 // We have the end of the vertical selection
                 // now figure out the horizontal part of the selection
-                for (int w=0; w < (width-1+SEL_MARGIN); w++) {
+                for (int w=0; w <= width; w++) { // colSums[width] will be 0
                     if ((colSums[w]/(h - hSelStart)) > SUM_TRIGGER) {
                         if (wSelStart < 0) {
                             if (wSelMargin < SEL_MARGIN) wSelMargin++;
-                            if (wSelMargin == SEL_MARGIN) wSelStart = w - SEL_MARGIN;
+                            if (wSelMargin == SEL_MARGIN) wSelStart = w - SEL_MARGIN + 1;
                         }
                     }
                     else {
                         if (wSelStart >= 0) {
                             if (wSelMargin > 0) wSelMargin--;
                         }
-                        if ((wSelStart > -1) && (wSelMargin == 0)) {
+                        if ((wSelStart >= 0) && ((wSelMargin == 0) || (w == width))) {
+                            if (w == width) {
+                                wSelEnd = width;
+                            }
+                            else {
+                                wSelEnd = w - SEL_MARGIN +1;
+                            }
+
                             // we have the end of a horizontal selection
-                            // calculate the coordinates in the original size
-                            int x1 = wSelStart / multiplier;
-                            int y1 = hSelStart / multiplier;
-                            int x2 = (w - SEL_MARGIN + 1) / multiplier;
-                            int y2 = (h - SEL_MARGIN + 1) / multiplier;
-                            SelectionItem *tmp = new SelectionItem(QRect(QPoint(x1, y1), QPoint(x2, y2)));
-                            d->selectionList.push_back(tmp);
-                            d->selectionList.back()->setSaved(true);
-                            d->selectionList.back()->saveZoom(transform().m11());
-                            d->scene->addItem(d->selectionList.back());
-                            d->selectionList.back()->setZValue(9);
+                            if ((wSelEnd-wSelStart) < width) {
+                                // skip selections that span the whole width
+                                // calculate the coordinates in the original size
+                                int x1 = wSelStart / multiplier;
+                                int y1 = hSelStart / multiplier;
+                                int x2 = wSelEnd / multiplier;
+                                int y2 = hSelEnd / multiplier;
+                                SelectionItem *tmp = new SelectionItem(QRect(QPoint(x1, y1), QPoint(x2, y2)));
+                                d->selectionList.push_back(tmp);
+                                d->selectionList.back()->setSaved(true);
+                                d->selectionList.back()->saveZoom(transform().m11());
+                                d->scene->addItem(d->selectionList.back());
+                                d->selectionList.back()->setZValue(9);
+                            }
                             wSelStart = -1;
+                            wSelEnd = -1;
+                            wSelMargin = 0;
                         }
                     }
                 }
                 hSelStart = -1;
+                hSelEnd = -1;
+                hSelMargin = 0;
                 colSums.fill(0);
             }
         }
     }
     
+    if (d->selectionList.size() > MAX_NUM_SELECTIONS) {
+        // smaller area or should we give up??
+        clearSavedSelections(); 
+        //findSelections(area/2); 
+        // instead of trying to find probably broken selections just give up 
+        // and do not force broken selections on the user.
+    }
+    else {
+        // 1/multiplier is the error margin caused by the resolution reduction
+        refineSelections(qRound(2/multiplier));
+    }
+}
+
+void KSaneViewer::refineSelections(int pixelMargin)
+{
+   // The end result
+    int hSelStart;
+    int hSelEnd;
+    int wSelStart;
+    int wSelEnd;
+
+    for (int i=0; i<d->selectionList.size(); i++) {
+        QRectF selRect = d->selectionList.at(i)->rect();
+
+        // original values
+        hSelStart = (int)selRect.top();
+        hSelEnd = (int)selRect.bottom();
+        wSelStart = (int)selRect.left();
+        wSelEnd = (int)selRect.right();
+
+        // Top
+        // Too long iteration should not be a problem since the loop should be interrupted by the limit 
+        hSelStart = refineRow(hSelStart - pixelMargin, hSelEnd, wSelStart, wSelEnd);
+
+        // Bottom (from the bottom up wards)
+        hSelEnd = refineRow(hSelEnd + pixelMargin, hSelStart, wSelStart, wSelEnd);
+
+        // Left
+        wSelStart = refineColumn(wSelStart - pixelMargin, wSelEnd, hSelStart, hSelEnd);
+
+        // Right
+        wSelEnd = refineColumn(wSelEnd + pixelMargin, wSelStart, hSelStart, hSelEnd);
+        
+        // Now update the selection
+        d->selectionList.at(i)->setRect(QRectF(QPointF(wSelStart, hSelStart), QPointF(wSelEnd, hSelEnd)));
+    }
+}
+
+int KSaneViewer::refineRow(int fromRow, int toRow, int rowStart, int rowEnd)
+{
+    int pix;
+    int diff;
+    float rowTrigger;
+    int row;
+    int addSub = (fromRow < toRow) ? 1 : -1;
     
-    // Now adjust the selections on the preview sized image
-    // FIXME To do
+    rowStart -= 2; //add some margin
+    rowEnd += 2; //add some margin
+    
+    if (rowStart < 1) rowStart = 1;
+    if (rowEnd >= d->img->width()) rowEnd = d->img->width() - 1;
+    
+    if (fromRow < 1) fromRow = 1;
+    if (fromRow >= d->img->height()) fromRow = d->img->height() - 1;
+    
+    if (toRow < 1) toRow = 1;
+    if (toRow >= d->img->height()) toRow = d->img->height() - 1;
+    
+    row = fromRow;
+    while (row != toRow) {
+        rowTrigger = 0;
+        for (int w=rowStart; w<rowEnd; w++) {
+            diff = 0;
+            pix = qGray(d->img->pixel(w, row));
+            // how much does the pixel differ from the surrounding
+            diff += qAbs(pix - qGray(d->img->pixel(w-1, row)));
+            diff += qAbs(pix - qGray(d->img->pixel(w+1, row)));
+            diff += qAbs(pix - qGray(d->img->pixel(w, row-1)));
+            diff += qAbs(pix - qGray(d->img->pixel(w, row+1)));
+            if (diff <= DIFF_TRIGGER) diff = 0;
+            
+            rowTrigger = ((rowTrigger * AVERAGE_MULT) + diff) / AVERAGE_COUNT;
+            
+            if (rowTrigger > AVERAGE_TRIGGER) {
+                break;
+            }
+        }
+
+        if (rowTrigger > AVERAGE_TRIGGER) {
+            // row == 1 _probably_ means that the selection should start from 0
+            // but that can not be detected if we start from 1 => include one extra column
+            if (row == 1) row = 0;
+            if (row == (d->img->width() -2)) row = d->img->width();
+            return row;
+        }
+        row += addSub;
+    }
+    return row;
+}
+
+int KSaneViewer::refineColumn(int fromCol, int toCol, int colStart, int colEnd)
+{
+    int pix;
+    int diff;
+    float colTrigger;
+    int col;
+    int count;
+    int addSub = (fromCol < toCol) ? 1 : -1;
+    
+    colStart -= 2; //add some margin
+    colEnd += 2; //add some margin
+    
+    if (colStart < 1) colStart = 1;
+    if (colEnd >= d->img->height()) colEnd = d->img->height() - 1;
+    
+    if (fromCol < 1) fromCol = 1;
+    if (fromCol >= d->img->width()) fromCol = d->img->width() - 2;
+    
+    if (toCol < 1) toCol = 1;
+    if (toCol >= d->img->width()) toCol = d->img->width() - 2;
+    
+    col = fromCol;
+    while (col != toCol) {
+        colTrigger = 0;
+        count = 0;
+        for (int row=colStart; row<colEnd; row++) {
+            count++;
+            diff = 0;
+            pix = qGray(d->img->pixel(col, row));
+            // how much does the pixel differ from the surrounding
+            diff += qAbs(pix - qGray(d->img->pixel(col-1, row)));
+            diff += qAbs(pix - qGray(d->img->pixel(col+1, row)));
+            diff += qAbs(pix - qGray(d->img->pixel(col, row-1)));
+            diff += qAbs(pix - qGray(d->img->pixel(col, row+1)));
+            if (diff <= DIFF_TRIGGER) diff = 0;
+            
+            colTrigger = ((colTrigger * AVERAGE_MULT) + diff) / AVERAGE_COUNT;
+            
+            if (colTrigger > AVERAGE_TRIGGER) {
+                break;
+            }
+        }
+
+        if (colTrigger > AVERAGE_TRIGGER) {
+            // col == 1 _probably_ means that the selection should start from 0
+            // but that can not be detected if we start from 1 => include one extra column
+            if (col == 1) col = 0;
+            if (col == (d->img->width() -2)) col = d->img->width();
+            return col;
+        }
+        col += addSub;
+    }
+    return col;
 }
 
 }  // NameSpace KSaneIface

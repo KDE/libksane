@@ -43,7 +43,9 @@ class KSaneViewer : public QGraphicsView
 
         void setQImage(QImage *img);
         void updateImage();
-        void findSelections();
+        /** Find selections in the picture
+        * \param area this parameter determine the area of the reduced sized image. */
+        void findSelections(float area = 10000.0);
         
     public Q_SLOTS:
         
@@ -94,7 +96,15 @@ class KSaneViewer : public QGraphicsView
         void updateSelVisibility();
         void updateHighlight();
         bool activeSelection(float &tl_x, float &tl_y, float &br_x, float &br_y);
+        void refineSelections(int pixelMargin);
         
+        // fromRow is the row to start the iterations from. fromRow can be grater than toRow. 
+        // rowStart is the x1 coordinate of the row 
+        // all parameters are corrected to be valid pixel indexes, 
+        // but start must be < end
+        int  refineRow(int fromRow, int toRow, int rowStart, int rowEnd);
+        int  refineColumn(int fromCol, int toCol, int colStart, int colEnd);
+
         struct Private;
         Private * const d;
 
