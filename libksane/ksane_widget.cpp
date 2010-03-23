@@ -112,7 +112,7 @@ KSaneWidget::KSaneWidget(QWidget* parent)
     
     // Create the static UI
     // create the preview
-    d->m_previewViewer = new KSaneViewer(this);
+    d->m_previewViewer = new KSaneViewer(&(d->m_previewImg), this);
     connect(d->m_previewViewer, SIGNAL(newSelection(float, float, float, float)),
             d, SLOT(handleSelection(float, float, float, float)));
 

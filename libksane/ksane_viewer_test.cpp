@@ -40,9 +40,8 @@ int main (int argc, char *argv[])
     }
     QImage img(argv[1]);
 
-    KSaneIface::KSaneViewer viewer;
-    viewer.setQImage(&img);
-    
+    KSaneIface::KSaneViewer viewer(&img);
+
     viewer.findSelections();
 
     viewer.show();

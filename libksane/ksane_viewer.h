@@ -38,7 +38,7 @@ class KSaneViewer : public QGraphicsView
 {
     Q_OBJECT
     public:
-        KSaneViewer(QWidget *parent = 0);
+        KSaneViewer(QImage *img, QWidget *parent = 0);
         ~KSaneViewer();
 
         void setQImage(QImage *img);
@@ -91,6 +91,7 @@ class KSaneViewer : public QGraphicsView
         void mousePressEvent(QMouseEvent *e);
         void mouseReleaseEvent(QMouseEvent *e);
         void mouseMoveEvent(QMouseEvent *e);
+        void drawBackground(QPainter *painter, const QRectF &rect); 
         
     private:
         void updateSelVisibility();

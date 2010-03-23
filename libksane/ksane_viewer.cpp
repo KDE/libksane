@@ -50,7 +50,6 @@ namespace KSaneIface
 struct KSaneViewer::Private
 {
     QGraphicsScene      *scene;
-    QGraphicsPixmapItem *pixmapItem;
     SelectionItem       *selection;
     QImage              *img;
 
@@ -73,20 +72,26 @@ struct KSaneViewer::Private
     QGraphicsRectItem *hideBottom;
 };
 
-KSaneViewer::KSaneViewer(QWidget *parent) : QGraphicsView(parent), d(new Private)
+KSaneViewer::KSaneViewer(QImage * img, QWidget *parent) : QGraphicsView(parent), d(new Private)
 {
+    d->img = img;
+
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
     setMouseTracking(true);
     
     // Init the scene
     d->scene = new QGraphicsScene;
+    d->scene->setSceneRect(0, 0, img->width(), img->height());
     setScene(d->scene);
-    d->pixmapItem = new QGraphicsPixmapItem;
 
     d->selection = new SelectionItem(QRectF());
     d->selection->setZValue(10);
     d->selection->setSaved(false);
+    d->selection->setMaxRight(img->width());
+    d->selection->setMaxBottom(img->height());
+    d->selection->setRect(d->scene->sceneRect());
+    d->selection->setVisible(false);
 
     d->hideTop = new QGraphicsRectItem;
     d->hideBottom = new QGraphicsRectItem;
@@ -108,14 +113,12 @@ KSaneViewer::KSaneViewer(QWidget *parent) : QGraphicsView(parent), d(new Private
     d->hideRight->setBrush(QBrush(Qt::black));
     d->hideLeft->setBrush(QBrush(Qt::black));
 
-    d->scene->addItem(d->pixmapItem);
     d->scene->addItem(d->selection);
     d->scene->addItem(d->hideLeft);
     d->scene->addItem(d->hideRight);
     d->scene->addItem(d->hideTop);
     d->scene->addItem(d->hideBottom);
-    d->scene->setBackgroundBrush(QColor(0x70, 0x70, 0x70));
-
+    
     d->change = SelectionItem::None;
     d->selectionList.clear();
     
@@ -144,6 +147,13 @@ KSaneViewer::KSaneViewer(QWidget *parent) : QGraphicsView(parent), d(new Private
 }
 
 // ------------------------------------------------------------------------
+void KSaneViewer::drawBackground(QPainter *painter, const QRectF &rect)
+{
+    painter->fillRect(rect, QColor(0x70, 0x70, 0x70));
+    painter->drawImage(rect, *d->img, rect);
+}
+
+// ------------------------------------------------------------------------
 KSaneViewer::~KSaneViewer()
 {
     // first remove any old saved selections
@@ -160,10 +170,7 @@ void KSaneViewer::setQImage(QImage *img)
     // first remove any old saved selections
     clearSavedSelections();
 
-    d->pixmapItem->setPixmap(QPixmap::fromImage(*img));
-    d->pixmapItem->setShapeMode(QGraphicsPixmapItem::BoundingRectShape);
     d->scene->setSceneRect(0, 0, img->width(), img->height());
-    d->pixmapItem->setZValue(0);
     d->selection->setMaxRight(img->width());
     d->selection->setMaxBottom(img->height());
     d->selection->setRect(d->scene->sceneRect());
@@ -174,7 +181,6 @@ void KSaneViewer::setQImage(QImage *img)
 // ------------------------------------------------------------------------
 void KSaneViewer::updateImage()
 {
-    d->pixmapItem->setPixmap(QPixmap::fromImage(*d->img));
 }
 
 // ------------------------------------------------------------------------
@@ -215,7 +221,7 @@ void KSaneViewer::zoomSel()
 // ------------------------------------------------------------------------
 void KSaneViewer::zoom2Fit()
 {
-    fitInView(d->pixmapItem->boundingRect(), Qt::KeepAspectRatio);
+    fitInView(d->img->rect(), Qt::KeepAspectRatio);
     d->selection->saveZoom(transform().m11());
     for (int i=0; i<d->selectionList.size(); ++i) {
         d->selectionList[i]->saveZoom(transform().m11());
@@ -226,7 +232,7 @@ void KSaneViewer::zoom2Fit()
 void KSaneViewer::setTLX(float ratio)
 {
     QRectF rect = d->selection->rect();
-    rect.setLeft(ratio * d->pixmapItem->pixmap().width());
+    rect.setLeft(ratio * d->img->width());
     d->selection->setRect(rect);
     updateSelVisibility();
 }
@@ -235,7 +241,7 @@ void KSaneViewer::setTLX(float ratio)
 void KSaneViewer::setTLY(float ratio)
 {
     QRectF rect = d->selection->rect();
-    rect.setTop(ratio * d->pixmapItem->pixmap().height());
+    rect.setTop(ratio * d->img->height());
     d->selection->setRect(rect);
     updateSelVisibility();
 }
@@ -244,7 +250,7 @@ void KSaneViewer::setTLY(float ratio)
 void KSaneViewer::setBRX(float ratio)
 {
     QRectF rect = d->selection->rect();
-    rect.setRight(ratio * d->pixmapItem->pixmap().width());
+    rect.setRight(ratio * d->img->width());
     d->selection->setRect(rect);
     updateSelVisibility();
 }
@@ -253,7 +259,7 @@ void KSaneViewer::setBRX(float ratio)
 void KSaneViewer::setBRY(float ratio)
 {
     QRectF rect = d->selection->rect();
-    rect.setBottom(ratio * d->pixmapItem->pixmap().height());
+    rect.setBottom(ratio * d->img->height());
     d->selection->setRect(rect);
     updateSelVisibility();
 }
@@ -262,10 +268,10 @@ void KSaneViewer::setBRY(float ratio)
 void KSaneViewer::setSelection(float tl_x, float tl_y, float br_x, float br_y)
 {
     QRectF rect;
-    rect.setCoords(tl_x * d->pixmapItem->pixmap().width(),
-                    tl_y * d->pixmapItem->pixmap().height(),
-                    br_x * d->pixmapItem->pixmap().width(),
-                    br_y * d->pixmapItem->pixmap().height());
+    rect.setCoords(tl_x * d->img->width(),
+                    tl_y * d->img->height(),
+                    br_x * d->img->width(),
+                    br_y * d->img->height());
 
     d->selection->setRect(rect);
     updateSelVisibility();
@@ -276,28 +282,28 @@ void KSaneViewer::setHighlightArea(float tl_x, float tl_y, float br_x, float br_
 {
     QRectF rect;
     // Left 
-    rect.setCoords(0,0, tl_x * d->pixmapItem->pixmap().width(), d->pixmapItem->pixmap().height());
+    rect.setCoords(0,0, tl_x * d->img->width(), d->img->height());
     d->hideLeft->setRect(rect);
     
     // Right
-    rect.setCoords(br_x * d->pixmapItem->pixmap().width(), 
+    rect.setCoords(br_x * d->img->width(), 
                    0,
-                   d->pixmapItem->pixmap().width(), 
-                   d->pixmapItem->pixmap().height());
+                   d->img->width(), 
+                   d->img->height());
     d->hideRight->setRect(rect);
 
     // Top
-    rect.setCoords(tl_x * d->pixmapItem->pixmap().width(), 
+    rect.setCoords(tl_x * d->img->width(), 
                    0,
-                   br_x * d->pixmapItem->pixmap().width(), 
-                   tl_y * d->pixmapItem->pixmap().height());
+                   br_x * d->img->width(), 
+                   tl_y * d->img->height());
     d->hideTop->setRect(rect);
 
     // Bottom
-    rect.setCoords(tl_x * d->pixmapItem->pixmap().width(), 
-                   br_y * d->pixmapItem->pixmap().height(),
-                   br_x * d->pixmapItem->pixmap().width(), 
-                   d->pixmapItem->pixmap().height());
+    rect.setCoords(tl_x * d->img->width(), 
+                   br_y * d->img->height(),
+                   br_x * d->img->width(), 
+                   d->img->height());
     d->hideBottom->setRect(rect);
 
     d->hideLeft->show();
@@ -312,14 +318,14 @@ void KSaneViewer::updateHighlight()
     if (d->selection->isVisible()) {
         QRectF rect;
         // Left 
-        rect.setCoords(0,0, d->selection->rect().left(), d->pixmapItem->pixmap().height());
+        rect.setCoords(0,0, d->selection->rect().left(), d->img->height());
         d->hideLeft->setRect(rect);
         
         // Right
         rect.setCoords(d->selection->rect().right(), 
                        0,
-                       d->pixmapItem->pixmap().width(), 
-                       d->pixmapItem->pixmap().height());
+                       d->img->width(), 
+                       d->img->height());
         d->hideRight->setRect(rect);
         
         // Top
@@ -333,7 +339,7 @@ void KSaneViewer::updateHighlight()
         rect.setCoords(d->selection->rect().left(), 
                        d->selection->rect().bottom(),
                        d->selection->rect().right(),
-                       d->pixmapItem->pixmap().height());
+                       d->img->height());
         d->hideBottom->setRect(rect);
         
         d->hideLeft->show();
@@ -354,8 +360,8 @@ void KSaneViewer::updateSelVisibility()
 {
     if ((d->selection->rect().width() >0.001) &&
         (d->selection->rect().height() > 0.001) &&
-        ((d->pixmapItem->pixmap().width() - d->selection->rect().width() > 0.1) ||
-        (d->pixmapItem->pixmap().height() - d->selection->rect().height() > 0.1)))
+        ((d->img->width() - d->selection->rect().width() > 0.1) ||
+        (d->img->height() - d->selection->rect().height() > 0.1)))
     {
         d->selection->setVisible(true);
     }
@@ -386,10 +392,10 @@ bool KSaneViewer::selectionAt(int index, float &tl_x, float &tl_y, float &br_x, 
         return activeSelection(tl_x, tl_y, br_x, br_y);
     }
 
-    tl_x = d->selectionList[index]->rect().left()   / d->pixmapItem->pixmap().width();
-    tl_y = d->selectionList[index]->rect().top()    / d->pixmapItem->pixmap().height();
-    br_x = d->selectionList[index]->rect().right()  / d->pixmapItem->pixmap().width();
-    br_y = d->selectionList[index]->rect().bottom() / d->pixmapItem->pixmap().height();
+    tl_x = d->selectionList[index]->rect().left()   / d->img->width();
+    tl_y = d->selectionList[index]->rect().top()    / d->img->height();
+    br_x = d->selectionList[index]->rect().right()  / d->img->width();
+    br_y = d->selectionList[index]->rect().bottom() / d->img->height();
     return true;
 }
 
@@ -404,10 +410,10 @@ bool KSaneViewer::activeSelection(float &tl_x, float &tl_y, float &br_x, float &
         return true;
     }
     
-    tl_x = d->selection->rect().left()   / d->pixmapItem->pixmap().width();
-    tl_y = d->selection->rect().top()    / d->pixmapItem->pixmap().height();
-    br_x = d->selection->rect().right()  / d->pixmapItem->pixmap().width();
-    br_y = d->selection->rect().bottom() / d->pixmapItem->pixmap().height();
+    tl_x = d->selection->rect().left()   / d->img->width();
+    tl_y = d->selection->rect().top()    / d->img->height();
+    br_x = d->selection->rect().right()  / d->img->width();
+    br_y = d->selection->rect().bottom() / d->img->height();
     
     if ((tl_x == br_x) || (tl_y == br_y)) {
         tl_x = 0.0;
@@ -530,13 +536,13 @@ void KSaneViewer::mouseReleaseEvent(QMouseEvent *e)
     
     if ((e->modifiers() != Qt::ControlModifier) &&
         (d->selection->isVisible()) &&
-        (d->pixmapItem->pixmap().width() > 0.001) &&
-        (d->pixmapItem->pixmap().height() > 0.001))
+        (d->img->width() > 0.001) &&
+        (d->img->height() > 0.001))
     {
-        float tlx = d->selection->rect().left()   / d->pixmapItem->pixmap().width();
-        float tly = d->selection->rect().top()    / d->pixmapItem->pixmap().height();
-        float brx = d->selection->rect().right()  / d->pixmapItem->pixmap().width();
-        float bry = d->selection->rect().bottom() / d->pixmapItem->pixmap().height();
+        float tlx = d->selection->rect().left()   / d->img->width();
+        float tly = d->selection->rect().top()    / d->img->height();
+        float brx = d->selection->rect().right()  / d->img->width();
+        float bry = d->selection->rect().bottom() / d->img->height();
         
         emit newSelection(tlx, tly, brx, bry);
     }
