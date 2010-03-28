@@ -181,6 +181,9 @@ void KSaneViewer::setQImage(QImage *img)
 // ------------------------------------------------------------------------
 void KSaneViewer::updateImage()
 {
+    setCacheMode(QGraphicsView::CacheNone);
+    repaint();
+    setCacheMode(QGraphicsView::CacheBackground);
 }
 
 // ------------------------------------------------------------------------
