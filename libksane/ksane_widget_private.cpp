@@ -620,10 +620,6 @@ void KSaneWidgetPrivate::startPreviewScan()
     if (m_optDepth != 0) m_optDepth->storeCurrentData();
     if (m_optRes != 0) m_optRes->storeCurrentData();
     if (m_optResY != 0) m_optResY->storeCurrentData();
-    if (m_optTlX != 0) m_optTlX->storeCurrentData();
-    if (m_optTlY != 0) m_optTlY->storeCurrentData();
-    if (m_optBrX != 0) m_optBrX->storeCurrentData();
-    if (m_optBrY != 0) m_optBrY->storeCurrentData();
     if (m_optPreview != 0) m_optPreview->storeCurrentData();
     
     // check if we can modify the selection
@@ -719,10 +715,6 @@ void KSaneWidgetPrivate::previewScanDone()
     if (m_optDepth != 0) m_optDepth->restoreSavedData();
     if (m_optRes != 0) m_optRes->restoreSavedData();
     if (m_optResY != 0) m_optResY->restoreSavedData();
-    if (m_optTlX != 0) m_optTlX->restoreSavedData();
-    if (m_optTlY != 0) m_optTlY->restoreSavedData();
-    if (m_optBrX != 0) m_optBrX->restoreSavedData();
-    if (m_optBrY != 0) m_optBrY->restoreSavedData();
     if (m_optPreview != 0) m_optPreview->restoreSavedData();
     
     if (m_autoSelect) {
@@ -917,6 +909,8 @@ void KSaneWidgetPrivate::oneFinalScanDone()
     
     sane_cancel(m_saneHandle);
 
+    // clear the highlight
+    m_previewViewer->setHighlightArea(0,0,1,1);
     setBusy(false);
     m_scanOngoing = false;
     
