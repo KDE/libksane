@@ -25,8 +25,8 @@
  *
  * ============================================================ */
 
-#ifndef FIND_SANE_DEVICES_H
-#define FIND_SANE_DEVICES_H
+#ifndef KSANE_FIND_DEVICES_THREAD_H
+#define KSANE_FIND_DEVICES_THREAD_H
 
 // #include "ksane.h"
 

@@ -25,8 +25,8 @@
  *
  * ============================================================ */
 
-#ifndef KSANE_BUTTON_OPT_H
-#define KSANE_BUTTON_OPT_H
+#ifndef KSANE_OPT_BUTTON_H
+#define KSANE_OPT_BUTTON_H
 
 #include "ksane_option.h"
 

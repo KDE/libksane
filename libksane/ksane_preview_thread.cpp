@@ -186,7 +186,7 @@ namespace KSaneIface
                         sane_cancel(m_saneHandle);
                         return;
                     }
-                    kDebug() << "New Frame";
+                    //kDebug() << "New Frame";
                     m_frameRead = 0;
                     m_pixel_x     = 0;
                     m_pixel_y     = 0;
@@ -242,7 +242,7 @@ namespace KSaneIface
                             // resize the image
                             *m_img = m_img->copy(0, 0, m_img->width(), m_img->height() + m_img->width());
                         }
-                        for (j=7; j>=0; j--) {
+                        for (j=7; j>=0; --j) {
                             if ((m_readData[i] & (1<<j)) == 0) {
                                 m_img->setPixel(m_pixel_x,
                                                 m_pixel_y,
@@ -372,7 +372,7 @@ namespace KSaneIface
                         return;
                     }
                     break;
-                    
+
                 case SANE_FRAME_GREEN:
                     if (m_params.depth == 8) {
                         for (int i=0; i<read_bytes; i++) {
@@ -401,7 +401,7 @@ namespace KSaneIface
                         return;
                     }
                     break;
-                    
+
                 case SANE_FRAME_BLUE:
                     if (m_params.depth == 8) {
                         for (int i=0; i<read_bytes; i++) {
@@ -431,19 +431,17 @@ namespace KSaneIface
                     }
                     break;
         }
-        
+
         kWarning() << "Format" << m_params.format
         << "and depth" << m_params.format
         << "is not yet suppoeted by libksane!";
         m_readStatus = READ_ERROR;
         return;
     }
-    
-    
+
     bool KSanePreviewThread::saneStartDone()
     {
         return   m_saneStartDone;
     }
-    
+
 }  // NameSpace KSaneIface
-    

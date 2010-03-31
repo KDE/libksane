@@ -140,7 +140,7 @@ public:
     /** This methos returns the model of the scanner. */
     QString model() const;
 
-    /** This method returns the current resolution of the aquired image,
+    /** This method returns the current resolution of the acquired image,
     * in dots per inch.
     * @note This function should be called from the slot connected
     * to the imageReady signal. The connection should not be queued.

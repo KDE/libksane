@@ -1,4 +1,4 @@
-
+// krazy:skip
 //begin strings from hplip-3.9.2/scan/sane/common.h to make them translatable
 I18N_NOOP("None");
 I18N_NOOP("MH");

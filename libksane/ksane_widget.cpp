@@ -37,6 +37,7 @@
 #include <QLabel>
 #include <QSplitter>
 #include <QMutex>
+#include <QPointer>
 
 // KDE includes
 #include <kpassworddialog.h>
@@ -254,13 +255,14 @@ QString KSaneWidget::model() const {return d->m_model;}
 
 QString KSaneWidget::selectDevice(QWidget* parent)
 {
-  QString selected_name("");
-  KSaneDeviceDialog sel(parent);
+  QString selected_name;
+  QPointer<KSaneDeviceDialog> sel = new KSaneDeviceDialog(parent);
 
   // sel.setDefault(prev_backend); // set default scanner - perhaps application using libksane should remember that
-  if(sel.exec()) {
-      return selected_name = sel.getSelectedName();
+  if(sel->exec() == KDialog::Accepted) {
+      return selected_name = sel->getSelectedName();
   }
+  delete sel;
   return selected_name;
 }
 
@@ -376,7 +378,7 @@ bool KSaneWidget::openDevice(const QString &device_name)
     num_sane_options = *reinterpret_cast<SANE_Word*>(data.data());
 
     // read the rest of the options
-    for (i=1; i<num_sane_options; i++) {
+    for (i=1; i<num_sane_options; ++i) {
         switch (KSaneOption::otpionType(sane_get_option_descriptor(d->m_saneHandle, i))) {
             case KSaneOption::TYPE_DETECT_FAIL:
                 d->m_optList.append(new KSaneOption(d->m_saneHandle, i));
@@ -406,7 +408,7 @@ bool KSaneWidget::openDevice(const QString &device_name)
     }
 
     // do the connections of the option parameters
-    for (i=1; i<d->m_optList.size(); i++) {
+    for (i=1; i<d->m_optList.size(); ++i) {
         //kDebug() << d->m_optList.at(i)->name();
         connect (d->m_optList.at(i), SIGNAL(optsNeedReload()), d, SLOT(optReload()));
         connect (d->m_optList.at(i), SIGNAL(valsNeedReload()), d, SLOT(scheduleValReload()));

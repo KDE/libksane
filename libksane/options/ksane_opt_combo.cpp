@@ -128,12 +128,12 @@ QStringList &KSaneOptCombo::genComboStringList()
     switch (m_optDesc->type)
     {
         case SANE_TYPE_INT:
-            for (i=1; i<=m_optDesc->constraint.word_list[0]; i++) {
+            for (i=1; i<=m_optDesc->constraint.word_list[0]; ++i) {
                 m_strList += getSaneComboString((int)m_optDesc->constraint.word_list[i]);
             }
             break;
         case SANE_TYPE_FIXED:
-            for (i=1; i<=m_optDesc->constraint.word_list[0]; i++) {
+            for (i=1; i<=m_optDesc->constraint.word_list[0]; ++i) {
                 m_strList += getSaneComboString((float)SANE_UNFIX(m_optDesc->constraint.word_list[i]));
             }
             break;
@@ -300,7 +300,7 @@ bool KSaneOptCombo::setValue(float value)
         case SANE_TYPE_INT:
             tmp = (float)m_optDesc->constraint.word_list[minIndex];
             minDiff = qAbs(value - tmp);
-            for (i=2; i<=m_optDesc->constraint.word_list[0]; i++) {
+            for (i=2; i<=m_optDesc->constraint.word_list[0]; ++i) {
                 tmp = (float)m_optDesc->constraint.word_list[i];
                 if (qAbs(value - tmp) < minDiff) {
                     minDiff = qAbs(value - tmp);
@@ -314,7 +314,7 @@ bool KSaneOptCombo::setValue(float value)
         case SANE_TYPE_FIXED:
             tmp = (float)SANE_UNFIX(m_optDesc->constraint.word_list[minIndex]);
             minDiff = qAbs(value - tmp);
-            for (i=2; i<=m_optDesc->constraint.word_list[0]; i++) {
+            for (i=2; i<=m_optDesc->constraint.word_list[0]; ++i) {
                 tmp = (float)SANE_UNFIX(m_optDesc->constraint.word_list[i]);
                 if (qAbs(value - tmp) < minDiff) {
                     minDiff = qAbs(value - tmp);

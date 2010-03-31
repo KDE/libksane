@@ -25,8 +25,8 @@
  *
  * ============================================================ */
 
-#ifndef KSANE_CHECKBOX_OPT_H
-#define KSANE_CHECKBOX_OPT_H
+#ifndef KSANE_OPT_CHECKBOX_H
+#define KSANE_OPT_CHECKBOX_H
 
 #include "ksane_option.h"
 

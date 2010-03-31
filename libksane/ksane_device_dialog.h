@@ -26,8 +26,8 @@
  *
  * ============================================================ */
 
-#ifndef KSANE_DEVICE_DIAG_H
-#define KSANE_DEVICE_DIAG_H
+#ifndef KSANE_DEVICE_DIALOG_H
+#define KSANE_DEVICE_DIALOG_H
 
 #include "ksane_find_devices_thread.h"
 

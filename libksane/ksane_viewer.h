@@ -38,7 +38,7 @@ class KSaneViewer : public QGraphicsView
 {
     Q_OBJECT
     public:
-        KSaneViewer(QImage *img, QWidget *parent = 0);
+        explicit KSaneViewer(QImage *img, QWidget *parent = 0);
         ~KSaneViewer();
 
         void setQImage(QImage *img);

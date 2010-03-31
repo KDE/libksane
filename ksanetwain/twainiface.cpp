@@ -76,7 +76,7 @@ bool KSaneWidgetPrivate::winEvent(MSG* pMsg, long* result)
 
 /** Initializes TWAIN interface . Is already called from the constructor. 
     It should be called again if ReleaseTwain is called.
-    hWnd is the window which has to subclassed in order to recieve
+    hWnd is the window which has to subclassed in order to receive
     Twain messaged. Normally - this would be your main application window.
  */
 bool KSaneWidgetPrivate::InitTwain()

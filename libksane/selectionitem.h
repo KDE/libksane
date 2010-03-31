@@ -24,17 +24,16 @@
 * License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *
 * ============================================================ */
-#ifndef SIDELINEITEM_H
-#define SIDELINEITEM_H
+#ifndef SELECTIONITEM_H
+#define SELECTIONITEM_H
 
 #include <QGraphicsPixmapItem>
-#include <QTransform>
 #include <QPainter>
 
 namespace KSaneIface
 {
 
-class SelectionItem : public QObject, public QGraphicsItem
+class SelectionItem : public QGraphicsItem
 {
     public:
         typedef enum

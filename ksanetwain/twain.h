@@ -1,3 +1,4 @@
+// krazy:skip
 /* ======================================================================== *\
 
   Copyright (C) 1991, 1992 TWAIN Working Group: Aldus, Caere, Eastman-Kodak,

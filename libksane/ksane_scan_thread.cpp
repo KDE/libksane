@@ -161,9 +161,7 @@ namespace KSaneIface
     void KSaneScanThread::readData()
     {
         SANE_Int readBytes = 0;
-        kDebug() << "pre read";
         m_saneStatus = sane_read(m_saneHandle, m_readData, SCAN_READ_CHUNK_SIZE, &readBytes);
-        kDebug() << "post read";
         
         switch (m_saneStatus) 
         {
@@ -201,7 +199,7 @@ namespace KSaneIface
                         sane_cancel(m_saneHandle);
                         return;
                     }
-                    kDebug() << "New Frame";
+                    //kDebug() << "New Frame";
                     m_frameRead = 0;
                     m_frame_t_count++;
                     break;
