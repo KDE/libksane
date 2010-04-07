@@ -928,13 +928,13 @@ int KSaneViewer::refineRow(int fromRow, int toRow, int rowStart, int rowEnd)
     rowEnd += 2; //add some margin
     
     if (rowStart < 1) rowStart = 1;
-    if (rowEnd >= d->img->width()) rowEnd = d->img->width() - 1;
+    if (rowEnd >= d->img->width()) rowEnd = d->img->width() - 2;
     
     if (fromRow < 1) fromRow = 1;
-    if (fromRow >= d->img->height()) fromRow = d->img->height() - 1;
+    if (fromRow >= d->img->height()) fromRow = d->img->height() - 2;
     
     if (toRow < 1) toRow = 1;
-    if (toRow >= d->img->height()) toRow = d->img->height() - 1;
+    if (toRow >= d->img->height()) toRow = d->img->height() - 2;
     
     row = fromRow;
     while (row != toRow) {
@@ -981,7 +981,7 @@ int KSaneViewer::refineColumn(int fromCol, int toCol, int colStart, int colEnd)
     colEnd += 2; //add some margin
     
     if (colStart < 1) colStart = 1;
-    if (colEnd >= d->img->height()) colEnd = d->img->height() - 1;
+    if (colEnd >= d->img->height()) colEnd = d->img->height() - 2;
     
     if (fromCol < 1) fromCol = 1;
     if (fromCol >= d->img->width()) fromCol = d->img->width() - 2;
