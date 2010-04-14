@@ -34,9 +34,6 @@
 #include <QSlider>
 #include <QGridLayout>
 
-/** Remove #if tags when KDE 4.2 becomes unpopular**/
-#include <kdeversion.h>
-
 /**
   *@author Kåre Särs
   */
