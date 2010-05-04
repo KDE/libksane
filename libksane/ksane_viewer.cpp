@@ -70,6 +70,7 @@ struct KSaneViewer::Private
     QGraphicsRectItem *hideRight;
     QGraphicsRectItem *hideTop;
     QGraphicsRectItem *hideBottom;
+    QGraphicsRectItem *hideArea;
 };
 
 KSaneViewer::KSaneViewer(QImage * img, QWidget *parent) : QGraphicsView(parent), d(new Private)
@@ -97,16 +98,19 @@ KSaneViewer::KSaneViewer(QImage * img, QWidget *parent) : QGraphicsView(parent),
     d->hideBottom = new QGraphicsRectItem;
     d->hideRight = new QGraphicsRectItem;
     d->hideLeft = new QGraphicsRectItem;
+    d->hideArea = new QGraphicsRectItem;
 
     d->hideTop->setOpacity(0.4);
     d->hideBottom->setOpacity(0.4);
     d->hideRight->setOpacity(0.4);
     d->hideLeft->setOpacity(0.4);
-    
+    d->hideArea->setOpacity(0.6);
+   
     d->hideTop->setPen(Qt::NoPen);
     d->hideBottom->setPen(Qt::NoPen);
     d->hideRight->setPen(Qt::NoPen);
     d->hideLeft->setPen(Qt::NoPen);
+    d->hideArea->setPen(Qt::NoPen);
 
     d->hideTop->setBrush(QBrush(Qt::black));
     d->hideBottom->setBrush(QBrush(Qt::black));
@@ -118,6 +122,7 @@ KSaneViewer::KSaneViewer(QImage * img, QWidget *parent) : QGraphicsView(parent),
     d->scene->addItem(d->hideRight);
     d->scene->addItem(d->hideTop);
     d->scene->addItem(d->hideBottom);
+    d->scene->addItem(d->hideArea);
     
     d->change = SelectionItem::None;
     d->selectionList.clear();
@@ -284,7 +289,8 @@ void KSaneViewer::setSelection(float tl_x, float tl_y, float br_x, float br_y)
 void KSaneViewer::setHighlightArea(float tl_x, float tl_y, float br_x, float br_y)
 {
     QRectF rect;
-    // Left 
+    
+    // Left  reason for rect: setCoords(x1,y1,x2,y2) != setRect(x1,x2, width, height)
     rect.setCoords(0,0, tl_x * d->img->width(), d->img->height());
     d->hideLeft->setRect(rect);
     
@@ -304,17 +310,45 @@ void KSaneViewer::setHighlightArea(float tl_x, float tl_y, float br_x, float br_
 
     // Bottom
     rect.setCoords(tl_x * d->img->width(), 
-                   br_y * d->img->height(),
-                   br_x * d->img->width(), 
-                   d->img->height());
+                    br_y * d->img->height(),
+                    br_x * d->img->width(), 
+                    d->img->height());
     d->hideBottom->setRect(rect);
+
+    // hide area
+    rect.setCoords(tl_x * d->img->width(), tl_y* d->img->height(),
+                   br_x * d->img->width(), br_y* d->img->height());
+
+    d->hideArea->setRect(rect);
 
     d->hideLeft->show();
     d->hideRight->show();
     d->hideTop->show();
     d->hideBottom->show();
+    // the hide area is hidden until setHighlightShown is called.
+    d->hideArea->hide();
 }
 
+// ------------------------------------------------------------------------
+void KSaneViewer::setHighlightShown(int percentage, QColor hideColor)
+{
+    if (percentage >= 100) {
+        d->hideArea->hide();
+        return;
+    }
+
+    d->hideArea->setBrush(hideColor);
+
+    qreal diff = d->hideBottom->rect().top() - d->hideTop->rect().bottom();
+    diff -= (diff * percentage) / 100;
+
+    QRectF rect = d->hideArea->rect();
+    rect.setTop(d->hideBottom->rect().top() - diff);
+
+    d->hideArea->setRect(rect);
+
+    d->hideArea->show();
+}
 // ------------------------------------------------------------------------
 void KSaneViewer::updateHighlight()
 {
@@ -323,38 +357,40 @@ void KSaneViewer::updateHighlight()
         // Left 
         rect.setCoords(0,0, d->selection->rect().left(), d->img->height());
         d->hideLeft->setRect(rect);
-        
+
         // Right
         rect.setCoords(d->selection->rect().right(), 
                        0,
                        d->img->width(), 
                        d->img->height());
         d->hideRight->setRect(rect);
-        
+
         // Top
         rect.setCoords(d->selection->rect().left(), 
                        0,
                        d->selection->rect().right(),
                        d->selection->rect().top());
         d->hideTop->setRect(rect);
-        
+
         // Bottom
         rect.setCoords(d->selection->rect().left(), 
                        d->selection->rect().bottom(),
                        d->selection->rect().right(),
                        d->img->height());
         d->hideBottom->setRect(rect);
-        
+
         d->hideLeft->show();
         d->hideRight->show();
         d->hideTop->show();
         d->hideBottom->show();
+        d->hideArea->hide();
     }
     else {
         d->hideLeft->hide();
         d->hideRight->hide();
         d->hideTop->hide();
         d->hideBottom->hide();
+        d->hideArea->hide();
     }
 }
 

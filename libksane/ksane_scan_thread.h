@@ -36,7 +36,6 @@ extern "C"
 }
 
 #include <QThread>
-#include <QMutex>
 #include <QByteArray>
 
 #define SCAN_READ_CHUNK_SIZE 100000
@@ -82,7 +81,6 @@ namespace KSaneIface
             ReadStatus      m_readStatus;
             bool            m_invertColors;
             bool            m_saneStartDone;
-            QMutex          m_cancelMutex;
     };
 }
 

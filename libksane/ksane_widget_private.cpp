@@ -853,7 +853,7 @@ void KSaneWidgetPrivate::oneFinalScanDone()
                 m_optBrX->getMaxValue(max_x);
                 m_optBrY->getMaxValue(max_y);
                 
-                // reead the selection from the viewer
+                // read the selection from the viewer
                 m_previewViewer->selectionAt(m_selIndex, x1,y1,x2,y2);
 
                 // set the highlight
@@ -986,6 +986,7 @@ void KSaneWidgetPrivate::updateProgress()
             m_activityFrame->show();
         }
         progress = m_scanThread->scanProgress();
+        m_previewViewer->setHighlightShown(progress);
     }
     
     m_progressBar->setValue(progress);

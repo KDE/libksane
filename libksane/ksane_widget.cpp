@@ -238,7 +238,9 @@ KSaneWidget::KSaneWidget(QWidget* parent)
 
 KSaneWidget::~KSaneWidget()
 {
-    closeDevice();
+    while (!closeDevice()) usleep(1000);
+    // wait for any thread to exit
+
     s_objectMutex.lock();
     s_objectCount--;
     if (s_objectCount <= 0) {

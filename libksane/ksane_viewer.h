@@ -53,26 +53,30 @@ class KSaneViewer : public QGraphicsView
         void setTLY(float ratio);
         void setBRX(float ratio);
         void setBRY(float ratio);
-        /** This functiuon is used to set a selection without the user seting it.
+        
+        /** This function is used to set a selection without the user setting it.
         * \note all parameters must be in the range 0.0 -> 1.0.
         * \param tl_x is the x coordinate of the top left corner 0=0 1=image with.
-        * \param tl_y is the y coordinate of the top left corner 0=0 1=image with.
+        * \param tl_y is the y coordinate of the top left corner 0=0 1=image height.
         * \param br_x is the x coordinate of the bottom right corner 0=0 1=image with.
-        * \param br_y is the y coordinate of the bottom right corner 0=0 1=image with.
-        */
+        * \param br_y is the y coordinate of the bottom right corner 0=0 1=image height. */
         void setSelection(float tl_x, float tl_y, float br_x, float br_y);
         void clearActiveSelection();
         void clearSavedSelections();
         void clearSelections();
         
-        /** This functiuon is used to set a selection without the user seting it.
+        /** This function is used to darken everything except what is inside the given area.
         * \note all parameters must be in the range 0.0 -> 1.0.
         * \param tl_x is the x coordinate of the top left corner 0=0 1=image with.
-        * \param tl_y is the y coordinate of the top left corner 0=0 1=image with.
+        * \param tl_y is the y coordinate of the top left corner 0=0 1=image height.
         * \param br_x is the x coordinate of the bottom right corner 0=0 1=image with.
-        * \param br_y is the y coordinate of the bottom right corner 0=0 1=image with.
-        */
+        * \param br_y is the y coordinate of the bottom right corner 0=0 1=image height. */
         void setHighlightArea(float tl_x, float tl_y, float br_x, float br_y);
+
+        /** This function sets the percentage of the highlighted area that is visible. The rest is hidden.
+        * \param percentage is the percentage of the highlighted area that is shown.
+        * \param hideColor is the color to use to hide the highlighted area of the image.*/
+        void setHighlightShown(int percentage, QColor hideColor = Qt::white);
 
         void zoomIn();
         void zoomOut();
