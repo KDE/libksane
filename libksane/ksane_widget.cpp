@@ -31,6 +31,8 @@
 #include "ksane.h"
 #include "ksane.moc"
 
+#include <unistd.h>
+
 // Qt includes
 #include <QApplication>
 #include <QVarLengthArray>
