@@ -78,6 +78,9 @@ class KSaneViewer : public QGraphicsView
         * \param hideColor is the color to use to hide the highlighted area of the image.*/
         void setHighlightShown(int percentage, QColor hideColor = Qt::white);
 
+        /** This function removes the highlight area. */
+        void clearHighlight();
+
         void zoomIn();
         void zoomOut();
         void zoomSel();

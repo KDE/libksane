@@ -172,14 +172,12 @@ void KSaneViewer::setQImage(QImage *img)
 {
     if (img == 0) return;
 
-    // first remove any old saved selections
-    clearSavedSelections();
-
+    // remove selections
+    clearSelections();
+    
     d->scene->setSceneRect(0, 0, img->width(), img->height());
     d->selection->setMaxRight(img->width());
     d->selection->setMaxBottom(img->height());
-    d->selection->setRect(d->scene->sceneRect());
-    d->selection->setVisible(false);
     d->img = img;
 }
 
@@ -239,6 +237,7 @@ void KSaneViewer::zoom2Fit()
 // ------------------------------------------------------------------------
 void KSaneViewer::setTLX(float ratio)
 {
+    if (!d->selection->isVisible()) return; // only correct the selection if it is visible
     QRectF rect = d->selection->rect();
     rect.setLeft(ratio * d->img->width());
     d->selection->setRect(rect);
@@ -248,6 +247,7 @@ void KSaneViewer::setTLX(float ratio)
 // ------------------------------------------------------------------------
 void KSaneViewer::setTLY(float ratio)
 {
+    if (!d->selection->isVisible()) return; // only correct the selection if it is visible
     QRectF rect = d->selection->rect();
     rect.setTop(ratio * d->img->height());
     d->selection->setRect(rect);
@@ -257,6 +257,7 @@ void KSaneViewer::setTLY(float ratio)
 // ------------------------------------------------------------------------
 void KSaneViewer::setBRX(float ratio)
 {
+    if (!d->selection->isVisible()) return; // only correct the selection if it is visible
     QRectF rect = d->selection->rect();
     rect.setRight(ratio * d->img->width());
     d->selection->setRect(rect);
@@ -266,6 +267,7 @@ void KSaneViewer::setBRX(float ratio)
 // ------------------------------------------------------------------------
 void KSaneViewer::setBRY(float ratio)
 {
+    if (!d->selection->isVisible()) return; // only correct the selection if it is visible
     QRectF rect = d->selection->rect();
     rect.setBottom(ratio * d->img->height());
     d->selection->setRect(rect);
@@ -349,6 +351,7 @@ void KSaneViewer::setHighlightShown(int percentage, QColor hideColor)
 
     d->hideArea->show();
 }
+
 // ------------------------------------------------------------------------
 void KSaneViewer::updateHighlight()
 {
@@ -392,6 +395,17 @@ void KSaneViewer::updateHighlight()
         d->hideBottom->hide();
         d->hideArea->hide();
     }
+}
+
+// ------------------------------------------------------------------------
+void KSaneViewer::clearHighlight()
+{
+    d->hideLeft
+    ->hide();
+    d->hideRight->hide();
+    d->hideTop->hide();
+    d->hideBottom->hide();
+    d->hideArea->hide();
 }
 
 // ------------------------------------------------------------------------

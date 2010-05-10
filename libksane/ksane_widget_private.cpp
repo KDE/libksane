@@ -438,11 +438,11 @@ void KSaneWidgetPrivate::optReload()
         m_optList.at(i)->readValue();
     }
     // estimate the preview size and create an empty image
-    // this is done so that you can select scanarea without
+    // this is done so that you can select scan area without
     // having to scan a preview.
     updatePreviewSize();
     
-    // encsure that we do not get a scrollbar at the bottom of the option of the options
+    // ensure that we do not get a scrollbar at the bottom of the option of the options
     int min_width = m_basicOptsTab->sizeHint().width();
     if (min_width < m_otherOptsTab->sizeHint().width()) {
         min_width = m_otherOptsTab->sizeHint().width();
@@ -450,6 +450,7 @@ void KSaneWidgetPrivate::optReload()
     
     m_optsTabWidget->setMinimumWidth(min_width + 32);
     
+    m_previewViewer->zoom2Fit();
 }
 
 void KSaneWidgetPrivate::valReload()
@@ -568,13 +569,16 @@ void KSaneWidgetPrivate::updatePreviewSize()
         m_optBrY->getMaxValue(max_y);
     }
     if ((max_x == m_previewWidth) && (max_y == m_previewHeight)) {
-        //kDebug() << "no preview width";
+        //kDebug() << "no preview size change";
         return;
     }
     
+    // The preview size has changed 
     m_previewWidth  = max_x;
     m_previewHeight = max_y;
+
     // set the scan area to the whole area
+    m_previewViewer->clearSelections();
     if (m_optTlX != 0) {
         m_optTlX->setValue(0);
     }
@@ -690,7 +694,13 @@ void KSaneWidgetPrivate::startPreviewScan()
         valReload();
     }
     
+    // clear the preview
+    m_previewViewer->clearHighlight();
+    m_previewViewer->clearSelections();
+    updatePreviewSize();
+    
     setBusy(true);
+    
     m_progressBar->setValue(0);
     m_isPreview = true;
     m_previewThread->setPreviewInverted(m_invertColors->isChecked());
@@ -725,13 +735,7 @@ void KSaneWidgetPrivate::previewScanDone()
     m_scanOngoing = false;
     m_updProgressTmr.stop();
     
-    if (m_progressBar->value() == 0) {
-        m_previewViewer->setQImage(&m_previewImg);
-        m_previewViewer->zoom2Fit();
-    }
-    else {
-        m_previewViewer->updateImage();
-    }
+    m_previewViewer->updateImage();
     
     emit scanDone(KSaneWidget::NoError, "");
     
@@ -972,6 +976,7 @@ void KSaneWidgetPrivate::updateProgress()
         if (!m_progressBar->isVisible() && (m_previewThread->saneStartDone())) {
             m_warmingUp->hide();
             m_activityFrame->show();
+            // the image size might have changed
             m_previewViewer->setQImage(&m_previewImg);
             m_previewViewer->zoom2Fit();
             

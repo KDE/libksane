@@ -351,7 +351,7 @@ bool KSaneWidget::openDevice(const QString &device_name)
 
         status = sane_open(device_name.toLatin1(), &d->m_saneHandle);
 
-        // store password in wallet on sucessful auth
+        // store password in wallet on successful authentication
         if(dlg->keepPassword() && status != SANE_STATUS_ACCESS_DENIED) {
             QMap<QString, QString> entry;
             entry["username"] = dlg->username().toUtf8();
@@ -438,10 +438,10 @@ bool KSaneWidget::openDevice(const QString &device_name)
     d->m_btnFrame->setDisabled(false);
 
     // estimate the preview size and create an empty image
-    // this is done so that you can select scanarea without
+    // this is done so that you can select scan area without
     // having to scan a preview.
     d->updatePreviewSize();
-
+    QTimer::singleShot(0, d->m_previewViewer, SLOT(zoom2Fit()));
     return true;
 }
 
