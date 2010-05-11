@@ -697,6 +697,7 @@ void KSaneWidgetPrivate::startPreviewScan()
     // clear the preview
     m_previewViewer->clearHighlight();
     m_previewViewer->clearSelections();
+    m_previewImg.fill(0xFFFFFFFF);
     updatePreviewSize();
     
     setBusy(true);

@@ -174,7 +174,10 @@ void KSaneViewer::setQImage(QImage *img)
 
     // remove selections
     clearSelections();
-    
+
+    // clear zoom
+    setMatrix(QMatrix());
+
     d->scene->setSceneRect(0, 0, img->width(), img->height());
     d->selection->setMaxRight(img->width());
     d->selection->setMaxBottom(img->height());
