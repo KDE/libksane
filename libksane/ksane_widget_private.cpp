@@ -974,16 +974,17 @@ void KSaneWidgetPrivate::updateProgress()
     int progress;
     if (m_isPreview) {
         progress = m_previewThread->scanProgress();
-        if (!m_progressBar->isVisible() && (m_previewThread->saneStartDone())) {
-            m_warmingUp->hide();
-            m_activityFrame->show();
-            // the image size might have changed
-            m_previewViewer->setQImage(&m_previewImg);
-            m_previewViewer->zoom2Fit();
-            
-        }
-        else {
-            m_previewViewer->updateImage();
+        if (m_previewThread->saneStartDone()) {
+            if (!m_progressBar->isVisible()) {
+                m_warmingUp->hide();
+                m_activityFrame->show();
+                // the image size might have changed
+                m_previewViewer->setQImage(&m_previewImg);
+                m_previewViewer->zoom2Fit();
+            }
+            else {
+                m_previewViewer->updateImage();
+            }
         }
     }
     else {

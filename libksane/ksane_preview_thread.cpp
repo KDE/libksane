@@ -74,8 +74,6 @@ namespace KSaneIface
         // Start the scanning with sane_start
         status = sane_start(m_saneHandle);
         
-        m_saneStartDone = true;
-        
         if (status != SANE_STATUS_GOOD) {
             kDebug() << "sane_start=" << sane_strstatus(status);
             sane_cancel(m_saneHandle);
@@ -125,6 +123,10 @@ namespace KSaneIface
         m_frameRead   = 0;
         m_px_c_index  = 0;
         m_frame_t_count = 0;
+
+        // set the m_saneStartDone here so the new QImage gets allocated before updating the preview.
+        m_saneStartDone = true;
+        
         
         while (m_readStatus == READ_ON_GOING) {
             readData();
