@@ -24,6 +24,7 @@ SET(ksane_LIB_SRCS
     ksane_preview_thread.cpp
     ksane_widget_private.cpp
     splittercollapser.cpp
+    ksane_auth.cpp
     options/ksane_option.cpp
     options/ksane_opt_button.cpp
     options/ksane_opt_checkbox.cpp

@@ -83,6 +83,11 @@ KSaneWidgetPrivate::KSaneWidgetPrivate()
     m_previewHeight = 0;
     
     clearDeviceOptions();
+    
+    m_findDevThread = FindSaneDevicesThread::getInstance();
+    connect(m_findDevThread, SIGNAL(finished()), this, SLOT(devListUpdated()));
+    
+    m_auth = KSaneAuth::getInstance();
 }
 
 void KSaneWidgetPrivate::clearDeviceOptions()
@@ -131,6 +136,24 @@ void KSaneWidgetPrivate::clearDeviceOptions()
 
     delete m_scanThread;
     m_scanThread = 0;
+    
+    m_devName.clear();
+}
+
+void KSaneWidgetPrivate::devListUpdated()
+{
+    if (m_vendor.isEmpty()) {
+        const QList<KSaneWidget::DeviceInfo> list = m_findDevThread->devicesList();
+        if (list.size() == 0) return;
+        for (int i=0; i<list.size(); i++) {
+            kDebug() << list[i].name;
+            if (list[i].name == m_devName) {
+                m_vendor    = list[i].vendor;
+                m_model     = list[i].model;
+                break;
+            }
+        }
+    }
 }
 
 KSaneWidget::ImageFormat KSaneWidgetPrivate::getImgFormat(SANE_Parameters &params)

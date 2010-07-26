@@ -6,6 +6,7 @@
  * Description : Sane interface for KDE
  *
  * Copyright (C) 2009 by Grzegorz Kurtyka <grzegorz dot kurtyka at gmail dot com>
+ * Copyright (C) 2010 by Kare Sars <kare dot sars at iki dot fi>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -28,44 +29,79 @@
 #include "ksane_find_devices_thread.h"
 #include "ksane_find_devices_thread.moc"
 
+#include "ksane_widget_private.h"
+
+// Sane includes.
+extern "C"
+{
+#include <sane/saneopts.h>
+#include <sane/sane.h>
+}
+
 // KDE includes.
 #include <KDebug>
 
+// Qt includes
+#include <QMutex>
 
 namespace KSaneIface
 {
+static FindSaneDevicesThread *s_instance = 0;
+static QMutex s_mutex;
 
-FindSaneDevicesThread::FindSaneDevicesThread(QObject *parent)
-     : QThread(parent)
+FindSaneDevicesThread *FindSaneDevicesThread::getInstance()
+{
+    s_mutex.lock();
+
+    if (s_instance == 0) {
+        s_instance = new FindSaneDevicesThread();
+    }
+    s_mutex.unlock();
+
+    return s_instance;
+}
+
+FindSaneDevicesThread::FindSaneDevicesThread() : QThread(0)
 {
 }
 
 FindSaneDevicesThread::~FindSaneDevicesThread()
 {
+    s_mutex.lock();
     wait();
+    s_mutex.unlock();
 }
 
 
 void FindSaneDevicesThread::run()
 {
-    QString tmp;
-    int     i = 0;
+    SANE_Device const **devList;
+    //SANE_Int            version;
+    SANE_Status         status;
 
-    status = sane_get_devices(&dev_list, SANE_FALSE);
+    // This is unfortunately not very reliable as many back-ends do not refresh
+    // the device list after the sane_init() call...
+    status = sane_get_devices(&devList, SANE_FALSE);
 
-    devices_map.clear();
-    while(dev_list[i] != 0) {
-        tmp = QString(dev_list[i]->vendor);
-        tmp += " : " + QString(dev_list[i]->model);
-        tmp += "\n " + QString(dev_list[i]->name);
-        //kDebug() << "FindSaneDevicesThread::found device: " << dev_list[i]->name;
-        devices_map.insert( dev_list[i]->name, tmp );
-        i++;
+    m_deviceList.clear();
+    if (status == SANE_STATUS_GOOD) {
+        int i = 0;
+        KSaneWidget::DeviceInfo tmp;
+
+        while(devList[i] != 0) {
+            tmp.name = devList[i]->name;
+            tmp.vendor = devList[i]->vendor;
+            tmp.model = devList[i]->model;
+            tmp.type = devList[i]->type;
+            m_deviceList << tmp;
+            i++;
+        }
     }
 }
 
-void FindSaneDevicesThread::getDevicesList(QMap<QString, QString> &devices_list) {
-    devices_list = devices_map;
+const QList<KSaneWidget::DeviceInfo> FindSaneDevicesThread::devicesList()
+{
+    return m_deviceList;
 }
 
 }

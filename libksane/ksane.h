@@ -5,7 +5,7 @@
  * Date        : 2007-09-13
  * Description : Sane interface for KDE
  *
- * Copyright (C) 2007-2008 by Kare Sars <kare dot sars at iki dot fi>
+ * Copyright (C) 2007-2010 by Kare Sars <kare dot sars at iki dot fi>
  * Copyright (C) 2007 by Gilles Caulier <caulier dot gilles at gmail dot com>
  *
  * This library is free software; you can redistribute it and/or
@@ -75,6 +75,14 @@ public:
                              * @note segmentation is not implemented yet.*/
         ErrorGeneral        /**< The error string should contain an error message. */
     } ScanStatus;
+    
+    struct DeviceInfo
+    {
+        QString name;     /* unique device name */
+        QString vendor;   /* device vendor string */
+        QString model;    /* device model name */
+        QString type;     /* device type (e.g., "flatbed scanner") */
+    };
 
     /** This constructor initializes the private class variables, but the widget is left empty.
      * The options and the preview are added with the call to openDevice(). */
@@ -97,28 +105,13 @@ public:
     * @return 'true' if all goes well and 'false' if no device is open. */
     bool closeDevice();
     
+    KDE_DEPRECATED bool makeQImage(const QByteArray &, int, int, int, ImageFormat, QImage &);
+     
     /**
      * This is a convenience method that can be used to create a QImage from the image data
-     * returned by the imageReady(...) signal.Note: If the image data has 16 bits/color the
-     * data is truncated to 8 bits/color since QImage does not support 16 bits/color.
-     *
-     * @param data is the byte data containing the image.
-     * @param width is the width of the image in pixels.
-     * @param height is the height of the image in pixels.
-     * @param bytes_per_line is the number of bytes used per line. This might include padding
-     * and is probably only relevant for 'FormatBlackWhite'.
-     * @param format is the KSane image format of the data.
-     * @param img is the QImage reference to the image to fill. */
-     KDE_DEPRECATED bool makeQImage(const QByteArray &data,
-                                    int width,
-                                    int height,
-                                    int bytes_per_line,
-                                    ImageFormat format,
-                                    QImage &img);
-    /**
-     * This is a convenience method that can be used to create a QImage from the image data
-     * returned by the imageReady(...) signal. Note: If the image data has 16 bits/color the
-     * data is truncated to 8 bits/color since QImage does not support 16 bits/color.
+     * returned by the imageReady(...) signal. 
+     * @note: If the image data has 16 bits/color the * data is truncated to 8 bits/color 
+     * since QImage does not support 16 bits/color. A warning message will be shown.
      *
      * @param data is the byte data containing the image.
      * @param width is the width of the image in pixels.
@@ -128,6 +121,25 @@ public:
      * @param format is the KSane image format of the data.
      * @return This function returns the provided image data as a QImage. */
     QImage toQImage(const QByteArray &data,
+                    int width,
+                    int height,
+                    int bytes_per_line,
+                    ImageFormat format);
+
+    /**
+     * This is a convenience method that can be used to create a QImage from the image data
+     * returned by the imageReady(...) signal. 
+     * @note: If the image data has 16 bits/color the * data is truncated to 8 bits/color, but
+     * unlike toQImage() this function will not give a warning.
+     *
+     * @param data is the byte data containing the image.
+     * @param width is the width of the image in pixels.
+     * @param height is the height of the image in pixels.
+     * @param bytes_per_line is the number of bytes used per line. This might include padding
+     * and is probably only relevant for 'FormatBlackWhite'.
+     * @param format is the KSane image format of the data.
+     * @return This function returns the provided image data as a QImage. */
+    QImage toQImageSilent(const QByteArray &data,
                     int width,
                     int height,
                     int bytes_per_line,

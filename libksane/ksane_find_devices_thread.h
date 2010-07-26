@@ -28,18 +28,10 @@
 #ifndef KSANE_FIND_DEVICES_THREAD_H
 #define KSANE_FIND_DEVICES_THREAD_H
 
-// #include "ksane.h"
+#include "ksane.h"
 
-#include <QObject>
 #include <QThread>
-#include <QMap>
-
-// Sane includes.
-extern "C"
-{
-#include <sane/saneopts.h>
-#include <sane/sane.h>
-}
+#include <QList>
 
 namespace KSaneIface
 {
@@ -48,17 +40,18 @@ class FindSaneDevicesThread : public QThread {
     Q_OBJECT
 
     public:
-        FindSaneDevicesThread(QObject *parent);
+        static FindSaneDevicesThread *getInstance();
         ~FindSaneDevicesThread();
         void run();
-        void getDevicesList(QMap<QString, QString> &devices_list);
+
+        const QList<KSaneWidget::DeviceInfo> devicesList();
 
     private:
-        SANE_Status         status;
-        SANE_Device const   **dev_list;
-        QMap<QString, QString> devices_map;
+        FindSaneDevicesThread();
+
+        QList<KSaneWidget::DeviceInfo> m_deviceList;
 };
 
 }
 
-#endif // FIND_SANE_DEVICES_H
+#endif

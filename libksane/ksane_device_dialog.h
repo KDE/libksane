@@ -5,7 +5,7 @@
  * Date        : 2007-09-13
  * Description : Sane interface for KDE
  *
- * Copyright (C) 2007-2008 by Kare Sars <kare dot sars at iki dot fi>
+ * Copyright (C) 2007-2010 by Kare Sars <kare dot sars at iki dot fi>
  * Copyright (C) 2009 by Grzegorz Kurtyka <grzegorz dot kurtyka at gmail dot com>
  *
  * This library is free software; you can redistribute it and/or
@@ -63,22 +63,21 @@ public:
 
 public Q_SLOTS:
     void reloadDevicesList();
+
+private Q_SLOTS:
     void setAvailable(bool avail);
     void updateDevicesList();
 
 private:
-    QWidget                *m_btn_container;
-    QGroupBox              *m_btn_box;
-    QButtonGroup           *m_btn_group;
-    QVBoxLayout            *m_btn_layout;
-    QString                 m_default_backend;
-    QString                 m_selected_device;
-    FindSaneDevicesThread  *m_find_devices_thread;
-
-    bool setDevicesList(const QMap<QString, QString>& list);
-    QMap<QString, QString> getDevicesList();
+    QWidget                *m_btnContainer;
+    QGroupBox              *m_btnBox;
+    QButtonGroup           *m_btnGroup;
+    QVBoxLayout            *m_btnLayout;
+    QString                 m_defaultBackend;
+    QString                 m_selectedDevice;
+    FindSaneDevicesThread  *m_findDevThread;
 };
 
 }  // NameSpace KSaneIface
 
-#endif // RADIO_SELECT_H
+#endif

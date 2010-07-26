@@ -60,6 +60,8 @@ extern "C"
 #include "splittercollapser.h"
 #include "ksane_scan_thread.h"
 #include "ksane_preview_thread.h"
+#include "ksane_find_devices_thread.h"
+#include "ksane_auth.h"
 
 #define IMG_DATA_R_SIZE 100000
 
@@ -80,19 +82,20 @@ namespace KSaneIface
             KSaneOption *getOption(const QString &name);
             KSaneWidget::ImageFormat getImgFormat(SANE_Parameters &params);
             int getBytesPerLines(SANE_Parameters &params);
-            
+
         Q_SIGNALS:
             void imageReady(QByteArray &data, int width, int height, int bytes_per_line, int format);
-            
+
             void scanProgress(int percent);
             void scanDone(int status, const QString &errStr);
-            
+
         public Q_SLOTS:
+            void devListUpdated();
             void startFinalScan();
             void previewScanDone();
             void oneFinalScanDone();
             void updateProgress();
-            
+
         private Q_SLOTS:
             void scheduleValReload();
             void optReload();
@@ -102,13 +105,12 @@ namespace KSaneIface
             void setTLY(float y);
             void setBRX(float x);
             void setBRY(float y);
-            
+
             void startPreviewScan();
-            
+
             void checkInvert();
             void invertPreview();
-            
-            
+
         public:
             // backend independent
             KTabWidget         *m_optsTabWidget;
@@ -118,31 +120,31 @@ namespace KSaneIface
             QScrollArea        *m_otherScrollA;
             QWidget            *m_otherOptsTab;
             LabeledCheckbox    *m_invertColors;
-            
+
             QSplitter          *m_splitter;
             SplitterCollapser  *m_optionsCollapser;
-            
+
             QWidget            *m_previewFrame;
             KSaneViewer        *m_previewViewer;
             QWidget            *m_btnFrame;
-            KPushButton        *m_zInBtn;
-            KPushButton        *m_zOutBtn;
-            KPushButton        *m_zSelBtn;
-            KPushButton        *m_zFitBtn;
+            QToolButton        *m_zInBtn;
+            QToolButton        *m_zOutBtn;
+            QToolButton        *m_zSelBtn;
+            QToolButton        *m_zFitBtn;
             KPushButton        *m_scanBtn;
             KPushButton        *m_prevBtn;
-            
+
             QWidget            *m_activityFrame;
             QLabel             *m_warmingUp;
             QProgressBar       *m_progressBar;
             KPushButton        *m_cancelBtn;
-            
+
             // device info
             SANE_Handle         m_saneHandle;
-            QString             m_modelName;
+            QString             m_devName;
             QString             m_vendor;
             QString             m_model;
-            
+
             // Option variables
             QList<KSaneOption*> m_optList;
             KSaneOption        *m_optSource;
@@ -163,7 +165,7 @@ namespace KSaneIface
             QCheckBox          *m_splitGamChB;
             LabeledGamma       *m_commonGamma;
             KSaneOption        *m_optWaitForBtn;
-            
+
             // preview variables
             float               m_previewWidth;
             float               m_previewHeight;
@@ -171,21 +173,26 @@ namespace KSaneIface
             QImage              m_previewImg;
             bool                m_isPreview;
             bool                m_autoSelect;
-            
+
             int                 m_selIndex;
-            
+
             bool                m_scanOngoing;
             bool                m_closeDevicePending;
-            
-            
+
             // final image data
             QByteArray          m_scanData;
-            
+
             // option handling
             QTimer              m_readValsTmr;
             QTimer              m_updProgressTmr;
             KSaneScanThread    *m_scanThread;
             KSanePreviewThread *m_previewThread;
+
+            QString             m_saneUserName;
+            QString             m_sanePassword;
+
+            FindSaneDevicesThread *m_findDevThread;
+            KSaneAuth             *m_auth;
     };
 
 

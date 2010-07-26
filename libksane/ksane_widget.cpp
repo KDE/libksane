@@ -5,7 +5,7 @@
  * Date        : 2009-01-24
  * Description : Sane interface for KDE
  *
- * Copyright (C) 2007-2009 by Kare Sars <kare dot sars at iki dot fi>
+ * Copyright (C) 2007-2010 by Kare Sars <kare dot sars at iki dot fi>
  * Copyright (C) 2009 by Matthias Nagl <matthias at nagl dot info>
  * Copyright (C) 2009 by Grzegorz Kurtyka <grzegorz dot kurtyka at gmail dot com>
  * Copyright (C) 2007-2008 by Gilles Caulier <caulier dot gilles at gmail dot com>
@@ -62,24 +62,12 @@
 
 namespace KSaneIface
 {
-static QString s_sane_username;
-static QString s_sane_password;
 static int     s_objectCount = 0;
 static QMutex  s_objectMutex;
-
-/** static function called by sane_open to get authorization from user */
-static void getSaneAuthorization(SANE_String_Const, SANE_Char *username, SANE_Char *password) {
-    qstrncpy(username, s_sane_username.toUtf8(), SANE_MAX_USERNAME_LEN);
-    qstrncpy(password, s_sane_password.toUtf8(), SANE_MAX_PASSWORD_LEN );
-}
 
 KSaneWidget::KSaneWidget(QWidget* parent)
     : QWidget(parent), d(new KSaneWidgetPrivate)
 {
-    s_objectMutex.lock();
-    s_objectCount++;
-    s_objectMutex.unlock();
-
     SANE_Int    version;
     SANE_Status status;
 
@@ -88,17 +76,27 @@ KSaneWidget::KSaneWidget(QWidget* parent)
     KGlobal::locale()->insertCatalog("libksane");
     KGlobal::locale()->insertCatalog("sane-backends");
 
-    status = sane_init(&version, &getSaneAuthorization);
-    if (status != SANE_STATUS_GOOD) {
-        kDebug() << "libksane: sane_init() failed("
-                 << sane_strstatus(status) << ")";
+    s_objectMutex.lock();
+    s_objectCount++;
+
+    if (s_objectCount == 1) {
+        // only call sane init for the first instance
+        status = sane_init(&version, &KSaneAuth::authorization);
+        if (status != SANE_STATUS_GOOD) {
+            kDebug() << "libksane: sane_init() failed("
+            << sane_strstatus(status) << ")";
+        }
+        else {
+            //kDebug() << "Sane Version = "
+            //         << SANE_VERSION_MAJOR(version) << "."
+            //         << SANE_VERSION_MINORparent(version) << "."
+            //         << SANE_VERSION_BUILD(version);
+        }
     }
-    else {
-        //kDebug() << "Sane Version = "
-        //         << SANE_VERSION_MAJOR(version) << "."
-        //         << SANE_VERSION_MINORparent(version) << "."
-        //         << SANE_VERSION_BUILD(version);
-    }
+    s_objectMutex.unlock();
+
+    // read the device list to get a list of vendor and model info
+    d->m_findDevThread->start();
 
     d->m_readValsTmr.setSingleShot(true);
     connect(&d->m_readValsTmr,   SIGNAL(timeout()), d, SLOT(valReload()));
@@ -143,22 +141,26 @@ KSaneWidget::KSaneWidget(QWidget* parent)
     progress_lay->addWidget(d->m_cancelBtn, 0);
     d->m_activityFrame->hide();
     
-    d->m_zInBtn  = new KPushButton(this);
+    d->m_zInBtn  = new QToolButton(this);
+    d->m_zInBtn->setAutoRaise(true);
     d->m_zInBtn->setIcon(KIcon("zoom-in"));
     d->m_zInBtn->setToolTip(i18n("Zoom In"));
     connect(d->m_zInBtn, SIGNAL(clicked()), d->m_previewViewer, SLOT(zoomIn()));
     
-    d->m_zOutBtn = new KPushButton(this);
+    d->m_zOutBtn = new QToolButton(this);
+    d->m_zOutBtn->setAutoRaise(true);
     d->m_zOutBtn->setIcon(KIcon("zoom-out"));
     d->m_zOutBtn->setToolTip(i18n("Zoom Out"));
     connect(d->m_zOutBtn, SIGNAL(clicked()), d->m_previewViewer, SLOT(zoomOut()));
     
-    d->m_zSelBtn = new KPushButton(this);
+    d->m_zSelBtn = new QToolButton(this);
+    d->m_zSelBtn->setAutoRaise(true);
     d->m_zSelBtn->setIcon(KIcon("zoom-fit-best"));
     d->m_zSelBtn->setToolTip(i18n("Zoom to Selection"));
     connect(d->m_zSelBtn, SIGNAL(clicked()), d->m_previewViewer, SLOT(zoomSel()));
     
-    d->m_zFitBtn = new KPushButton(this);
+    d->m_zFitBtn = new QToolButton(this);
+    d->m_zFitBtn->setAutoRaise(true);
     d->m_zFitBtn->setIcon(KIcon("document-preview"));
     d->m_zFitBtn->setToolTip(i18n("Zoom to Fit"));
     connect(d->m_zFitBtn, SIGNAL(clicked()), d->m_previewViewer, SLOT(zoom2Fit()));
@@ -246,16 +248,36 @@ KSaneWidget::~KSaneWidget()
     s_objectMutex.lock();
     s_objectCount--;
     if (s_objectCount <= 0) {
-        // Only call sane_exit if this is the last object.
+        // only delete the find-devices and authorization singletons and call sane_exit
+        // if this is the last instance
+        delete d->m_findDevThread;
+        delete d->m_auth;
         sane_exit();
     }
     s_objectMutex.unlock();
     delete d;
 }
 
-QString KSaneWidget::vendor() const {return d->m_vendor;}
-QString KSaneWidget::make() const {return d->m_vendor;}
-QString KSaneWidget::model() const {return d->m_model;}
+QString KSaneWidget::vendor() const 
+{
+    d->m_findDevThread->wait();
+    d->devListUpdated(); // this is just a wrapped if (m_vendor.isEmpty()) statement if the vendor is known
+    // devListUpdated here is to ensure that we do not come in between finished and the devListUpdated slot
+
+    return d->m_vendor;
+}
+QString KSaneWidget::make() const 
+{
+    return vendor();
+}
+QString KSaneWidget::model() const 
+{
+    d->m_findDevThread->wait();
+    d->devListUpdated(); // this is just a wrapped if (m_vendor.isEmpty()) statement if the vendor is known
+    // devListUpdated here is to ensure that we do not come in between finished and the devListUpdated slot
+
+    return d->m_model;
+}
 
 QString KSaneWidget::selectDevice(QWidget* parent)
 {
@@ -270,60 +292,41 @@ QString KSaneWidget::selectDevice(QWidget* parent)
   return selected_name;
 }
 
-bool KSaneWidget::openDevice(const QString &device_name)
+bool KSaneWidget::openDevice(const QString &deviceName)
 {
     int                            i=0;
     const SANE_Option_Descriptor  *optDesc;
     SANE_Status                    status;
-    SANE_Word                      num_sane_options;
+    SANE_Word                      numSaneOptions;
     SANE_Int                       res;
-    SANE_Device const            **dev_list;
     KPasswordDialog               *dlg;
-    KWallet::Wallet               *sane_wallet;
-    QString                        my_folder_name("ksane");
+    KWallet::Wallet               *saneWallet;
+    QString                        myFolderName("ksane");
     QMap<QString, QString>         wallet_entry;
 
     // don't bother trying to open if the device string is empty
-    if (device_name.isEmpty()) {
+    if (deviceName.isEmpty()) {
         return false;
     }
-
-    // get the device list to get the vendor and model info
-    status = sane_get_devices(&dev_list, SANE_TRUE);
-
-    while(dev_list[i] != 0) {
-        if (QString(dev_list[i]->name) == device_name) {
-            d->m_modelName = QString(dev_list[i]->vendor) + ' ' + QString(dev_list[i]->model);
-            d->m_vendor    = QString(dev_list[i]->vendor);
-            d->m_model     = QString(dev_list[i]->model);
-            break;
-        }
-        i++;
-    }
-
-    if (device_name == "test") {
-        d->m_modelName = "Test Scanner";
-        d->m_vendor    = "Test";
-        d->m_model     = "Scanner";
-    }
-
-    status = sane_open(device_name.toLatin1(), &d->m_saneHandle);
+    // save the device name
+    d->m_devName = deviceName;
 
     // Try to open the device
+    status = sane_open(deviceName.toLatin1(), &d->m_saneHandle);
 
     bool password_dialog_ok = true;
 
     // prepare wallet for authentication and create password dialog
     if(status == SANE_STATUS_ACCESS_DENIED) {
-        sane_wallet = KWallet::Wallet::openWallet(KWallet::Wallet::LocalWallet(), winId() );
+        saneWallet = KWallet::Wallet::openWallet(KWallet::Wallet::LocalWallet(), winId() );
 
-        if(sane_wallet) {
+        if(saneWallet) {
             dlg = new KPasswordDialog(this, KPasswordDialog::ShowUsernameLine | KPasswordDialog::ShowKeepPassword);
-            if(!sane_wallet->hasFolder(my_folder_name)) {
-                sane_wallet->createFolder(my_folder_name);
+            if(!saneWallet->hasFolder(myFolderName)) {
+                saneWallet->createFolder(myFolderName);
             }
-            sane_wallet->setFolder(my_folder_name);
-            sane_wallet->readMap(device_name.toLatin1(), wallet_entry);
+            saneWallet->setFolder(myFolderName);
+            saneWallet->readMap(deviceName.toLatin1(), wallet_entry);
             if(!wallet_entry.empty() || true) {
                 dlg->setUsername( wallet_entry["username"] );
                 dlg->setPassword( wallet_entry["password"] );
@@ -332,7 +335,7 @@ bool KSaneWidget::openDevice(const QString &device_name)
         } else {
             dlg = new KPasswordDialog(this, KPasswordDialog::ShowUsernameLine);
         }
-        dlg->setPrompt(i18n("Authentication required for resource: %1", device_name ) );
+        dlg->setPrompt(i18n("Authentication required for resource: %1", deviceName ) );
 
     }
 
@@ -343,46 +346,62 @@ bool KSaneWidget::openDevice(const QString &device_name)
         password_dialog_ok = dlg->exec();
         if(!password_dialog_ok) {
             delete dlg;
+            d->m_devName.clear();
             return false; //the user canceled
         }
 
-        s_sane_username = dlg->username();
-        s_sane_password = dlg->password();
+        // add/update the device user-name and password for authentication
+        d->m_auth->setDeviceAuth(d->m_devName, dlg->username(), dlg->password());
 
-        status = sane_open(device_name.toLatin1(), &d->m_saneHandle);
+        status = sane_open(deviceName.toLatin1(), &d->m_saneHandle);
 
         // store password in wallet on successful authentication
         if(dlg->keepPassword() && status != SANE_STATUS_ACCESS_DENIED) {
             QMap<QString, QString> entry;
             entry["username"] = dlg->username().toUtf8();
             entry["password"] = dlg->password().toUtf8();
-            sane_wallet->writeMap(device_name.toLatin1(), entry);
+            saneWallet->writeMap(deviceName.toLatin1(), entry);
         }
     }
 
-    // clear static members in library
-    s_sane_username = "";
-    s_sane_password = "";
-
     if (status != SANE_STATUS_GOOD) {
-        kDebug() << "sane_open(\"" << device_name << "\", &handle) failed! status = " << sane_strstatus(status);
+        kDebug() << "sane_open(\"" << deviceName << "\", &handle) failed! status = " << sane_strstatus(status);
+        d->m_auth->clearDeviceAuth(d->m_devName);
+        d->m_devName.clear();
         return false;
+    }
+
+    // update the device list if needed to get the vendor and model info
+    if (d->m_findDevThread->devicesList().size() == 0) {
+        d->m_findDevThread->start();
+    }
+    else {
+        // us the "old" existing list
+        d->devListUpdated();
+        // if m_vendor is not updated it means that the list needs to be updated.
+        if (d->m_vendor.isEmpty()) {
+            d->m_findDevThread->start();
+        }
     }
 
     // Read the options (start with option 0 the number of parameters)
     optDesc = sane_get_option_descriptor(d->m_saneHandle, 0);
     if (optDesc == 0) {
+        d->m_auth->clearDeviceAuth(d->m_devName);
+        d->m_devName.clear();
         return false;
     }
     QVarLengthArray<char> data(optDesc->size);
     status = sane_control_option(d->m_saneHandle, 0, SANE_ACTION_GET_VALUE, data.data(), &res);
     if (status != SANE_STATUS_GOOD) {
+        d->m_auth->clearDeviceAuth(d->m_devName);
+        d->m_devName.clear();
         return false;
     }
-    num_sane_options = *reinterpret_cast<SANE_Word*>(data.data());
+    numSaneOptions = *reinterpret_cast<SANE_Word*>(data.data());
 
     // read the rest of the options
-    for (i=1; i<num_sane_options; ++i) {
+    for (i=1; i<numSaneOptions; ++i) {
         switch (KSaneOption::otpionType(sane_get_option_descriptor(d->m_saneHandle, i))) {
             case KSaneOption::TYPE_DETECT_FAIL:
                 d->m_optList.append(new KSaneOption(d->m_saneHandle, i));
@@ -441,7 +460,7 @@ bool KSaneWidget::openDevice(const QString &device_name)
     // this is done so that you can select scan area without
     // having to scan a preview.
     d->updatePreviewSize();
-    QTimer::singleShot(0, d->m_previewViewer, SLOT(zoom2Fit()));
+    QTimer::singleShot(1000, d->m_previewViewer, SLOT(zoom2Fit()));
     return true;
 }
 
@@ -463,6 +482,8 @@ bool KSaneWidget::closeDevice()
         d->m_closeDevicePending = true;
         return false;
     }
+
+    d->m_auth->clearDeviceAuth(d->m_devName);
     // else 
     sane_close(d->m_saneHandle);
     d->clearDeviceOptions();
@@ -477,11 +498,11 @@ bool KSaneWidget::closeDevice()
 
 #define inc_pixel(x,y,ppl) { x++; if (x>=ppl) { y++; x=0;} }
 
-QImage KSaneWidget::toQImage(const QByteArray &data,
-                              int width,
-                              int height,
-                              int bytes_per_line,
-                              ImageFormat format)
+QImage KSaneWidget::toQImageSilent(const QByteArray &data,
+                                   int width,
+                                   int height,
+                                   int bytes_per_line,
+                                   ImageFormat format)
 {
     QImage img;
     int j=0;
@@ -527,8 +548,6 @@ QImage KSaneWidget::toQImage(const QByteArray &data,
                 img.bits()[j+2] = data.data()[i];
                 j+=4;
             }
-            KMessageBox::sorry(0, i18n("The image data contained 16 bits per color, "
-                    "but the color depth has been truncated to 8 bits per color."));
             break;
 
         case FormatRGB_8_C:
@@ -567,8 +586,6 @@ QImage KSaneWidget::toQImage(const QByteArray &data,
 
                 inc_pixel(pixel_x, pixel_y, width);
             }
-            KMessageBox::sorry(0, i18n("The image data contained 16 bits per color, "
-                    "but the color depth has been truncated to 8 bits per color."));
             break;
 
         case FormatNone:
@@ -580,6 +597,20 @@ QImage KSaneWidget::toQImage(const QByteArray &data,
     img.setDotsPerMeterX(dpm);
     img.setDotsPerMeterY(dpm);
     return img;
+}
+
+QImage KSaneWidget::toQImage(const QByteArray &data,
+                              int width,
+                              int height,
+                              int bytes_per_line,
+                              ImageFormat format)
+{
+    
+    if ((format == FormatRGB_16_C) || (format == FormatGrayScale16)) {
+            KMessageBox::sorry(0, i18n("The image data contained 16 bits per color, "
+                    "but the color depth has been truncated to 8 bits per color."));
+    }
+    return toQImageSilent(data, width, height, bytes_per_line, format);
 }
 
 void KSaneWidget::scanFinal()
