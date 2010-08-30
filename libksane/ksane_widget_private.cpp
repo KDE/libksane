@@ -740,6 +740,7 @@ void KSaneWidgetPrivate::previewScanDone()
     if (m_closeDevicePending) {
         setBusy(false);
         sane_close(m_saneHandle);
+        m_saneHandle = 0;
         clearDeviceOptions();
         emit scanDone(KSaneWidget::NoError, "");
         return;
@@ -750,8 +751,13 @@ void KSaneWidgetPrivate::previewScanDone()
     if (m_optRes != 0) m_optRes->restoreSavedData();
     if (m_optResY != 0) m_optResY->restoreSavedData();
     if (m_optPreview != 0) m_optPreview->restoreSavedData();
-    
-    if (m_autoSelect) {
+
+    if ((m_previewThread->status != SANE_STATUS_GOOD) &&
+        (m_previewThread->status != SANE_STATUS_EOF))
+    {
+        KMessageBox::sorry(0, i18n(sane_strstatus(m_previewThread->status)));
+    }
+    else if (m_autoSelect) {
         m_previewViewer->findSelections();
     }
     
@@ -817,6 +823,7 @@ void KSaneWidgetPrivate::oneFinalScanDone()
     if (m_closeDevicePending) {
         setBusy(false);
         sane_close(m_saneHandle);
+        m_saneHandle = 0;
         clearDeviceOptions();
         return;
     }

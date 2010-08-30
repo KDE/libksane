@@ -486,6 +486,7 @@ bool KSaneWidget::closeDevice()
     d->m_auth->clearDeviceAuth(d->m_devName);
     // else 
     sane_close(d->m_saneHandle);
+    d->m_saneHandle = 0;
     d->clearDeviceOptions();
 
     // disable the interface until a new device is opened.
