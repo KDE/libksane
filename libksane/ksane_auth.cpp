@@ -2,10 +2,10 @@
 *
 * This file is part of the KDE project
 *
-* Date        : 2008-11-15
-* Description : Preview image viewer that can handle a selection.
+* Date        : 2010
+* Description : Sane authentication helpers.
 *
-* Copyright (C) 2008 by Kare Sars <kare dot sars at iki dot fi>
+* Copyright (C) 2010 by Kare Sars <kare dot sars at iki dot fi>
 *
 * This library is free software; you can redistribute it and/or
 * modify it under the terms of the GNU Lesser General Public
