@@ -128,8 +128,8 @@ bool KSaneOptCheckBox::getValue(QString &val)
 bool KSaneOptCheckBox::setValue(const QString &val)
 {
     if (state() == STATE_HIDDEN) return false;
-    if ((val.compare("true", Qt::CaseInsensitive)) ||
-        (val.compare("1")))
+    if ((val.compare("true", Qt::CaseInsensitive) == 0) ||
+        (val.compare("1") == 0))
     {
         checkboxChanged(true);
     }
