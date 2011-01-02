@@ -46,19 +46,19 @@ extern "C"
 
 namespace KSaneIface
 {
-static FindSaneDevicesThread *s_instance = 0;
-static QMutex s_mutex;
+static FindSaneDevicesThread *s_instancesane = 0;
+static QMutex s_mutexsane;
 
 FindSaneDevicesThread *FindSaneDevicesThread::getInstance()
 {
-    s_mutex.lock();
+    s_mutexsane.lock();
 
-    if (s_instance == 0) {
-        s_instance = new FindSaneDevicesThread();
+    if (s_instancesane == 0) {
+        s_instancesane = new FindSaneDevicesThread();
     }
-    s_mutex.unlock();
+    s_mutexsane.unlock();
 
-    return s_instance;
+    return s_instancesane;
 }
 
 FindSaneDevicesThread::FindSaneDevicesThread() : QThread(0)
@@ -67,9 +67,9 @@ FindSaneDevicesThread::FindSaneDevicesThread() : QThread(0)
 
 FindSaneDevicesThread::~FindSaneDevicesThread()
 {
-    s_mutex.lock();
+    s_mutexsane.lock();
     wait();
-    s_mutex.unlock();
+    s_mutexsane.unlock();
 }
 
 
