@@ -564,7 +564,7 @@ void KSaneWidgetPrivate::ImageData(TW_MEMREF pdata, TW_IMAGEINFO& info)
     {
         // Under Windows, Twain interface return a DIB data structure.
         // See http://en.wikipedia.org/wiki/Device-independent_bitmap#DIBs_in_memory for details.
-        HGLOBAL hDIB     = (HGLOBAL)(long)pdata;
+        HGLOBAL hDIB     = (HGLOBAL)(qptrdiff)pdata;
         int size         = (int)GlobalSize(hDIB);
         const char* bits = (const char*)GlobalLock(hDIB);
 
