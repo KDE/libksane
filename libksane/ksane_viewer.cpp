@@ -934,6 +934,11 @@ void KSaneViewer::findSelections(float area)
     }
 }
 
+QSize KSaneViewer::sizeHint() const
+{
+    return QSize(250, 300);  // a sensible size for a scan preview
+}
+
 void KSaneViewer::refineSelections(int pixelMargin)
 {
    // The end result

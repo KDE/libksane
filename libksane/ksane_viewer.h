@@ -46,6 +46,8 @@ class KSaneViewer : public QGraphicsView
         /** Find selections in the picture
         * \param area this parameter determine the area of the reduced sized image. */
         void findSelections(float area = 10000.0);
+
+        virtual QSize sizeHint() const;
         
     public Q_SLOTS:
         
