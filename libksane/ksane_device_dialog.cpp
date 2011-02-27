@@ -131,7 +131,7 @@ void KSaneDeviceDialog::updateDevicesList()
     }
 
     const QList<KSaneWidget::DeviceInfo> list = m_findDevThread->devicesList();
-    if (list.size() == 0) {
+    if (list.isEmpty()) {
         m_btnBox->setTitle(i18n("Sorry. No devices found."));
         return;
     }
