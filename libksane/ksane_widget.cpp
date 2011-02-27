@@ -286,7 +286,7 @@ QString KSaneWidget::selectDevice(QWidget* parent)
 
   // sel.setDefault(prev_backend); // set default scanner - perhaps application using libksane should remember that
   if(sel->exec() == KDialog::Accepted) {
-      return selected_name = sel->getSelectedName();
+      selected_name = sel->getSelectedName();
   }
   delete sel;
   return selected_name;
