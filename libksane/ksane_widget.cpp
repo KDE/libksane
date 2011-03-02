@@ -65,6 +65,8 @@ namespace KSaneIface
 static int     s_objectCount = 0;
 static QMutex  s_objectMutex;
 
+static const QString InvetColorsOption = QString("KSane::InvertColors");
+
 KSaneWidget::KSaneWidget(QWidget* parent)
     : QWidget(parent), d(new KSaneWidgetPrivate)
 {
@@ -636,6 +638,11 @@ void KSaneWidget::scanCancel()
     }
 }
 
+void KSaneWidget::setPreviewResolution(float dpi)
+{
+    d->m_previewDPI = dpi;
+}
+
 void KSaneWidget::getOptVals(QMap <QString, QString> &opts)
 {
     KSaneOption *option;
@@ -648,11 +655,8 @@ void KSaneWidget::getOptVals(QMap <QString, QString> &opts)
             opts[option->name()] = tmp;
         }
     }
-}
-
-void KSaneWidget::setPreviewResolution(float dpi)
-{
-    d->m_previewDPI = dpi;
+    // Special handling for non sane option
+    opts[InvetColorsOption] = d->m_invertColors->isChecked() ? "true" : "false";
 }
 
 bool KSaneWidget::getOptVal(const QString &optname, QString &value)
@@ -661,6 +665,11 @@ bool KSaneWidget::getOptVal(const QString &optname, QString &value)
 
     if ((option = d->getOption(optname)) != 0) {
         return option->getValue(value);
+    }
+    // Special handling for non sane option
+    if (optname == InvetColorsOption) {
+        value = d->m_invertColors->isChecked() ? "true" : "false";
+        return true;
     }
     return false;
 }
@@ -701,7 +710,19 @@ int KSaneWidget::setOptVals(const QMap <QString, QString> &opts)
             d->m_splitGamChB->setChecked(true);
         }
     }
-    
+
+    // special handling for non-sane option
+    if (opts.contains(InvetColorsOption)) {
+        tmp = opts[InvetColorsOption];
+        if ((tmp.compare("true", Qt::CaseInsensitive) == 0) ||
+            (tmp.compare("1") == 0))
+        {
+            d->m_invertColors->setChecked(true);
+        }
+        else {
+            d->m_invertColors->setChecked(false);
+        }
+    }
     return ret;
 }
 
@@ -740,6 +761,19 @@ bool KSaneWidget::setOptVal(const QString &option, const QString &value)
         }
     }
 
+    // special handling for non-sane option
+    if (option == InvetColorsOption) {
+        if ((value.compare("true", Qt::CaseInsensitive) == 0) ||
+            (value.compare("1") == 0))
+        {
+            d->m_invertColors->setChecked(true);
+        }
+        else {
+            d->m_invertColors->setChecked(false);
+        }
+        return true;
+    }
+    
     return false;
 }
 
