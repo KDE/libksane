@@ -5,7 +5,7 @@
  * Date        : 2007-09-13
  * Description : Sane interface for KDE
  *
- * Copyright (C) 2007-2008 by Kare Sars <kare dot sars at iki dot fi>
+ * Copyright (C) 2007-2011 by Kare Sars <kare.sars@iki .fi>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -28,10 +28,6 @@
 #ifndef LABELED_GAMMA_H
 #define LABELED_GAMMA_H
 
-// Qt includes.
-
-#include <QFrame>
-
 // Local includes.
 #include "labeled_slider.h"
 #include "gamma_disp.h"
@@ -46,7 +42,7 @@ namespace KSaneIface
 /**
  * A wrapper for a checkbox
  */
-class LabeledGamma : public QFrame
+class LabeledGamma : public KSaneOptionWidget
 {
     Q_OBJECT
 
@@ -65,9 +61,6 @@ public:
     void setSize(int size);
     const QVector<int> &gammaTablePtr() { return m_gam_tbl; }
     int size() {return (int)(m_max_val+1);}
-    
-    void widgetSizeHints(int *lab_w, int *rest_w);
-    void setColumnWidths(int, int) {};
 
     bool getValues(int &bri, int &con, int &gam);
 

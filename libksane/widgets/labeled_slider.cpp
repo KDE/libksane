@@ -5,7 +5,7 @@
  * Date        : 2007-09-13
  * Description : Sane interface for KDE
  *
- * Copyright (C) 2007-2008 by Kare Sars <kare dot sars at iki dot fi>
+ * Copyright (C) 2007-2011 by Kare Sars <kare.sars@iki .fi>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -41,11 +41,9 @@ namespace KSaneIface
 
 LabeledSlider::LabeledSlider(QWidget *parent, const QString& ltext,
                              int min, int max, int ste)
-             : QFrame(parent)
+: KSaneOptionWidget(parent, ltext)
 {
-    m_layout = new QGridLayout(this);
-    m_label  = new QLabel(ltext, this);
-    m_step   = ste;
+    m_step = ste;
     if (m_step == 0) m_step = 1;
 
     m_slider = new QSlider(this);
@@ -70,40 +68,20 @@ LabeledSlider::LabeledSlider(QWidget *parent, const QString& ltext,
     connect(m_slider, SIGNAL(valueChanged(int)), this, SLOT(syncValues(int)));
     connect(m_slider, SIGNAL(sliderReleased()),  this, SLOT(fixValue()));
 
-    m_layout->setSpacing(3);
-    m_layout->setMargin(0);
-    m_layout->addWidget(m_label, 0, 0, Qt::AlignRight);
     m_layout->addWidget(m_slider, 0, 1);
     m_layout->addWidget(m_spinb, 0, 2);
-    m_layout->setColumnStretch(0, 0);
     m_layout->setColumnStretch(1, 50);
     m_layout->setColumnStretch(2, 0);
+    
 }
 
 LabeledSlider::~LabeledSlider()
 {
 }
 
-void LabeledSlider::setLabelText(const QString &text)
-{
-    m_label->setText(text);
-}
-
 void LabeledSlider::setSuffix(const KLocalizedString &text)
 {
     m_spinb->setSuffix(text);
-}
-
-void LabeledSlider::widgetSizeHints(int *lab_w, int *spi_w)
-{
-    if (lab_w != 0) *lab_w = m_label->sizeHint().width();
-    if (spi_w != 0) *spi_w = m_spinb->sizeHint().width();
-}
-
-void LabeledSlider::setColumnWidths(int lab_w, int spi_w)
-{
-    m_layout->setColumnMinimumWidth(0, lab_w);
-    m_layout->setColumnMinimumWidth(2, spi_w);
 }
 
 void LabeledSlider::setValue(int value)

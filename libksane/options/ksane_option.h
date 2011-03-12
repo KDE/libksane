@@ -44,6 +44,8 @@ extern "C"
 namespace KSaneIface
 {
 
+class KSaneOptionWidget;
+    
 class KSaneOption : public QObject
 {
     Q_OBJECT
@@ -66,7 +68,7 @@ public:
     ~KSaneOption();
     static KSaneOptType otpionType(const SANE_Option_Descriptor *optDesc);
     
-    QFrame *widget() {return m_frame;}
+    KSaneOptionWidget *widget() {return m_widget;}
     virtual bool hasGui() {return false;}
     QString name();
     
@@ -113,7 +115,7 @@ protected:
     int                           m_index;
     const SANE_Option_Descriptor *m_optDesc; ///< This pointer is provided by sane 
     unsigned char                *m_data;
-    QFrame                       *m_frame;
+    KSaneOptionWidget            *m_widget;
 };
 
 }  // NameSpace KSaneIface

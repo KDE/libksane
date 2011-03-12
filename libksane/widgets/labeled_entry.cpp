@@ -5,7 +5,7 @@
  * Date        : 2007-09-13
  * Description : Sane interface for KDE
  *
- * Copyright (C) 2007-2008 by Kare Sars <kare dot sars at iki dot fi>
+ * Copyright (C) 2007-2011 by Kare Sars <kare.sars@iki .fi>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -40,29 +40,21 @@ namespace KSaneIface
 {
 
 LabeledEntry::LabeledEntry(QWidget *parent, const QString& ltext)
-            : QFrame(parent)
+: KSaneOptionWidget(parent, ltext)
 {
-    QHBoxLayout *hb = new QHBoxLayout(this);
-    hb->setSpacing(2);
-    hb->setMargin(0);
-    label = new QLabel(ltext, this);
-    entry = new KLineEdit(this);
-    reset = new QPushButton(this);
-    reset->setText(i18nc("Label for button to reset text in a KLineEdit", "Reset"));
-    set = new QPushButton(this);
-    set->setText(i18nc("Label for button to write text in a KLineEdit to sane", "Set"));
+    m_entry = new KLineEdit(this);
+    m_reset = new QPushButton(this);
+    m_reset->setText(i18nc("Label for button to reset text in a KLineEdit", "Reset"));
+    m_set = new QPushButton(this);
+    m_set->setText(i18nc("Label for button to write text in a KLineEdit to sane", "Set"));
 
-    hb->addWidget(label);
-    hb->addWidget(entry);
-    hb->addWidget(reset);
-    hb->addWidget(set);
-    hb->activate();
-
-    connect(reset, SIGNAL(clicked()),
-            this, SLOT(resetClicked()));
-
-    connect(set, SIGNAL(clicked()),
-            this, SLOT(setClicked()));
+    m_layout->addWidget(m_entry, 1, 0, 1, 2);
+    m_layout->addWidget(m_reset, 1, 2);
+    m_layout->addWidget(m_set, 1, 3);
+    m_layout->setColumnStretch(1, 50);
+    
+    connect(m_reset, SIGNAL(clicked()), this, SLOT(resetClicked()));
+    connect(m_set,   SIGNAL(clicked()), this, SLOT(setClicked()));
 }
 
 LabeledEntry::~LabeledEntry()
@@ -71,25 +63,19 @@ LabeledEntry::~LabeledEntry()
 
 void LabeledEntry::setText(const QString& text)
 {
-    e_text = text;
-    entry->setText(text);
+    m_eText = text;
+    m_entry->setText(text);
 }
 
 void LabeledEntry::resetClicked()
 {
-    entry->setText(e_text);
+    m_entry->setText(m_eText);
 }
 
 void LabeledEntry::setClicked()
 {
-    e_text = entry->text();
-    emit entryEdited(e_text);
-}
-
-void LabeledEntry::widgetSizeHints(int *lab_w, int *chb_w)
-{
-    if (lab_w != 0) *lab_w = 0;
-    if (chb_w != 0) *chb_w = 0;
+    m_eText = m_entry->text();
+    emit entryEdited(m_eText);
 }
 
 }  // NameSpace KSaneIface

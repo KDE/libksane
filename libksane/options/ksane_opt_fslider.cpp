@@ -50,27 +50,13 @@ KSaneOptFSlider::KSaneOptFSlider(const SANE_Handle handle, const int index)
 
 void KSaneOptFSlider::createWidget(QWidget *parent)
 {
-    if (m_frame) return;
+    if (m_widget) return;
 
-    m_frame = m_slider = new LabeledFSlider(parent, "", FIXED_MIN, FIXED_MAX, MIN_FIXED_STEP);
+    m_widget = m_slider = new LabeledFSlider(parent, "", FIXED_MIN, FIXED_MAX, MIN_FIXED_STEP);
     readOption();
-    m_frame->setToolTip(i18n(m_optDesc->desc));
+    m_widget->setToolTip(i18n(m_optDesc->desc));
     connect(m_slider, SIGNAL(valueChanged(float)), this, SLOT(sliderChanged(float)));
     readValue();
-}
-
-void KSaneOptFSlider::widgetSizeHints(int *lab_w, int *rest_w)
-{
-    if (m_slider) {
-        m_slider->widgetSizeHints(lab_w, rest_w);
-    }
-}
-
-void KSaneOptFSlider::setColumnWidths(int lab_w, int rest_w)
-{
-    if (m_slider) {
-        m_slider->setColumnWidths(lab_w, rest_w);
-    }
 }
 
 void KSaneOptFSlider::readOption()

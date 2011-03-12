@@ -56,7 +56,6 @@
 #include "ksane_opt_fslider.h"
 #include "ksane_opt_gamma.h"
 #include "ksane_opt_slider.h"
-#include "labeled_separator.h"
 #include "ksane_device_dialog.h"
 #include "labeled_gamma.h"
 

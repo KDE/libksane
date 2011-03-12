@@ -318,7 +318,8 @@ void KSaneWidgetPrivate::createOptInterface()
     m_colorOpts = new QWidget;
     basic_layout->addWidget(m_colorOpts);
     QVBoxLayout *color_lay = new QVBoxLayout(m_colorOpts);
-
+    color_lay->setContentsMargins(0,0,0,0);
+    
     // Add Color correction to the color "frame"
     if ((option = getOption(SANE_NAME_BRIGHTNESS)) != 0) {
         option->createWidget(m_colorOpts);
@@ -333,6 +334,7 @@ void KSaneWidgetPrivate::createOptInterface()
     QWidget *gamma_frm = new QWidget;
     color_lay->addWidget(gamma_frm);
     QVBoxLayout *gam_frm_l = new QVBoxLayout(gamma_frm);
+    gam_frm_l->setContentsMargins(0,0,0,0);
 
     if ((option = getOption(SANE_NAME_GAMMA_VECTOR_R)) != 0) {
         m_optGamR= option;
@@ -363,9 +365,8 @@ void KSaneWidgetPrivate::createOptInterface()
         connect(m_commonGamma, SIGNAL(gammaChanged(int,int,int)), m_optGamG->widget(), SLOT(setValues(int,int,int)));
         connect(m_commonGamma, SIGNAL(gammaChanged(int,int,int)), m_optGamB->widget(), SLOT(setValues(int,int,int)));
 
-        m_splitGamChB = new QCheckBox(i18n("Separate color intensity tables"),
-                                                  m_basicOptsTab);
-                                                  color_lay->addWidget(m_splitGamChB);
+        m_splitGamChB = new LabeledCheckbox(m_basicOptsTab, i18n("Separate color intensity tables"));
+        color_lay->addWidget(m_splitGamChB);
         
         connect (m_splitGamChB, SIGNAL(toggled(bool)), gamma_frm, SLOT(setVisible(bool)));
         connect (m_splitGamChB, SIGNAL(toggled(bool)), m_commonGamma, SLOT(setHidden(bool)));
@@ -420,9 +421,29 @@ void KSaneWidgetPrivate::createOptInterface()
     if (min_width < m_otherOptsTab->sizeHint().width()) {
         min_width = m_otherOptsTab->sizeHint().width();
     }
-    
-    m_optsTabWidget->setMinimumWidth(min_width +
-    m_basicScrollA->verticalScrollBar()->sizeHint().width() + 5);
+
+    // calculate label widths
+    int labelWidth = 0;
+    KSaneOptionWidget *tmpOption;
+    for (int i=0; i<m_optList.size(); i++) {
+        tmpOption = m_optList.at(i)->widget();
+        if (tmpOption) {
+            labelWidth = qMax(labelWidth, tmpOption->labelWidthHint());
+        }
+    }
+    labelWidth = qMax(labelWidth, m_invertColors->labelWidthHint());
+    if (m_splitGamChB) labelWidth = qMax(labelWidth, m_splitGamChB->labelWidthHint());
+
+    for (int i=0; i<m_optList.size(); i++) {
+        tmpOption = m_optList.at(i)->widget();
+        if (tmpOption) {
+            tmpOption->setLabelWidth(labelWidth);
+        }
+    }
+    m_invertColors->setLabelWidth(labelWidth);
+    if (m_splitGamChB) m_splitGamChB->setLabelWidth(labelWidth);
+
+    m_optsTabWidget->setMinimumWidth(min_width + m_basicScrollA->verticalScrollBar()->sizeHint().width() + 5);
 }
 
 

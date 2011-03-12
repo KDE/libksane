@@ -32,13 +32,15 @@
 #include <KDebug>
 #include <KLocale>
 
+#include "ksane_option_widget.h"
+
 namespace KSaneIface
 {
 
 KSaneOption::KSaneOption(const SANE_Handle handle, const int index)
     : QObject(), m_handle(handle), m_index(index)
 {
-    m_frame = 0;
+    m_widget = 0;
     m_data = 0;
     readOption();
 }
@@ -50,18 +52,18 @@ KSaneOption::~KSaneOption()
         m_data = 0;
     }
     // delete the frame, just in case if no parent is set
-    delete m_frame;
-    m_frame = 0;
+    delete m_widget;
+    m_widget = 0;
 }
 
 void KSaneOption::createWidget(QWidget *parent)
 {
-    if (!m_frame) {
-        m_frame = new QFrame(parent);
+    if (!m_widget) {
+        m_widget = new KSaneOptionWidget(parent, "");
     }
 
     if (m_optDesc) {
-        m_frame->setToolTip(i18n(m_optDesc->desc));
+        m_widget->setToolTip(i18n(m_optDesc->desc));
     }
 
     readOption();
@@ -76,14 +78,14 @@ void KSaneOption::readOption()
 
 void KSaneOption::updateVisibility()
 {
-    if (!m_frame) return;
+    if (!m_widget) return;
 
     if (state() == STATE_HIDDEN) {
-        m_frame->hide();
+        m_widget->hide();
     }
     else {
-        m_frame->show();
-        m_frame->setEnabled(state() == STATE_SHOWN);
+        m_widget->show();
+        m_widget->setEnabled(state() == STATE_SHOWN);
     }
 }
 
@@ -121,7 +123,7 @@ bool KSaneOption::writeData(void *data)
         readValue();
         return false;
     }
-    if ((res & SANE_INFO_INEXACT) && (m_frame != 0)) {
+    if ((res & SANE_INFO_INEXACT) && (m_widget != 0)) {
         //kDebug() << "write was inexact. Reload value just in case...";
         readValue();
     }

@@ -49,27 +49,13 @@ KSaneOptCombo::KSaneOptCombo(const SANE_Handle handle, const int index)
 
 void KSaneOptCombo::createWidget(QWidget *parent)
 {
-    if (m_frame) return;
+    if (m_widget) return;
 
-    m_frame = m_combo = new LabeledCombo(parent, "", QStringList());
+    m_widget = m_combo = new LabeledCombo(parent, "", QStringList());
     readOption();
-    m_frame->setToolTip(i18n(m_optDesc->desc));
+    m_widget->setToolTip(i18n(m_optDesc->desc));
     connect(m_combo, SIGNAL(activated(int)), this, SLOT(comboboxChangedIndex(int)));
     readValue();
-}
-
-void KSaneOptCombo::widgetSizeHints(int *lab_w, int *rest_w)
-{
-    if (m_combo) {
-        m_combo->widgetSizeHints(lab_w, rest_w);
-    }
-}
-
-void KSaneOptCombo::setColumnWidths(int lab_w, int rest_w)
-{
-    if (m_combo) {
-        m_combo->setColumnWidths(lab_w, rest_w);
-    }
 }
 
 void KSaneOptCombo::readValue()

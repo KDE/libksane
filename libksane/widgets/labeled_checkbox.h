@@ -5,7 +5,7 @@
  * Date        : 2007-09-13
  * Description : Sane interface for KDE
  *
- * Copyright (C) 2007-2008 by Kare Sars <kare dot sars at iki dot fi>
+ * Copyright (C) 2007-2011 by Kare Sars <kare.sars@iki .fi>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -28,8 +28,9 @@
 #ifndef LABELED_CHECKBOX_H
 #define LABELED_CHECKBOX_H
 
+#include "ksane_option_widget.h"
+
 // Qt includes.
-#include <QFrame>
 #include <QCheckBox>
 #include <QGridLayout>
 
@@ -43,7 +44,7 @@ namespace KSaneIface
 /**
  * A wrapper for a checkbox
  */
-class LabeledCheckbox : public QFrame
+class LabeledCheckbox : public KSaneOptionWidget
 {
     Q_OBJECT
 
@@ -59,21 +60,13 @@ public:
     ~LabeledCheckbox();
     void setChecked(bool);
     bool isChecked();
-    void widgetSizeHints(int *lab_w, int *chb_w);
-    void setColumnWidths(int lab_w, int rest_w);
-
-private Q_SLOTS:
-
-    void prToggled(bool);
 
 Q_SIGNALS:
-
     void toggled(bool);
 
 private:
 
     QCheckBox *chbx;
-    QGridLayout *layout;
 };
 
 }  // NameSpace KSaneIface

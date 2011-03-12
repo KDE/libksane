@@ -47,13 +47,13 @@ KSaneOptGamma::KSaneOptGamma(const SANE_Handle handle, const int index)
 
 void KSaneOptGamma::createWidget(QWidget *parent)
 {
-    if (m_frame) return;
+    if (m_widget) return;
 
     readOption();
 
     if (!m_optDesc) return;
 
-    m_frame = m_gamma = new LabeledGamma(parent, i18n(m_optDesc->title),
+    m_widget = m_gamma = new LabeledGamma(parent, i18n(m_optDesc->title),
                                           m_optDesc->size/sizeof(SANE_Word));
     connect(m_gamma, SIGNAL(gammaTableChanged(const QVector<int> &)),
              this, SLOT(gammaTableChanged(const QVector<int> &)));
@@ -61,23 +61,9 @@ void KSaneOptGamma::createWidget(QWidget *parent)
     if (strcmp(m_optDesc->name, SANE_NAME_GAMMA_VECTOR_G) == 0) m_gamma->setColor(Qt::green);
     if (strcmp(m_optDesc->name, SANE_NAME_GAMMA_VECTOR_B) == 0) m_gamma->setColor(Qt::blue);
 
-    m_frame->setToolTip(i18n(m_optDesc->desc));
+    m_widget->setToolTip(i18n(m_optDesc->desc));
     updateVisibility();
     readValue();
-}
-
-void KSaneOptGamma::widgetSizeHints(int *lab_w, int *rest_w)
-{
-    if (m_gamma) {
-        m_gamma->widgetSizeHints(lab_w, rest_w);
-    }
-}
-
-void KSaneOptGamma::setColumnWidths(int lab_w, int rest_w)
-{
-    if (m_gamma) {
-        m_gamma->setColumnWidths(lab_w, rest_w);
-    }
 }
 
 void KSaneOptGamma::gammaTableChanged(const QVector<int> &gam_tbl)

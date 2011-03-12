@@ -5,7 +5,7 @@
  * Date        : 2007-09-13
  * Description : Sane interface for KDE
  *
- * Copyright (C) 2007-2008 by Kare Sars <kare dot sars at iki dot fi>
+ * Copyright (C) 2007-2011 by Kare Sars <kare.sars@iki .fi>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -42,7 +42,7 @@ namespace KSaneIface
 {
 
 LabeledGamma::LabeledGamma(QWidget *parent, const QString& text, int size)
-            : QFrame(parent)
+: KSaneOptionWidget(parent, text)
 {
     m_bri_slider = new LabeledSlider(this, i18n("Brightness"), -50, 50, 1);
     m_bri_slider->setValue(0);
@@ -54,20 +54,13 @@ LabeledGamma::LabeledGamma(QWidget *parent, const QString& text, int size)
     m_gam_slider->setValue(100);
 
     // Calculate the size of the widgets in the sliders
-    int lw, spw, lw_max=0, spw_max=0;
-    m_bri_slider->widgetSizeHints(&lw, &spw);
-    lw_max=lw;
-    spw_max=spw;
-    m_con_slider->widgetSizeHints(&lw, &spw);
-    if (lw>lw_max) lw_max = lw;
-    if (spw>spw_max) spw_max = spw;
-    m_gam_slider->widgetSizeHints(&lw, &spw);
-    if (lw>lw_max) lw_max = lw;
-    if (spw>spw_max) spw_max = spw;
+    int labelMax = m_bri_slider->labelWidthHint();
+    labelMax = qMax(labelMax, m_con_slider->labelWidthHint());
+    labelMax = qMax(labelMax, m_gam_slider->labelWidthHint());
     // set the calculated widths
-    m_bri_slider->setColumnWidths(lw_max, spw_max);
-    m_con_slider->setColumnWidths(lw_max, spw_max);
-    m_gam_slider->setColumnWidths(lw_max, spw_max);
+    m_bri_slider->setLabelWidth(labelMax);
+    m_con_slider->setLabelWidth(labelMax);
+    m_gam_slider->setLabelWidth(labelMax);
 
     m_gam_tbl.resize(size);
     for (int i=0; i<m_gam_tbl.size(); i++) {
@@ -77,31 +70,20 @@ LabeledGamma::LabeledGamma(QWidget *parent, const QString& text, int size)
 
     m_gamma_disp = new GammaDisp(this, &m_gam_tbl);
 
-    QHBoxLayout *gbl    = new QHBoxLayout(this);
     QGroupBox *groupBox = new QGroupBox(text, this);
     QGridLayout *gr_lay = new QGridLayout(groupBox);
-    gr_lay->setSpacing(2);
-    gr_lay->setMargin(2);
 
     gr_lay->addWidget(m_bri_slider, 0, 0);
     gr_lay->addWidget(m_con_slider, 1, 0);
     gr_lay->addWidget(m_gam_slider, 2, 0);
     gr_lay->addWidget(m_gamma_disp, 0, 1, 3, 1);
-    gr_lay->activate();
 
-    gbl->addWidget(groupBox);
-    gbl->setSpacing(2);
-    gbl->setMargin(0);
-    gbl->activate();
+    m_label->hide();
+    m_layout->addWidget(groupBox, 1, 0, 1,3);
 
-    connect(m_bri_slider, SIGNAL(valueChanged(int)),
-            this, SLOT(calculateGT()));
-
-    connect(m_con_slider, SIGNAL(valueChanged(int)),
-            this, SLOT(calculateGT()));
-
-    connect(m_gam_slider, SIGNAL(valueChanged(int)),
-            this, SLOT(calculateGT()));
+    connect(m_bri_slider, SIGNAL(valueChanged(int)), this, SLOT(calculateGT()));
+    connect(m_con_slider, SIGNAL(valueChanged(int)), this, SLOT(calculateGT()));
+    connect(m_gam_slider, SIGNAL(valueChanged(int)), this, SLOT(calculateGT()));
 }
 
 LabeledGamma::~LabeledGamma()
@@ -213,10 +195,5 @@ void LabeledGamma::calculateGT()
     emit gammaTableChanged(m_gam_tbl);
 }
 
-void LabeledGamma::widgetSizeHints(int *lab_w, int *rest_w)
-{
-    if (lab_w != 0) *lab_w = 0;
-    if (rest_w != 0) *rest_w = 0;
-}
 
 }  // NameSpace KSaneIface

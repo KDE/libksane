@@ -2,10 +2,9 @@
  *
  * This file is part of the KDE project
  *
- * Date        : 2007-09-13
- * Description : Sane interface for KDE
+ * Description : Base class for option widgets
  *
- * Copyright (C) 2007-2008 by Kare Sars <kare dot sars at iki dot fi>
+ * Copyright (C) 2011 by Kare Sars <kare.sars@iki.fi>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,40 +24,47 @@
  *
  * ============================================================ */
 
-// Local includes.
-#include "labeled_separator.h"
-#include "labeled_separator.moc"
+#ifndef KSANE_OPTION_WIDGET_H
+#define KSANE_OPTION_WIDGET_H
 
 // Qt includes.
+#include <QWidget>
 #include <QLabel>
-#include <QHBoxLayout>
+#include <QGridLayout>
 
 namespace KSaneIface
 {
 
-LabeledSeparator::LabeledSeparator(QWidget *parent, const QString& ltext)
-                : QFrame( parent )
+/**
+  *@author Kåre Särs
+  */
+
+/**
+ * A wrapper for a checkbox
+ */
+class KSaneOptionWidget : public QWidget
 {
-    QHBoxLayout *hb = new QHBoxLayout(this);
-    hb->setSpacing(2);
-    hb->setMargin(0);
-    QFrame *line1 = new QFrame(this);
-    line1->setFrameShape( QFrame::HLine );
-    line1->setFrameShadow( QFrame::Sunken );
+    Q_OBJECT
 
-    QLabel *label = new QLabel(ltext, this);
-    QFrame *line2 = new QFrame(this);
-    line2->setFrameShape(QFrame::HLine);
-    line2->setFrameShadow(QFrame::Sunken);
+public:
+   /**
+    * Create the Wodget.
+    * \param parent parent widget
+    * \param Label text.
+    */
+    KSaneOptionWidget(QWidget *parent, const QString &labelText);
+    ~KSaneOptionWidget();
 
-    hb->addWidget(line1,50);
-    hb->addWidget(label);
-    hb->addWidget(line2,50);
-    //hb->activate();
-}
+    void setLabelText(const QString &text);
 
-LabeledSeparator::~LabeledSeparator()
-{
-}
+    int labelWidthHint();
+    void setLabelWidth(int labelWidth);
+
+protected:
+    QLabel      *m_label;
+    QGridLayout *m_layout;
+};
 
 }  // NameSpace KSaneIface
+
+#endif // KSANE_OPTION_WIDGET_H

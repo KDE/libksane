@@ -5,7 +5,7 @@
  * Date        : 2007-09-13
  * Description : Sane interface for KDE
  *
- * Copyright (C) 2007-2008 by Kare Sars <kare dot sars at iki dot fi>
+ * Copyright (C) 2007-2011 by Kare Sars <kare.sars@iki .fi>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -37,31 +37,21 @@
 namespace KSaneIface
 {
 
-LabeledCombo::LabeledCombo(QWidget *parent, const QString& ltext,
-                           const QStringList& list)
-            : QFrame(parent)
+LabeledCombo::LabeledCombo(QWidget *parent, const QString& ltext, const QStringList& list)
+: KSaneOptionWidget(parent, ltext)
 {
-    m_layout = new QGridLayout(this);
-    m_label  = new QLabel(ltext, this);
     m_combo  = new KComboBox(this);
     m_combo->addItems(list);
 
     m_label->setBuddy(m_combo);
 
-    connect(m_combo, SIGNAL(activated(int)), this, SLOT(prActivated(int)));
+    connect(m_combo, SIGNAL(activated(int)), this, SIGNAL(activated(int)));
 
-    m_layout->setSpacing(3);
-    m_layout->setMargin(0);
-    m_layout->addWidget(m_label, 0, 0, Qt::AlignLeft);
-    m_layout->addWidget(m_combo, 0, 2);
-    m_layout->setColumnStretch(0, 0);
-    m_layout->setColumnStretch(1, 50);
-    m_layout->setColumnStretch(2, 0);
-}
-
-void LabeledCombo::setLabelText(const QString &text)
-{
-    m_label->setText(text);
+    m_layout->addWidget(m_combo, 0, 1);
+    m_layout->addWidget(new QWidget(this), 0, 2);
+    m_layout->setColumnStretch(1, 0);
+    m_layout->setColumnStretch(2, 50);
+    
 }
 
 void LabeledCombo::setCurrentText(const QString &t)
@@ -94,25 +84,6 @@ bool LabeledCombo::setIcon(const QIcon &icon, const QString& str)
 void LabeledCombo::setCurrentIndex(int i)
 {
     m_combo->setCurrentIndex(i);
-}
-
-
-void LabeledCombo::widgetSizeHints(int *lab_w, int *cmb_w)
-{
-    if (lab_w != 0) *lab_w = m_label->sizeHint().width();
-    if (cmb_w != 0) *cmb_w = m_combo->sizeHint().width();;
-}
-
-void LabeledCombo::setColumnWidths(int lab_w, int cmb_w)
-{
-    //kDebug() << "lab_w =" << lab_w << "cmb_w =" << cmb_w;
-    m_layout->setColumnMinimumWidth(0, lab_w);
-    m_layout->setColumnMinimumWidth(2, cmb_w);
-}
-
-void LabeledCombo::prActivated(int i)
-{
-    emit activated(i);
 }
 
 }  // NameSpace KSaneIface

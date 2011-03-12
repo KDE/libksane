@@ -2,10 +2,9 @@
  *
  * This file is part of the KDE project
  *
- * Date        : 2007-09-13
  * Description : Sane interface for KDE
  *
- * Copyright (C) 2007-2008 by Kare Sars <kare dot sars at iki dot fi>
+ * Copyright (C) 2007-2011 by Kare Sars <kare.sars@iki .fi>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -28,10 +27,7 @@
 #ifndef LABELED_COMBO_H
 #define LABELED_COMBO_H
 
-// Qt includes.
-#include <QFrame>
-#include <QLabel>
-#include <QGridLayout>
+#include "ksane_option_widget.h"
 
 // KDE includes
 #include <KComboBox>
@@ -42,7 +38,7 @@ namespace KSaneIface
 /**
  * A label and a combobox.
  */
-class LabeledCombo : public QFrame
+class LabeledCombo : public KSaneOptionWidget
 {
     Q_OBJECT
 
@@ -55,13 +51,6 @@ public:
     */
     LabeledCombo(QWidget *parent, const QString& label, const QStringList& list);
 
-   /**
-    * Set the label
-    */
-    void setLabelText(const QString &text);
-
-    void widgetSizeHints(int *lab_w, int *cmb_w);
-    void setColumnWidths(int lab_w, int cmb_w);
 
 public Q_SLOTS:
 
@@ -98,19 +87,12 @@ public Q_SLOTS:
     */
     bool setIcon(const QIcon& icon, const QString& str);
 
-private Q_SLOTS:
-
-    void prActivated(int);
-
 Q_SIGNALS:
 
     void activated(int);
 
 private:
-
-    QLabel      *m_label;
     KComboBox   *m_combo;
-    QGridLayout *m_layout;
 };
 
 }  // NameSpace KSaneIface

@@ -5,7 +5,7 @@
  * Date        : 2007-09-13
  * Description : Sane interface for KDE
  *
- * Copyright (C) 2007-2008 by Kare Sars <kare dot sars at iki dot fi>
+ * Copyright (C) 2007-2011 by Kare Sars <kare.sars@iki .fi>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -28,15 +28,13 @@
 #ifndef LABELED_ENTRY_H
 #define LABELED_ENTRY_H
 
-// Qt includes.
-#include <QFrame>
+#include "ksane_option_widget.h"
 
 /**
  *@author Kåre Särs
  */
 
 class QPushButton;
-class QLabel;
 class KLineEdit;
 
 namespace KSaneIface
@@ -45,7 +43,7 @@ namespace KSaneIface
 /**
  * A text entry field with a set and reset button
  */
-class LabeledEntry : public QFrame
+class LabeledEntry : public KSaneOptionWidget
 {
     Q_OBJECT
 
@@ -60,8 +58,6 @@ public:
     LabeledEntry(QWidget *parent, const QString& text);
     ~LabeledEntry();
     void setText(const QString& text);
-    void widgetSizeHints(int *lab_w, int *cmb_w);
-    void setColumnWidths(int, int) {};
 
 private Q_SLOTS:
 
@@ -74,11 +70,10 @@ Q_SIGNALS:
 
 private:
 
-    QLabel *label;
-    KLineEdit *entry;
-    QPushButton *set;
-    QPushButton *reset;
-    QString e_text;
+    KLineEdit *m_entry;
+    QPushButton *m_set;
+    QPushButton *m_reset;
+    QString m_eText;
 };
 
 }  // NameSpace KSaneIface

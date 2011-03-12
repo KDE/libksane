@@ -47,31 +47,17 @@ KSaneOptEntry::KSaneOptEntry(const SANE_Handle handle, const int index)
 
 void KSaneOptEntry::createWidget(QWidget *parent)
 {
-    if (m_frame) return;
+    if (m_widget) return;
 
     readOption();
 
     if (!m_optDesc) return;
 
-    m_frame = m_entry = new LabeledEntry(parent, i18n(m_optDesc->title));
-    m_frame->setToolTip(i18n(m_optDesc->desc));
+    m_widget = m_entry = new LabeledEntry(parent, i18n(m_optDesc->title));
+    m_widget->setToolTip(i18n(m_optDesc->desc));
     connect(m_entry, SIGNAL(entryEdited(const QString&)), this, SLOT(entryChanged(const QString&)));
     updateVisibility();
     readValue();
-}
-
-void KSaneOptEntry::widgetSizeHints(int *lab_w, int *rest_w)
-{
-    if (m_entry) {
-        m_entry->widgetSizeHints(lab_w, rest_w);
-    }
-}
-
-void KSaneOptEntry::setColumnWidths(int lab_w, int rest_w)
-{
-    if (m_entry) {
-        m_entry->setColumnWidths(lab_w, rest_w);
-    }
 }
 
 void KSaneOptEntry::entryChanged(const QString& text)

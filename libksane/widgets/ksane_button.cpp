@@ -2,10 +2,7 @@
  *
  * This file is part of the KDE project
  *
- * Date        : 2007-05-05
- * Description : Sane interface for KDE
- *
- * Copyright (C) 2008 by Kare Sars <kare dot sars at iki dot fi>
+ * Copyright (C) 2008-2011 by Kare Sars <kare.sars@iki.fi>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -36,42 +33,19 @@ namespace KSaneIface
 {
 
 KSaneButton::KSaneButton(QWidget *parent, const QString& ltext)
-               : QFrame(parent)
+: KSaneOptionWidget(parent, QString())
 {
-    layout = new QGridLayout(this);
-    layout->setSpacing(3);
-    layout->setMargin(0);
-    button = new QPushButton(ltext, this);
-    layout->addWidget(button, 0, 2);
-
-    layout->setColumnStretch(0, 0);
-    layout->setColumnStretch(1, 50);
-    layout->setColumnStretch(2, 0);
-
-    connect(button, SIGNAL(clicked(bool)),
-            this, SLOT(btnClicked(bool)));
+    m_button = new QPushButton(ltext, this);
+    m_layout->addWidget(m_button, 0, 1);
+    m_layout->addWidget(new QWidget(this), 0, 2);
+    m_layout->setColumnStretch(1, 0);
+    m_layout->setColumnStretch(2, 50);
+    
+    connect(m_button, SIGNAL(clicked(bool)), this, SIGNAL(clicked()));
 }
 
 KSaneButton::~KSaneButton()
 {
-}
-
-void KSaneButton::btnClicked(bool)
-{
-    emit clicked();
-}
-
-void KSaneButton::widgetSizeHints(int *lab_w, int *rest_w)
-{
-    if (lab_w != 0) *lab_w = 0;
-    if (rest_w != 0) *rest_w = 0;
-}
-
-void KSaneButton::setColumnWidths(int lab_w, int rest_w)
-{
-    //kDebug() << "lab_w =" << lab_w << "rest_w =" << rest_w;
-    layout->setColumnMinimumWidth(0, lab_w);
-    layout->setColumnMinimumWidth(1, rest_w);
 }
 
 }  // NameSpace KSaneIface

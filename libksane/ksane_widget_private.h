@@ -54,7 +54,6 @@ extern "C"
 #include "ksane.h"
 #include "ksane_option.h"
 #include "ksane_viewer.h"
-#include "labeled_separator.h"
 #include "labeled_gamma.h"
 #include "labeled_checkbox.h"
 #include "splittercollapser.h"
@@ -162,7 +161,7 @@ namespace KSaneIface
             KSaneOption        *m_optGamR;
             KSaneOption        *m_optGamG;
             KSaneOption        *m_optGamB;
-            QCheckBox          *m_splitGamChB;
+            LabeledCheckbox    *m_splitGamChB;
             LabeledGamma       *m_commonGamma;
             KSaneOption        *m_optWaitForBtn;
 

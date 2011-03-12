@@ -5,7 +5,7 @@
  * Date        : 2007-09-13
  * Description : Sane interface for KDE
  *
- * Copyright (C) 2007-2008 by Kare Sars <kare dot sars at iki dot fi>
+ * Copyright (C) 2007-2011 by Kare Sars <kare.sars@iki .fi>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -28,13 +28,11 @@
 #ifndef LABELED_FSLIDER_H
 #define LABELED_FSLIDER_H
 
-// Qt includes.
+#include "ksane_option_widget.h"
 
-#include <QFrame>
+// Qt includes.
 #include <QSlider>
 #include <QDoubleSpinBox>
-#include <QLabel>
-#include <QGridLayout>
 
 /**
  *@author Kåre Särs
@@ -47,7 +45,7 @@ namespace KSaneIface
  * A combination of a label a slider and a spinbox.
  * The slider is connected to the spinbox so that they have the same value.
  */
-class LabeledFSlider : public QFrame
+class LabeledFSlider : public KSaneOptionWidget
 {
     Q_OBJECT
 
@@ -66,14 +64,6 @@ public:
     LabeledFSlider(QWidget *parent, const QString& text,
                    float min, float max, float st);
     ~LabeledFSlider();
-
-    /**
-    * Set the label
-    */
-    void setLabelText(const QString &text);
-    
-    void widgetSizeHints(int *lab_w, int *spi_w);
-    void setColumnWidths(int lab_w, int spi_w);
 
    /**
     * \return the slider value.
@@ -109,10 +99,8 @@ Q_SIGNALS:
 
 private:
 
-    QLabel         *m_label;
     QSlider        *m_slider;
     QDoubleSpinBox *m_spinb;
-    QGridLayout    *m_layout;
     float           m_fstep;
     int             m_istep;
 };

@@ -2,10 +2,9 @@
  *
  * This file is part of the KDE project
  *
- * Date        : 2007-09-13
- * Description : Sane interface for KDE
+ * Description : Base class for option widgets
  *
- * Copyright (C) 2007-2008 by Kare Sars <kare dot sars at iki dot fi>
+ * Copyright (C) 2011 by Kare Sars <kare.sars@iki.fi>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,39 +24,45 @@
  *
  * ============================================================ */
 
-#ifndef LABELED_SEPARATOR_H
-#define LABELED_SEPARATOR_H
+// Local includes.
+#include "ksane_option_widget.h"
+#include "ksane_option_widget.moc"
 
-// Qt includes.
-
-#include <QFrame>
-
-/**
-  *@author Kåre Särs
-  */
+// Qt includes
+#include <KDebug>
 
 namespace KSaneIface
 {
 
-/**
- * A separator with a text label
- */
-class LabeledSeparator : public QFrame
+KSaneOptionWidget::KSaneOptionWidget(QWidget *parent, const QString& labelText)
+: QWidget(parent)
 {
-    Q_OBJECT
+    m_label = new QLabel(labelText);
 
-public:
+    m_layout = new QGridLayout(this);
+    m_layout->addWidget(m_label, 0, 0, Qt::AlignRight);
+    m_layout->setColumnStretch(0, 0);
+    m_layout->setContentsMargins(0,0,0,0);
+}
 
-   /**
-    * Create the separator.
-    *
-    * \param parent parent widget
-    * \param text is the text for the separator.
-    */
-    LabeledSeparator(QWidget *parent, const QString& text);
-    ~LabeledSeparator();
-};
+KSaneOptionWidget::~KSaneOptionWidget()
+{
+}
+
+void KSaneOptionWidget::setLabelText(const QString &text)
+{
+    m_label->setText(text);
+}
+
+
+int KSaneOptionWidget::labelWidthHint()
+{
+    return m_label->sizeHint().width();
+}
+
+void KSaneOptionWidget::setLabelWidth(int labelWidth)
+{
+    m_layout->setColumnMinimumWidth(0, labelWidth);
+}
 
 }  // NameSpace KSaneIface
-
-#endif // LABELD_SEPARATOR_H

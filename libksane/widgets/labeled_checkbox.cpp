@@ -5,7 +5,7 @@
  * Date        : 2007-09-13
  * Description : Sane interface for KDE
  *
- * Copyright (C) 2007-2008 by Kare Sars <kare dot sars at iki dot fi>
+ * Copyright (C) 2007-2011 by Kare Sars <kare.sars@iki .fi>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -36,19 +36,13 @@ namespace KSaneIface
 {
 
 LabeledCheckbox::LabeledCheckbox(QWidget *parent, const QString& ltext)
-               : QFrame(parent)
+: KSaneOptionWidget(parent, ltext)
 {
-    layout = new QGridLayout(this);
-    layout->setSpacing(3);
-    layout->setMargin(0);
-    chbx = new QCheckBox(ltext, this);
-    layout->addWidget(chbx, 0, 0);
+    chbx = new QCheckBox(QString(), this);
+    m_layout->addWidget(chbx, 0, 1);
+    m_layout->setColumnStretch(1, 50);
 
-    layout->setColumnStretch(0, 0);
-    layout->setColumnStretch(1, 50);
-
-    connect(chbx, SIGNAL(toggled(bool)),
-            this, SLOT(prToggled(bool)));
+    connect(chbx, SIGNAL(toggled(bool)), this, SIGNAL(toggled(bool)));
 }
 
 LabeledCheckbox::~LabeledCheckbox()
@@ -63,26 +57,6 @@ void LabeledCheckbox::setChecked(bool is_checked)
 bool LabeledCheckbox::isChecked()
 {
     return chbx->isChecked();
-}
-
-
-
-void LabeledCheckbox::prToggled(bool on)
-{
-    emit toggled(on);
-}
-
-void LabeledCheckbox::widgetSizeHints(int *lab_w, int *rest_w)
-{
-    if (lab_w != 0) *lab_w = chbx->sizeHint().width();;
-    if (rest_w != 0) *rest_w = 0;
-}
-
-void LabeledCheckbox::setColumnWidths(int lab_w, int rest_w)
-{
-    //kDebug() << "lab_w =" << lab_w << "rest_w =" << rest_w;
-    layout->setColumnMinimumWidth(0, lab_w);
-    layout->setColumnMinimumWidth(1, rest_w);
 }
 
 }  // NameSpace KSaneIface

@@ -2,10 +2,7 @@
  *
  * This file is part of the KDE project
  *
- * Date        : 2008-05-04
- * Description : Sane interface for KDE
- *
- * Copyright (C) 2008 by Kare Sars <kare dot sars at iki dot fi>
+ * Copyright (C) 2008-2011 by Kare Sars <kare.sars@iki .fi>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -28,8 +25,9 @@
 #ifndef KSANE_BUTTON_H
 #define KSANE_BUTTON_H
 
+#include "ksane_option_widget.h"
+
 // Qt includes.
-#include <QFrame>
 #include <QPushButton>
 #include <QGridLayout>
 
@@ -43,7 +41,7 @@ namespace KSaneIface
 /**
  * A wrapper for a checkbox
  */
-class KSaneButton : public QFrame
+class KSaneButton : public KSaneOptionWidget
 {
     Q_OBJECT
 
@@ -56,18 +54,12 @@ public:
     */
     KSaneButton(QWidget *parent, const QString& text);
     ~KSaneButton();
-    void widgetSizeHints(int *lab_w, int *chb_w);
-    void setColumnWidths(int lab_w, int rest_w);
-
-private Q_SLOTS:
-    void btnClicked(bool);
 
 Q_SIGNALS:
     void clicked();
 
 private:
-    QPushButton *button;
-    QGridLayout *layout;
+    QPushButton *m_button;
 };
 
 }  // NameSpace KSaneIface

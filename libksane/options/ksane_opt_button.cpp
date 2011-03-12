@@ -44,14 +44,14 @@ KSaneOptButton::KSaneOptButton(const SANE_Handle handle, const int index)
 
 void KSaneOptButton::createWidget(QWidget *parent)
 {
-    if (m_frame) return;
+    if (m_widget) return;
 
     readOption();
 
     if (!m_optDesc) return;
 
-    m_frame = m_button = new KSaneButton(parent, i18n(m_optDesc->title));
-    m_frame->setToolTip(i18n(m_optDesc->desc));
+    m_widget = m_button = new KSaneButton(parent, i18n(m_optDesc->title));
+    m_widget->setToolTip(i18n(m_optDesc->desc));
     connect(m_button, SIGNAL(clicked()), this, SLOT(buttonClicked()));
 
     updateVisibility();
@@ -63,18 +63,5 @@ void KSaneOptButton::buttonClicked()
     unsigned char data[4];
     writeData(data);
 }
-void KSaneOptButton::widgetSizeHints(int *lab_w, int *rest_w)
-{
-    if (m_button) {
-        m_button->widgetSizeHints(lab_w, rest_w);
-    }
-}
-void KSaneOptButton::setColumnWidths(int lab_w, int rest_w)
-{
-    if (m_button) {
-        m_button->setColumnWidths(lab_w, rest_w);
-    }
-}
-
 
 }  // NameSpace KSaneIface

@@ -47,33 +47,19 @@ KSaneOptCheckBox::KSaneOptCheckBox(const SANE_Handle handle, const int index)
 
 void KSaneOptCheckBox::createWidget(QWidget *parent)
 {
-    if (m_frame) return;
+    if (m_widget) return;
 
     readOption();
 
     if (!m_optDesc) return;
 
-    m_frame = m_checkbox = new LabeledCheckbox(parent, i18n(m_optDesc->title));
-    m_frame->setToolTip(i18n(m_optDesc->desc));
+    m_widget = m_checkbox = new LabeledCheckbox(parent, i18n(m_optDesc->title));
+    m_widget->setToolTip(i18n(m_optDesc->desc));
 
     connect(m_checkbox, SIGNAL(toggled(bool)), this, SLOT(checkboxChanged(bool)));
 
     updateVisibility();
     readValue();
-}
-
-
-void KSaneOptCheckBox::widgetSizeHints(int *lab_w, int *rest_w)
-{
-    if (m_checkbox) {
-        m_checkbox->widgetSizeHints(lab_w, rest_w);
-    }
-}
-void KSaneOptCheckBox::setColumnWidths(int lab_w, int rest_w)
-{
-    if (m_checkbox) {
-        m_checkbox->setColumnWidths(lab_w, rest_w);
-    }
 }
 
 void KSaneOptCheckBox::checkboxChanged(bool toggled)

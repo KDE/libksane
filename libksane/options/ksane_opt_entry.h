@@ -44,9 +44,6 @@ public:
 
     void createWidget(QWidget *parent);
 
-    void widgetSizeHints(int *lab_w, int *rest_w);
-    void setColumnWidths(int lab_w, int rest_w);
-
     void readValue();
 
     bool getValue(float &val);

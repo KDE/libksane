@@ -5,7 +5,7 @@
  * Date        : 2007-09-13
  * Description : Sane interface for KDE
  *
- * Copyright (C) 2007-2008 by Kare Sars <kare dot sars at iki dot fi>
+ * Copyright (C) 2007-2011 by Kare Sars <kare.sars@iki .fi>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -38,13 +38,8 @@ namespace KSaneIface
 
 LabeledFSlider::LabeledFSlider(QWidget *parent, const QString& ltext,
                                float min, float max, float step)
-              : QFrame(parent)
+: KSaneOptionWidget(parent, ltext)
 {
-    m_layout = new QGridLayout(this);
-    m_layout->setSpacing(3);
-    m_layout->setMargin(0);
-    m_label = new QLabel(ltext, this);
-
     int imin = TO_FIX(min);
     int imax = TO_FIX(max);
     m_istep = TO_FIX(step);
@@ -76,7 +71,8 @@ LabeledFSlider::LabeledFSlider(QWidget *parent, const QString& ltext,
     }
     m_spinb->setDecimals(decimals);
     m_spinb->setValue(max);
-    m_spinb->setMinimumWidth(m_spinb->sizeHint().width()+35);
+    //m_spinb->setMinimumWidth(m_spinb->sizeHint().width()+35);
+    m_spinb->setMinimumWidth(m_spinb->sizeHint().width());
     m_spinb->setAlignment(Qt::AlignRight);
     m_spinb->setValue(min);
 
@@ -86,10 +82,8 @@ LabeledFSlider::LabeledFSlider(QWidget *parent, const QString& ltext,
     connect(m_slider, SIGNAL(valueChanged(int)),    this, SLOT(syncValues(int)));
     connect(m_slider, SIGNAL(sliderReleased()),   this, SLOT(fixValue()));
 
-    m_layout->addWidget(m_label, 0, 0, Qt::AlignRight);
     m_layout->addWidget(m_slider, 0,1);
     m_layout->addWidget(m_spinb, 0, 2);
-    m_layout->setColumnStretch(0, 0);
     m_layout->setColumnStretch(1, 50);
     m_layout->setColumnStretch(2, 0);
     m_layout->activate();
@@ -97,23 +91,6 @@ LabeledFSlider::LabeledFSlider(QWidget *parent, const QString& ltext,
 
 LabeledFSlider::~LabeledFSlider()
 {
-}
-
-void LabeledFSlider::setLabelText(const QString &text)
-{
-    m_label->setText(text);
-}
-
-void LabeledFSlider::widgetSizeHints(int *lab_w, int *spi_w)
-{
-    if (lab_w != 0) *lab_w = m_label->sizeHint().width();
-    if (spi_w != 0) *spi_w = m_spinb->sizeHint().width();
-}
-
-void LabeledFSlider::setColumnWidths(int lab_w, int spi_w)
-{
-    m_layout->setColumnMinimumWidth(0, lab_w);
-    m_layout->setColumnMinimumWidth(2, spi_w);
 }
 
 void LabeledFSlider::setSuffix(const QString &text)

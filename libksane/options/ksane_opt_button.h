@@ -44,8 +44,6 @@ public:
     
     void createWidget(QWidget *parent);
 
-    void widgetSizeHints(int *lab_w, int *rest_w);
-    void setColumnWidths(int lab_w, int rest_w);
     bool hasGui() {return true;}
     
 private Q_SLOTS:

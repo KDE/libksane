@@ -10,11 +10,11 @@ SET(ksane_LIB_SRCS
     widgets/labeled_gamma.cpp
     widgets/labeled_checkbox.cpp
     widgets/labeled_entry.cpp
-    widgets/labeled_separator.cpp
     widgets/labeled_combo.cpp
     widgets/labeled_fslider.cpp
     widgets/labeled_slider.cpp
     widgets/ksane_button.cpp
+    widgets/ksane_option_widget.cpp
     ksane_viewer.cpp
     selectionitem.cpp
     ksane_device_dialog.cpp
