@@ -88,16 +88,14 @@ KSaneDeviceDialog::~KSaneDeviceDialog() {
 
 void KSaneDeviceDialog::reloadDevicesList()
 {
+    setAvailable(false);
+    while (!m_btnGroup->buttons().isEmpty()) {
+        delete m_btnGroup->buttons().takeFirst();
+    }
+    m_btnBox->setTitle(i18n("Looking for devices. Please wait."));
+    enableButton(KDialog::User1, false);
+
     if(!m_findDevThread->isRunning()) {
-        setAvailable(false);
-
-        while (!m_btnGroup->buttons().isEmpty()) {
-            delete m_btnGroup->buttons().takeFirst();
-        }
-
-        m_btnBox->setEnabled(false);
-        m_btnBox->setTitle(i18n("Looking for devices. Please wait."));
-        enableButton(KDialog::User1, false);
         m_findDevThread->start();
     }
 }
@@ -133,6 +131,7 @@ void KSaneDeviceDialog::updateDevicesList()
     const QList<KSaneWidget::DeviceInfo> list = m_findDevThread->devicesList();
     if (list.isEmpty()) {
         m_btnBox->setTitle(i18n("Sorry. No devices found."));
+        enableButton(KDialog::User1, true);
         return;
     }
 
@@ -165,7 +164,6 @@ void KSaneDeviceDialog::updateDevicesList()
         button(KDialog::Ok)->animateClick();
     }
 
-    m_btnBox->setEnabled(true);
     enableButton(KDialog::User1, true);
 }
 
