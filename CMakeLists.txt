@@ -1,5 +1,8 @@
 PROJECT(libksane)
 
+MESSAGE(STATUS "----------------------------------------------------------------------------------")
+MESSAGE(STATUS "Starting CMake configuration for: libksane")
+
 # building separately or as part of kdegraphics ?
 if(NOT KDE4_FOUND)
     find_package(KDE4 REQUIRED)
@@ -8,14 +11,13 @@ if(NOT KDE4_FOUND)
     else (NOT WIN32)
         find_package(Sane)
     endif (NOT WIN32)
-    
+
     include_directories(
         ${KDE4_INCLUDES} 
         ${CMAKE_CURRENT_BINARY_DIR}/libksane
     )
 endif(NOT KDE4_FOUND)
-    
-    
+
 # =======================================================
 # Information to update before to release this library.
 
