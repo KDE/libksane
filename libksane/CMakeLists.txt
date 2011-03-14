@@ -43,13 +43,13 @@ TARGET_LINK_LIBRARIES(ksane ${KDE4_KDEUI_LIBS}
 
 SET_TARGET_PROPERTIES(ksane PROPERTIES VERSION ${KSANE_LIB_SO_VERSION_STRING} SOVERSION ${KSANE_LIB_SO_CUR_VERSION})
 
-if ("$ENV{COMPILE_VIEWER_TESTAPP}" STREQUAL "YES")
+IF ("$ENV{COMPILE_VIEWER_TESTAPP}" STREQUAL "YES")
     message("Compile testapp")
     kde4_add_executable(viewer_test ksane_viewer.cpp ksane_viewer_test.cpp selectionitem.cpp)
     target_link_libraries(viewer_test ${KDE4_KDEUI_LIBS})
-endif()
+ENDIF()
 
-install(TARGETS ksane ${INSTALL_TARGETS_DEFAULT_ARGS} )
+INSTALL(TARGETS ksane ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 INSTALL(FILES ksane.h
               libksane_export.h
@@ -59,16 +59,16 @@ INSTALL(FILES ksane.h
 KDE4_INSTALL_ICONS(${ICON_INSTALL_DIR})
 
 
-set(INCLUDE_DIRECTORY ${CMAKE_INSTALL_PREFIX}/include)
-get_target_property(LIB_OUT_NAME ksane LOCATION)
-get_filename_component(LIB_OUT_NAME ${LIB_OUT_NAME} NAME)
-set(LIBPATH ${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX})
+SET(INCLUDE_DIRECTORY ${CMAKE_INSTALL_PREFIX}/include)
+GET_TARGET_PROPERTY(LIB_OUT_NAME ksane LOCATION)
+GET_FILENAME_COMPONENT(LIB_OUT_NAME ${LIB_OUT_NAME} NAME)
+SET(LIBPATH ${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX})
 
-configure_file(
+CONFIGURE_FILE(
     ../KSaneConfig.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/KSaneConfig.cmake @ONLY
 )
 
-install(
+INSTALL(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/KSaneConfig.cmake
     DESTINATION ${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}/cmake/KSane
 )
