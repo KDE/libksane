@@ -63,9 +63,9 @@ ADD_DEFINITIONS(-DKDE_DEFAULT_DEBUG_AREA=51004)
 
 # =======================================================
 IF (SANE_FOUND)
-    SUBDIRS(libksane)
+    ADD_SUBDIRECTORY(libksane)
 ELSE (SANE_FOUND)
-    SUBDIRS(ksanetwain)
+    ADD_SUBDIRECTORY(ksanetwain)
 ENDIF (SANE_FOUND)
 
 IF(NOT WIN32)
