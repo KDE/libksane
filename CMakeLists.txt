@@ -36,7 +36,7 @@ SET(KSANE_LIB_MINOR_VERSION "3")
 SET(KSANE_LIB_PATCH_VERSION "0")
 
 # Suffix to add at end of version string. Usual values are:
-# "-svn"   : alpha code unstable from svn. Do not use in production
+# "-git"   : alpha code unstable from git. Do not use in production
 # "-beta1" : beta1 release.
 # "-beta2" : beta2 release.
 # "-beta3" : beta3 release.
