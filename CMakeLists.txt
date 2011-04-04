@@ -63,6 +63,16 @@ ADD_DEFINITIONS(-DKDE_DEFAULT_DEBUG_AREA=51004)
 CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/libksane/version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/libksane/version.h)
 
 # =======================================================
+
+# To prevent warnings from M$ compiler
+IF(WIN32 AND MSVC)
+    ADD_DEFINITIONS(-D_CRT_SECURE_NO_WARNINGS)
+    ADD_DEFINITIONS(-D_ATL_SECURE_NO_WARNINGS)
+    ADD_DEFINITIONS(-D_AFX_SECURE_NO_WARNINGS)
+ENDIF(WIN32 AND MSVC)
+
+# =======================================================
+
 IF (SANE_FOUND)
     ADD_SUBDIRECTORY(libksane)
 ELSE (SANE_FOUND)
