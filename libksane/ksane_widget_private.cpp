@@ -422,12 +422,6 @@ void KSaneWidgetPrivate::createOptInterface()
     // add a stretch to the end to keep the parameters at the top
     other_layout->addStretch();
     
-    // encsure that we do not get a scrollbar at the bottom of the option of the options
-    int min_width = m_basicOptsTab->sizeHint().width();
-    if (min_width < m_otherOptsTab->sizeHint().width()) {
-        min_width = m_otherOptsTab->sizeHint().width();
-    }
-
     // calculate label widths
     int labelWidth = 0;
     KSaneOptionWidget *tmpOption;
@@ -448,6 +442,12 @@ void KSaneWidgetPrivate::createOptInterface()
     }
     m_invertColors->setLabelWidth(labelWidth);
     if (m_splitGamChB) m_splitGamChB->setLabelWidth(labelWidth);
+
+    // encsure that we do not get a scrollbar at the bottom of the option of the options
+    int min_width = m_basicOptsTab->sizeHint().width();
+    if (min_width < m_otherOptsTab->sizeHint().width()) {
+        min_width = m_otherOptsTab->sizeHint().width();
+    }
 
     m_optsTabWidget->setMinimumWidth(min_width + m_basicScrollA->verticalScrollBar()->sizeHint().width() + 5);
 }
@@ -498,7 +498,7 @@ void KSaneWidgetPrivate::optReload()
         min_width = m_otherOptsTab->sizeHint().width();
     }
     
-    m_optsTabWidget->setMinimumWidth(min_width + 32);
+    m_optsTabWidget->setMinimumWidth(min_width + m_basicScrollA->verticalScrollBar()->sizeHint().width() + 5);
     
     m_previewViewer->zoom2Fit();
 }
