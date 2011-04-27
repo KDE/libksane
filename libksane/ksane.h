@@ -95,6 +95,12 @@ public:
      * device name of the selected scanner device is returned. */
     QString selectDevice(QWidget* parent=0);
 
+    /**
+     * Get the list of available scanning devices. Connect to availableDevices()
+     * which is fired once these devices are known.
+     */
+    void initGetDeviceList() const;
+
     /** This method opens the specified scanner device and adds the scan options to the
      * KSane widget.
      * @param device_name is the libsane device name for the scanner to open.
@@ -232,7 +238,7 @@ public Q_SLOTS:
     * imageReady signal. */
     void scanFinal();
 
-    Q_SIGNALS:
+Q_SIGNALS:
     /**
      * This Signal is emitted when a final scan is ready.
      * @param data is the byte data containing the image.
@@ -257,6 +263,12 @@ public Q_SLOTS:
      * this can be used to display a progress bar.
      * @param percent is the percentage of the scan progress (0-100). */
     void scanProgress(int percent);
+
+    /**
+     * This signal is emitted every time the device list is updated or
+     * after initGetDeviceList() is called.
+     */
+    void availableDevices(const QList<KSaneWidget::DeviceInfo> &deviceList);
 
 private:
 

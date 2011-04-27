@@ -67,7 +67,7 @@ static QMutex  s_objectMutex;
 static const QString InvetColorsOption = QString("KSane::InvertColors");
 
 KSaneWidget::KSaneWidget(QWidget* parent)
-    : QWidget(parent), d(new KSaneWidgetPrivate)
+    : QWidget(parent), d(new KSaneWidgetPrivate())
 {
     SANE_Int    version;
     SANE_Status status;
@@ -111,6 +111,8 @@ KSaneWidget::KSaneWidget(QWidget* parent)
     connect(d, SIGNAL(imageReady(QByteArray &, int, int, int, int)),
             this, SIGNAL(imageReady(QByteArray &, int, int, int, int)));
     connect(d, SIGNAL(scanDone(int, QString)), this, SIGNAL(scanDone(int, QString)));
+    connect(d,    SIGNAL(availableDevices(QList<KSaneWidget::DeviceInfo>)),
+            this, SIGNAL(availableDevices(QList<KSaneWidget::DeviceInfo>)));
     
     // Create the static UI
     // create the preview
@@ -293,6 +295,19 @@ QString KSaneWidget::selectDevice(QWidget* parent)
   return selected_name;
 }
 
+void KSaneWidget::initGetDeviceList() const
+{
+    // update the device list if needed to get the vendor and model info
+    if (d->m_findDevThread->devicesList().size() == 0) {
+        //kDebug() << "initGetDeviceList() starting thread...";
+        d->m_findDevThread->start();
+    }
+    else {
+        //kDebug() << "initGetDeviceList() have existing data...";
+        d->signalDevListUpdate();
+    }
+}
+
 bool KSaneWidget::openDevice(const QString &deviceName)
 {
     int                            i=0;
@@ -377,7 +392,7 @@ bool KSaneWidget::openDevice(const QString &deviceName)
         d->m_findDevThread->start();
     }
     else {
-        // us the "old" existing list
+        // use the "old" existing list
         d->devListUpdated();
         // if m_vendor is not updated it means that the list needs to be updated.
         if (d->m_vendor.isEmpty()) {

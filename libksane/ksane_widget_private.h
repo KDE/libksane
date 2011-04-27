@@ -87,9 +87,11 @@ namespace KSaneIface
 
             void scanProgress(int percent);
             void scanDone(int status, const QString &errStr);
+            void availableDevices(const QList<KSaneWidget::DeviceInfo> &deviceList);
 
         public Q_SLOTS:
             void devListUpdated();
+            void signalDevListUpdate();
             void startFinalScan();
             void previewScanDone();
             void oneFinalScanDone();

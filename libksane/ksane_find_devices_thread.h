@@ -44,7 +44,7 @@ class FindSaneDevicesThread : public QThread {
         ~FindSaneDevicesThread();
         void run();
 
-        const QList<KSaneWidget::DeviceInfo> devicesList();
+        const QList<KSaneWidget::DeviceInfo> devicesList() const;
 
     private:
         FindSaneDevicesThread();

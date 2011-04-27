@@ -99,7 +99,7 @@ void FindSaneDevicesThread::run()
     }
 }
 
-const QList<KSaneWidget::DeviceInfo> FindSaneDevicesThread::devicesList()
+const QList<KSaneWidget::DeviceInfo> FindSaneDevicesThread::devicesList() const
 {
     return m_deviceList;
 }

@@ -86,6 +86,7 @@ KSaneWidgetPrivate::KSaneWidgetPrivate()
     
     m_findDevThread = FindSaneDevicesThread::getInstance();
     connect(m_findDevThread, SIGNAL(finished()), this, SLOT(devListUpdated()));
+    connect(m_findDevThread, SIGNAL(finished()), this, SLOT(signalDevListUpdate()));
     
     m_auth = KSaneAuth::getInstance();
 }
@@ -154,6 +155,11 @@ void KSaneWidgetPrivate::devListUpdated()
             }
         }
     }
+}
+
+void KSaneWidgetPrivate::signalDevListUpdate()
+{
+    emit availableDevices(m_findDevThread->devicesList());
 }
 
 KSaneWidget::ImageFormat KSaneWidgetPrivate::getImgFormat(SANE_Parameters &params)
