@@ -426,24 +426,60 @@ void KSaneWidgetPrivate::createOptInterface()
     // calculate label widths
     int labelWidth = 0;
     KSaneOptionWidget *tmpOption;
-    for (int i=0; i<m_optList.size(); i++) {
-        tmpOption = m_optList.at(i)->widget();
-        if (tmpOption) {
-            labelWidth = qMax(labelWidth, tmpOption->labelWidthHint());
+    // Basic Options
+    for (int i=0; i<basic_layout->count(); i++) {
+        if (basic_layout->itemAt(i) && basic_layout->itemAt(i)->widget()) {
+            tmpOption = qobject_cast<KSaneOptionWidget *>(basic_layout->itemAt(i)->widget());
+            if (tmpOption) {
+                labelWidth = qMax(labelWidth, tmpOption->labelWidthHint());
+            }
         }
     }
-    labelWidth = qMax(labelWidth, m_invertColors->labelWidthHint());
-    if (m_splitGamChB) labelWidth = qMax(labelWidth, m_splitGamChB->labelWidthHint());
-
-    for (int i=0; i<m_optList.size(); i++) {
-        tmpOption = m_optList.at(i)->widget();
-        if (tmpOption) {
-            tmpOption->setLabelWidth(labelWidth);
+    // Color Options
+    for (int i=0; i<basic_layout->count(); i++) {
+        if (basic_layout->itemAt(i) && basic_layout->itemAt(i)->widget()) {
+            tmpOption = qobject_cast<KSaneOptionWidget *>(basic_layout->itemAt(i)->widget());
+            if (tmpOption) {
+                labelWidth = qMax(labelWidth, tmpOption->labelWidthHint());
+            }
         }
     }
-    m_invertColors->setLabelWidth(labelWidth);
-    if (m_splitGamChB) m_splitGamChB->setLabelWidth(labelWidth);
-
+    // Set label widths
+    for (int i=0; i<basic_layout->count(); i++) {
+        if (basic_layout->itemAt(i) && basic_layout->itemAt(i)->widget()) {
+            tmpOption = qobject_cast<KSaneOptionWidget *>(basic_layout->itemAt(i)->widget());
+            if (tmpOption) {
+                tmpOption->setLabelWidth(labelWidth);
+            }
+        }
+    }
+    for (int i=0; i<color_lay->count(); i++) {
+        if (color_lay->itemAt(i) && color_lay->itemAt(i)->widget()) {
+            tmpOption = qobject_cast<KSaneOptionWidget *>(color_lay->itemAt(i)->widget());
+            if (tmpOption) {
+                tmpOption->setLabelWidth(labelWidth);
+            }
+        }
+    }
+    // Other Options
+    labelWidth=0;
+    for (int i=0; i<other_layout->count(); i++) {
+        if (other_layout->itemAt(i) && other_layout->itemAt(i)->widget()) {
+            tmpOption = qobject_cast<KSaneOptionWidget *>(other_layout->itemAt(i)->widget());
+            if (tmpOption) {
+                labelWidth = qMax(labelWidth, tmpOption->labelWidthHint());
+            }
+        }
+    }
+    for (int i=0; i<other_layout->count(); i++) {
+        if (other_layout->itemAt(i) && other_layout->itemAt(i)->widget()) {
+            tmpOption = qobject_cast<KSaneOptionWidget *>(other_layout->itemAt(i)->widget());
+            if (tmpOption) {
+                tmpOption->setLabelWidth(labelWidth);
+            }
+        }
+    }
+    
     // encsure that we do not get a scrollbar at the bottom of the option of the options
     int min_width = m_basicOptsTab->sizeHint().width();
     if (min_width < m_otherOptsTab->sizeHint().width()) {
@@ -453,21 +489,20 @@ void KSaneWidgetPrivate::createOptInterface()
     m_optsTabWidget->setMinimumWidth(min_width + m_basicScrollA->verticalScrollBar()->sizeHint().width() + 5);
 }
 
-
 void KSaneWidgetPrivate::setDefaultValues()
 {
     KSaneOption *option;
-    
+
     // Try to get Color mode by default
     if ((option = getOption(SANE_NAME_SCAN_MODE)) != 0) {
         option->setValue(i18n(SANE_VALUE_SCAN_MODE_COLOR));
     }
-    
+
     // Try to set 8 bit color
     if ((option = getOption(SANE_NAME_BIT_DEPTH)) != 0) {
         option->setValue(8);
     }
-    
+
     // Try to set Scan resolution to 600 DPI
     if (m_optRes != 0) {
         m_optRes->setValue(600);
@@ -482,7 +517,7 @@ void KSaneWidgetPrivate::scheduleValReload()
 void KSaneWidgetPrivate::optReload()
 {
     int i;
-    
+
     for (i=0; i<m_optList.size(); i++) {
         m_optList.at(i)->readOption();
         // Also read the values

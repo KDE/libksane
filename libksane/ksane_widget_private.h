@@ -82,7 +82,6 @@ namespace KSaneIface
             KSaneWidget::ImageFormat getImgFormat(SANE_Parameters &params);
             int getBytesPerLines(SANE_Parameters &params);
 
-
         public Q_SLOTS:
             void devListUpdated();
             void signalDevListUpdate();

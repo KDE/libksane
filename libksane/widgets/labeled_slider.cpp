@@ -68,10 +68,10 @@ LabeledSlider::LabeledSlider(QWidget *parent, const QString& ltext,
     connect(m_slider, SIGNAL(valueChanged(int)), this, SLOT(syncValues(int)));
     connect(m_slider, SIGNAL(sliderReleased()),  this, SLOT(fixValue()));
 
-    m_layout->addWidget(m_slider, 0, 1);
-    m_layout->addWidget(m_spinb, 0, 2);
-    m_layout->setColumnStretch(1, 50);
-    m_layout->setColumnStretch(2, 0);
+    m_layout->addWidget(m_slider, 0, 2);
+    m_layout->addWidget(m_spinb, 0, 1);
+    m_layout->setColumnStretch(1, 0);
+    m_layout->setColumnStretch(2, 50);
     
 }
 
