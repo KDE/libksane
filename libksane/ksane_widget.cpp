@@ -616,7 +616,7 @@ QImage KSaneWidget::toQImage(const QByteArray &data,
 {
     
     if ((format == FormatRGB_16_C) || (format == FormatGrayScale16)) {
-            KMessageBox::sorry(0, i18n("The image data contained 16 bits per color, "
+        d->alertUser(KSaneWidget::ErrorGeneral, i18n("The image data contained 16 bits per color, "
                     "but the color depth has been truncated to 8 bits per color."));
     }
     return toQImageSilent(data, width, height, bytes_per_line, format);

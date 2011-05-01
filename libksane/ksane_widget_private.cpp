@@ -818,7 +818,7 @@ void KSaneWidgetPrivate::previewScanDone()
     if ((m_previewThread->status != SANE_STATUS_GOOD) &&
         (m_previewThread->status != SANE_STATUS_EOF))
     {
-        KMessageBox::sorry(0, i18n(sane_strstatus(m_previewThread->status)));
+        alertUser(KSaneWidget::ErrorGeneral, i18n(sane_strstatus(m_previewThread->status)));
     }
     else if (m_autoSelect) {
         m_previewViewer->findSelections();
@@ -984,14 +984,14 @@ void KSaneWidgetPrivate::oneFinalScanDone()
         switch(m_scanThread->saneStatus()) 
         {
             case SANE_STATUS_GOOD:
-            case SANE_STATUS_UNSUPPORTED:
             case SANE_STATUS_CANCELLED:
             case SANE_STATUS_EOF:
                 break;
             case SANE_STATUS_NO_DOCS:
                 emit q->scanDone(KSaneWidget::Information, i18n(sane_strstatus(m_scanThread->saneStatus())));
-                KMessageBox::sorry(0, i18n(sane_strstatus(m_scanThread->saneStatus())));
+                alertUser(KSaneWidget::Information, i18n(sane_strstatus(m_scanThread->saneStatus())));
                 break;
+            case SANE_STATUS_UNSUPPORTED:
             case SANE_STATUS_IO_ERROR:
             case SANE_STATUS_NO_MEM:
             case SANE_STATUS_INVAL:
@@ -1000,18 +1000,17 @@ void KSaneWidgetPrivate::oneFinalScanDone()
             case SANE_STATUS_DEVICE_BUSY:
             case SANE_STATUS_ACCESS_DENIED:
                 emit q->scanDone(KSaneWidget::ErrorGeneral, i18n(sane_strstatus(m_scanThread->saneStatus())));
-                KMessageBox::sorry(0, i18n(sane_strstatus(m_scanThread->saneStatus())));
+                alertUser(KSaneWidget::ErrorGeneral, i18n(sane_strstatus(m_scanThread->saneStatus())));
                 break;
         }
     }
-    
+
     sane_cancel(m_saneHandle);
 
     // clear the highlight
     m_previewViewer->setHighlightArea(0,0,1,1);
     setBusy(false);
     m_scanOngoing = false;
-    
 }
 
 void KSaneWidgetPrivate::setBusy(bool busy)
@@ -1092,5 +1091,22 @@ void KSaneWidgetPrivate::updateProgress()
     m_progressBar->setValue(progress);
     emit q->scanProgress(progress);
 }
+
+void KSaneWidgetPrivate::alertUser(int type, const QString &strStatus)
+{
+    if (q->receivers(SIGNAL(userMessage(int, QString))) == 0) {
+        switch (type) {
+            case KSaneWidget::ErrorGeneral:
+                KMessageBox::sorry(0, strStatus);
+                break;
+            default:
+                KMessageBox::information(0, strStatus);
+        }
+    }
+    else {
+        emit q->userMessage(type, strStatus);
+    }
+}
+
 
 }  // NameSpace KSaneIface

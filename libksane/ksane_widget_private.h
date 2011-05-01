@@ -106,6 +106,9 @@ namespace KSaneIface
             void invertPreview();
 
         public:
+            void alertUser(int type, const QString &strStatus);
+
+        public:
             // backend independent
             KTabWidget         *m_optsTabWidget;
             QScrollArea        *m_basicScrollA;
