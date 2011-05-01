@@ -67,7 +67,7 @@ static QMutex  s_objectMutex;
 static const QString InvetColorsOption = QString("KSane::InvertColors");
 
 KSaneWidget::KSaneWidget(QWidget* parent)
-    : QWidget(parent), d(new KSaneWidgetPrivate())
+    : QWidget(parent), d(new KSaneWidgetPrivate(this))
 {
     SANE_Int    version;
     SANE_Status status;
@@ -105,14 +105,6 @@ KSaneWidget::KSaneWidget(QWidget* parent)
     d->m_updProgressTmr.setSingleShot(false);
     d->m_updProgressTmr.setInterval(300);
     connect(&d->m_updProgressTmr, SIGNAL(timeout()), d, SLOT(updateProgress()));
-    
-    // Forward signals from the private class
-    connect(d, SIGNAL(scanProgress(int)), this, SIGNAL(scanProgress(int)));
-    connect(d, SIGNAL(imageReady(QByteArray &, int, int, int, int)),
-            this, SIGNAL(imageReady(QByteArray &, int, int, int, int)));
-    connect(d, SIGNAL(scanDone(int, QString)), this, SIGNAL(scanDone(int, QString)));
-    connect(d,    SIGNAL(availableDevices(QList<KSaneWidget::DeviceInfo>)),
-            this, SIGNAL(availableDevices(QList<KSaneWidget::DeviceInfo>)));
     
     // Create the static UI
     // create the preview

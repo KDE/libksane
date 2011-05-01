@@ -47,7 +47,8 @@ static const int ActiveSelection = 100000;
 namespace KSaneIface
 {
 
-KSaneWidgetPrivate::KSaneWidgetPrivate()
+KSaneWidgetPrivate::KSaneWidgetPrivate(KSaneWidget *parent):
+q(parent)
 {
     // Device independent UI variables
     m_optsTabWidget = 0;
@@ -159,7 +160,7 @@ void KSaneWidgetPrivate::devListUpdated()
 
 void KSaneWidgetPrivate::signalDevListUpdate()
 {
-    emit availableDevices(m_findDevThread->devicesList());
+    emit q->availableDevices(m_findDevThread->devicesList());
 }
 
 KSaneWidget::ImageFormat KSaneWidgetPrivate::getImgFormat(SANE_Parameters &params)
@@ -769,7 +770,7 @@ void KSaneWidgetPrivate::previewScanDone()
         sane_close(m_saneHandle);
         m_saneHandle = 0;
         clearDeviceOptions();
-        emit scanDone(KSaneWidget::NoError, "");
+        emit q->scanDone(KSaneWidget::NoError, "");
         return;
     }
     
@@ -794,7 +795,7 @@ void KSaneWidgetPrivate::previewScanDone()
     
     m_previewViewer->updateImage();
     
-    emit scanDone(KSaneWidget::NoError, "");
+    emit q->scanDone(KSaneWidget::NoError, "");
     
     return;
 }
@@ -865,7 +866,7 @@ void KSaneWidgetPrivate::oneFinalScanDone()
             int bytesPerLine = qMax(getBytesPerLines(params), 1); // ensure no div by 0
             lines = m_scanData.size() / bytesPerLine;
         }
-        emit imageReady(m_scanData,
+        emit q->imageReady(m_scanData,
                          params.pixels_per_line,
                          lines,
                          getBytesPerLines(params),
@@ -942,7 +943,7 @@ void KSaneWidgetPrivate::oneFinalScanDone()
                 return;
             }
         }
-        emit scanDone(KSaneWidget::NoError, "");
+        emit q->scanDone(KSaneWidget::NoError, "");
     }
     else {
         switch(m_scanThread->saneStatus()) 
@@ -953,7 +954,7 @@ void KSaneWidgetPrivate::oneFinalScanDone()
             case SANE_STATUS_EOF:
                 break;
             case SANE_STATUS_NO_DOCS:
-                emit scanDone(KSaneWidget::NoError, i18n(sane_strstatus(m_scanThread->saneStatus())));
+                emit q->scanDone(KSaneWidget::Information, i18n(sane_strstatus(m_scanThread->saneStatus())));
                 KMessageBox::sorry(0, i18n(sane_strstatus(m_scanThread->saneStatus())));
                 break;
             case SANE_STATUS_IO_ERROR:
@@ -963,7 +964,7 @@ void KSaneWidgetPrivate::oneFinalScanDone()
             case SANE_STATUS_COVER_OPEN:
             case SANE_STATUS_DEVICE_BUSY:
             case SANE_STATUS_ACCESS_DENIED:
-                emit scanDone(KSaneWidget::ErrorGeneral, i18n(sane_strstatus(m_scanThread->saneStatus())));
+                emit q->scanDone(KSaneWidget::ErrorGeneral, i18n(sane_strstatus(m_scanThread->saneStatus())));
                 KMessageBox::sorry(0, i18n(sane_strstatus(m_scanThread->saneStatus())));
                 break;
         }
@@ -1054,7 +1055,7 @@ void KSaneWidgetPrivate::updateProgress()
     }
     
     m_progressBar->setValue(progress);
-    emit scanProgress(progress);
+    emit q->scanProgress(progress);
 }
 
 }  // NameSpace KSaneIface

@@ -72,7 +72,7 @@ namespace KSaneIface
         Q_OBJECT
 
         public:
-            KSaneWidgetPrivate();
+            KSaneWidgetPrivate(KSaneWidget *);
             void clearDeviceOptions();
             void createOptInterface();
             void updatePreviewSize();
@@ -82,12 +82,6 @@ namespace KSaneIface
             KSaneWidget::ImageFormat getImgFormat(SANE_Parameters &params);
             int getBytesPerLines(SANE_Parameters &params);
 
-        Q_SIGNALS:
-            void imageReady(QByteArray &data, int width, int height, int bytes_per_line, int format);
-
-            void scanProgress(int percent);
-            void scanDone(int status, const QString &errStr);
-            void availableDevices(const QList<KSaneWidget::DeviceInfo> &deviceList);
 
         public Q_SLOTS:
             void devListUpdated();
@@ -194,6 +188,7 @@ namespace KSaneIface
 
             FindSaneDevicesThread *m_findDevThread;
             KSaneAuth             *m_auth;
+            KSaneWidget           *q;
     };
 
 

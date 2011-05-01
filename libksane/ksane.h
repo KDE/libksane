@@ -48,10 +48,11 @@ class KSaneWidgetPrivate;
 class LIBKSANE_EXPORT KSaneWidget : public QWidget
 {
     Q_OBJECT
+    friend class KSaneWidgetPrivate;
 
 public:
     /** This enumeration describes the type of the returned data.
-     * The number of formats might grow, so it is wise to be prepard fro more.*/
+     * The number of formats might grow, so it is wise to be prepared fro more.*/
     typedef enum
     {
         FormatBlackWhite,   /**< One bit per pixel 1 = black 0 = white */
@@ -67,13 +68,15 @@ public:
         FormatNone = 0xFFFF /**< This enumeration value should never be returned to the user */
     } ImageFormat;
 
+    /** @note There might come more enumerations in the future. */
     typedef enum
     {
         NoError,            /**< The scanning was finished successfully.*/
         ErrorCannotSegment, /**< If this error status is returned libksane can not segment the
                              * returned data. Scanning without segmentation should work.
                              * @note segmentation is not implemented yet.*/
-        ErrorGeneral        /**< The error string should contain an error message. */
+        ErrorGeneral,        /**< The error string should contain an error message. */
+        Information          /**< There is some information to the user. */
     } ScanStatus;
     
     struct DeviceInfo
@@ -256,6 +259,14 @@ Q_SIGNALS:
      * @param strStatus If an error has occurred this string will contain an error message.
      * otherwise the string is empty. */
     void scanDone(int status, const QString &strStatus);
+
+    /**
+     * This signal is emitted when the user is to be notified about something.
+     * @note If no slot is connected to this signal the message will be displayed in a KMessageBox.
+     * @param type contains a ScanStatus code to identify the type of message (error/info/...).
+     * @param msg is the message to the user.
+     * otherwise the string is empty. */
+    void userMessage(int type, const QString &strStatus);
 
     /**
      * This Signal is emitted for progress information during a scan.
