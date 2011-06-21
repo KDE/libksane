@@ -722,48 +722,48 @@ void KSaneViewer::mouseMoveEvent(QMouseEvent *e)
         switch (d->change)
         {
             case SelectionItem::None:
-                setCursor(Qt::CrossCursor);
+                viewport()->setCursor(Qt::CrossCursor);
                 break;
             case SelectionItem::Top:
-                setCursor(Qt::SizeVerCursor);
+                viewport()->setCursor(Qt::SizeVerCursor);
                 break;
             case SelectionItem::TopRight:
-                setCursor(Qt::SizeBDiagCursor);
+                viewport()->setCursor(Qt::SizeBDiagCursor);
                 break;
             case SelectionItem::Right:
-                setCursor(Qt::SizeHorCursor);
+                viewport()->setCursor(Qt::SizeHorCursor);
                 break;
             case SelectionItem::BottomRight:
-                setCursor(Qt::SizeFDiagCursor);
+                viewport()->setCursor(Qt::SizeFDiagCursor);
                 break;
             case SelectionItem::Bottom:
-                setCursor(Qt::SizeVerCursor);
+                viewport()->setCursor(Qt::SizeVerCursor);
                 break;
             case SelectionItem::BottomLeft:
-                setCursor(Qt::SizeBDiagCursor);
+                viewport()->setCursor(Qt::SizeBDiagCursor);
                 break;
             case SelectionItem::Left:
-                setCursor(Qt::SizeHorCursor);
+                viewport()->setCursor(Qt::SizeHorCursor);
                 break;
             case SelectionItem::TopLeft:
-                setCursor(Qt::SizeFDiagCursor);
+                viewport()->setCursor(Qt::SizeFDiagCursor);
                 break;
             case SelectionItem::Move:
-                setCursor(Qt::SizeAllCursor);
+                viewport()->setCursor(Qt::SizeAllCursor);
                 break;
             case SelectionItem::AddRemove:
-                setCursor(Qt::ArrowCursor);
+                viewport()->setCursor(Qt::ArrowCursor);
                 break;
         }
     }
     else {
-        setCursor(Qt::CrossCursor);
+        viewport()->setCursor(Qt::CrossCursor);
     }
 
     // now check the selection list
     for (int i=0; i<d->selectionList.size(); i++) {
         if (d->selectionList[i]->intersects(scenePoint) == SelectionItem::AddRemove) {
-            setCursor(Qt::ArrowCursor);
+            viewport()->setCursor(Qt::ArrowCursor);
         }
     }
 
