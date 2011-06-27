@@ -36,9 +36,9 @@ namespace KSaneIface
 {
 
 LabeledCheckbox::LabeledCheckbox(QWidget *parent, const QString& ltext)
-: KSaneOptionWidget(parent, ltext)
+: KSaneOptionWidget(parent, QString())
 {
-    chbx = new QCheckBox(QString(), this);
+    chbx = new QCheckBox(ltext, this);
     m_layout->addWidget(chbx, 0, 1);
     m_layout->setColumnStretch(1, 50);
 
