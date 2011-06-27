@@ -30,6 +30,7 @@
 
 // Qt includes
 #include <KDebug>
+#include <KLocale>
 
 namespace KSaneIface
 {
@@ -37,7 +38,8 @@ namespace KSaneIface
 KSaneOptionWidget::KSaneOptionWidget(QWidget *parent, const QString& labelText)
 : QWidget(parent)
 {
-    m_label = new QLabel(labelText);
+    m_label = new QLabel;
+    setLabelText(labelText);
 
     m_layout = new QGridLayout(this);
     m_layout->addWidget(m_label, 0, 0, Qt::AlignRight);
@@ -51,7 +53,11 @@ KSaneOptionWidget::~KSaneOptionWidget()
 
 void KSaneOptionWidget::setLabelText(const QString &text)
 {
-    m_label->setText(text);
+    if (text.isEmpty()) {
+        m_label->setText(QString());
+    } else {
+        m_label->setText(i18nc("Label for a scanner option", "%1:", text));
+    }
 }
 
 
