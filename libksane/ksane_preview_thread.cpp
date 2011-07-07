@@ -29,6 +29,7 @@
 #include "ksane_preview_thread.moc"
 
 #include <KDebug>
+#include <QMutexLocker>
 
 
 namespace KSaneIface
@@ -48,7 +49,8 @@ namespace KSaneIface
     m_invertColors(false),
     m_readStatus(READ_READY),
     m_scanProgress(0),
-    m_saneStartDone(false)
+    m_saneStartDone(false),
+    m_imageResized(false)
     {
         m_px_colors[0] = 0;
         m_px_colors[1] = 0;
@@ -117,7 +119,7 @@ namespace KSaneIface
             }
             m_img->fill(0xFFFFFFFF);
         }
-        
+        m_imageResized = false;
         m_pixel_x     = 0;
         m_pixel_y     = 0;
         m_frameRead   = 0;
@@ -220,6 +222,7 @@ namespace KSaneIface
     
     void KSanePreviewThread::copyToPreviewImg(int read_bytes)
     {
+        QMutexLocker locker(&imgMutex);
         int index;
         uchar *imgBits = m_img->bits();
         if (m_invertColors) {
@@ -243,6 +246,7 @@ namespace KSaneIface
                         if (m_pixel_y >= m_img->height()) {
                             // resize the image
                             *m_img = m_img->copy(0, 0, m_img->width(), m_img->height() + m_img->width());
+                            m_imageResized = true;
                         }
                         for (j=7; j>=0; --j) {
                             if ((m_readData[i] & (1<<j)) == 0) {
@@ -274,6 +278,7 @@ namespace KSaneIface
                             // resize the image
                             *m_img = m_img->copy(0, 0, m_img->width(), m_img->height() + m_img->width());
                             imgBits = m_img->bits();
+                            m_imageResized = true;
                         }
                         imgBits[index    ] = m_readData[i];
                         imgBits[index + 1] = m_readData[i];
@@ -290,6 +295,7 @@ namespace KSaneIface
                                 // resize the image
                                 *m_img = m_img->copy(0, 0, m_img->width(), m_img->height() + m_img->width());
                                 imgBits = m_img->bits();
+                                m_imageResized = true;
                             }
                             imgBits[index    ] = m_readData[i+1];
                             imgBits[index + 1] = m_readData[i+1];
@@ -311,6 +317,7 @@ namespace KSaneIface
                                 if (m_pixel_y >= m_img->height()) {
                                     // resize the image
                                     *m_img = m_img->copy(0, 0, m_img->width(), m_img->height() + m_img->width());
+                                    m_imageResized = true;
                                 }
                                 m_img->setPixel(m_pixel_x,
                                                 m_pixel_y,
@@ -332,6 +339,7 @@ namespace KSaneIface
                                     if (m_pixel_y >= m_img->height()) {
                                         // resize the image
                                         *m_img = m_img->copy(0, 0, m_img->width(), m_img->height() + m_img->width());
+                                        m_imageResized = true;
                                     }
                                     m_img->setPixel(m_pixel_x,
                                                     m_pixel_y,
@@ -353,6 +361,7 @@ namespace KSaneIface
                                 // resize the image
                                 *m_img = m_img->copy(0, 0, m_img->width(), m_img->height() + m_img->width());
                                 imgBits = m_img->bits();
+                                m_imageResized = true;
                             }
                             imgBits[index_red8_to_argb8(m_frameRead)] = m_readData[i];
                             m_frameRead++;
@@ -366,6 +375,7 @@ namespace KSaneIface
                                     // resize the image
                                     *m_img = m_img->copy(0, 0, m_img->width(), m_img->height() + m_img->width());
                                     imgBits = m_img->bits();
+                                    m_imageResized = true;
                                 }
                                 imgBits[index_red16_to_argb8(m_frameRead)] = m_readData[i+1];
                             }
@@ -382,6 +392,7 @@ namespace KSaneIface
                                 // resize the image
                                 *m_img = m_img->copy(0, 0, m_img->width(), m_img->height() + m_img->width());
                                 imgBits = m_img->bits();
+                                m_imageResized = true;
                             }
                             imgBits[index_green8_to_argb8(m_frameRead)] = m_readData[i];
                             m_frameRead++;
@@ -395,6 +406,7 @@ namespace KSaneIface
                                     // resize the image
                                     *m_img = m_img->copy(0, 0, m_img->width(), m_img->height() + m_img->width());
                                     imgBits = m_img->bits();
+                                    m_imageResized = true;
                                 }
                                 imgBits[index_green16_to_argb8(m_frameRead)] = m_readData[i+1];
                             }
@@ -411,6 +423,7 @@ namespace KSaneIface
                                 // resize the image
                                 *m_img = m_img->copy(0, 0, m_img->width(), m_img->height() + m_img->width());
                                 imgBits = m_img->bits();
+                                m_imageResized = true;
                             }
                             imgBits[index_blue8_to_argb8(m_frameRead)] = m_readData[i];
                             m_frameRead++;
@@ -424,6 +437,7 @@ namespace KSaneIface
                                     // resize the image
                                     *m_img = m_img->copy(0, 0, m_img->width(), m_img->height() + m_img->width());
                                     imgBits = m_img->bits();
+                                    m_imageResized = true;
                                 }
                                 imgBits[index_blue16_to_argb8(m_frameRead)] = m_readData[i+1];
                             }
@@ -444,6 +458,15 @@ namespace KSaneIface
     bool KSanePreviewThread::saneStartDone()
     {
         return   m_saneStartDone;
+    }
+
+    bool KSanePreviewThread::imageResized()
+    {
+        if (m_imageResized) {
+            m_imageResized = false;
+            return true;
+        }
+        return false;
     }
 
 }  // NameSpace KSaneIface
