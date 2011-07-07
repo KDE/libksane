@@ -882,6 +882,7 @@ void KSaneWidgetPrivate::startFinalScan()
 void KSaneWidgetPrivate::oneFinalScanDone()
 {
     m_updProgressTmr.stop();
+    updateProgress();
     
     if (m_closeDevicePending) {
         setBusy(false);
@@ -1067,15 +1068,19 @@ void KSaneWidgetPrivate::updateProgress()
     if (m_isPreview) {
         progress = m_previewThread->scanProgress();
         if (m_previewThread->saneStartDone()) {
-            if (!m_progressBar->isVisible()) {
+            if (!m_progressBar->isVisible() || m_previewThread->imageResized()) {
                 m_warmingUp->hide();
                 m_activityFrame->show();
                 // the image size might have changed
+                m_previewThread->imgMutex.lock();
                 m_previewViewer->setQImage(&m_previewImg);
                 m_previewViewer->zoom2Fit();
+                m_previewThread->imgMutex.unlock();
             }
             else {
+                m_previewThread->imgMutex.lock();
                 m_previewViewer->updateImage();
+                m_previewThread->imgMutex.unlock();
             }
         }
     }

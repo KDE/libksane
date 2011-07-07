@@ -36,6 +36,7 @@ extern "C"
 }
 
 #include <QThread>
+#include <QMutex>
 #include <QImage>
 
 #define PREVIEW_READ_CHUNK_SIZE 100000
@@ -60,8 +61,10 @@ namespace KSaneIface
             void cancelScan();
             int scanProgress();
             bool saneStartDone();
+            bool imageResized();
 
             SANE_Status status;
+            QMutex imgMutex;
 
         private:
             void readData();
@@ -83,6 +86,7 @@ namespace KSaneIface
             ReadStatus      m_readStatus;
             int             m_scanProgress;
             bool            m_saneStartDone;
+            bool            m_imageResized;
     };
 }
 
