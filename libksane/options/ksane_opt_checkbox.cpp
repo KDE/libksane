@@ -65,7 +65,8 @@ void KSaneOptCheckBox::createWidget(QWidget *parent)
 void KSaneOptCheckBox::checkboxChanged(bool toggled)
 {
     unsigned char data[4];
-    
+
+    m_checked = toggled;
     fromSANE_Word(data, (toggled) ? 1:0);
     writeData(data);
 }
