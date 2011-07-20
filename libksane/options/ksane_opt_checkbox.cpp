@@ -75,7 +75,7 @@ void KSaneOptCheckBox::readValue()
 {
     if (state() == STATE_HIDDEN) return;
 
-    // read that current value
+    // read the current value
     QVarLengthArray<unsigned char> data(m_optDesc->size);
     SANE_Status status;
     SANE_Int res;
@@ -83,10 +83,13 @@ void KSaneOptCheckBox::readValue()
     if (status != SANE_STATUS_GOOD) {
         return;
     }
-    
+    bool old = m_checked;
     m_checked = (toSANE_Word(data.data()) != 0) ? true:false;
     if (m_checkbox) {
         m_checkbox->setChecked(m_checked);
+    }
+    if ((old != m_checked) && ((m_optDesc->cap & SANE_CAP_SOFT_SELECT) == 0)) {
+        emit buttonPressed(name(), i18n(m_optDesc->title), m_checked);
     }
 }
 
@@ -123,6 +126,7 @@ bool KSaneOptCheckBox::setValue(const QString &val)
     else {
         checkboxChanged(false);
     }
+    readValue();
     return true;
 }
 

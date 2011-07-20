@@ -55,6 +55,9 @@ public:
 private Q_SLOTS:
     void checkboxChanged(bool toggled);
 
+Q_SIGNALS:
+    void buttonPressed(const QString &optionName, const QString &optionLabel, bool pressed);
+
 private:
     LabeledCheckbox *m_checkbox;
     bool             m_checked;

@@ -104,6 +104,7 @@ namespace KSaneIface
 
             void checkInvert();
             void invertPreview();
+            void pollPollOptions();
 
         public:
             void alertUser(int type, const QString &strStatus);
@@ -144,6 +145,7 @@ namespace KSaneIface
 
             // Option variables
             QList<KSaneOption*> m_optList;
+            QList<KSaneOption*> m_pollList;
             KSaneOption        *m_optSource;
             KSaneOption        *m_optNegative;
             KSaneOption        *m_optFilmType;
@@ -182,6 +184,7 @@ namespace KSaneIface
             // option handling
             QTimer              m_readValsTmr;
             QTimer              m_updProgressTmr;
+            QTimer              m_optionPollTmr;
             KSaneScanThread    *m_scanThread;
             KSanePreviewThread *m_previewThread;
 

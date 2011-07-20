@@ -443,6 +443,21 @@ bool KSaneWidget::openDevice(const QString &deviceName)
         //kDebug() << d->m_optList.at(i)->name();
         connect (d->m_optList.at(i), SIGNAL(optsNeedReload()), d, SLOT(optReload()));
         connect (d->m_optList.at(i), SIGNAL(valsNeedReload()), d, SLOT(scheduleValReload()));
+
+        if (d->m_optList.at(i)->needsPolling()) {
+            //kDebug() << d->m_optList.at(i)->name() << " needs polling";
+            d->m_pollList.append(d->m_optList.at(i));
+            KSaneOptCheckBox *buttonOption = qobject_cast<KSaneOptCheckBox *>(d->m_optList.at(i));
+            if (buttonOption) {
+                connect(buttonOption, SIGNAL(buttonPressed(QString, QString, bool)),
+                        this, SIGNAL(buttonPressed(QString, QString, bool)));
+            }
+        }
+    }
+
+    // start polling the poll options
+    if (d->m_pollList.size() > 0) {
+        d->m_optionPollTmr.start();
     }
     
     // Create the preview thread

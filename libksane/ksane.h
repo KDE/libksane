@@ -278,8 +278,24 @@ Q_SIGNALS:
     /**
      * This signal is emitted every time the device list is updated or
      * after initGetDeviceList() is called.
+     * @param deviceList is a QList of KSaneWidget::DeviceInfo that contain the
+     * device name, model, vendor and type of the attached scanners.
+     * @note The list is only a snapshot of the current available devices. Devices
+     * might be added or removed/opened after the signal is emitted.
      */
     void availableDevices(const QList<KSaneWidget::DeviceInfo> &deviceList);
+
+    /**
+     * This Signal is emitted when a hardware button is pressed.
+     * @param optionName is the untranslated technical name of the sane-option.
+     * @param optionLabel is the translated user visible label of the sane-option.
+     * @param pressed indicates if the value is true or false.
+     * @note The SANE standard does not specify hardware buttons and their behaviors,
+     * so this signal is emitted for sane-options that behave like hardware buttons.
+     * That is the sane-options are read-only and type boolean. The naming of hardware
+     * buttons also differ from backend to backend.
+     */
+    void buttonPressed(const QString &optionName, const QString &optionLabel, bool pressed);
 
 private:
 

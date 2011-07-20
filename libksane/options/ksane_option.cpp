@@ -105,6 +105,17 @@ KSaneOption::KSaneOptWState KSaneOption::state()
     return STATE_SHOWN;
 }
 
+bool KSaneOption::needsPolling()
+{
+    if (!m_optDesc) return false;
+
+    if ((m_optDesc->cap & SANE_CAP_AUTOMATIC) || !(m_optDesc->cap & SANE_CAP_SOFT_SELECT)) {
+        return true;
+    }
+
+    return false;
+}
+
 QString KSaneOption::name()
 {
     if (m_optDesc == 0) return QString("");
@@ -115,6 +126,10 @@ bool KSaneOption::writeData(void *data)
 {
     SANE_Status status;
     SANE_Int res;
+
+    if (state() == STATE_DISABLED) {
+        return false;
+    }
 
     status = sane_control_option (m_handle, m_index, SANE_ACTION_SET_VALUE, data, &res);
     if (status != SANE_STATUS_GOOD) {
@@ -202,16 +217,6 @@ bool KSaneOption::restoreSavedData()
     writeData(m_data);
     readValue();
     return true;
-}
-
-void KSaneOption::widgetSizeHints(int *, int *)
-{
-    kDebug() << m_optDesc->name << " : type not supported";
-}
-
-void KSaneOption::setColumnWidths(int, int)
-{
-    kDebug() << m_optDesc->name << " : type not supported";
 }
 
 KSaneOption::KSaneOptType KSaneOption::otpionType(const SANE_Option_Descriptor *optDesc)

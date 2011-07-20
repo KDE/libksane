@@ -54,7 +54,6 @@ q(parent)
     m_optsTabWidget = 0;
     m_basicOptsTab  = 0;
     m_otherOptsTab  = 0;
-    m_colorOpts     = 0;
     m_zInBtn        = 0;
     m_zOutBtn       = 0;
     m_zSelBtn       = 0;
@@ -90,11 +89,14 @@ q(parent)
     connect(m_findDevThread, SIGNAL(finished()), this, SLOT(signalDevListUpdate()));
     
     m_auth = KSaneAuth::getInstance();
+    m_optionPollTmr.setInterval(100);
+    connect(&m_optionPollTmr, SIGNAL(timeout()), this, SLOT(pollPollOptions()));
 }
 
 void KSaneWidgetPrivate::clearDeviceOptions()
 {
     m_optSource     = 0;
+    m_colorOpts     = 0;
     m_optNegative   = 0;
     m_optFilmType   = 0;
     m_optMode       = 0;
@@ -112,21 +114,15 @@ void KSaneWidgetPrivate::clearDeviceOptions()
     m_optWaitForBtn = 0;
     m_scanOngoing   = false;
     m_closeDevicePending = false;
-    
-    delete m_invertColors;
-    m_invertColors  = 0;
+
     // delete all the options in the list.
     while (!m_optList.isEmpty()) {
         delete m_optList.takeFirst();
     }
+    m_pollList.clear();
+    m_optionPollTmr.stop();
 
     // remove the remaining layouts/widgets and read thread
-    delete m_commonGamma;
-    m_commonGamma = 0;
-
-    delete m_splitGamChB;
-    m_splitGamChB = 0;
-
     delete m_basicOptsTab;
     m_basicOptsTab = 0;
 
@@ -138,7 +134,7 @@ void KSaneWidgetPrivate::clearDeviceOptions()
 
     delete m_scanThread;
     m_scanThread = 0;
-    
+
     m_devName.clear();
 }
 
@@ -322,7 +318,7 @@ void KSaneWidgetPrivate::createOptInterface()
     }
 
     // Color Options Frame
-    m_colorOpts = new QWidget;
+    m_colorOpts = new QWidget(m_basicOptsTab);
     basic_layout->addWidget(m_colorOpts);
     QVBoxLayout *color_lay = new QVBoxLayout(m_colorOpts);
     color_lay->setContentsMargins(0,0,0,0);
@@ -338,28 +334,27 @@ void KSaneWidgetPrivate::createOptInterface()
     }
     
     // Add gamma tables to the color "frame"
-    QWidget *gamma_frm = new QWidget;
+    QWidget *gamma_frm = new QWidget(m_colorOpts);
     color_lay->addWidget(gamma_frm);
     QVBoxLayout *gam_frm_l = new QVBoxLayout(gamma_frm);
     gam_frm_l->setContentsMargins(0,0,0,0);
 
     if ((option = getOption(SANE_NAME_GAMMA_VECTOR_R)) != 0) {
-        m_optGamR= option;
+        m_optGamR = option;
         option->createWidget(gamma_frm);
         gam_frm_l->addWidget(option->widget());
     }
     if ((option = getOption(SANE_NAME_GAMMA_VECTOR_G)) != 0) {
-        m_optGamG= option;
+        m_optGamG = option;
         option->createWidget(gamma_frm);
         gam_frm_l->addWidget(option->widget());
     }
     if ((option = getOption(SANE_NAME_GAMMA_VECTOR_B)) != 0) {
-        m_optGamB= option;
+        m_optGamB = option;
         option->createWidget(gamma_frm);
         gam_frm_l->addWidget(option->widget());
     }
-    
-    
+
     if ((m_optGamR != 0) && (m_optGamG != 0) && (m_optGamB != 0)) {
         LabeledGamma *gamma = reinterpret_cast<LabeledGamma *>(m_optGamR->widget());
         m_commonGamma = new LabeledGamma(m_colorOpts, i18n(SANE_TITLE_GAMMA_VECTOR), gamma->size());
@@ -372,7 +367,7 @@ void KSaneWidgetPrivate::createOptInterface()
         connect(m_commonGamma, SIGNAL(gammaChanged(int,int,int)), m_optGamG->widget(), SLOT(setValues(int,int,int)));
         connect(m_commonGamma, SIGNAL(gammaChanged(int,int,int)), m_optGamB->widget(), SLOT(setValues(int,int,int)));
 
-        m_splitGamChB = new LabeledCheckbox(m_basicOptsTab, i18n("Separate color intensity tables"));
+        m_splitGamChB = new LabeledCheckbox(m_colorOpts, i18n("Separate color intensity tables"));
         color_lay->addWidget(m_splitGamChB);
         
         connect (m_splitGamChB, SIGNAL(toggled(bool)), gamma_frm, SLOT(setVisible(bool)));
@@ -523,6 +518,12 @@ void KSaneWidgetPrivate::optReload()
         // Also read the values
         m_optList.at(i)->readValue();
     }
+    // Gamma table special case
+    if (m_optGamR && m_optGamG && m_optGamB) {
+        m_commonGamma->setHidden(m_optGamR->state() == KSaneOption::STATE_HIDDEN);
+        m_splitGamChB->setHidden(m_optGamR->state() == KSaneOption::STATE_HIDDEN);
+    }
+
     // estimate the preview size and create an empty image
     // this is done so that you can select scan area without
     // having to scan a preview.
@@ -1110,6 +1111,13 @@ void KSaneWidgetPrivate::alertUser(int type, const QString &strStatus)
     }
     else {
         emit q->userMessage(type, strStatus);
+    }
+}
+
+void KSaneWidgetPrivate::pollPollOptions()
+{
+    for (int i=1; i<m_pollList.size(); ++i) {
+        m_pollList.at(i)->readValue();
     }
 }
 

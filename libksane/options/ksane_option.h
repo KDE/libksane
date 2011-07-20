@@ -64,12 +64,21 @@ public:
         TYPE_BUTTON
     } KSaneOptType;
     
+    typedef enum
+    {
+        STATE_HIDDEN,
+        STATE_DISABLED,
+        STATE_SHOWN
+    } KSaneOptWState;
+
     KSaneOption(const SANE_Handle handle, const int index);
     ~KSaneOption();
     static KSaneOptType otpionType(const SANE_Option_Descriptor *optDesc);
     
     KSaneOptionWidget *widget() {return m_widget;}
     virtual bool hasGui() {return false;}
+    bool needsPolling();
+    KSaneOptWState state();
     QString name();
     
     virtual void createWidget(QWidget *parent);
@@ -88,27 +97,17 @@ public:
     bool storeCurrentData();
     bool restoreSavedData();
 
-    virtual void widgetSizeHints(int *lab_w, int *rest_w);
-    virtual void setColumnWidths(int lab_w, int rest_w);
-
 Q_SIGNALS:
     void optsNeedReload();
     void valsNeedReload();
 
 protected:
-    typedef enum
-    {
-        STATE_HIDDEN,
-        STATE_DISABLED,
-        STATE_SHOWN
-    } KSaneOptWState;
     
     SANE_Word toSANE_Word(unsigned char *data);
     void fromSANE_Word(unsigned char *data, SANE_Word from);
     bool writeData(void *data);
     KLocalizedString unitString();
     QString unitDoubleString();
-    KSaneOptWState state();
     void updateVisibility();
     
     SANE_Handle                   m_handle; 
