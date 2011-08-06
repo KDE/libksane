@@ -10,7 +10,8 @@ ENDIF(NOT KDE4_FOUND)
 
 # Check if sane API is available.
 IF (NOT WIN32)
-    FIND_PACKAGE(Sane REQUIRED)
+    FIND_PACKAGE(Sane)
+    macro_log_feature(SANE_FOUND "SANE development toolkit" "Scanner Access Now Easy (SANE) development package" "http://www.sane-project.org" TRUE "" "Needed by libksane")
 ENDIF (NOT WIN32)
 
 ADD_DEFINITIONS (${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
@@ -84,3 +85,5 @@ IF(NOT WIN32)
   CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/libksane.lsm.cmake ${CMAKE_CURRENT_BINARY_DIR}/libksane.lsm)
   INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/libksane.pc DESTINATION ${LIB_INSTALL_DIR}/pkgconfig )
 ENDIF(NOT WIN32)
+
+macro_display_feature_log()
