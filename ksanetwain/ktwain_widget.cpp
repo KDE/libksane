@@ -104,6 +104,20 @@ QImage KSaneWidget::toQImage(const QByteArray &data,
     return img;
 }
 
+QImage KSaneWidget::toQImageSilent(const QByteArray &data,
+                                   int width,
+                                   int height,
+                                   int bytes_per_line,
+                                   ImageFormat format)
+{
+    return KSaneWidget::toQImage(data,
+                                width,
+                                height,
+                                bytes_per_line,
+                                format);
+}
+
+
 void KSaneWidget::scanFinal()
 {
 }
@@ -129,6 +143,7 @@ void KSaneWidget::setPreviewResolution(float dpi){Q_UNUSED(dpi);}
 void KSaneWidget::setSelection(QPointF lefttop, QPointF rightbottom){Q_UNUSED(lefttop); Q_UNUSED(rightbottom);}
 void KSaneWidget::setOptionsCollapsed(bool){}
 void KSaneWidget::setScanButtonHidden(bool){}
+void KSaneWidget::initGetDeviceList() const {}
 
 
 }  // NameSpace KSaneIface
