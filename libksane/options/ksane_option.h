@@ -73,7 +73,7 @@ public:
 
     KSaneOption(const SANE_Handle handle, const int index);
     ~KSaneOption();
-    static KSaneOptType otpionType(const SANE_Option_Descriptor *optDesc);
+    static KSaneOptType optionType(const SANE_Option_Descriptor *optDesc);
     
     KSaneOptionWidget *widget() {return m_widget;}
     virtual bool hasGui() {return false;}

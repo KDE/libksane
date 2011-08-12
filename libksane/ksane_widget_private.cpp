@@ -102,6 +102,7 @@ void KSaneWidgetPrivate::clearDeviceOptions()
     m_optMode       = 0;
     m_optDepth      = 0;
     m_optRes        = 0;
+    m_optResX       = 0;
     m_optResY       = 0;
     m_optTlX        = 0;
     m_optTlY        = 0;
@@ -275,18 +276,17 @@ void KSaneWidgetPrivate::createOptInterface()
         option->createWidget(m_basicOptsTab);
         basic_layout->addWidget(option->widget());
     }
-    else {
-        // TODO: add a combined x and y resolution widget.
-        if ((option = getOption(SANE_NAME_SCAN_X_RESOLUTION)) != 0) {
-        m_optRes = option;
+    // These two next resolution options are a bit tricky.
+    if ((option = getOption(SANE_NAME_SCAN_X_RESOLUTION)) != 0) {
+        m_optResX = option;
+        if (!m_optRes) m_optRes = m_optResX;
         option->createWidget(m_basicOptsTab);
         basic_layout->addWidget(option->widget());
-        }
-        if ((option = getOption(SANE_NAME_SCAN_Y_RESOLUTION)) != 0) {
-            m_optResY = option;
-            option->createWidget(m_basicOptsTab);
-            basic_layout->addWidget(option->widget());
-        }
+    }
+    if ((option = getOption(SANE_NAME_SCAN_Y_RESOLUTION)) != 0) {
+        m_optResY = option;
+        option->createWidget(m_basicOptsTab);
+        basic_layout->addWidget(option->widget());
     }
 
     // save a pointer to the preview option if possible
@@ -710,6 +710,7 @@ void KSaneWidgetPrivate::startPreviewScan()
     // store the current settings of parameters to be changed
     if (m_optDepth != 0) m_optDepth->storeCurrentData();
     if (m_optRes != 0) m_optRes->storeCurrentData();
+    if (m_optResX != 0) m_optResX->storeCurrentData();
     if (m_optResY != 0) m_optResY->storeCurrentData();
     if (m_optPreview != 0) m_optPreview->storeCurrentData();
     
@@ -809,10 +810,11 @@ void KSaneWidgetPrivate::previewScanDone()
         emit q->scanDone(KSaneWidget::NoError, "");
         return;
     }
-    
+
     // restore the original settings of the changed parameters
     if (m_optDepth != 0) m_optDepth->restoreSavedData();
     if (m_optRes != 0) m_optRes->restoreSavedData();
+    if (m_optResX != 0) m_optResX->restoreSavedData();
     if (m_optResY != 0) m_optResY->restoreSavedData();
     if (m_optPreview != 0) m_optPreview->restoreSavedData();
 
@@ -856,18 +858,18 @@ void KSaneWidgetPrivate::startFinalScan()
         m_previewViewer->selectionAt(m_selIndex, x1,y1,x2,y2);
         m_previewViewer->setHighlightArea(x1,y1,x2,y2);
         m_selIndex++;
- 
+
         // calculate the option values
         x1 *= max_x; y1 *= max_y;
         x2 *= max_x; y2 *= max_y;
-        
+
         // now set the selection
         m_optTlX->setValue(x1);
         m_optTlY->setValue(y1);
         m_optBrX->setValue(x2);
         m_optBrY->setValue(y2);
     }
-    
+
     // execute a pending value reload
     while (m_readValsTmr.isActive()) {
         m_readValsTmr.stop();

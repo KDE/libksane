@@ -95,7 +95,7 @@ KSaneOption::KSaneOptWState KSaneOption::state()
 
     if (((m_optDesc->cap & SANE_CAP_SOFT_DETECT) == 0) ||
         (m_optDesc->cap & SANE_CAP_INACTIVE) ||
-        ((m_optDesc->size == 0) && (otpionType(m_optDesc) != TYPE_BUTTON)))
+        ((m_optDesc->size == 0) && (optionType(m_optDesc) != TYPE_BUTTON)))
     {
         return STATE_HIDDEN;
     }
@@ -219,7 +219,7 @@ bool KSaneOption::restoreSavedData()
     return true;
 }
 
-KSaneOption::KSaneOptType KSaneOption::otpionType(const SANE_Option_Descriptor *optDesc)
+KSaneOption::KSaneOptType KSaneOption::optionType(const SANE_Option_Descriptor *optDesc)
 {
     if (!optDesc) return TYPE_DETECT_FAIL;
     

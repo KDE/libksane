@@ -410,7 +410,7 @@ bool KSaneWidget::openDevice(const QString &deviceName)
 
     // read the rest of the options
     for (i=1; i<numSaneOptions; ++i) {
-        switch (KSaneOption::otpionType(sane_get_option_descriptor(d->m_saneHandle, i))) {
+        switch (KSaneOption::optionType(sane_get_option_descriptor(d->m_saneHandle, i))) {
             case KSaneOption::TYPE_DETECT_FAIL:
                 d->m_optList.append(new KSaneOption(d->m_saneHandle, i));
                 break;

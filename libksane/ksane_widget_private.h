@@ -152,6 +152,7 @@ namespace KSaneIface
             KSaneOption        *m_optMode;
             KSaneOption        *m_optDepth;
             KSaneOption        *m_optRes;
+            KSaneOption        *m_optResX;
             KSaneOption        *m_optResY;
             KSaneOption        *m_optTlX;
             KSaneOption        *m_optTlY;
