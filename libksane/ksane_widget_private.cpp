@@ -1102,7 +1102,7 @@ void KSaneWidgetPrivate::updateProgress()
 
 void KSaneWidgetPrivate::alertUser(int type, const QString &strStatus)
 {
-    if (q->receivers(SIGNAL(userMessage(int, QString))) == 0) {
+    if (q->receivers(SIGNAL(userMessage(int,QString))) == 0) {
         switch (type) {
             case KSaneWidget::ErrorGeneral:
                 KMessageBox::sorry(0, strStatus);

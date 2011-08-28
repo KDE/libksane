@@ -58,9 +58,9 @@ KSaneWidget::KSaneWidget(QWidget* parent)
 
     // Forward signals from the private class
     //connect(d, SIGNAL(scanProgress(int)), this, SIGNAL(scanProgress(int)));
-    connect(d, SIGNAL(ImageReady(QByteArray &, int, int, int, int)),
-            this, SIGNAL(imageReady(QByteArray &, int, int, int, int)));
-    //connect(d, SIGNAL(scanDone(int, QString)), this, SIGNAL(scanDone(int, QString)));
+    connect(d, SIGNAL(ImageReady(QByteArray&,int,int,int,int)),
+            this, SIGNAL(imageReady(QByteArray&,int,int,int,int)));
+    //connect(d, SIGNAL(scanDone(int,QString)), this, SIGNAL(scanDone(int,QString)));
     
 
 

@@ -109,8 +109,8 @@ KSaneWidget::KSaneWidget(QWidget* parent)
     // Create the static UI
     // create the preview
     d->m_previewViewer = new KSaneViewer(&(d->m_previewImg), this);
-    connect(d->m_previewViewer, SIGNAL(newSelection(float, float, float, float)),
-            d, SLOT(handleSelection(float, float, float, float)));
+    connect(d->m_previewViewer, SIGNAL(newSelection(float,float,float,float)),
+            d, SLOT(handleSelection(float,float,float,float)));
 
     
     d->m_warmingUp = new QLabel;
@@ -449,8 +449,8 @@ bool KSaneWidget::openDevice(const QString &deviceName)
             d->m_pollList.append(d->m_optList.at(i));
             KSaneOptCheckBox *buttonOption = qobject_cast<KSaneOptCheckBox *>(d->m_optList.at(i));
             if (buttonOption) {
-                connect(buttonOption, SIGNAL(buttonPressed(QString, QString, bool)),
-                        this, SIGNAL(buttonPressed(QString, QString, bool)));
+                connect(buttonOption, SIGNAL(buttonPressed(QString,QString,bool)),
+                        this, SIGNAL(buttonPressed(QString,QString,bool)));
             }
         }
     }
