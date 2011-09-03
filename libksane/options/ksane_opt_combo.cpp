@@ -146,7 +146,7 @@ QString KSaneOptCombo::getSaneComboString(int ival)
         case SANE_UNIT_MM:          return i18np("%1 mm","%1 mm", ival);
         case SANE_UNIT_DPI:         return i18np("%1 DPI","%1 DPI", ival);
         case SANE_UNIT_PERCENT:     return i18np("%1 %","%1 %", ival);
-        case SANE_UNIT_MICROSECOND: return i18np("%1 usec","%1 usec", ival);
+        case SANE_UNIT_MICROSECOND: return i18np("%1 µs","%1 µs", ival);
     }
     return QString::number(ival);
 }
@@ -158,10 +158,10 @@ QString KSaneOptCombo::getSaneComboString(float fval)
         case SANE_UNIT_NONE:        break;
         case SANE_UNIT_PIXEL:       return i18ncp("Parameter and Unit","%1 Pixel", "%1 Pixels", fval);
         case SANE_UNIT_BIT:         return i18ncp("Parameter and Unit","%1 Bit","%1 Bits", fval);
-        case SANE_UNIT_MM:          return i18nc("Parameter and Unit","%1 mm", fval);
-        case SANE_UNIT_DPI:         return i18nc("Parameter and Unit","%1 DPI", fval);
-        case SANE_UNIT_PERCENT:     return i18nc("Parameter and Unit","%1 %", fval);
-        case SANE_UNIT_MICROSECOND: return i18ncp("Parameter and Unit","%1 usec","%1 usec", fval);
+        case SANE_UNIT_MM:          return i18nc("Parameter and Unit (Millimeter)","%1 mm", fval);
+        case SANE_UNIT_DPI:         return i18nc("Parameter and Unit (Dots Per Inch)","%1 DPI", fval);
+        case SANE_UNIT_PERCENT:     return i18nc("Parameter and Unit (Percentage)","%1 %", fval);
+        case SANE_UNIT_MICROSECOND: return i18nc("Parameter and Unit (Microseconds)","%1 µs", fval);
     }
     return QString::number(fval, 'F', 4);
 }

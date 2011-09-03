@@ -298,10 +298,10 @@ KLocalizedString KSaneOption::unitString()
         case SANE_UNIT_NONE:        return KLocalizedString();
         case SANE_UNIT_PIXEL:       return ki18ncp("SpinBox parameter unit", " Pixel", " Pixels");
         case SANE_UNIT_BIT:         return ki18ncp("SpinBox parameter unit", " Bit", " Bits");
-        case SANE_UNIT_MM:          return ki18nc("SpinBox parameter unit", " mm");
-        case SANE_UNIT_DPI:         return ki18nc("SpinBox parameter unit", " DPI");
-        case SANE_UNIT_PERCENT:     return ki18nc("SpinBox parameter unit", " %");
-        case SANE_UNIT_MICROSECOND: return ki18ncp("SpinBox parameter unit", " usec", " usecs");
+        case SANE_UNIT_MM:          return ki18nc("SpinBox parameter unit (Millimeter)", " mm");
+        case SANE_UNIT_DPI:         return ki18nc("SpinBox parameter unit (Dots Per Inch)", " DPI");
+        case SANE_UNIT_PERCENT:     return ki18nc("SpinBox parameter unit (Percentage)", " %");
+        case SANE_UNIT_MICROSECOND: return ki18nc("SpinBox parameter unit (Microseconds)", " µs");
     }
     return KLocalizedString();
 }
@@ -313,10 +313,10 @@ QString KSaneOption::unitDoubleString()
         case SANE_UNIT_NONE:        return QString("");
         case SANE_UNIT_PIXEL:       return i18nc("Double numbers. SpinBox parameter unit", " Pixels");
         case SANE_UNIT_BIT:         return i18nc("Double numbers. SpinBox parameter unit", " Bits");
-        case SANE_UNIT_MM:          return i18nc("Double numbers. SpinBox parameter unit", " mm");
-        case SANE_UNIT_DPI:         return i18nc("Double numbers. SpinBox parameter unit", " DPI");
-        case SANE_UNIT_PERCENT:     return i18nc("Double numbers. SpinBox parameter unit", " %");
-        case SANE_UNIT_MICROSECOND: return i18nc("Double numbers. SpinBox parameter unit", " usec");
+        case SANE_UNIT_MM:          return i18nc("Double numbers. SpinBox parameter unit (Millimeter)", " mm");
+        case SANE_UNIT_DPI:         return i18nc("Double numbers. SpinBox parameter unit (Dots Per Inch)", " DPI");
+        case SANE_UNIT_PERCENT:     return i18nc("Double numbers. SpinBox parameter unit (Percentage)", " %");
+        case SANE_UNIT_MICROSECOND: return i18nc("Double numbers. SpinBox parameter unit (Microseconds)", " µs");
     }
     return QString("");
 }
