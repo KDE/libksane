@@ -51,7 +51,11 @@ void KSaneOptGamma::createWidget(QWidget *parent)
 
     readOption();
 
-    if (!m_optDesc) return;
+    if (!m_optDesc) {
+        kDebug() << "This is a bug";
+        m_widget = new KSaneOptionWidget(parent, "");
+        return;
+    }
 
     m_widget = m_gamma = new LabeledGamma(parent, i18n(m_optDesc->title),
                                           m_optDesc->size/sizeof(SANE_Word));

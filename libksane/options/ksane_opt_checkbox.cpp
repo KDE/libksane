@@ -51,7 +51,11 @@ void KSaneOptCheckBox::createWidget(QWidget *parent)
 
     readOption();
 
-    if (!m_optDesc) return;
+    if (!m_optDesc) {
+        kDebug() << "This is a bug";
+        m_widget = new KSaneOptionWidget(parent, "");
+        return;
+    }
 
     m_widget = m_checkbox = new LabeledCheckbox(parent, i18n(m_optDesc->title));
     m_widget->setToolTip(i18n(m_optDesc->desc));
