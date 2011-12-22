@@ -31,7 +31,7 @@
 
 #include "ksane_find_devices_thread.h"
 
-// Qt includes.
+// Qt includes
 #include <QGroupBox>
 #include <QStringList>
 #include <QButtonGroup>

@@ -25,17 +25,17 @@
  *
  * ============================================================ */
 
-// Local includes.
+// Local includes
 #include "labeled_gamma.h"
 #include "labeled_gamma.moc"
 
-// C++ includes.
+// C++ includes
 #include <cmath>
 
-// Qt includes.
+// Qt includes
 #include <QGroupBox>
 
-// KDE includes.
+// KDE includes
 #include <klocale.h>
 
 namespace KSaneIface

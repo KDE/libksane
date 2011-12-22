@@ -24,7 +24,7 @@
  * License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * ============================================================ */
-// Local includes.
+// Local includes
 #include "ksane_opt_combo.h"
 #include "ksane_opt_combo.moc"
 

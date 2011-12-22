@@ -22,7 +22,7 @@
  *
  * ============================================================ */
 
-// Local includes.
+// Local includes
 #include "ksane_button.h"
 #include "ksane_button.moc"
 

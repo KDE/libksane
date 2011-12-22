@@ -25,14 +25,14 @@
  *
  * ============================================================ */
 
-// Local includes.
+// Local includes
 #include "labeled_slider.h"
 #include "labeled_slider.moc"
 
-// KDE includes.
+// KDE includes
 #include <KNumInput>
 
-// Qt includes.
+// Qt includes
 #include <QLabel>
 #include <QSlider>
 

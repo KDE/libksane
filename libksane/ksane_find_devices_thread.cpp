@@ -31,14 +31,14 @@
 
 #include "ksane_widget_private.h"
 
-// Sane includes.
+// Sane includes
 extern "C"
 {
 #include <sane/saneopts.h>
 #include <sane/sane.h>
 }
 
-// KDE includes.
+// KDE includes
 #include <KDebug>
 
 // Qt includes

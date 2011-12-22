@@ -28,7 +28,7 @@
 #ifndef LABELED_GAMMA_H
 #define LABELED_GAMMA_H
 
-// Local includes.
+// Local includes
 #include "labeled_slider.h"
 #include "gamma_disp.h"
 

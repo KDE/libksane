@@ -28,10 +28,10 @@
 #ifndef KSANE_AUTH_H
 #define KSANE_AUTH_H
 
-// Qt includes.
+// Qt includes
 #include <QString>
 
-// Sane includes.
+// Sane includes
 extern "C"
 {
 #include <sane/saneopts.h>

@@ -29,10 +29,10 @@
 #ifndef KSANE_H
 #define KSANE_H
 
-// Qt includes.
+// Qt includes
 #include <QtGui/QWidget>
 
-// Local includes.
+// Local includes
 #include "libksane_export.h"
 
 /** This namespace collects all methods and classes in LibKSane. */

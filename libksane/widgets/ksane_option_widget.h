@@ -27,7 +27,7 @@
 #ifndef KSANE_OPTION_WIDGET_H
 #define KSANE_OPTION_WIDGET_H
 
-// Qt includes.
+// Qt includes
 #include <QWidget>
 #include <QLabel>
 #include <QGridLayout>

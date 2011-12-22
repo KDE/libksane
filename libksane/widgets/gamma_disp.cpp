@@ -25,11 +25,11 @@
  *
  * ============================================================ */
 
-// Local includes.
+// Local includes
 #include "gamma_disp.h"
 #include "gamma_disp.moc"
 
-// Qt includes.
+// Qt includes
 #include <QPainter>
 
 namespace KSaneIface

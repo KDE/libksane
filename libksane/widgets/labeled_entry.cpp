@@ -25,11 +25,11 @@
  *
  * ============================================================ */
 
-// Local includes.
+// Local includes
 #include "labeled_entry.h"
 #include "labeled_entry.moc"
 
-// Qt includes.
+// Qt includes
 #include <QHBoxLayout>
 #include <QLabel>
 #include <KLineEdit>

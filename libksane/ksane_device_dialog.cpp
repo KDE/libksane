@@ -26,12 +26,12 @@
  *
  * ============================================================ */
 
-// Local includes.
+// Local includes
 #include "ksane_device_dialog.h"
 #include "ksane_device_dialog.moc"
 
 
-// Sane includes.
+// Sane includes
 extern "C"
 {
 #include <sane/saneopts.h>
@@ -39,7 +39,7 @@ extern "C"
 }
 
 
-// KDE includes.
+// KDE includes
 #include <KDebug>
 #include <KPushButton>
 

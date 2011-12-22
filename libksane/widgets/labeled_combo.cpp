@@ -27,7 +27,7 @@
 #include "labeled_combo.h"
 #include "labeled_combo.moc"
 
-// Qt includes.
+// Qt includes
 #include <QLabel>
 
 // KDE includes
