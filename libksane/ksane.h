@@ -53,8 +53,7 @@ class LIBKSANE_EXPORT KSaneWidget : public QWidget
 public:
     /** This enumeration describes the type of the returned data.
      * The number of formats might grow, so it is wise to be prepared fro more.*/
-    typedef enum
-    {
+    enum ImageFormat {
         FormatBlackWhite,   /**< One bit per pixel 1 = black 0 = white */
         FormatGrayScale8,   /**< Grayscale with one byte per pixel 0 = black 255 = white */
         FormatGrayScale16,  /**< Grayscale withtTwo bytes per pixel.
@@ -66,7 +65,7 @@ public:
                              * The byte order is the one provided by libsane. */
         FormatBMP,          /**< The image data  is returned as a BMP. */
         FormatNone = 0xFFFF /**< This enumeration value should never be returned to the user */
-    } ImageFormat;
+    };
 
     /** @note There might come more enumerations in the future. */
     typedef enum
