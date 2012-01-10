@@ -7,7 +7,7 @@ Keywords: kde image sane scanner digiKam kipi-plugins
 Author: caulier dot gilles at gmail dot com (Gilles Caulier)
  kare dot sars at iki dot fi (Kare Sars)
 Maintained-by:
-Primary-site: http://www.kipi-plugins.org
+Primary-site: http://www.digikam.org
 Alternate-site: http://www.digikam.org
 Original-site:
 Platforms:
