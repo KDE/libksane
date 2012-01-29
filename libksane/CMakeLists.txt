@@ -32,7 +32,10 @@ SET(ksane_LIB_SRCS
     options/ksane_opt_slider.cpp
     options/ksane_opt_fslider.cpp
     options/ksane_opt_combo.cpp
-    )
+
+    KSaneCore.cpp
+    KSaneDevice.cpp
+)
 
 KDE4_ADD_LIBRARY(ksane SHARED ${ksane_LIB_SRCS})
 

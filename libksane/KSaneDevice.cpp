@@ -28,3 +28,17 @@
 #include "KSaneDevice.h"
 #include "KSaneDevice.moc"
 
+class KSaneDevicePrivate
+{
+public:
+    KSaneDevice *q;
+    KSaneDevicePrivate(KSaneDevice *parent): q(parent) {}
+};
+
+KSaneDevice::KSaneDevice(QObject *parent): QObject(parent), d(new KSaneDevicePrivate(this)) {}
+KSaneDevice::~KSaneDevice() {}
+
+void KSaneDevice::scanCancel() {}
+void KSaneDevice::scanFinal() {}
+
+

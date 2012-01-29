@@ -29,6 +29,7 @@
 #define KSANEDEVICE_H
 
 #include <QObject>
+#include <QImage>
 #include "libksane_export.h"
 
 class KSaneDevicePrivate;
