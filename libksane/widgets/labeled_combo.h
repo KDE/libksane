@@ -57,7 +57,7 @@ public Q_SLOTS:
     /**
      * Add string entries to the combobox
      */
-    void addItems(const QStringList &list) { m_combo->addItems(list); }
+    void addItems(const QStringList &list);
 
     /**
      * Remove all string entries

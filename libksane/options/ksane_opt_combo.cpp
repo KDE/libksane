@@ -180,10 +180,6 @@ QString KSaneOptCombo::getSaneComboString(unsigned char *data)
         case SANE_TYPE_STRING:
             tmp = i18n(reinterpret_cast<char*>(data));
             tmp = tmp.simplified();
-            if (tmp.length() > 25) {
-                tmp = tmp.left(22);
-                tmp += "...";
-            }
             return tmp;
         default :
             break;
