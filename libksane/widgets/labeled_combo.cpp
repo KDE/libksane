@@ -51,8 +51,20 @@ LabeledCombo::LabeledCombo(QWidget *parent, const QString& ltext, const QStringL
     m_layout->addWidget(new QWidget(this), 0, 2);
     m_layout->setColumnStretch(1, 0);
     m_layout->setColumnStretch(2, 50);
-    
+    setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Fixed);
 }
+
+void LabeledCombo::addItems(const QStringList &list)
+{
+    m_combo->addItems(list);
+
+    QString tmp;
+    for (int i=0; i<m_combo->count(); i++) {
+        tmp = m_combo->itemText(i);
+        m_combo->setItemData(i, tmp, Qt::ToolTipRole);
+    }
+}
+
 
 void LabeledCombo::setCurrentText(const QString &t)
 {
