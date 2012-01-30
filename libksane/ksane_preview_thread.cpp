@@ -25,7 +25,7 @@
 *
 * ============================================================ */
 
-// Local includes.
+// Local includes
 #include "ksane_preview_thread.moc"
 
 #include <KDebug>

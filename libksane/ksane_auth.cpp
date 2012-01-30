@@ -31,7 +31,7 @@
 #include <QMutex>
 #include <QList>
 
-// KDE includes.
+// KDE includes
 #include <KDebug>
 
 namespace KSaneIface

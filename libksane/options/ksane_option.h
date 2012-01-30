@@ -28,13 +28,13 @@
 #ifndef KSANE_OPTION_H
 #define KSANE_OPTION_H
 
-// Qt includes.
+// Qt includes
 #include <QFrame>
 
 //KDE includes
 #include <KLocalizedString>
 
-// Sane includes.
+// Sane includes
 extern "C"
 {
 #include <sane/sane.h>

@@ -27,7 +27,7 @@
 
 #include "ksane_option_widget.h"
 
-// Qt includes.
+// Qt includes
 #include <QPushButton>
 #include <QGridLayout>
 

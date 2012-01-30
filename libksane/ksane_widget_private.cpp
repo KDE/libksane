@@ -26,11 +26,11 @@
  *
  * ============================================================ */
 
-// Local includes.
+// Local includes
 #include "ksane_widget_private.h"
 #include "ksane_widget_private.moc"
 
-// Qt includes.
+// Qt includes
 #include <QImage>
 #include <QScrollArea>
 #include <QScrollBar>

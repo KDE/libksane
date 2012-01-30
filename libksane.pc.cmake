@@ -5,7 +5,7 @@ includedir=${INCLUDE_INSTALL_DIR}
 
 Name: libksane
 Description: libksane is a C++ library for SANE interface to control flat scanners.
-URL: http://www.kipi-plugins.org
+URL: http://www.digikam.org
 Requires:
 Version: ${KSANE_LIB_VERSION_STRING}
 Libs: -L${LIB_INSTALL_DIR} -lksane

@@ -32,7 +32,7 @@
 
 #include "twain.h"
 
-// Windows includes.
+// Windows includes
 #include <windows.h>
 
 #include <QWidget>

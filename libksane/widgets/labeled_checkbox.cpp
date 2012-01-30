@@ -25,7 +25,7 @@
  *
  * ============================================================ */
 
-// Local includes.
+// Local includes
 #include "labeled_checkbox.h"
 #include "labeled_checkbox.moc"
 

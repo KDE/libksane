@@ -28,7 +28,7 @@
 #ifndef KSANE_SCAN_THREAD_H
 #define KSANE_SCAN_THREAD_H
 
-// Sane includes.
+// Sane includes
 extern "C"
 {
     #include <sane/saneopts.h>

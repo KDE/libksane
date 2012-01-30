@@ -46,7 +46,7 @@
 #include <kwallet.h>
 #include <kpushbutton.h>
 
-// Local includes.
+// Local includes
 #include "ksane_widget_private.h"
 #include "ksane_option.h"
 #include "ksane_opt_button.h"

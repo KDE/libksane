@@ -24,7 +24,7 @@
  *
  * ============================================================ */
 
-// Local includes.
+// Local includes
 #include "ksane_option_widget.h"
 #include "ksane_option_widget.moc"
 

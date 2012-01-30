@@ -28,7 +28,7 @@
 #ifndef GAMMA_DISP_H
 #define GAMMA_DISP_H
 
-// Qt includes.
+// Qt includes
 
 #include <QWidget>
 

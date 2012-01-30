@@ -38,7 +38,7 @@
 #include <klocalizedstring.h>
 #include <kpushbutton.h>
 
-// Local includes.
+// Local includes
 #include "twainiface.h"
 
 namespace KSaneIface

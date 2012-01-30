@@ -28,14 +28,14 @@
 #ifndef KSANE_WIDGET_PRIVATE_H
 #define KSANE_WIDGET_PRIVATE_H
 
-// Sane includes.
+// Sane includes
 extern "C"
 {
     #include <sane/saneopts.h>
     #include <sane/sane.h>
 }
 
-// Qt includes.
+// Qt includes
 #include <QtGui/QWidget>
 #include <QCheckBox>
 #include <QTimer>
