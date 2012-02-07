@@ -109,7 +109,8 @@ bool KSaneOption::needsPolling()
 {
     if (!m_optDesc) return false;
 
-    if ((m_optDesc->cap & SANE_CAP_AUTOMATIC) || !(m_optDesc->cap & SANE_CAP_SOFT_SELECT)) {
+    if ((m_optDesc->cap & SANE_CAP_SOFT_DETECT) && !(m_optDesc->cap & SANE_CAP_SOFT_SELECT)) {
+        kDebug() << name() << "optDesc->cap =" << m_optDesc->cap;
         return true;
     }
 
