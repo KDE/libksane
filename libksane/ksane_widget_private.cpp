@@ -1023,11 +1023,15 @@ void KSaneWidgetPrivate::setBusy(bool busy)
         m_warmingUp->show();
         m_activityFrame->hide();
         m_btnFrame->hide();
+        m_optionPollTmr.stop();
     }
     else {
         m_warmingUp->hide();
         m_activityFrame->hide();
         m_btnFrame->show();
+        if (m_pollList.size() > 0) {
+            m_optionPollTmr.start();
+        }
     }
     
     m_optsTabWidget->setDisabled(busy);
