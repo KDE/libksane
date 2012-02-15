@@ -46,48 +46,47 @@ namespace KSaneIface
     m_readStatus(READ_READY),
     m_saneStartDone(false)
     {}
-    
+
     void KSaneScanThread::setImageInverted(bool inverted)
     {
         m_invertColors = inverted;
     }
-    
+
     SANE_Status KSaneScanThread::saneStatus()
     {
         return m_saneStatus;
     }
-    
+
     KSaneScanThread::ReadStatus KSaneScanThread::frameStatus()
     {
         return m_readStatus;
     }
-    
+
     void KSaneScanThread::cancelScan()
     {
         m_readStatus = READ_CANCEL;
     }
-    
+
     int KSaneScanThread::scanProgress()
     {
         if (m_dataSize == 0) return 0;
-        
+
         int bytesRead;
-        
+
         if (m_frameSize < m_dataSize) {
             bytesRead = m_frameRead + (m_frameSize * m_frame_t_count);
         }
         else {
             bytesRead = m_frameRead;
         }
-        
-        return (int)((bytesRead * 100)/m_dataSize);
+        return (int)(((float)bytesRead * 100.0)/m_dataSize);
     }
-    
+
     SANE_Parameters KSaneScanThread::saneParameters()
     {
         return m_params;
     }
-        
+
     void KSaneScanThread::run()
     {
         m_dataSize = 0;
@@ -96,13 +95,13 @@ namespace KSaneIface
 
         // Start the scanning with sane_start
         m_saneStatus = sane_start(m_saneHandle);
-        
+
         m_saneStartDone = true;
-                
+
         if (m_readStatus == READ_CANCEL) {
             return;
         }
-        
+
         if (m_saneStatus != SANE_STATUS_GOOD) {
             kDebug() << "sane_start=" << sane_strstatus(m_saneStatus);
             m_readStatus = READ_ERROR;
@@ -118,7 +117,7 @@ namespace KSaneIface
             // oneFinalScanDone() does the sane_cancel()
             return;
         }
-        
+
         // calculate data size
         m_frameSize  = m_params.lines * m_params.bytes_per_line;
         if ((m_params.format == SANE_FRAME_RED) ||
@@ -130,12 +129,12 @@ namespace KSaneIface
         else {
             m_dataSize = m_frameSize;
         }
-        
+
         m_data->clear();
         if (m_dataSize > 0) {
             m_data->reserve(m_dataSize);
         }
-        
+
         m_frameRead     = 0;
         m_frame_t_count = 0;
         m_readStatus    = READ_ON_GOING;
@@ -143,18 +142,18 @@ namespace KSaneIface
             readData();
         }
     }
-    
+
     void KSaneScanThread::readData()
     {
         SANE_Int readBytes = 0;
         m_saneStatus = sane_read(m_saneHandle, m_readData, SCAN_READ_CHUNK_SIZE, &readBytes);
-        
-        switch (m_saneStatus) 
+
+        switch (m_saneStatus)
         {
             case SANE_STATUS_GOOD:
                 // continue to parsing the data
                 break;
-                
+
             case SANE_STATUS_EOF:
                 if (m_frameRead < m_frameSize) {
                     kDebug() << "frameRead =" << m_frameRead  << ", frameSize =" << m_frameSize << "readBytes =" << readBytes;
@@ -196,19 +195,19 @@ namespace KSaneIface
                 sane_cancel(m_saneHandle);
                 return;
         }
-        
+
         copyToScanData(readBytes);
     }
-    
+
     #define index_red8_to_rgb8(i)     (i*3)
     #define index_red16_to_rgb16(i)   ((i/2)*6 + i%2)
-    
+
     #define index_green8_to_rgb8(i)   (i*3 + 1)
     #define index_green16_to_rgb16(i) ((i/2)*6 + i%2 + 2)
-    
+
     #define index_blue8_to_rgb8(i)    (i*3 + 2)
     #define index_blue16_to_rgb16(i)  ((i/2)*6 + i%2 + 4)
-    
+
     void KSaneScanThread::copyToScanData(int readBytes)
     {
         if (m_invertColors) {
@@ -277,7 +276,7 @@ namespace KSaneIface
                     return;
                 }
                 break;
-                
+
             case SANE_FRAME_BLUE:
                 if (m_params.depth == 8) {
                     for (int i=0; i<readBytes; i++) {
