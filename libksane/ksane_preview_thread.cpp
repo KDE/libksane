@@ -149,7 +149,7 @@ namespace KSaneIface
             bytesRead = m_frameRead;
         }
         
-        return (int)((bytesRead * 100)/m_dataSize);
+        return (int)(((float)bytesRead * 100.0)/m_dataSize);
     }
     
     void KSanePreviewThread::readData()
