@@ -773,24 +773,26 @@ void KSaneViewer::mouseMoveEvent(QMouseEvent *e)
 }
 
 // The change trigger before adding to the sum
-#define DIFF_TRIGGER 8
+static const int DIFF_TRIGGER = 8;
 
 // The selection start/stop level trigger
-#define SUM_TRIGGER 4
+static const int SUM_TRIGGER = 4;
 
 // The selection start/stop level trigger for the floating  average
-#define AVERAGE_TRIGGER 7
+static const int AVERAGE_TRIGGER = 7;
 
-// The selection start/stop margin 
-#define SEL_MARGIN 3
+// The selection start/stop margin
+static const int SEL_MARGIN = 3;
 
 // Maximum number of allowed selections (this could be a settable variable)
-#define MAX_NUM_SELECTIONS 8
+static const int MAX_NUM_SELECTIONS = 8;
 
 // floating average 'div' must be one less than 'count'
-#define AVERAGE_COUNT 50
-#define AVERAGE_MULT 49
+static const int AVERAGE_COUNT = 50;
+static const int AVERAGE_MULT = 49;
 
+// Minimum selection area compared to the whole image
+static const float MIN_AREA_SIZE = 0.01;
 // ------------------------------------------------------------------------
 void KSaneViewer::findSelections(float area)
 {
@@ -900,12 +902,15 @@ void KSaneViewer::findSelections(float area)
                                 int y1 = hSelStart / multiplier;
                                 int x2 = wSelEnd / multiplier;
                                 int y2 = hSelEnd / multiplier;
-                                SelectionItem *tmp = new SelectionItem(QRect(QPoint(x1, y1), QPoint(x2, y2)));
-                                d->selectionList.push_back(tmp);
-                                d->selectionList.back()->setSaved(true);
-                                d->selectionList.back()->saveZoom(transform().m11());
-                                d->scene->addItem(d->selectionList.back());
-                                d->selectionList.back()->setZValue(9);
+                                float selArea = (float)(wSelEnd - wSelStart) * (float)(hSelEnd-hSelStart);
+                                if (selArea > (area * MIN_AREA_SIZE)) {
+                                    SelectionItem *tmp = new SelectionItem(QRect(QPoint(x1, y1), QPoint(x2, y2)));
+                                    d->selectionList.push_back(tmp);
+                                    d->selectionList.back()->setSaved(true);
+                                    d->selectionList.back()->saveZoom(transform().m11());
+                                    d->scene->addItem(d->selectionList.back());
+                                    d->selectionList.back()->setZValue(9);
+                                }
                             }
                             wSelStart = -1;
                             wSelEnd = -1;
@@ -930,7 +935,20 @@ void KSaneViewer::findSelections(float area)
     }
     else {
         // 1/multiplier is the error margin caused by the resolution reduction
-        refineSelections(qRound(2/multiplier));
+        refineSelections(qRound(1/multiplier));
+        // check that the selections are big enough
+        float minArea = d->img->height() * d->img->width() * MIN_AREA_SIZE;
+
+        int i = 0;
+        while (i < d->selectionList.size()) {
+            if ((d->selectionList[i]->rect().width() * d->selectionList[i]->rect().height()) < minArea) {
+                d->scene->removeItem(d->selectionList[i]);
+                d->selectionList.removeAt(i);
+            }
+            else {
+                i++;
+            }
+        }
     }
 }
 
@@ -968,36 +986,36 @@ void KSaneViewer::refineSelections(int pixelMargin)
 
         // Right
         wSelEnd = refineColumn(wSelEnd + pixelMargin, wSelStart, hSelStart, hSelEnd);
-        
+
         // Now update the selection
         d->selectionList.at(i)->setRect(QRectF(QPointF(wSelStart, hSelStart), QPointF(wSelEnd, hSelEnd)));
     }
 }
 
-int KSaneViewer::refineRow(int fromRow, int toRow, int rowStart, int rowEnd)
+int KSaneViewer::refineRow(int fromRow, int toRow, int colStart, int colEnd)
 {
     int pix;
     int diff;
     float rowTrigger;
     int row;
     int addSub = (fromRow < toRow) ? 1 : -1;
-    
-    rowStart -= 2; //add some margin
-    rowEnd += 2; //add some margin
-    
-    if (rowStart < 1) rowStart = 1;
-    if (rowEnd >= d->img->width()) rowEnd = d->img->width() - 2;
-    
+
+    colStart -= 2; //add some margin
+    colEnd += 2; //add some margin
+
+    if (colStart < 1) colStart = 1;
+    if (colEnd >= d->img->width()-1) colEnd = d->img->width() - 2;
+
     if (fromRow < 1) fromRow = 1;
-    if (fromRow >= d->img->height()) fromRow = d->img->height() - 2;
-    
+    if (fromRow >= d->img->height()-1) fromRow = d->img->height() - 2;
+
     if (toRow < 1) toRow = 1;
-    if (toRow >= d->img->height()) toRow = d->img->height() - 2;
-    
+    if (toRow >= d->img->height()-1) toRow = d->img->height() - 2;
+
     row = fromRow;
     while (row != toRow) {
         rowTrigger = 0;
-        for (int w=rowStart; w<rowEnd; w++) {
+        for (int w=colStart; w<colEnd; w++) {
             diff = 0;
             pix = qGray(d->img->pixel(w, row));
             // how much does the pixel differ from the surrounding
@@ -1006,9 +1024,9 @@ int KSaneViewer::refineRow(int fromRow, int toRow, int rowStart, int rowEnd)
             diff += qAbs(pix - qGray(d->img->pixel(w, row-1)));
             diff += qAbs(pix - qGray(d->img->pixel(w, row+1)));
             if (diff <= DIFF_TRIGGER) diff = 0;
-            
+
             rowTrigger = ((rowTrigger * AVERAGE_MULT) + diff) / AVERAGE_COUNT;
-            
+
             if (rowTrigger > AVERAGE_TRIGGER) {
                 break;
             }
@@ -1026,7 +1044,7 @@ int KSaneViewer::refineRow(int fromRow, int toRow, int rowStart, int rowEnd)
     return row;
 }
 
-int KSaneViewer::refineColumn(int fromCol, int toCol, int colStart, int colEnd)
+int KSaneViewer::refineColumn(int fromCol, int toCol, int rowStart, int rowEnd)
 {
     int pix;
     int diff;
@@ -1034,24 +1052,24 @@ int KSaneViewer::refineColumn(int fromCol, int toCol, int colStart, int colEnd)
     int col;
     int count;
     int addSub = (fromCol < toCol) ? 1 : -1;
-    
-    colStart -= 2; //add some margin
-    colEnd += 2; //add some margin
-    
-    if (colStart < 1) colStart = 1;
-    if (colEnd >= d->img->height()) colEnd = d->img->height() - 2;
-    
+
+    rowStart -= 2; //add some margin
+    rowEnd += 2; //add some margin
+
+    if (rowStart < 1) rowStart = 1;
+    if (rowEnd >= d->img->height()-1) rowEnd = d->img->height() - 2;
+
     if (fromCol < 1) fromCol = 1;
-    if (fromCol >= d->img->width()) fromCol = d->img->width() - 2;
-    
+    if (fromCol >= d->img->width()-1) fromCol = d->img->width() - 2;
+
     if (toCol < 1) toCol = 1;
-    if (toCol >= d->img->width()) toCol = d->img->width() - 2;
-    
+    if (toCol >= d->img->width()-1) toCol = d->img->width() - 2;
+
     col = fromCol;
     while (col != toCol) {
         colTrigger = 0;
         count = 0;
-        for (int row=colStart; row<colEnd; row++) {
+        for (int row=rowStart; row<rowEnd; row++) {
             count++;
             diff = 0;
             pix = qGray(d->img->pixel(col, row));
