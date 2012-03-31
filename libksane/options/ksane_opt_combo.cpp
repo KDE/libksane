@@ -132,6 +132,7 @@ QStringList &KSaneOptCombo::genComboStringList()
             break;
         default :
             m_strList += "NOT HANDELED";
+            break;
     }
     return m_strList;
 }
@@ -265,6 +266,7 @@ bool KSaneOptCombo::getValue(float &val)
             return true;
         default:
             kDebug() << "Type" << m_optDesc->type << "not supported!";
+            break;
     }
     return false;
 }
