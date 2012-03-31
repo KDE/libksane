@@ -157,7 +157,7 @@ void KSaneWidgetPrivate::devListUpdated()
 
 void KSaneWidgetPrivate::signalDevListUpdate()
 {
-    emit q->availableDevices(m_findDevThread->devicesList());
+    emit (q->availableDevices(m_findDevThread->devicesList()));
 }
 
 KSaneWidget::ImageFormat KSaneWidgetPrivate::getImgFormat(SANE_Parameters &params)
@@ -807,7 +807,7 @@ void KSaneWidgetPrivate::previewScanDone()
         sane_close(m_saneHandle);
         m_saneHandle = 0;
         clearDeviceOptions();
-        emit q->scanDone(KSaneWidget::NoError, "");
+        emit (q->scanDone(KSaneWidget::NoError, ""));
         return;
     }
 
@@ -833,7 +833,7 @@ void KSaneWidgetPrivate::previewScanDone()
     
     m_previewViewer->updateImage();
     
-    emit q->scanDone(KSaneWidget::NoError, "");
+    emit (q->scanDone(KSaneWidget::NoError, ""));
     
     return;
 }
@@ -982,7 +982,7 @@ void KSaneWidgetPrivate::oneFinalScanDone()
                 return;
             }
         }
-        emit q->scanDone(KSaneWidget::NoError, "");
+        emit (q->scanDone(KSaneWidget::NoError, ""));
     }
     else {
         switch(m_scanThread->saneStatus()) 
@@ -992,7 +992,7 @@ void KSaneWidgetPrivate::oneFinalScanDone()
             case SANE_STATUS_EOF:
                 break;
             case SANE_STATUS_NO_DOCS:
-                emit q->scanDone(KSaneWidget::Information, i18n(sane_strstatus(m_scanThread->saneStatus())));
+                emit (q->scanDone(KSaneWidget::Information, i18n(sane_strstatus(m_scanThread->saneStatus()))));
                 alertUser(KSaneWidget::Information, i18n(sane_strstatus(m_scanThread->saneStatus())));
                 break;
             case SANE_STATUS_UNSUPPORTED:
@@ -1003,7 +1003,7 @@ void KSaneWidgetPrivate::oneFinalScanDone()
             case SANE_STATUS_COVER_OPEN:
             case SANE_STATUS_DEVICE_BUSY:
             case SANE_STATUS_ACCESS_DENIED:
-                emit q->scanDone(KSaneWidget::ErrorGeneral, i18n(sane_strstatus(m_scanThread->saneStatus())));
+                emit (q->scanDone(KSaneWidget::ErrorGeneral, i18n(sane_strstatus(m_scanThread->saneStatus()))));
                 alertUser(KSaneWidget::ErrorGeneral, i18n(sane_strstatus(m_scanThread->saneStatus())));
                 break;
         }
@@ -1101,7 +1101,7 @@ void KSaneWidgetPrivate::updateProgress()
     }
     
     m_progressBar->setValue(progress);
-    emit q->scanProgress(progress);
+    emit (q->scanProgress(progress));
 }
 
 void KSaneWidgetPrivate::alertUser(int type, const QString &strStatus)
@@ -1117,7 +1117,7 @@ void KSaneWidgetPrivate::alertUser(int type, const QString &strStatus)
         }
     }
     else {
-        emit q->userMessage(type, strStatus);
+        emit (q->userMessage(type, strStatus));
     }
 }
 
