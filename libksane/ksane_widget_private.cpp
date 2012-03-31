@@ -905,11 +905,11 @@ void KSaneWidgetPrivate::oneFinalScanDone()
             int bytesPerLine = qMax(getBytesPerLines(params), 1); // ensure no div by 0
             lines = m_scanData.size() / bytesPerLine;
         }
-        emit q->imageReady(m_scanData,
+        emit (q->imageReady(m_scanData,
                          params.pixels_per_line,
                          lines,
                          getBytesPerLines(params),
-                         (int)getImgFormat(params));
+                         (int)getImgFormat(params)));
 
         // now check if we should have automatic ADF batch scaning
         if (m_optSource){
