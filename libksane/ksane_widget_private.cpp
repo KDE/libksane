@@ -1113,6 +1113,7 @@ void KSaneWidgetPrivate::alertUser(int type, const QString &strStatus)
                 break;
             default:
                 KMessageBox::information(0, strStatus);
+                break;
         }
     }
     else {
