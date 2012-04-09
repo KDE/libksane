@@ -157,7 +157,7 @@ void KSaneWidgetPrivate::devListUpdated()
 
 void KSaneWidgetPrivate::signalDevListUpdate()
 {
-    emit q->availableDevices(m_findDevThread->devicesList());
+    emit (q->availableDevices(m_findDevThread->devicesList()));
 }
 
 KSaneWidget::ImageFormat KSaneWidgetPrivate::getImgFormat(SANE_Parameters &params)
@@ -807,7 +807,7 @@ void KSaneWidgetPrivate::previewScanDone()
         sane_close(m_saneHandle);
         m_saneHandle = 0;
         clearDeviceOptions();
-        emit q->scanDone(KSaneWidget::NoError, "");
+        emit (q->scanDone(KSaneWidget::NoError, ""));
         return;
     }
 
@@ -833,7 +833,7 @@ void KSaneWidgetPrivate::previewScanDone()
     
     m_previewViewer->updateImage();
     
-    emit q->scanDone(KSaneWidget::NoError, "");
+    emit (q->scanDone(KSaneWidget::NoError, ""));
     
     return;
 }
@@ -905,18 +905,18 @@ void KSaneWidgetPrivate::oneFinalScanDone()
             int bytesPerLine = qMax(getBytesPerLines(params), 1); // ensure no div by 0
             lines = m_scanData.size() / bytesPerLine;
         }
-        emit q->imageReady(m_scanData,
+        emit (q->imageReady(m_scanData,
                          params.pixels_per_line,
                          lines,
                          getBytesPerLines(params),
-                         (int)getImgFormat(params));
+                         (int)getImgFormat(params)));
 
         // now check if we should have automatic ADF batch scaning
         if (m_optSource){
             QString source;
             m_optSource->getValue(source);
 
-            if (source == "Automatic Document Feeder") {
+            if (source.contains("Automatic Document Feeder")) {
                 // in batch mode only one area can be scanned per page
                 //kDebug() << "source == \"Automatic Document Feeder\"";
                 m_updProgressTmr.start();
@@ -982,7 +982,7 @@ void KSaneWidgetPrivate::oneFinalScanDone()
                 return;
             }
         }
-        emit q->scanDone(KSaneWidget::NoError, "");
+        emit (q->scanDone(KSaneWidget::NoError, ""));
     }
     else {
         switch(m_scanThread->saneStatus()) 
@@ -992,7 +992,7 @@ void KSaneWidgetPrivate::oneFinalScanDone()
             case SANE_STATUS_EOF:
                 break;
             case SANE_STATUS_NO_DOCS:
-                emit q->scanDone(KSaneWidget::Information, i18n(sane_strstatus(m_scanThread->saneStatus())));
+                emit (q->scanDone(KSaneWidget::Information, i18n(sane_strstatus(m_scanThread->saneStatus()))));
                 alertUser(KSaneWidget::Information, i18n(sane_strstatus(m_scanThread->saneStatus())));
                 break;
             case SANE_STATUS_UNSUPPORTED:
@@ -1003,7 +1003,7 @@ void KSaneWidgetPrivate::oneFinalScanDone()
             case SANE_STATUS_COVER_OPEN:
             case SANE_STATUS_DEVICE_BUSY:
             case SANE_STATUS_ACCESS_DENIED:
-                emit q->scanDone(KSaneWidget::ErrorGeneral, i18n(sane_strstatus(m_scanThread->saneStatus())));
+                emit (q->scanDone(KSaneWidget::ErrorGeneral, i18n(sane_strstatus(m_scanThread->saneStatus()))));
                 alertUser(KSaneWidget::ErrorGeneral, i18n(sane_strstatus(m_scanThread->saneStatus())));
                 break;
         }
@@ -1023,11 +1023,15 @@ void KSaneWidgetPrivate::setBusy(bool busy)
         m_warmingUp->show();
         m_activityFrame->hide();
         m_btnFrame->hide();
+        m_optionPollTmr.stop();
     }
     else {
         m_warmingUp->hide();
         m_activityFrame->hide();
         m_btnFrame->show();
+        if (m_pollList.size() > 0) {
+            m_optionPollTmr.start();
+        }
     }
     
     m_optsTabWidget->setDisabled(busy);
@@ -1097,7 +1101,7 @@ void KSaneWidgetPrivate::updateProgress()
     }
     
     m_progressBar->setValue(progress);
-    emit q->scanProgress(progress);
+    emit (q->scanProgress(progress));
 }
 
 void KSaneWidgetPrivate::alertUser(int type, const QString &strStatus)
@@ -1109,10 +1113,11 @@ void KSaneWidgetPrivate::alertUser(int type, const QString &strStatus)
                 break;
             default:
                 KMessageBox::information(0, strStatus);
+                break;
         }
     }
     else {
-        emit q->userMessage(type, strStatus);
+        emit (q->userMessage(type, strStatus));
     }
 }
 

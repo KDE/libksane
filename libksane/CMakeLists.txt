@@ -45,7 +45,9 @@ TARGET_LINK_LIBRARIES(ksane ${KDE4_KDEUI_LIBS}
 
 SET_TARGET_PROPERTIES(ksane PROPERTIES VERSION ${KSANE_LIB_SO_VERSION_STRING} SOVERSION ${KSANE_LIB_SO_CUR_VERSION})
 
-IF ("$ENV{COMPILE_VIEWER_TESTAPP}" STREQUAL "YES")
+OPTION(COMPILE_VIEWER_TESTAPP "Compile a small test application for the viewer")
+
+IF (COMPILE_VIEWER_TESTAPP)
     message("Compile testapp")
     kde4_add_executable(viewer_test ksane_viewer.cpp ksane_viewer_test.cpp selectionitem.cpp)
     target_link_libraries(viewer_test ${KDE4_KDEUI_LIBS})
