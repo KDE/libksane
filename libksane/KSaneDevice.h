@@ -42,7 +42,6 @@ class LIBKSANE_EXPORT KSaneDevice : public QObject
 {
     Q_OBJECT
     friend class KSaneDevicePrivate;
-    friend class KSaneCore;
 
 public:
     /** This enumeration describes the type of the returned data.
@@ -62,8 +61,7 @@ public:
     };
 
     /** \note There might come more enumerations in the future. */
-    enum ScanStatus
-    {
+    enum ScanStatus {
         NoError,            /**< The scanning was finished successfully.*/
         ErrorCannotSegment, /**< If this error status is returned libksane can not segment the
                              * returned data. Scanning without segmentation should work.
@@ -72,8 +70,29 @@ public:
         Information          /**< There is some information to the user. */
     };
 
-    /** Destructor */
+    struct DeviceInfo {
+        QString vendor;   /**< device vendor string (sometimes called "make")*/
+        QString model;    /**< device model name */
+        QString type;     /**< device type (e.g., "flatbed scanner") */
+        QString name;     /**< unique device name used to identify the scanner */
+    };
+
+    explicit KSaneDevice(QObject* parent=0);
     ~KSaneDevice();
+
+    /**
+     * Initiate the fetching of the list of connected scanners. The available
+     * devices are returned with the availableDevices() signal.
+     * \param rescanDeviceList force a rescan of the devices even if a device list
+     * already is in memory.
+     * \note All sane backends do not support rescanning for devices, which means
+     * that the list might not be updated even if a new scanner is connected. */
+    void requestDeviceList(bool rescanDeviceList);
+
+    /** This method opens the specified scanner device
+     * \param name is the sane device name for the scanner to open.
+     * \return 'true' on success and 'false' if the specified scanner can not be opened. */
+     bool openDevice(const QString &name);
 
     /**
      * This is a convenience method that can be used to create a QImage from the image data
@@ -94,11 +113,10 @@ public:
                     int bytes_per_line,
                     ImageFormat format);
 
-    /** This method returns the vendor name of the scanner (Same as make). */
-    QString vendor() const;
-
-    /** This methos returns the model of the scanner. */
-    QString model() const;
+    /** This method returns the device information of the open device. If no
+     * device is open it will return an empty struct.
+     * \return the device information of the open device */
+    const DeviceInfo deviceInfo() const;
 
     /** This method returns the scan area's width in mm
     * \return Width of the scannable area in mm */
@@ -111,8 +129,9 @@ public:
     /** This method sets the selection according to the given points
     * \note The points are defined with respect to the scan areas top-left corner in mm
     * \param topLeft Upper left corner of the selection (in mm)
-    * \param bottomRight Lower right corner of the selection (in mm) */
-    void setSelection(QPointF topLeft, QPointF bottomRight);
+    * \param bottomRight Lower right corner of the selection (in mm)
+    * \return true if the selection could be made and false on failure */
+    bool setSelection(QPointF topLeft, QPointF bottomRight);
 
     /** This function is used to set the preferred resolution for scanning the preview.
     * \param dpi is the wanted scan resolution for the preview
@@ -131,6 +150,17 @@ public Q_SLOTS:
     void scanFinal();
 
 Q_SIGNALS:
+
+    /**
+     * This signal is emitted every time the device list is updated or
+     * after initGetDeviceList() is called.
+     * param deviceList is a QList of KSaneDevice::DeviceInfo that contain the
+     * device name, model, vendor and type of the attached scanners.
+     * \note The list is only a snapshot of the current available devices. Devices
+     * might be added or removed/opened after the signal is emitted.
+     */
+    void availableDevices(const QList<KSaneDevice::DeviceInfo> &deviceList);
+
     /**
      * This Signal is emitted when a final scan is ready.
      * \param data is the byte data containing the image.
@@ -139,13 +169,14 @@ Q_SIGNALS:
      * \param bytes_per_line is the number of bytes used per line. This might include padding
      * and is probably only relevant for 'FormatBlackWhite'.
      * \param format is the KSane image format of the data.
-     * \param dpi contains the Dots Per Inch (DPI) of the scanned image. */
+     * \param xdpi contains the Dots Per Inch (DPI) of the scanned image for the X-axes
+     * \param ydpi contains the Dots Per Inch (DPI) of the scanned image for the Y-axes. */
     void imageReady(QByteArray &data, int width, int height,
-                    int bytes_per_line, int format, qreal dpi);
+                    int bytes_per_line, int format, qreal xdpi, qreal ydpi);
 
     /**
      * This signal is emitted when the user is to be notified about something.
-     * \note If no slot is connected to this signal the message will be displayed in a KMessageBox.
+     * \note If no slot is connected to this signal the message will be displayed on stderr.
      * \param type contains a ScanStatus code to identify the type of message (error/info/...).
      * \param msg is the message to the user.
      * otherwise the string is empty. */
@@ -171,9 +202,6 @@ Q_SIGNALS:
     void buttonPressed(const QString &optionName, const QString &optionLabel, bool pressed);
 
 private:
-    /** This constructor initializes the private class variables. */
-    KSaneDevice(QObject* parent=0);
-
     KSaneDevicePrivate * const d;
 };
 
