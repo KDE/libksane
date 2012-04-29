@@ -67,13 +67,6 @@ public:
      * that the list might not be updated even if a new scanner is connected. */
     void requestDeviceList(bool rescanDeviceList);
 
-    /** This method opens the specified scanner device and adds the scan options to the
-     * KSane widget.
-     * param device_name is the libsane device name for the scanner to open.
-     * \return 'true' if all goes well and 'false' if the specified scanner can not be opened. */
-    bool openDevice(const QString &device_name);
-
-
 Q_SIGNALS:
     /**
      * This signal is emitted every time the device list is updated or

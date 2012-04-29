@@ -62,7 +62,7 @@ public:
     };
 
     /** \note There might come more enumerations in the future. */
-    typedef enum
+    enum ScanStatus
     {
         NoError,            /**< The scanning was finished successfully.*/
         ErrorCannotSegment, /**< If this error status is returned libksane can not segment the
@@ -70,7 +70,7 @@ public:
                              * \note segmentation is not implemented yet.*/
         ErrorGeneral,        /**< The error string should contain an error message. */
         Information          /**< There is some information to the user. */
-    } ScanStatus;
+    };
 
     /** Destructor */
     ~KSaneDevice();
@@ -100,13 +100,6 @@ public:
     /** This methos returns the model of the scanner. */
     QString model() const;
 
-    /** This method returns the current resolution of the acquired image,
-    * in dots per inch.
-    * \note This function should be called from the slot connected
-    * to the imageReady signal. The connection should not be queued.
-    * \return the resolution used for scanning or 0.0 on failure. */
-    float currentDPI();
-
     /** This method returns the scan area's width in mm
     * \return Width of the scannable area in mm */
     float scanAreaWidth();
@@ -120,55 +113,12 @@ public:
     * \param topLeft Upper left corner of the selection (in mm)
     * \param bottomRight Lower right corner of the selection (in mm) */
     void setSelection(QPointF topLeft, QPointF bottomRight);
-    
+
     /** This function is used to set the preferred resolution for scanning the preview.
     * \param dpi is the wanted scan resolution for the preview
     * \note if the set value is not supported, the cloasest one is used
     * \note setting the value 0 means that the default calculated value should be used */
     void setPreviewResolution(float dpi);
-
-    /** This method reads the available parameters and their values and
-     * returns them in a QMap (Name, value)
-     * \param opts is a QMap with the parameter names and values. */
-    void getOptVals(QMap <QString, QString> &opts);
-
-    /** This method can be used to write many parameter values at once.
-     * \param opts is a QMap with the parameter names and values.
-     * \return This function returns the number of successful writes. */
-    int setOptVals(const QMap <QString, QString> &opts);
-
-    /** This function reads one parameter value into a string.
-     * \param optname is the name of the parameter to read.
-     * \param value is the string representation of the value.
-     * \return this function returns true if the read was successful. */
-    bool getOptVal(const QString &optname, QString &value);
-
-    /** This function writes one parameter value into a string.
-     * \param optname is the name of the parameter to write.
-     * \param value is the string representation of the value.
-     * \return this function returns true if the write was successful. */
-    bool setOptVal(const QString &optname, const QString &value);
-
-    /** This function sets the label on the final scan button
-    * \param scanLabel is the new label for the button. */
-    void setScanButtonText(const QString &scanLabel);
-
-    /** This function sets the label on the preview button
-    * \param previewLabel is the new label for the button. */
-    void setPreviewButtonText(const QString &previewLabel);
-
-    /** This function can be used to enable/disable automatic selections on previews.
-    * The default state is enabled.
-    * \param enable specifies if the auto selection should be turned on or off. */
-    void enableAutoSelect(bool enable);
-
-    /** This function is used to programatically collapse/restore the options.
-    * \param collapse defines the state to set. */
-    void setOptionsCollapsed(bool collapse);
-
-    /** This function is used hide/show the final scan button.
-    * \param hidden defines the state to set. */
-    void setScanButtonHidden(bool hidden);
 
 public Q_SLOTS:
     /** This method can be used to cancel a scan or prevent an automatic new scan. */
