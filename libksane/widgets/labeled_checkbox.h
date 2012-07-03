@@ -42,22 +42,22 @@ namespace KSaneIface
   */
 
 /**
- * A wrapper for a checkbox
+ * A wrapper for a checkBox
  */
-class LabeledCheckbox : public KSaneOptionWidget
+class LabeledCheckBox : public KSaneOptionWidget
 {
     Q_OBJECT
 
 public:
 
    /**
-    * Create the checkbox.
+    * Create the checkBox.
     *
     * \param parent parent widget
-    * \param text is the text describing the checkbox.
+    * \param text is the text describing the checkBox.
     */
-    LabeledCheckbox(QWidget *parent, const QString& text);
-    ~LabeledCheckbox();
+    LabeledCheckBox(QWidget *parent, const QString& text);
+    ~LabeledCheckBox();
     void setChecked(bool);
     bool isChecked();
 

@@ -25,9 +25,9 @@
 *
 * ============================================================ */
 
-#include "ksane_viewer.h"
-#include "ksane_viewer.moc"
-#include "selectionitem.h"
+#include "KSaneViewer.h"
+#include "KSaneViewer.moc"
+#include "KSaneSelectionItem.h"
 
 #include <QGraphicsPixmapItem>
 #include <QGraphicsScene>
@@ -44,17 +44,14 @@
 
 #include <math.h>
 
-namespace KSaneIface
-{
-
 struct KSaneViewer::Private
 {
     QGraphicsScene      *scene;
-    SelectionItem       *selection;
-    QImage              *img;
+    KSaneSelectionItem  *selection;
+    const QImage        *img;
 
-    QList<SelectionItem *>    selectionList;
-    SelectionItem::Intersects change;
+    QList<KSaneSelectionItem *>    selectionList;
+    KSaneSelectionItem::Intersects change;
 
     QPointF lastSPoint;
     int m_left_last_x;
@@ -73,7 +70,7 @@ struct KSaneViewer::Private
     QGraphicsRectItem *hideArea;
 };
 
-KSaneViewer::KSaneViewer(QImage * img, QWidget *parent) : QGraphicsView(parent), d(new Private)
+KSaneViewer::KSaneViewer(const QImage * img, QWidget *parent) : QGraphicsView(parent), d(new Private)
 {
     d->img = img;
 
@@ -86,7 +83,7 @@ KSaneViewer::KSaneViewer(QImage * img, QWidget *parent) : QGraphicsView(parent),
     d->scene->setSceneRect(0, 0, img->width(), img->height());
     setScene(d->scene);
 
-    d->selection = new SelectionItem(QRectF());
+    d->selection = new KSaneSelectionItem(QRectF());
     d->selection->setZValue(10);
     d->selection->setSaved(false);
     d->selection->setMaxRight(img->width());
@@ -124,7 +121,7 @@ KSaneViewer::KSaneViewer(QImage * img, QWidget *parent) : QGraphicsView(parent),
     d->scene->addItem(d->hideBottom);
     d->scene->addItem(d->hideArea);
     
-    d->change = SelectionItem::None;
+    d->change = KSaneSelectionItem::None;
     d->selectionList.clear();
     
     // create context menu
@@ -155,7 +152,9 @@ KSaneViewer::KSaneViewer(QImage * img, QWidget *parent) : QGraphicsView(parent),
 void KSaneViewer::drawBackground(QPainter *painter, const QRectF &rect)
 {
     painter->fillRect(rect, QColor(0x70, 0x70, 0x70));
-    painter->drawImage(rect, *d->img, rect);
+    if (d->img) {
+        painter->drawImage(rect, *d->img, rect);
+    }
 }
 
 // ------------------------------------------------------------------------
@@ -168,7 +167,7 @@ KSaneViewer::~KSaneViewer()
 }
 
 // ------------------------------------------------------------------------
-void KSaneViewer::setQImage(QImage *img)
+void KSaneViewer::setQImage(const QImage *img)
 {
     if (img == 0) return;
 
@@ -185,7 +184,23 @@ void KSaneViewer::setQImage(QImage *img)
 }
 
 // ------------------------------------------------------------------------
-void KSaneViewer::updateImage()
+void KSaneViewer::imageResized()
+{
+    if (d->img == 0) return;
+
+    // remove selections
+    clearSelections();
+
+    // clear zoom
+    setMatrix(QMatrix());
+
+    d->scene->setSceneRect(0, 0, d->img->width(), d->img->height());
+    d->selection->setMaxRight(d->img->width());
+    d->selection->setMaxBottom(d->img->height());
+}
+
+// ------------------------------------------------------------------------
+void KSaneViewer::imageUpdated()
 {
     setCacheMode(QGraphicsView::CacheNone);
     repaint();
@@ -238,7 +253,7 @@ void KSaneViewer::zoom2Fit()
 }
 
 // ------------------------------------------------------------------------
-void KSaneViewer::setTLX(float ratio)
+void KSaneViewer::setTLX(qreal ratio)
 {
     if (!d->selection->isVisible()) return; // only correct the selection if it is visible
     QRectF rect = d->selection->rect();
@@ -248,7 +263,7 @@ void KSaneViewer::setTLX(float ratio)
 }
 
 // ------------------------------------------------------------------------
-void KSaneViewer::setTLY(float ratio)
+void KSaneViewer::setTLY(qreal ratio)
 {
     if (!d->selection->isVisible()) return; // only correct the selection if it is visible
     QRectF rect = d->selection->rect();
@@ -258,7 +273,7 @@ void KSaneViewer::setTLY(float ratio)
 }
 
 // ------------------------------------------------------------------------
-void KSaneViewer::setBRX(float ratio)
+void KSaneViewer::setBRX(qreal ratio)
 {
     if (!d->selection->isVisible()) return; // only correct the selection if it is visible
     QRectF rect = d->selection->rect();
@@ -268,7 +283,7 @@ void KSaneViewer::setBRX(float ratio)
 }
 
 // ------------------------------------------------------------------------
-void KSaneViewer::setBRY(float ratio)
+void KSaneViewer::setBRY(qreal ratio)
 {
     if (!d->selection->isVisible()) return; // only correct the selection if it is visible
     QRectF rect = d->selection->rect();
@@ -278,7 +293,7 @@ void KSaneViewer::setBRY(float ratio)
 }
 
 // ------------------------------------------------------------------------
-void KSaneViewer::setSelection(float tl_x, float tl_y, float br_x, float br_y)
+void KSaneViewer::setSelection(qreal tl_x, qreal tl_y, qreal br_x, qreal br_y)
 {
     QRectF rect;
     rect.setCoords(tl_x * d->img->width(),
@@ -291,7 +306,7 @@ void KSaneViewer::setSelection(float tl_x, float tl_y, float br_x, float br_y)
 }
 
 // ------------------------------------------------------------------------
-void KSaneViewer::setHighlightArea(float tl_x, float tl_y, float br_x, float br_y)
+void KSaneViewer::setHighlightArea(qreal tl_x, qreal tl_y, qreal br_x, qreal br_y)
 {
     QRectF rect;
     
@@ -438,7 +453,7 @@ int KSaneViewer::selListSize() {
 }
 
 // ---- First return the "saved" selection sthen the active selection -----------
-bool KSaneViewer::selectionAt(int index, float &tl_x, float &tl_y, float &br_x, float &br_y)
+bool KSaneViewer::selectionAt(int index, qreal &tl_x, qreal &tl_y, qreal &br_x, qreal &br_y)
 {
     if ((index < 0) || (index > d->selectionList.size())) {
         activeSelection(tl_x, tl_y, br_x, br_y);
@@ -456,7 +471,7 @@ bool KSaneViewer::selectionAt(int index, float &tl_x, float &tl_y, float &br_x, 
 }
 
 // ------------------------------------------------------------------------
-bool KSaneViewer::activeSelection(float &tl_x, float &tl_y, float &br_x, float &br_y)
+bool KSaneViewer::activeSelection(qreal &tl_x, qreal &tl_y, qreal &br_x, qreal &br_y)
 {
     if (!d->selection->isVisible()) {
         tl_x = 0.0;
@@ -493,7 +508,7 @@ void KSaneViewer::clearActiveSelection()
 void KSaneViewer::clearSavedSelections()
 {
     // first remove any old saved selections
-    SelectionItem *tmp;
+    KSaneSelectionItem *tmp;
     while (!d->selectionList.isEmpty()) {
         tmp = d->selectionList.takeFirst();
         d->scene->removeItem(tmp);
@@ -536,11 +551,11 @@ void KSaneViewer::mousePressEvent(QMouseEvent *e)
                 d->selection->setVisible(true);
                 d->selection->setRect(QRectF(scenePoint, QSizeF(0,0)));
                 d->selection->intersects(scenePoint); // just to disable add/remove
-                d->change = SelectionItem::BottomRight;
+                d->change = KSaneSelectionItem::BottomRight;
             }
             else if (!d->selection->contains(scenePoint)) {
                 d->selection->setRect(QRectF(scenePoint, QSizeF(0,0)));
-                d->change = SelectionItem::BottomRight;
+                d->change = KSaneSelectionItem::BottomRight;
             }
             updateHighlight();
         }
@@ -562,9 +577,9 @@ void KSaneViewer::mouseReleaseEvent(QMouseEvent *e)
 
         QPointF scenePoint = mapToScene(e->pos());
         for (int i=0; i<d->selectionList.size(); i++) {
-            if (d->selectionList[i]->intersects(scenePoint) == SelectionItem::AddRemove) {
+            if (d->selectionList[i]->intersects(scenePoint) == KSaneSelectionItem::AddRemove) {
                 d->scene->removeItem(d->selectionList[i]);
-                SelectionItem *tmp = d->selectionList[i];
+                KSaneSelectionItem *tmp = d->selectionList[i];
                 d->selectionList.removeAt(i);
                 d->selection->setVisible(true);
                 d->selection->setRect(tmp->rect());
@@ -574,9 +589,9 @@ void KSaneViewer::mouseReleaseEvent(QMouseEvent *e)
                 break;
             }
         }
-        if (!removed && (d->selection->intersects(scenePoint) == SelectionItem::AddRemove)) {
+        if (!removed && (d->selection->intersects(scenePoint) == KSaneSelectionItem::AddRemove)) {
             // add the current selection
-            SelectionItem *tmp = new SelectionItem(d->selection->rect());
+            KSaneSelectionItem *tmp = new KSaneSelectionItem(d->selection->rect());
             d->selectionList.push_back(tmp);
             d->selectionList.back()->setSaved(true);
             d->selectionList.back()->saveZoom(transform().m11());
@@ -595,10 +610,10 @@ void KSaneViewer::mouseReleaseEvent(QMouseEvent *e)
         (d->img->width() > 0.001) &&
         (d->img->height() > 0.001))
     {
-        float tlx = d->selection->rect().left()   / d->img->width();
-        float tly = d->selection->rect().top()    / d->img->height();
-        float brx = d->selection->rect().right()  / d->img->width();
-        float bry = d->selection->rect().bottom() / d->img->height();
+        qreal tlx = d->selection->rect().left()   / d->img->width();
+        qreal tly = d->selection->rect().top()    / d->img->height();
+        qreal brx = d->selection->rect().right()  / d->img->width();
+        qreal bry = d->selection->rect().bottom() / d->img->height();
         
         emit newSelection(tlx, tly, brx, bry);
     }
@@ -627,89 +642,89 @@ void KSaneViewer::mouseMoveEvent(QMouseEvent *e)
             QRectF rect = d->selection->rect();
             switch (d->change)
             {
-                case SelectionItem::None:
+                case KSaneSelectionItem::None:
                     // should not be here :)
                     break;
-                case SelectionItem::Top:
+                case KSaneSelectionItem::Top:
                     if (scenePoint.y() < rect.bottom()) rect.setTop(scenePoint.y());
                     else {
-                        d->change = SelectionItem::Bottom;
+                        d->change = KSaneSelectionItem::Bottom;
                         rect.setBottom(scenePoint.y());
                     }
                     break;
-                case SelectionItem::TopRight:
+                case KSaneSelectionItem::TopRight:
                     if (scenePoint.x() > rect.left()) rect.setRight(scenePoint.x());
                     else {
                         rect.setLeft(scenePoint.x());
-                        d->change = SelectionItem::TopLeft;
+                        d->change = KSaneSelectionItem::TopLeft;
                     }
                     if (scenePoint.y() < rect.bottom()) rect.setTop(scenePoint.y());
                     else {
                         rect.setBottom(scenePoint.y());
-                        d->change = SelectionItem::BottomLeft;
+                        d->change = KSaneSelectionItem::BottomLeft;
                     } // FIXME arrow
                     break;
-                case SelectionItem::Right:
+                case KSaneSelectionItem::Right:
                     if (scenePoint.x() > rect.left()) rect.setRight(scenePoint.x());
                     else {
                         rect.setLeft(scenePoint.x());
-                        d->change = SelectionItem::Left;
+                        d->change = KSaneSelectionItem::Left;
                     }
                     break;
-                case SelectionItem::BottomRight:
+                case KSaneSelectionItem::BottomRight:
                     if (scenePoint.x() > rect.left()) rect.setRight(scenePoint.x());
                     else {
                         rect.setLeft(scenePoint.x());
-                        d->change = SelectionItem::BottomLeft;
+                        d->change = KSaneSelectionItem::BottomLeft;
                     }
                     if (scenePoint.y() > rect.top())  rect.setBottom(scenePoint.y());
                     else {
                         rect.setTop(scenePoint.y());
-                        d->change = SelectionItem::TopRight;
+                        d->change = KSaneSelectionItem::TopRight;
                     } // FIXME arrow
                     break;
-                case SelectionItem::Bottom:
+                case KSaneSelectionItem::Bottom:
                     if (scenePoint.y() > rect.top()) rect.setBottom(scenePoint.y());
                     else {
-                        d->change = SelectionItem::Top;
+                        d->change = KSaneSelectionItem::Top;
                         rect.setTop(scenePoint.y());
                     }
                     break;
-                case SelectionItem::BottomLeft:
+                case KSaneSelectionItem::BottomLeft:
                     if (scenePoint.x() < rect.right()) rect.setLeft(scenePoint.x());
                     else {
                         rect.setRight(scenePoint.x());
-                        d->change = SelectionItem::BottomRight;
+                        d->change = KSaneSelectionItem::BottomRight;
                     }
                     if (scenePoint.y() > rect.top()) rect.setBottom(scenePoint.y());
                     else {
                         rect.setTop(scenePoint.y());
-                        d->change = SelectionItem::TopLeft;
+                        d->change = KSaneSelectionItem::TopLeft;
                     } // FIXME arrow
                     break;
-                case SelectionItem::Left:
+                case KSaneSelectionItem::Left:
                     if (scenePoint.x() < rect.right()) rect.setLeft(scenePoint.x());
                     else {
                         rect.setRight(scenePoint.x());
-                        d->change = SelectionItem::Right;
+                        d->change = KSaneSelectionItem::Right;
                     }
                     break;
-                case SelectionItem::TopLeft:
+                case KSaneSelectionItem::TopLeft:
                     if (scenePoint.x() < rect.right())  rect.setLeft(scenePoint.x());
                     else {
                         rect.setRight(scenePoint.x());
-                        d->change = SelectionItem::TopRight;
+                        d->change = KSaneSelectionItem::TopRight;
                     }
                     if (scenePoint.y() < rect.bottom()) rect.setTop(scenePoint.y());
                     else {
                         rect.setBottom(scenePoint.y());
-                        d->change = SelectionItem::BottomLeft;
+                        d->change = KSaneSelectionItem::BottomLeft;
                     }// FIXME arrow
                     break;
-                case SelectionItem::Move:
+                case KSaneSelectionItem::Move:
                     rect.translate(d->selection->fixTranslation(scenePoint-d->lastSPoint));
                     break;
-                case SelectionItem::AddRemove:
+                case KSaneSelectionItem::AddRemove:
                     // do nothing
                     break;
             }
@@ -721,37 +736,37 @@ void KSaneViewer::mouseMoveEvent(QMouseEvent *e)
 
         switch (d->change)
         {
-            case SelectionItem::None:
+            case KSaneSelectionItem::None:
                 viewport()->setCursor(Qt::CrossCursor);
                 break;
-            case SelectionItem::Top:
+            case KSaneSelectionItem::Top:
                 viewport()->setCursor(Qt::SizeVerCursor);
                 break;
-            case SelectionItem::TopRight:
+            case KSaneSelectionItem::TopRight:
                 viewport()->setCursor(Qt::SizeBDiagCursor);
                 break;
-            case SelectionItem::Right:
+            case KSaneSelectionItem::Right:
                 viewport()->setCursor(Qt::SizeHorCursor);
                 break;
-            case SelectionItem::BottomRight:
+            case KSaneSelectionItem::BottomRight:
                 viewport()->setCursor(Qt::SizeFDiagCursor);
                 break;
-            case SelectionItem::Bottom:
+            case KSaneSelectionItem::Bottom:
                 viewport()->setCursor(Qt::SizeVerCursor);
                 break;
-            case SelectionItem::BottomLeft:
+            case KSaneSelectionItem::BottomLeft:
                 viewport()->setCursor(Qt::SizeBDiagCursor);
                 break;
-            case SelectionItem::Left:
+            case KSaneSelectionItem::Left:
                 viewport()->setCursor(Qt::SizeHorCursor);
                 break;
-            case SelectionItem::TopLeft:
+            case KSaneSelectionItem::TopLeft:
                 viewport()->setCursor(Qt::SizeFDiagCursor);
                 break;
-            case SelectionItem::Move:
+            case KSaneSelectionItem::Move:
                 viewport()->setCursor(Qt::SizeAllCursor);
                 break;
-            case SelectionItem::AddRemove:
+            case KSaneSelectionItem::AddRemove:
                 viewport()->setCursor(Qt::ArrowCursor);
                 break;
         }
@@ -762,7 +777,7 @@ void KSaneViewer::mouseMoveEvent(QMouseEvent *e)
 
     // now check the selection list
     for (int i=0; i<d->selectionList.size(); i++) {
-        if (d->selectionList[i]->intersects(scenePoint) == SelectionItem::AddRemove) {
+        if (d->selectionList[i]->intersects(scenePoint) == KSaneSelectionItem::AddRemove) {
             viewport()->setCursor(Qt::ArrowCursor);
         }
     }
@@ -778,7 +793,7 @@ static const int DIFF_TRIGGER = 8;
 // The selection start/stop level trigger
 static const int SUM_TRIGGER = 4;
 
-// The selection start/stop level trigger for the floating  average
+// The selection start/stop level trigger for the qrealing  average
 static const int AVERAGE_TRIGGER = 7;
 
 // The selection start/stop margin
@@ -787,17 +802,17 @@ static const int SEL_MARGIN = 3;
 // Maximum number of allowed selections (this could be a settable variable)
 static const int MAX_NUM_SELECTIONS = 8;
 
-// floating average 'div' must be one less than 'count'
+// qrealing average 'div' must be one less than 'count'
 static const int AVERAGE_COUNT = 50;
 static const int AVERAGE_MULT = 49;
 
 // Minimum selection area compared to the whole image
-static const float MIN_AREA_SIZE = 0.01;
+static const qreal MIN_AREA_SIZE = 0.01;
 // ------------------------------------------------------------------------
-void KSaneViewer::findSelections(float area)
+void KSaneViewer::findSelections(qreal area)
 {
     // Reduce the size of the image to decrease noise and calculation time
-    float multiplier = sqrt(area/(d->img->height() * d->img->width()));
+    qreal multiplier = sqrt(area/(d->img->height() * d->img->width()));
 
     int width  = (int)(d->img->width() * multiplier);
     int height = (int)(d->img->height() * multiplier);
@@ -902,9 +917,9 @@ void KSaneViewer::findSelections(float area)
                                 int y1 = hSelStart / multiplier;
                                 int x2 = wSelEnd / multiplier;
                                 int y2 = hSelEnd / multiplier;
-                                float selArea = (float)(wSelEnd - wSelStart) * (float)(hSelEnd-hSelStart);
+                                qreal selArea = (qreal)(wSelEnd - wSelStart) * (qreal)(hSelEnd-hSelStart);
                                 if (selArea > (area * MIN_AREA_SIZE)) {
-                                    SelectionItem *tmp = new SelectionItem(QRect(QPoint(x1, y1), QPoint(x2, y2)));
+                                    KSaneSelectionItem *tmp = new KSaneSelectionItem(QRect(QPoint(x1, y1), QPoint(x2, y2)));
                                     d->selectionList.push_back(tmp);
                                     d->selectionList.back()->setSaved(true);
                                     d->selectionList.back()->saveZoom(transform().m11());
@@ -937,7 +952,7 @@ void KSaneViewer::findSelections(float area)
         // 1/multiplier is the error margin caused by the resolution reduction
         refineSelections(qRound(1/multiplier));
         // check that the selections are big enough
-        float minArea = d->img->height() * d->img->width() * MIN_AREA_SIZE;
+        qreal minArea = d->img->height() * d->img->width() * MIN_AREA_SIZE;
 
         int i = 0;
         while (i < d->selectionList.size()) {
@@ -996,7 +1011,7 @@ int KSaneViewer::refineRow(int fromRow, int toRow, int colStart, int colEnd)
 {
     int pix;
     int diff;
-    float rowTrigger;
+    qreal rowTrigger;
     int row;
     int addSub = (fromRow < toRow) ? 1 : -1;
 
@@ -1048,7 +1063,7 @@ int KSaneViewer::refineColumn(int fromCol, int toCol, int rowStart, int rowEnd)
 {
     int pix;
     int diff;
-    float colTrigger;
+    qreal colTrigger;
     int col;
     int count;
     int addSub = (fromCol < toCol) ? 1 : -1;
@@ -1098,5 +1113,3 @@ int KSaneViewer::refineColumn(int fromCol, int toCol, int rowStart, int rowEnd)
     }
     return col;
 }
-
-}  // NameSpace KSaneIface

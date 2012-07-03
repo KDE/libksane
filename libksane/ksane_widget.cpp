@@ -48,14 +48,14 @@
 
 // Local includes
 #include "ksane_widget_private.h"
-#include "ksane_option.h"
-#include "ksane_opt_button.h"
-#include "ksane_opt_checkbox.h"
-#include "ksane_opt_combo.h"
-#include "ksane_opt_entry.h"
-#include "ksane_opt_fslider.h"
-#include "ksane_opt_gamma.h"
-#include "ksane_opt_slider.h"
+#include "KSaneOption.h"
+#include "KSaneOptButton.h"
+#include "KSaneOptCheckBox.h"
+#include "KSaneOptCombo.h"
+#include "KSaneOptEntry.h"
+#include "KSaneOptSliderF.h"
+#include "KSaneOptGamma.h"
+#include "KSaneOptSlider.h"
 #include "ksane_device_dialog.h"
 #include "labeled_gamma.h"
 
@@ -109,8 +109,8 @@ KSaneWidget::KSaneWidget(QWidget* parent)
     // Create the static UI
     // create the preview
     d->m_previewViewer = new KSaneViewer(&(d->m_previewImg), this);
-    connect(d->m_previewViewer, SIGNAL(newSelection(float,float,float,float)),
-            d, SLOT(handleSelection(float,float,float,float)));
+    connect(d->m_previewViewer, SIGNAL(newSelection(qreal,qreal,qreal,qreal)),
+            d, SLOT(handleSelection(qreal,qreal,qreal,qreal)));
 
     
     d->m_warmingUp = new QLabel;
@@ -359,14 +359,14 @@ bool KSaneWidget::openDevice(const QString &deviceName)
         }
 
         // add/update the device user-name and password for authentication
-        d->m_auth->setDeviceAuth(d->m_devName, dlg->username(), dlg->password());
+        d->m_auth->setDeviceAuth(d->m_devName, dlg->usersaneName(), dlg->password());
 
         status = sane_open(deviceName.toLatin1(), &d->m_saneHandle);
 
         // store password in wallet on successful authentication
         if(dlg->keepPassword() && status != SANE_STATUS_ACCESS_DENIED) {
             QMap<QString, QString> entry;
-            entry["username"] = dlg->username().toUtf8();
+            entry["username"] = dlg->usersaneName().toUtf8();
             entry["password"] = dlg->password().toUtf8();
             saneWallet->writeMap(deviceName.toLatin1(), entry);
         }
@@ -420,8 +420,8 @@ bool KSaneWidget::openDevice(const QString &deviceName)
             case KSaneOption::TYPE_SLIDER:
                 d->m_optList.append(new KSaneOptSlider(d->m_saneHandle, i));
                 break;
-            case KSaneOption::TYPE_F_SLIDER:
-                d->m_optList.append(new KSaneOptFSlider(d->m_saneHandle, i));
+            case KSaneOption::TYPE_SLIDER_F:
+                d->m_optList.append(new KSaneOptSliderF(d->m_saneHandle, i));
                 break;
             case KSaneOption::TYPE_COMBO:
                 d->m_optList.append(new KSaneOptCombo(d->m_saneHandle, i));
@@ -440,12 +440,12 @@ bool KSaneWidget::openDevice(const QString &deviceName)
 
     // do the connections of the option parameters
     for (i=1; i<d->m_optList.size(); ++i) {
-        //kDebug() << d->m_optList.at(i)->name();
+        //kDebug() << d->m_optList.at(i)->saneName();
         connect (d->m_optList.at(i), SIGNAL(optsNeedReload()), d, SLOT(optReload()));
         connect (d->m_optList.at(i), SIGNAL(valsNeedReload()), d, SLOT(scheduleValReload()));
 
         if (d->m_optList.at(i)->needsPolling()) {
-            //kDebug() << d->m_optList.at(i)->name() << " needs polling";
+            //kDebug() << d->m_optList.at(i)->saneName() << " needs polling";
             d->m_pollList.append(d->m_optList.at(i));
             KSaneOptCheckBox *buttonOption = qobject_cast<KSaneOptCheckBox *>(d->m_optList.at(i));
             if (buttonOption) {
@@ -617,7 +617,7 @@ QImage KSaneWidget::toQImageSilent(const QByteArray &data,
             kDebug() << "Unsupported conversion";
             break;
     }
-    float dpm = currentDPI() * (1000.0 / 25.4);
+    qreal dpm = currentDPI() * (1000.0 / 25.4);
     img.setDotsPerMeterX(dpm);
     img.setDotsPerMeterY(dpm);
     return img;
@@ -659,7 +659,7 @@ void KSaneWidget::scanCancel()
     }
 }
 
-void KSaneWidget::setPreviewResolution(float dpi)
+void KSaneWidget::setPreviewResolution(qreal dpi)
 {
     d->m_previewDPI = dpi;
 }
@@ -673,7 +673,7 @@ void KSaneWidget::getOptVals(QMap <QString, QString> &opts)
     for (int i=1; i<d->m_optList.size(); i++) {
         option = d->m_optList.at(i);
         if (option->getValue(tmp)) {
-            opts[option->name()] = tmp;
+            opts[option->saneName()] = tmp;
         }
     }
     // Special handling for non sane option
@@ -702,8 +702,8 @@ int KSaneWidget::setOptVals(const QMap <QString, QString> &opts)
     int ret=0;
 
     for (i=0; i<d->m_optList.size(); i++) {
-        if (opts.contains(d->m_optList.at(i)->name())) {
-            tmp = opts[d->m_optList.at(i)->name()];
+        if (opts.contains(d->m_optList.at(i)->saneName())) {
+            tmp = opts[d->m_optList.at(i)->saneName()];
             if (d->m_optList.at(i)->setValue(tmp) == false) {
                 ret++;
             }
@@ -715,7 +715,7 @@ int KSaneWidget::setOptVals(const QMap <QString, QString> &opts)
         (d->m_optGamB))
     {
         // check if the current gamma values are identical. if they are identical,
-        // uncheck the "Separate color intensity tables" checkbox
+        // uncheck the "Separate color intensity tables" checkBox
         QString redGamma;
         QString greenGamma;
         QString blueGamma;
@@ -762,7 +762,7 @@ bool KSaneWidget::setOptVal(const QString &option, const QString &value)
                 (opt == d->m_optGamB)))
             {
                 // check if the current gamma values are identical. if they are identical,
-                // uncheck the "Separate color intensity tables" checkbox
+                // uncheck the "Separate color intensity tables" checkBox
                 QString redGamma;
                 QString greenGamma;
                 QString blueGamma;
@@ -821,10 +821,10 @@ void KSaneWidget::enableAutoSelect(bool enable)
     d->m_autoSelect = enable;
 }
 
-float KSaneWidget::currentDPI()
+qreal KSaneWidget::currentDPI()
 {
     if (d->m_optRes) {
-        float value;
+        qreal value;
         if (d->m_optRes->getValue(value)) {
             return value;
         }
@@ -832,9 +832,9 @@ float KSaneWidget::currentDPI()
     return 0.0;
 }
 
-float KSaneWidget::scanAreaWidth()
+qreal KSaneWidget::scanAreaWidth()
 {
-    float result = 0.0;
+    qreal result = 0.0;
     if (d->m_optBrX) {
         if (d->m_optBrX->getUnit() == SANE_UNIT_PIXEL) {
             d->m_optBrX->getMaxValue(result);
@@ -847,9 +847,9 @@ float KSaneWidget::scanAreaWidth()
     return result;
 }
 
-float KSaneWidget::scanAreaHeight()
+qreal KSaneWidget::scanAreaHeight()
 {
-    float result = 0.0;
+    qreal result = 0.0;
     if (d->m_optBrY) {
         if (d->m_optBrY->getUnit() == SANE_UNIT_PIXEL) {
             d->m_optBrY->getMaxValue(result);
@@ -867,7 +867,7 @@ void KSaneWidget::setSelection(QPointF topLeft, QPointF bottomRight)
     if (!d->m_optBrX || !d->m_optBrY || !d->m_optTlX || !d->m_optTlY) {
         return;
     }
-    float xmax, ymax;
+    qreal xmax, ymax;
     d->m_optBrX->getMaxValue(xmax);
     d->m_optBrY->getMaxValue(ymax);
     if (topLeft.x() < 0.0 || topLeft.y() < 0.0 || bottomRight.x() < 0.0 || bottomRight.y() < 0.0) {
@@ -894,9 +894,9 @@ void KSaneWidget::setSelection(QPointF topLeft, QPointF bottomRight)
         d->m_optBrY->setValue(bottomRight.y());
     }
     else if (d->m_optBrY->getUnit() == SANE_UNIT_PIXEL) {
-        const float mmperinch = 25.4;
-        const float dpi = currentDPI();
-        const float m = dpi / mmperinch;
+        const qreal mmperinch = 25.4;
+        const qreal dpi = currentDPI();
+        const qreal m = dpi / mmperinch;
         if (m*topLeft.x() > xmax || m*topLeft.y() > ymax || m*bottomRight.x() > xmax || m*bottomRight.y() > ymax) {
             d->m_previewViewer->clearActiveSelection();
             d->m_optTlX->setValue(0.0);

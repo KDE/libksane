@@ -2,8 +2,8 @@
 *
 * This file is part of the KDE project
 *
-* Date        : 2010
-* Description : Sane authentication helpers.
+* Date        : 2010-03-17
+* Description : Preview image viewer that can handle a selection.
 *
 * Copyright (C) 2010 by Kare Sars <kare dot sars at iki dot fi>
 *
@@ -25,33 +25,39 @@
 *
 * ============================================================ */
 
-#ifndef KSANE_AUTH_H
-#define KSANE_AUTH_H
+#include "KSaneViewer.h"
+#include "KSaneDevice.h"
 
-// Qt includes
-#include <QString>
+#include <KDebug>
+#include <QTimer>
+#include <QApplication>
+#include <QDialog>
+#include <QHBoxLayout>
 
-// Sane includes
-extern "C"
+int main (int argc, char *argv[])
 {
-#include <sane/saneopts.h>
-#include <sane/sane.h>
+    QApplication app(argc, argv);
+
+    if (argc != 2) {
+        kDebug() << "A device is needed.";
+        return 1;
+    }
+
+    KSaneDevice device;
+    if (!device.openDevice(argv[1])) {
+        kDebug() << "Failed to open device:" << argv[1];
+        return 1;
+    }
+
+    KSaneViewer *viewer= new KSaneViewer(device.previewImage());
+
+    QObject::connect(&device, SIGNAL(previewImageResized()), viewer, SLOT(imageResized()));
+    QObject::connect(&device, SIGNAL(previewProgress(int)), viewer, SLOT(imageUpdated()));
+
+    QDialog dialog;
+    QHBoxLayout *layout = new QHBoxLayout(&dialog);
+    layout->addWidget(viewer);
+
+    QTimer::singleShot(2000, &device, SLOT(scanPreview()));
+    return dialog.exec();
 }
-
-class KSaneAuth 
-{
-    public:
-        static KSaneAuth *getInstance();
-        ~KSaneAuth();
-
-        void setDeviceAuth(const QString &resource, const QString &username, const QString &password);
-        void clearDeviceAuth(const QString &resource);
-        static void authorization(SANE_String_Const resource, SANE_Char *username, SANE_Char *password);
-
-    private:
-        KSaneAuth();
-        struct Private;
-        Private * const d;
-};
-
-#endif

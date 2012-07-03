@@ -25,48 +25,34 @@
  *
  * ============================================================ */
 
-#ifndef KSANE_OPT_FSLIDER_H
-#define KSANE_OPT_FSLIDER_H
+#ifndef KSANE_OPT_CHECKBOX_H
+#define KSANE_OPT_CHECKBOX_H
 
-#include "ksane_option.h"
+#include "KSaneOption.h"
 
-namespace KSaneIface
-{
-
-class LabeledFSlider;
-
-class KSaneOptFSlider : public KSaneOption
+class KSaneOptCheckBox : public KSaneOption
 {
     Q_OBJECT
 
 public:
-    KSaneOptFSlider(const SANE_Handle handle, const int index);
-    
-    void createWidget(QWidget *parent);
+    KSaneOptCheckBox(const SANE_Handle handle, const int index);
 
     void readValue();
-    void readOption();
 
-    bool getMinValue(float &max);
-    bool getMaxValue(float &max);
-    bool getValue(float &val);
-    bool setValue(float val);
-    bool getValue(QString &val);
+    qreal value();
+    const QString strValue();
+    bool setValue(qreal val);
     bool setValue(const QString &val);
-    bool hasGui() {return true;}
+    bool editable() {return true;}
 
-    Q_SIGNALS:
-        void fValueRead(float);
-        
 private Q_SLOTS:
-    void sliderChanged(float val);
+    void checkBoxChanged(bool toggled);
+
+Q_SIGNALS:
+    void buttonPressed(const QString &optionName, const QString &optionLabel, bool pressed);
 
 private:
-    LabeledFSlider *m_slider;
-    float           m_fVal;
-    float           m_minChange;
+    bool m_checked;
 };
-
-}  // NameSpace KSaneIface
 
 #endif

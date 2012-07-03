@@ -40,7 +40,7 @@ namespace KSaneIface
 {
 
 /**
- * A wrapper for a checkbox
+ * A wrapper for a checkBox
  */
 class LabeledGamma : public KSaneOptionWidget
 {
@@ -49,10 +49,10 @@ class LabeledGamma : public KSaneOptionWidget
 public:
 
    /**
-    * Create the checkbox.
+    * Create the checkBox.
     *
     * \param parent parent widget
-    * \param text is the text describing the checkbox.
+    * \param text is the text describing the checkBox.
     */
     LabeledGamma(QWidget *parent, const QString& text, int elements);
     ~LabeledGamma();

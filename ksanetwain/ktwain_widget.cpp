@@ -138,8 +138,8 @@ bool KSaneWidget::setOptVal(const QString &option, const QString &value) {return
 void KSaneWidget::setScanButtonText(const QString &scanLabel) {}
 void KSaneWidget::setPreviewButtonText(const QString &previewLabel) {}
 void KSaneWidget::enableAutoSelect(bool enable) {}
-float KSaneWidget::currentDPI() {return 0.0;}
-void KSaneWidget::setPreviewResolution(float dpi){Q_UNUSED(dpi);}
+qreal KSaneWidget::currentDPI() {return 0.0;}
+void KSaneWidget::setPreviewResolution(qreal dpi){Q_UNUSED(dpi);}
 void KSaneWidget::setSelection(QPointF lefttop, QPointF rightbottom){Q_UNUSED(lefttop); Q_UNUSED(rightbottom);}
 void KSaneWidget::setOptionsCollapsed(bool){}
 void KSaneWidget::setScanButtonHidden(bool){}

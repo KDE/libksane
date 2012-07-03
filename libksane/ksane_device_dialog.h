@@ -29,7 +29,7 @@
 #ifndef KSANE_DEVICE_DIALOG_H
 #define KSANE_DEVICE_DIALOG_H
 
-#include "ksane_find_devices_thread.h"
+#include "KSaneFindDevicesThread.h"
 
 // Qt includes
 #include <QGroupBox>
@@ -75,7 +75,7 @@ private:
     QVBoxLayout            *m_btnLayout;
     QString                 m_defaultBackend;
     QString                 m_selectedDevice;
-    FindSaneDevicesThread  *m_findDevThread;
+    KSaneFindDevicesThread  *m_findDevThread;
 };
 
 }  // NameSpace KSaneIface

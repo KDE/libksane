@@ -24,48 +24,56 @@
  * License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * ============================================================ */
+// Local includes
+#include "KSaneOptEntry.h"
+#include "KSaneOptEntry.moc"
 
-#ifndef KSANE_OPT_SLIDER_H
-#define KSANE_OPT_SLIDER_H
+// Qt includes
+#include <QtCore/QVarLengthArray>
 
-#include "ksane_option.h"
+// KDE includes
+#include <KDebug>
+#include <KLocale>
 
-namespace KSaneIface
+KSaneOptEntry::KSaneOptEntry(const SANE_Handle handle, const int index)
+: KSaneOption(handle, index)
 {
+}
 
-class LabeledSlider;
-
-class KSaneOptSlider : public KSaneOption
+void KSaneOptEntry::entryChanged(const QString& text)
 {
-    Q_OBJECT
+    QString tmp;
+    tmp += text.left(m_optDesc->size);
+    if (tmp != text) {
+        writeData(tmp.toLatin1().data());
+    }
+}
 
-public:
-    KSaneOptSlider(const SANE_Handle handle, const int index);
-    
-    void createWidget(QWidget *parent);
+void KSaneOptEntry::readValue()
+{
+    if (visibility() == Hidden) return;
 
-    void readValue();
-    void readOption();
+    // read that current value
+    QVarLengthArray<unsigned char> data(m_optDesc->size);
+    SANE_Status status;
+    SANE_Int res;
+    status = sane_control_option (m_handle, m_index, SANE_ACTION_GET_VALUE, data.data(), &res);
+    if (status != SANE_STATUS_GOOD) {
+        return;
+    }
 
-    bool getMinValue(float &max);
-    bool getMaxValue(float &max);
-    bool getValue(float &val);
-    bool setValue(float val);
-    bool getValue(QString &val);
-    bool setValue(const QString &val);
-    bool hasGui() {return true;}
-    
-    Q_SIGNALS:
-        void fValueRead(float);
-        
-private Q_SLOTS:
-    void sliderChanged(int val);
+    m_string = QString(reinterpret_cast<char*>(data.data()));
+}
 
-private:
-    LabeledSlider *m_slider;
-    int            m_iVal;
-};
+const QString KSaneOptEntry::strValue()
+{
+    return m_string;
+}
 
-}  // NameSpace KSaneIface
-
-#endif
+bool KSaneOptEntry::setStrValue(const QString &val)
+{
+    if (visibility() == Hidden) return false;
+    entryChanged(val);
+    readValue();
+    return true;
+}

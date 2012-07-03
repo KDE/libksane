@@ -2,7 +2,7 @@
  *
  * This file is part of the KDE project
  *
- * Date        : 2009-01-31
+ * Date        : 2009-01-21
  * Description : Sane interface for KDE
  *
  * Copyright (C) 2009 by Kare Sars <kare dot sars at iki dot fi>
@@ -25,40 +25,39 @@
  *
  * ============================================================ */
 
-#ifndef KSANE_OPT_GAMMA_H
-#define KSANE_OPT_GAMMA_H
+#ifndef KSANE_OPT_FSLIDER_H
+#define KSANE_OPT_FSLIDER_H
 
-#include "ksane_option.h"
+#include "KSaneOption.h"
 
-namespace KSaneIface
-{
-
-class LabeledGamma;
-
-class KSaneOptGamma : public KSaneOption
+class KSaneOptSliderF : public KSaneOption
 {
     Q_OBJECT
 
 public:
-    KSaneOptGamma(const SANE_Handle handle, const int index);
-
-    void createWidget(QWidget *parent);
+    KSaneOptSliderF(const SANE_Handle handle, const int index);
 
     void readValue();
 
-    bool getValue(float &val);
-    bool setValue(float val);
-    bool getValue(QString &val);
+    bool editable() {return true;}
+
+    qreal minValue();
+    qreal maxValue();
+    qreal value();
+    const QString strValue();
+
+    bool setValue(qreal val);
     bool setValue(const QString &val);
-    bool hasGui() {return true;}
-    
+
+Q_SIGNALS:
+    void fValueRead(qreal);
+
 private Q_SLOTS:
-    void gammaTableChanged(const QVector<int> &gam_tbl);
+    void sliderChanged(qreal val);
 
 private:
-    LabeledGamma *m_gamma;
+    qreal           m_fVal;
+    qreal           m_minChange;
 };
-
-}  // NameSpace KSaneIface
 
 #endif

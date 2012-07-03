@@ -2,10 +2,10 @@
  *
  * This file is part of the KDE project
  *
- * Date        : 2009-01-21
+ * Date        : 2007-09-13
  * Description : Sane interface for KDE
  *
- * Copyright (C) 2009 by Kare Sars <kare dot sars at iki dot fi>
+ * Copyright (C) 2007-2008 by Kare Sars <kare dot sars at iki dot fi>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,44 +25,33 @@
  *
  * ============================================================ */
 
-#ifndef KSANE_OPT_CHECKBOX_H
-#define KSANE_OPT_CHECKBOX_H
+#ifndef KSANE_FIND_DEVICES_THREAD_H
+#define KSANE_FIND_DEVICES_THREAD_H
 
-#include "ksane_option.h"
+#include "KSaneDevice.h"
 
-namespace KSaneIface
-{
+#include <QThread>
+#include <QList>
 
-class LabeledCheckbox;
-
-class KSaneOptCheckBox : public KSaneOption
-{
+class KSaneFindDevicesThread : public QThread {
     Q_OBJECT
 
-public:
-    KSaneOptCheckBox(const SANE_Handle handle, const int index);
+    public:
+        static KSaneFindDevicesThread *getInstance();
+        ~KSaneFindDevicesThread();
 
-    void createWidget(QWidget *parent);
-
-    void readValue();
-
-    bool getValue(float &val);
-    bool setValue(float val);
-    bool getValue(QString &val);
-    bool setValue(const QString &val);
-    bool hasGui() {return true;}
-    
-private Q_SLOTS:
-    void checkboxChanged(bool toggled);
+        const QList<KSaneDevice::Info> devicesList() const;
 
 Q_SIGNALS:
-    void buttonPressed(const QString &optionName, const QString &optionLabel, bool pressed);
+    void devicesListUpdated(const QList<KSaneDevice::Info> &newList);
 
-private:
-    LabeledCheckbox *m_checkbox;
-    bool             m_checked;
+protected:
+    void run();
+
+    private:
+        KSaneFindDevicesThread();
+
+        QList<KSaneDevice::Info> m_deviceList;
 };
-
-}  // NameSpace KSaneIface
 
 #endif

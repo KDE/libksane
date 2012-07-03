@@ -2,7 +2,7 @@
  *
  * This file is part of the KDE project
  *
- * Date        : 2009-01-21
+ * Date        : 2009-01-31
  * Description : Sane interface for KDE
  *
  * Copyright (C) 2009 by Kare Sars <kare dot sars at iki dot fi>
@@ -24,53 +24,51 @@
  * License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * ============================================================ */
+// Local includes
+#include "KSaneOptGamma.h"
+#include "KSaneOptGamma.moc"
 
-#ifndef KSANE_OPT_COMBO_H
-#define KSANE_OPT_COMBO_H
+// Qt includes
+#include <QtCore/QVarLengthArray>
 
-#include "ksane_option.h"
+// KDE includes
+#include <KDebug>
+#include <KLocale>
 
-namespace KSaneIface
+KSaneOptGamma::KSaneOptGamma(const SANE_Handle handle, const int index)
+: KSaneOption(handle, index)
 {
+}
 
-class LabeledCombo;
 
-class KSaneOptCombo : public KSaneOption
+void KSaneOptGamma::gammaTableChanged(const QVector<int> &gam_tbl)
 {
-    Q_OBJECT
+    QVector<int> copy = gam_tbl;
+    writeData(copy.data());
+}
 
-public:
-    KSaneOptCombo(const SANE_Handle handle, const int index);
-    
-    void createWidget(QWidget *parent);
+void KSaneOptGamma::readValue()
+{
+    // Unfortunately gamma table to brigthness, contrast and gamma is
+    // not easy nor fast.. ergo not done
+}
 
-    void readValue();
-    void readOption();
 
-    bool getMinValue(float &max);
-    bool getValue(float &val);
-    bool setValue(float val);
-    bool getValue(QString &val);
-    bool setValue(const QString &val);
-    bool hasGui() {return true;}
-    
-private Q_SLOTS:
-    void comboboxChangedIndex(int val);
-    
-Q_SIGNALS:
-    void valueChanged();
+const QString KSaneOptGamma::strValue()
+{
+    int bri = 0;
+    int con = 0;
+    int gam = 0;
+    // FIXME 
+    //m_gamma->getValues(bri, con, gam);
+    return QString().sprintf("%d:%d:%d", bri, con, gam);
+}
 
-private:
-    QStringList &genComboStringList();
-    QString getSaneComboString(int ival);
-    QString getSaneComboString(float fval);
-    QString getSaneComboString(unsigned char *data);
-    
-    LabeledCombo *m_combo;
-    QString       m_currentText;
-    QStringList   m_strList;
-};
+bool KSaneOptGamma::setStrValue(const QString &/*val*/)
+{
+//    if (!m_gamma) return false;
+    if (visibility() == Hidden) return false;
 
-}  // NameSpace KSaneIface
-
-#endif
+//    m_gamma->setValues(val);
+    return true;
+}

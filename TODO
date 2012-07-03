@@ -12,14 +12,9 @@ KSaneBasicOptions* createBasicOptions(QWidget *parent=0) const     // A widget w
 KSaneSpecialOptions* createSpecialOptions(QWidget *parent=0) const // A widget with the rest of the options
 void signalPreviewUpdated(QImage *img);
 
-KSaneCore never displays popups and always emits userMessage like signals for user information
-
 
 # KSaneOption
 virtual QWidget* createWidget(QWidget* parent=0) const; // Create a KSaneOptionWidget and connect it to the option
-QString saneName() const;                               // Technical name of the sane option
-QString title() const;                                  // Translated option title
-QString description() const;                            // Translated option description
 
 Cleanup public API
 
@@ -43,7 +38,25 @@ Forward userMessage signals if connected or popup a dialog
 
 #General cleanup:
 -> enum xxx { }; for easier signal/slot handling
-float -> qreal
+qreal -> qreal
 
 # Pure Qt library option?
+
+
+
+
+
+Acquireimage -> multi file save
+Automatic selection -> all white/black ignored
+Color profile
+
+
+
+
+
+
+
+
+
+
 

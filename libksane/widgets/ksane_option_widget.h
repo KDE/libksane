@@ -40,7 +40,7 @@ namespace KSaneIface
   */
 
 /**
- * A wrapper for a checkbox
+ * A wrapper for a checkBox
  */
 class KSaneOptionWidget : public QWidget
 {

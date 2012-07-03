@@ -25,11 +25,8 @@
  *
  * ============================================================ */
 
-#ifndef KSANE_OPTION_H
-#define KSANE_OPTION_H
-
-// Qt includes
-#include <QFrame>
+#ifndef KSaneOption_H
+#define KSaneOption_H
 
 //KDE includes
 #include <KLocalizedString>
@@ -37,62 +34,63 @@
 // Sane includes
 extern "C"
 {
-#include <sane/sane.h>
-#include <sane/saneopts.h>
+    #include <sane/sane.h>
+    #include <sane/saneopts.h>
 }
 
-namespace KSaneIface
-{
-
-class KSaneOptionWidget;
-    
 class KSaneOption : public QObject
 {
     Q_OBJECT
 
+    Q_PROPERTY(QString strValue READ strValue WRITE setStrValue NOTIFY strValueChanged)
+    Q_PROPERTY(qreal   value    READ value    WRITE setValue    NOTIFY valueChanged)
+
 public:
-    
-    typedef enum
-    {
+
+    enum KSaneOptType {
         TYPE_DETECT_FAIL,
         TYPE_CHECKBOX,
         TYPE_SLIDER,
-        TYPE_F_SLIDER,
+        TYPE_SLIDER_F,
         TYPE_COMBO,
         TYPE_ENTRY,
         TYPE_GAMMA,
         TYPE_BUTTON
-    } KSaneOptType;
-    
-    typedef enum
-    {
-        STATE_HIDDEN,
-        STATE_DISABLED,
-        STATE_SHOWN
-    } KSaneOptWState;
+    };
 
-    KSaneOption(const SANE_Handle handle, const int index);
+    enum Visibility {
+        Hidden,
+        Disabled,
+        Shown
+    };
+
+    KSaneOption(const SANE_Handle handle, int index);
     ~KSaneOption();
     static KSaneOptType optionType(const SANE_Option_Descriptor *optDesc);
-    
-    KSaneOptionWidget *widget() {return m_widget;}
-    virtual bool hasGui() {return false;}
+
     bool needsPolling();
-    KSaneOptWState state();
-    QString name();
-    
-    virtual void createWidget(QWidget *parent);
+    Visibility visibility();
+
+    /** Returns the technical name of the option */
+    const QString saneName() const;
+
+    /** Returns a translated title of the option for the user */
+    const QString title() const;
+
+    /** Returns a translated description of the option for the user */
+    const QString description() const;
 
     virtual void readOption();
     virtual void readValue();
-    
-    virtual bool getMinValue(float &max);
-    virtual bool getMaxValue(float &max);
-    virtual bool getValue(float &val);
-    virtual bool setValue(float val);
-    virtual bool getValue(QString &val);
-    virtual bool setValue(const QString &val);
-    virtual int  getUnit();
+
+    virtual qreal minValue();
+    virtual qreal maxValue();
+    virtual qreal value();
+    virtual const QString strValue();
+    virtual bool setValue(qreal val);
+    virtual bool setStrValue(const QString &val);
+    virtual int  unit();
+    virtual bool editable() {return false;}
 
     bool storeCurrentData();
     bool restoreSavedData();
@@ -100,23 +98,22 @@ public:
 Q_SIGNALS:
     void optsNeedReload();
     void valsNeedReload();
+    void valueChanged();
+    void strValueChanged();
 
 protected:
-    
+
     SANE_Word toSANE_Word(unsigned char *data);
     void fromSANE_Word(unsigned char *data, SANE_Word from);
     bool writeData(void *data);
     KLocalizedString unitString();
     QString unitDoubleString();
     void updateVisibility();
-    
-    SANE_Handle                   m_handle; 
-    int                           m_index;
-    const SANE_Option_Descriptor *m_optDesc; ///< This pointer is provided by sane 
-    unsigned char                *m_data;
-    KSaneOptionWidget            *m_widget;
-};
 
-}  // NameSpace KSaneIface
+    SANE_Handle                   m_handle;
+    int                           m_index;
+    const SANE_Option_Descriptor *m_optDesc; ///< This pointer is provided by sane
+    unsigned char                *m_data;
+};
 
 #endif // KSANE_OPTION_H

@@ -52,14 +52,14 @@ extern "C"
 
 // Local includes
 #include "ksane.h"
-#include "ksane_option.h"
-#include "ksane_viewer.h"
+#include "KSaneOption.h"
+#include "KSaneViewer.h"
 #include "labeled_gamma.h"
-#include "labeled_checkbox.h"
+#include "labeled_checkBox.h"
 #include "splittercollapser.h"
-#include "ksane_scan_thread.h"
-#include "ksane_preview_thread.h"
-#include "ksane_find_devices_thread.h"
+#include "KSaneScanThread.h"
+#include "KSanePreviewThread.h"
+#include "KSaneFindDevicesThread.h"
 #include "ksane_auth.h"
 
 #define IMG_DATA_R_SIZE 100000
@@ -94,11 +94,11 @@ namespace KSaneIface
             void scheduleValReload();
             void optReload();
             void valReload();
-            void handleSelection(float tl_x, float tl_y, float br_x, float br_y);
-            void setTLX(float x);
-            void setTLY(float y);
-            void setBRX(float x);
-            void setBRY(float y);
+            void handleSelection(qreal tl_x, qreal tl_y, qreal br_x, qreal br_y);
+            void setTLX(qreal x);
+            void setTLY(qreal y);
+            void setBRX(qreal x);
+            void setBRY(qreal y);
 
             void startPreviewScan();
 
@@ -117,7 +117,7 @@ namespace KSaneIface
             QWidget            *m_colorOpts;
             QScrollArea        *m_otherScrollA;
             QWidget            *m_otherOptsTab;
-            LabeledCheckbox    *m_invertColors;
+            LabeledCheckBox    *m_invertColors;
 
             QSplitter          *m_splitter;
             SplitterCollapser  *m_optionsCollapser;
@@ -162,14 +162,14 @@ namespace KSaneIface
             KSaneOption        *m_optGamR;
             KSaneOption        *m_optGamG;
             KSaneOption        *m_optGamB;
-            LabeledCheckbox    *m_splitGamChB;
+            LabeledCheckBox    *m_splitGamChB;
             LabeledGamma       *m_commonGamma;
             KSaneOption        *m_optWaitForBtn;
 
             // preview variables
-            float               m_previewWidth;
-            float               m_previewHeight;
-            float               m_previewDPI;
+            qreal               m_previewWidth;
+            qreal               m_previewHeight;
+            qreal               m_previewDPI;
             QImage              m_previewImg;
             bool                m_isPreview;
             bool                m_autoSelect;
@@ -192,7 +192,7 @@ namespace KSaneIface
             QString             m_saneUserName;
             QString             m_sanePassword;
 
-            FindSaneDevicesThread *m_findDevThread;
+            KSaneFindDevicesThread *m_findDevThread;
             KSaneAuth             *m_auth;
             KSaneWidget           *q;
     };

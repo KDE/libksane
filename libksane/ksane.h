@@ -68,15 +68,14 @@ public:
     };
 
     /** @note There might come more enumerations in the future. */
-    typedef enum
-    {
+    enum ScanStatus {
         NoError,            /**< The scanning was finished successfully.*/
         ErrorCannotSegment, /**< If this error status is returned libksane can not segment the
                              * returned data. Scanning without segmentation should work.
                              * @note segmentation is not implemented yet.*/
         ErrorGeneral,        /**< The error string should contain an error message. */
         Information          /**< There is some information to the user. */
-    } ScanStatus;
+    };
     
     struct DeviceInfo
     {
@@ -165,15 +164,15 @@ public:
     * @note This function should be called from the slot connected
     * to the imageReady signal. The connection should not be queued.
     * @return the resolution used for scanning or 0.0 on failure. */
-    float currentDPI();
+    qreal currentDPI();
 
     /** This method returns the scan area's width in mm
     * @return Width of the scannable area in mm */
-    float scanAreaWidth();
+    qreal scanAreaWidth();
 
     /** This method returns the scan area's height in mm
     * @return Height of the scannable area in mm */
-    float scanAreaHeight();
+    qreal scanAreaHeight();
 
     /** This method sets the selection according to the given points
     * @note The points are defined with respect to the scan areas top-left corner in mm
@@ -185,7 +184,7 @@ public:
     * @param dpi is the wanted scan resolution for the preview
     * @note if the set value is not supported, the cloasest one is used
     * @note setting the value 0 means that the default calculated value should be used */
-    void setPreviewResolution(float dpi);
+    void setPreviewResolution(qreal dpi);
 
     /** This method reads the available parameters and their values and
      * returns them in a QMap (Name, value)

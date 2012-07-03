@@ -25,7 +25,7 @@
 *
 * ============================================================ */
 
-#include "ksane_viewer.h"
+#include "KSaneViewer.h"
 
 #include <KDebug>
 #include <QApplication>
@@ -40,7 +40,7 @@ int main (int argc, char *argv[])
     }
     QImage img(argv[1]);
 
-    KSaneIface::KSaneViewer viewer(&img);
+    KSaneViewer viewer(&img);
 
     viewer.findSelections();
 

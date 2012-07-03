@@ -25,8 +25,8 @@
  *
  * ============================================================ */
 // Local includes
-#include "ksane_option.h"
-#include "ksane_option.moc"
+#include "KSaneOption.h"
+#include "KSaneOption.moc"
 
 // KDE includes
 #include <KDebug>
@@ -34,13 +34,9 @@
 
 #include "ksane_option_widget.h"
 
-namespace KSaneIface
-{
-
 KSaneOption::KSaneOption(const SANE_Handle handle, const int index)
     : QObject(), m_handle(handle), m_index(index)
 {
-    m_widget = 0;
     m_data = 0;
     readOption();
 }
@@ -51,58 +47,27 @@ KSaneOption::~KSaneOption()
         free(m_data);
         m_data = 0;
     }
-    // delete the frame, just in case if no parent is set
-    delete m_widget;
-    m_widget = 0;
-}
-
-void KSaneOption::createWidget(QWidget *parent)
-{
-    if (!m_widget) {
-        m_widget = new KSaneOptionWidget(parent, "");
-    }
-
-    if (m_optDesc) {
-        m_widget->setToolTip(i18n(m_optDesc->desc));
-    }
-
-    readOption();
-    readValue();
 }
 
 void KSaneOption::readOption() 
 {
     m_optDesc = sane_get_option_descriptor(m_handle, m_index);
-    updateVisibility();
 }
 
-void KSaneOption::updateVisibility()
+KSaneOption::Visibility KSaneOption::visibility()
 {
-    if (!m_widget) return;
-
-    if (state() == STATE_HIDDEN) {
-        m_widget->hide();
-    }
-    else {
-        m_widget->show();
-        m_widget->setEnabled(state() == STATE_SHOWN);
-    }
-}
-
-KSaneOption::KSaneOptWState KSaneOption::state()
-{
-    if (!m_optDesc) return STATE_HIDDEN;
+    if (!m_optDesc) return Hidden;
 
     if (((m_optDesc->cap & SANE_CAP_SOFT_DETECT) == 0) ||
         (m_optDesc->cap & SANE_CAP_INACTIVE) ||
         ((m_optDesc->size == 0) && (optionType(m_optDesc) != TYPE_BUTTON)))
     {
-        return STATE_HIDDEN;
+        return Hidden;
     }
     else if ((m_optDesc->cap & SANE_CAP_SOFT_SELECT) == 0) {
-        return STATE_DISABLED;
+        return Disabled;
     }
-    return STATE_SHOWN;
+    return Shown;
 }
 
 bool KSaneOption::needsPolling()
@@ -110,17 +75,29 @@ bool KSaneOption::needsPolling()
     if (!m_optDesc) return false;
 
     if ((m_optDesc->cap & SANE_CAP_SOFT_DETECT) && !(m_optDesc->cap & SANE_CAP_SOFT_SELECT)) {
-        kDebug() << name() << "optDesc->cap =" << m_optDesc->cap;
+        kDebug() << saneName() << "optDesc->cap =" << m_optDesc->cap;
         return true;
     }
 
     return false;
 }
 
-QString KSaneOption::name()
+const QString KSaneOption::saneName() const
 {
     if (m_optDesc == 0) return QString("");
     return QString(m_optDesc->name);
+}
+
+const QString KSaneOption::title() const
+{
+    if (m_optDesc == 0) return QString("");
+    return QString(i18n(m_optDesc->title));
+}
+
+const QString KSaneOption::description() const
+{
+    if (m_optDesc == 0) return QString("");
+    return QString(i18n(m_optDesc->desc));
 }
 
 bool KSaneOption::writeData(void *data)
@@ -128,7 +105,7 @@ bool KSaneOption::writeData(void *data)
     SANE_Status status;
     SANE_Int res;
 
-    if (state() == STATE_DISABLED) {
+    if (visibility() == Disabled) {
         return false;
     }
 
@@ -139,7 +116,7 @@ bool KSaneOption::writeData(void *data)
         readValue();
         return false;
     }
-    if ((res & SANE_INFO_INEXACT) && (m_widget != 0)) {
+    if (res & SANE_INFO_INEXACT) {
         //kDebug() << "write was inexact. Reload value just in case...";
         readValue();
     }
@@ -177,23 +154,24 @@ void KSaneOption::fromSANE_Word(unsigned char *data, SANE_Word from)
     data[3] = (from & 0xFF000000)>>24;
 }
 
-bool KSaneOption::getMinValue(float &) {return false;}
-bool KSaneOption::getMaxValue(float &) {return false;}
-bool KSaneOption::getValue(float &) {return false;}
-bool KSaneOption::setValue(float) {return false;}
-bool KSaneOption::getValue(QString &) {return false;}
-bool KSaneOption::setValue(const QString &) {return false;}
-int  KSaneOption::getUnit() {return m_optDesc->unit;}
+qreal KSaneOption::minValue() {return 0.0;}
+qreal KSaneOption::maxValue() {return 0.0;}
+qreal KSaneOption::value()    {return 0.0;}
+const QString KSaneOption::strValue() {return QString();}
+
+bool KSaneOption::setValue(qreal) {return false;}
+bool KSaneOption::setStrValue(const QString &) {return false;}
+
+int  KSaneOption::unit() {return m_optDesc->unit;}
 
 bool KSaneOption::storeCurrentData()
 {
     SANE_Status status;
     SANE_Int res;
-    
+
     // check if we can read the value
-    if (!hasGui()) return false;
-    if (state() == STATE_HIDDEN) return false;
-    
+    if (visibility() == Hidden) return false;
+
     // read that current value
     if (m_data != 0) free(m_data);
     m_data = (unsigned char *)malloc(m_optDesc->size);
@@ -209,12 +187,11 @@ bool KSaneOption::restoreSavedData()
 {
     // check if we have saved any data
     if (m_data == 0) return false;
-    
+
     // check if we can write the value
-    if (!hasGui()) return false;
-    if (state() == STATE_HIDDEN) return false;
-    if (state() == STATE_DISABLED) return false;
-    
+    if (visibility() == Hidden) return false;
+    if (visibility() == Disabled) return false;
+
     writeData(m_data);
     readValue();
     return true;
@@ -223,7 +200,7 @@ bool KSaneOption::restoreSavedData()
 KSaneOption::KSaneOptType KSaneOption::optionType(const SANE_Option_Descriptor *optDesc)
 {
     if (!optDesc) return TYPE_DETECT_FAIL;
-    
+
     switch (optDesc->constraint_type) {
         case SANE_CONSTRAINT_NONE:
             switch(optDesc->type)
@@ -237,7 +214,7 @@ KSaneOption::KSaneOptType KSaneOption::optionType(const SANE_Option_Descriptor *
                     kDebug() << "size" << optDesc->size<< "!= sizeof(SANE_Word)";
                     break;
                 case SANE_TYPE_FIXED:
-                    if (optDesc->size == sizeof(SANE_Word)) return TYPE_F_SLIDER;
+                    if (optDesc->size == sizeof(SANE_Word)) return TYPE_SLIDER_F;
                     kDebug() << "Can not handle:"<< optDesc->title;
                     kDebug() << "SANE_CONSTRAINT_NONE && SANE_TYPE_FIXED";
                     kDebug() << "size" << optDesc->size<< "!= sizeof(SANE_Word)";
@@ -269,7 +246,7 @@ KSaneOption::KSaneOptType KSaneOption::optionType(const SANE_Option_Descriptor *
                     kDebug() << "size" << optDesc->size<< "!= sizeof(SANE_Word)";
                     break;
                 case SANE_TYPE_FIXED:
-                    if (optDesc->size == sizeof(SANE_Word)) return TYPE_F_SLIDER;
+                    if (optDesc->size == sizeof(SANE_Word)) return TYPE_SLIDER_F;
                     kDebug() << "Can not handle:"<< optDesc->title;
                     kDebug() << "SANE_CONSTRAINT_RANGE && SANE_TYPE_FIXED";
                     kDebug() << "size" << optDesc->size<< "!= sizeof(SANE_Word)";
@@ -322,6 +299,3 @@ QString KSaneOption::unitDoubleString()
     return QString("");
 }
 
-
-
-}  // NameSpace KSaneIface

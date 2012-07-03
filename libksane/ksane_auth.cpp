@@ -34,9 +34,6 @@
 // KDE includes
 #include <KDebug>
 
-namespace KSaneIface
-{
-
 static KSaneAuth *s_instance = 0;
 static QMutex     s_mutex;
 
@@ -127,10 +124,5 @@ void KSaneAuth::authorization(SANE_String_Const resource, SANE_Char *username, S
             break;
         }
     }
-}
-
-
-
-
 }
 

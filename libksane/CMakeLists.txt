@@ -14,34 +14,34 @@ SET(ksane_LIB_SRCS
     widgets/labeled_slider.cpp
     widgets/ksane_button.cpp
     widgets/ksane_option_widget.cpp
-    ksane_viewer.cpp
-    selectionitem.cpp
+    KSaneViewer.cpp
+    KSaneSelectionItem.cpp
     ksane_device_dialog.cpp
-    ksane_find_devices_thread.cpp
-    ksane_widget.cpp
-    ksane_scan_thread.cpp
-    ksane_preview_thread.cpp
-    ksane_widget_private.cpp
+    KSaneFindDevicesThread.cpp
+    #ksane_widget.cpp
+    KSaneScanThread.cpp
+    KSanePreviewThread.cpp
+    #ksane_widget_private.cpp
     splittercollapser.cpp
     ksane_auth.cpp
-    options/ksane_option.cpp
-    options/ksane_opt_button.cpp
-    options/ksane_opt_checkbox.cpp
-    options/ksane_opt_entry.cpp
-    options/ksane_opt_gamma.cpp
-    options/ksane_opt_slider.cpp
-    options/ksane_opt_fslider.cpp
-    options/ksane_opt_combo.cpp
+    options/KSaneOptButton.cpp
+    options/KSaneOptCheckBox.cpp
+    options/KSaneOptEntry.cpp
+    options/KSaneOptGamma.cpp
+    options/KSaneOptSlider.cpp
+    options/KSaneOptSliderF.cpp
+    options/KSaneOptCombo.cpp
 
-    KSaneCore.cpp
+    options/KSaneOption.cpp
+
     KSaneDevice.cpp
+    KSaneDevicePrivate.cpp
+    KSaneAccessSingleton.cpp
 )
 
 KDE4_ADD_LIBRARY(ksane SHARED ${ksane_LIB_SRCS})
 
-TARGET_LINK_LIBRARIES(ksane ${KDE4_KDEUI_LIBS}
-                            ${SANE_LIBRARY}
-                     )
+TARGET_LINK_LIBRARIES(ksane ${KDE4_KDEUI_LIBS} ${SANE_LIBRARY})
 
 SET_TARGET_PROPERTIES(ksane PROPERTIES VERSION ${KSANE_LIB_SO_VERSION_STRING} SOVERSION ${KSANE_LIB_SO_CUR_VERSION})
 
@@ -49,8 +49,16 @@ OPTION(COMPILE_VIEWER_TESTAPP "Compile a small test application for the viewer")
 
 IF (COMPILE_VIEWER_TESTAPP)
     message("Compile testapp")
-    kde4_add_executable(viewer_test ksane_viewer.cpp ksane_viewer_test.cpp selectionitem.cpp)
+    kde4_add_executable(viewer_test KSaneViewer.cpp KSaneViewer_test.cpp KSaneSelectionItem.cpp)
     target_link_libraries(viewer_test ${KDE4_KDEUI_LIBS})
+ENDIF()
+
+OPTION(COMPILE_TESTAPP "Compile a small test application for KSaneDevice")
+
+IF (COMPILE_TESTAPP)
+    message("Compile KSaneDevice testapp")
+    kde4_add_executable(testDevice KSaneDeviceTest.cpp ${ksane_LIB_SRCS})
+    target_link_libraries(testDevice ${KDE4_KDEUI_LIBS} ${SANE_LIBRARY})
 ENDIF()
 
 INSTALL(TARGETS ksane ${INSTALL_TARGETS_DEFAULT_ARGS} )

@@ -30,14 +30,14 @@
 #include "labeled_fslider.moc"
 
 #define FLOAT_MULTIP 32768.0
-#define TO_FLOAT(v) ((float)v / FLOAT_MULTIP)
+#define TO_FLOAT(v) ((qreal)v / FLOAT_MULTIP)
 #define TO_FIX(v) ((int)(v * FLOAT_MULTIP))
 
 namespace KSaneIface
 {
 
 LabeledFSlider::LabeledFSlider(QWidget *parent, const QString& ltext,
-                               float min, float max, float step)
+                               qreal min, qreal max, qreal step)
 : KSaneOptionWidget(parent, ltext)
 {
     int imin = TO_FIX(min);
@@ -63,7 +63,7 @@ LabeledFSlider::LabeledFSlider(QWidget *parent, const QString& ltext,
     m_spinb->setMaximum(max);
     m_spinb->setSingleStep(m_fstep);
     int decimals=0;
-    float tmp_step = m_fstep;
+    qreal tmp_step = m_fstep;
     while (tmp_step < 1) {
         tmp_step *= 10;
         decimals++;
@@ -98,7 +98,7 @@ void LabeledFSlider::setSuffix(const QString &text)
     m_spinb->setSuffix(text);
 }
 
-void LabeledFSlider::setRange(float min, float max)
+void LabeledFSlider::setRange(qreal min, qreal max)
 {
     //kDebug() << "min,max(" << m_spinb->minimum() << " - " << m_spinb->maximum();
     //kDebug() << ") -> (" << min << " - " << max << ")" << std::endl;
@@ -110,7 +110,7 @@ void LabeledFSlider::setRange(float min, float max)
     m_spinb->setRange(min, max);
 }
 
-void LabeledFSlider::setStep(float step)
+void LabeledFSlider::setStep(qreal step)
 {
     m_istep = TO_FIX(step);
     m_fstep = step;
@@ -122,7 +122,7 @@ void LabeledFSlider::setStep(float step)
     m_spinb->setSingleStep(m_fstep);
 
     int decimals=0;
-    float tmp_step = m_fstep;
+    qreal tmp_step = m_fstep;
     while (tmp_step < 1) {
         tmp_step *= 10;
         decimals++;
@@ -131,7 +131,7 @@ void LabeledFSlider::setStep(float step)
     m_spinb->setDecimals(decimals);
 }
 
-void LabeledFSlider::setValue(float value)
+void LabeledFSlider::setValue(qreal value)
 {
     int ivalue = TO_FIX(value);
 
@@ -158,7 +158,7 @@ void LabeledFSlider::syncValues(double value)
         m_spinb->setValue(value);
     }
     else if (ivalue != m_slider->value())m_slider->setValue(ivalue);
-    else emit valueChanged((float)value);
+    else emit valueChanged((qreal)value);
 }
 
 void LabeledFSlider::fixValue()

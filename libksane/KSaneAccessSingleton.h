@@ -2,10 +2,10 @@
  *
  * This file is part of the KDE project
  *
- * Date        : 2009-01-21
+ * Date        : 2012-05-25
  * Description : Sane interface for KDE
  *
- * Copyright (C) 2009 by Kare Sars <kare dot sars at iki dot fi>
+ * Copyright (C) 2012 by Kåre Särs <kare.sars@iki.fi>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,41 +25,47 @@
  *
  * ============================================================ */
 
-#ifndef KSANE_OPT_ENTRY_H
-#define KSANE_OPT_ENTRY_H
+#ifndef KSaneAccessSingleton_H
+#define KSaneAccessSingleton_H
 
-#include "ksane_option.h"
+#include "KSaneDevice.h"
 
-namespace KSaneIface
+#include <QObject>
+#include <QMutex>
+
+extern "C"
 {
+    #include <sane/saneopts.h>
+    #include <sane/sane.h>
+}
 
-class LabeledEntry;
-
-class KSaneOptEntry : public KSaneOption
+class KSaneAccessSingleton: public QObject
 {
     Q_OBJECT
-
 public:
-    KSaneOptEntry(const SANE_Handle handle, const int index);
+    static KSaneAccessSingleton *getInstance();
 
-    void createWidget(QWidget *parent);
+    QMutex accessMutex;
 
-    void readValue();
+    static void authorization(SANE_String_Const resource, SANE_Char *username, SANE_Char *password);
+    void setDeviceAuth(KSaneDevice *device, const QString &username, const QString &password);
+    void clearDeviceAuth(KSaneDevice *device);
 
-    bool getValue(float &val);
-    bool setValue(float val);
-    bool getValue(QString &val);
-    bool setValue(const QString &val);
-    bool hasGui() {return true;}
-    
-private Q_SLOTS:
-    void entryChanged(const QString &text);
+    void reserveSaneInterface(KSaneDevice *requester);
+    void releaseSaneInterface(KSaneDevice *requester);
 
 private:
-    LabeledEntry *m_entry;
-    QString       m_string;
+    struct AuthStruct {
+        KSaneDevice *device;
+        QString username;
+        QString password;
+    };
+
+    KSaneAccessSingleton();
+    ~KSaneAccessSingleton();
+    int m_reserveCount;
+    QList<AuthStruct> m_authList;
 };
 
-}  // NameSpace KSaneIface
 
 #endif

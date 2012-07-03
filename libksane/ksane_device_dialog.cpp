@@ -30,6 +30,7 @@
 #include "ksane_device_dialog.h"
 #include "ksane_device_dialog.moc"
 
+#include "ksane.h"
 
 // Sane includes
 extern "C"
@@ -74,7 +75,7 @@ KSaneDeviceDialog::KSaneDeviceDialog(QWidget *parent)
     
     setMainWidget(m_btnBox);
     setMinimumHeight(200);
-    m_findDevThread = FindSaneDevicesThread::getInstance();
+    m_findDevThread = KSaneFindDevicesThread::getInstance();
 
     connect(m_findDevThread, SIGNAL(finished()), this, SLOT(updateDevicesList()));
     connect(this, SIGNAL(user1Clicked()),        this, SLOT(reloadDevicesList()));
@@ -128,7 +129,7 @@ void KSaneDeviceDialog::updateDevicesList()
         delete m_btnGroup->buttons().takeFirst();
     }
 
-    const QList<KSaneWidget::DeviceInfo> list = m_findDevThread->devicesList();
+    const QList<KSaneDevice::Info> list = m_findDevThread->devicesList();
     if (list.isEmpty()) {
         m_btnBox->setTitle(i18n("Sorry. No devices found."));
         enableButton(KDialog::User1, true);

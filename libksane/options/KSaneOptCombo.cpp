@@ -25,10 +25,8 @@
  *
  * ============================================================ */
 // Local includes
-#include "ksane_opt_combo.h"
-#include "ksane_opt_combo.moc"
-
-#include "labeled_combo.h"
+#include "KSaneOptCombo.h"
+#include "KSaneOptCombo.moc"
 
 // Qt includes
 #include <QtCore/QVarLengthArray>
@@ -38,29 +36,16 @@
 #include <KDebug>
 #include <KLocale>
 
-namespace KSaneIface
-{
 static const char tmp_binary[] = "Binary";
 
 KSaneOptCombo::KSaneOptCombo(const SANE_Handle handle, const int index)
-: KSaneOption(handle, index), m_combo(0)
+: KSaneOption(handle, index)
 {
-}
-
-void KSaneOptCombo::createWidget(QWidget *parent)
-{
-    if (m_widget) return;
-
-    m_widget = m_combo = new LabeledCombo(parent, "", QStringList());
-    readOption();
-    m_widget->setToolTip(i18n(m_optDesc->desc));
-    connect(m_combo, SIGNAL(activated(int)), this, SLOT(comboboxChangedIndex(int)));
-    readValue();
 }
 
 void KSaneOptCombo::readValue()
 {
-    if (state() == STATE_HIDDEN) return;
+    if (visibility() == Hidden) return;
 
     // read that current value
     QVarLengthArray<unsigned char> data(m_optDesc->size);
@@ -71,46 +56,14 @@ void KSaneOptCombo::readValue()
         return;
     }
 
-    
     m_currentText = getSaneComboString(data.data());
-    if (m_combo != 0) {
-        if (m_combo->currentText() != m_currentText) {
-            m_combo->setCurrentText(m_currentText);
-            emit valueChanged();
-        }
-    }
 }
-
-void KSaneOptCombo::readOption()
-{
-    KSaneOption::readOption();
-    
-    if (!m_combo) return;
-    
-    QString saved = m_combo->currentText();
-    
-    m_strList = genComboStringList();
-    m_combo->clear();
-    m_combo->setLabelText(i18n(m_optDesc->title));
-    m_combo->addItems(m_strList);
-    m_combo->setIcon(KIcon("color"), getSaneComboString((unsigned char*)SANE_VALUE_SCAN_MODE_COLOR));
-    m_combo->setIcon(KIcon("gray-scale"),
-                     getSaneComboString((unsigned char*)SANE_VALUE_SCAN_MODE_GRAY));
-    m_combo->setIcon(KIcon("black-white"),
-                     getSaneComboString((unsigned char*)SANE_VALUE_SCAN_MODE_LINEART));
-                     // The epkowa/epson backend uses "Binary" which is the same as "Lineart"
-    m_combo->setIcon(KIcon("black-white"), i18n(tmp_binary));
-    
-    // set the previous value
-    m_combo->setCurrentText(saved);
-}
-
 
 QStringList &KSaneOptCombo::genComboStringList()
 {
     int i;
     m_strList.clear();
-    
+
     switch (m_optDesc->type)
     {
         case SANE_TYPE_INT:
@@ -120,7 +73,7 @@ QStringList &KSaneOptCombo::genComboStringList()
             break;
         case SANE_TYPE_FIXED:
             for (i=1; i<=m_optDesc->constraint.word_list[0]; ++i) {
-                m_strList += getSaneComboString((float)SANE_UNFIX(m_optDesc->constraint.word_list[i]));
+                m_strList += getSaneComboString((qreal)SANE_UNFIX(m_optDesc->constraint.word_list[i]));
             }
             break;
         case SANE_TYPE_STRING:
@@ -152,7 +105,7 @@ QString KSaneOptCombo::getSaneComboString(int ival)
     return QString::number(ival);
 }
 
-QString KSaneOptCombo::getSaneComboString(float fval)
+QString KSaneOptCombo::getSaneComboString(qreal fval)
 {
     switch(m_optDesc->unit)
     {
@@ -171,13 +124,13 @@ QString KSaneOptCombo::getSaneComboString(unsigned char *data)
 {
     QString tmp;
     if (data == 0) return QString();
-        
+
     switch (m_optDesc->type)
     {
         case SANE_TYPE_INT:
             return getSaneComboString((int)toSANE_Word(data));
         case SANE_TYPE_FIXED:
-            return getSaneComboString((float)SANE_UNFIX(toSANE_Word(data)));
+            return getSaneComboString((qreal)SANE_UNFIX(toSANE_Word(data)));
         case SANE_TYPE_STRING:
             tmp = i18n(reinterpret_cast<char*>(data));
             tmp = tmp.simplified();
@@ -192,13 +145,13 @@ QString KSaneOptCombo::getSaneComboString(unsigned char *data)
 
 void KSaneOptCombo::comboboxChangedIndex(int i)
 {
-    if (m_combo && (m_combo->currentText() == m_currentText)) {
-        return;
-    }
-    
+//     if (m_combo && (m_combo->currentText() == m_currentText)) {
+//         return;
+//     }
+
     unsigned char data[4];
     void *dataPtr;
-    
+
     switch (m_optDesc->type)
     {
         case SANE_TYPE_INT:
@@ -218,34 +171,32 @@ void KSaneOptCombo::comboboxChangedIndex(int i)
     emit valueChanged();
 }
 
-bool KSaneOptCombo::getMinValue(float &val)
+qreal KSaneOptCombo::minValue()
 {
-    if (state() == STATE_HIDDEN) return false;
+    qreal val=0.0;
     switch (m_optDesc->type)
     {
         case SANE_TYPE_INT:
-            val = (float)m_optDesc->constraint.word_list[1];
+            val = (qreal)m_optDesc->constraint.word_list[1];
             for (int i=2; i<=m_optDesc->constraint.word_list[0]; i++) {
-                val = qMin((float)m_optDesc->constraint.word_list[i], val);
+                val = qMin((qreal)m_optDesc->constraint.word_list[i], val);
             }
             break;
         case SANE_TYPE_FIXED:
-            val = (float)SANE_UNFIX(m_optDesc->constraint.word_list[1]);
+            val = (qreal)SANE_UNFIX(m_optDesc->constraint.word_list[1]);
             for (int i=2; i<=m_optDesc->constraint.word_list[0]; i++) {
-                val = qMin((float)SANE_UNFIX(m_optDesc->constraint.word_list[i]), val);
+                val = qMin((qreal)SANE_UNFIX(m_optDesc->constraint.word_list[i]), val);
             }
             break;
         default:
             kDebug() << "can not handle type:" << m_optDesc->type;
-            return false;
     }
-    return true;
+    return val;
 }
 
-bool KSaneOptCombo::getValue(float &val)
+qreal KSaneOptCombo::value()
 {
-    if (state() == STATE_HIDDEN) return false;
-
+    // FIXME this function needs checking
     // read that current value
     QVarLengthArray<unsigned char> data(m_optDesc->size);
     SANE_Status status;
@@ -253,39 +204,42 @@ bool KSaneOptCombo::getValue(float &val)
     status = sane_control_option (m_handle, m_index, SANE_ACTION_GET_VALUE, data.data(), &res);
     if (status != SANE_STATUS_GOOD) {
         kDebug() << m_optDesc->name << "sane_control_option returned" << status;
-        return false;
+        return 0.0;
     }
-    
+
     switch (m_optDesc->type)
     {
         case SANE_TYPE_INT:
-            val = (float)toSANE_Word(data.data());
-            return true;
+            return (qreal)toSANE_Word(data.data());
         case SANE_TYPE_FIXED:
-            val = SANE_UNFIX(toSANE_Word(data.data()));
-            return true;
+            return SANE_UNFIX(toSANE_Word(data.data()));
         default:
             kDebug() << "Type" << m_optDesc->type << "not supported!";
             break;
     }
-    return false;
+    return 0.0;
 }
 
-bool KSaneOptCombo::setValue(float value)
+const QString KSaneOptCombo::strValue()
+{
+    return m_currentText;
+}
+
+bool KSaneOptCombo::setValue(qreal value)
 {
     unsigned char data[4];
-    float tmp;
-    float minDiff;
+    qreal tmp;
+    qreal minDiff;
     int i;
     int minIndex = 1;
-    
+
     switch (m_optDesc->type)
     {
         case SANE_TYPE_INT:
-            tmp = (float)m_optDesc->constraint.word_list[minIndex];
+            tmp = (qreal)m_optDesc->constraint.word_list[minIndex];
             minDiff = qAbs(value - tmp);
             for (i=2; i<=m_optDesc->constraint.word_list[0]; ++i) {
-                tmp = (float)m_optDesc->constraint.word_list[i];
+                tmp = (qreal)m_optDesc->constraint.word_list[i];
                 if (qAbs(value - tmp) < minDiff) {
                     minDiff = qAbs(value - tmp);
                     minIndex = i;
@@ -296,10 +250,10 @@ bool KSaneOptCombo::setValue(float value)
             readValue();
             return (minDiff < 1.0);
         case SANE_TYPE_FIXED:
-            tmp = (float)SANE_UNFIX(m_optDesc->constraint.word_list[minIndex]);
+            tmp = (qreal)SANE_UNFIX(m_optDesc->constraint.word_list[minIndex]);
             minDiff = qAbs(value - tmp);
             for (i=2; i<=m_optDesc->constraint.word_list[0]; ++i) {
-                tmp = (float)SANE_UNFIX(m_optDesc->constraint.word_list[i]);
+                tmp = (qreal)SANE_UNFIX(m_optDesc->constraint.word_list[i]);
                 if (qAbs(value - tmp) < minDiff) {
                     minDiff = qAbs(value - tmp);
                     minIndex = i;
@@ -316,31 +270,24 @@ bool KSaneOptCombo::setValue(float value)
     return false;
 }
 
-bool KSaneOptCombo::getValue(QString &val)
+bool KSaneOptCombo::setStrValue(const QString &val)
 {
-    if (state() == STATE_HIDDEN) return false;
-    val = m_currentText;
-    return true;
-}
-
-bool KSaneOptCombo::setValue(const QString &val)
-{
-    if (state() == STATE_HIDDEN) return false;
+    if (visibility() == Hidden) return false;
     if (val == m_currentText) return true;
-    
+
     unsigned char data[4];
     void *data_ptr;
     SANE_Word fixed;
     int i;
-    float f;
+    qreal f;
     bool ok;
     QString tmp;
-    
+
     switch (m_optDesc->type)
     {
         case SANE_TYPE_INT:
             tmp = val.left(val.indexOf(' ')); // strip the unit
-            // accept float formating of the string
+            // accept qreal formating of the string
             i = (int)(tmp.toFloat(&ok));
             if (ok == false) return false;
             fromSANE_Word(data, i);
@@ -376,5 +323,3 @@ bool KSaneOptCombo::setValue(const QString &val)
     return true;
 }
 
-
-}  // NameSpace KSaneIface

@@ -24,48 +24,45 @@
  * License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * ============================================================ */
-// Local includes
-#include "ksane_opt_button.h"
-#include "ksane_opt_button.moc"
 
-#include "ksane_button.h"
+#ifndef KSANE_OPT_COMBO_H
+#define KSANE_OPT_COMBO_H
 
-// KDE includes
-#include <KDebug>
-#include <KLocale>
+#include "KSaneOption.h"
 
-namespace KSaneIface
+class KSaneOptCombo : public KSaneOption
 {
+    Q_OBJECT
 
-KSaneOptButton::KSaneOptButton(const SANE_Handle handle, const int index)
-: KSaneOption(handle, index), m_button(0)
-{
-}
+public:
+    KSaneOptCombo(const SANE_Handle handle, const int index);
 
-void KSaneOptButton::createWidget(QWidget *parent)
-{
-    if (m_widget) return;
+    void readValue();
 
-    readOption();
+    bool editable() {return true;}
 
-    if (!m_optDesc) {
-        kDebug() << "This is a bug";
-        m_widget = new KSaneOptionWidget(parent, "");
-        return;
-    }
+    qreal minValue();
 
-    m_widget = m_button = new KSaneButton(parent, i18n(m_optDesc->title));
-    m_widget->setToolTip(i18n(m_optDesc->desc));
-    connect(m_button, SIGNAL(clicked()), this, SLOT(buttonClicked()));
+    qreal value();
+    const QString strValue();
 
-    updateVisibility();
-    readValue();
-}
+    bool setValue(qreal val);
+    bool setStrValue(const QString &val);
 
-void KSaneOptButton::buttonClicked()
-{
-    unsigned char data[4];
-    writeData(data);
-}
+private Q_SLOTS:
+    void comboboxChangedIndex(int val);
 
-}  // NameSpace KSaneIface
+Q_SIGNALS:
+    void valueChanged();
+
+private:
+    QStringList &genComboStringList();
+    QString getSaneComboString(int ival);
+    QString getSaneComboString(qreal fval);
+    QString getSaneComboString(unsigned char *data);
+
+    QString       m_currentText;
+    QStringList   m_strList;
+};
+
+#endif

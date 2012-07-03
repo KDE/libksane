@@ -30,14 +30,10 @@
 #include <QGraphicsPixmapItem>
 #include <QPainter>
 
-namespace KSaneIface
-{
-
-class SelectionItem : public QGraphicsItem
+class KSaneSelectionItem : public QGraphicsItem
 {
     public:
-        typedef enum
-        {
+        enum Intersects {
             None,
             Top,
             TopRight,
@@ -49,10 +45,10 @@ class SelectionItem : public QGraphicsItem
             TopLeft,
             Move,
             AddRemove
-        } Intersects;
+        };
         
-        explicit SelectionItem(QRectF rect);
-        ~SelectionItem();
+        explicit KSaneSelectionItem(QRectF rect);
+        ~KSaneSelectionItem();
 
         void setMaxRight(qreal maxRight);
         void setMaxBottom(qreal maxBottom);
@@ -75,8 +71,6 @@ class SelectionItem : public QGraphicsItem
         struct Private;
         Private * const d;
 };
-
-}  // NameSpace KSaneIface
 
 #endif
 

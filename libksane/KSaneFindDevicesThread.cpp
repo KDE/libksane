@@ -6,7 +6,7 @@
  * Description : Sane interface for KDE
  *
  * Copyright (C) 2009 by Grzegorz Kurtyka <grzegorz dot kurtyka at gmail dot com>
- * Copyright (C) 2010 by Kare Sars <kare dot sars at iki dot fi>
+ * Copyright (C) 2010-2012 by Kåre Särs <kare.sars@iki.fi>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -26,10 +26,8 @@
  *
  * ============================================================ */
 
-#include "ksane_find_devices_thread.h"
-#include "ksane_find_devices_thread.moc"
-
-#include "ksane_widget_private.h"
+#include "KSaneFindDevicesThread.h"
+#include "KSaneFindDevicesThread.moc"
 
 // Sane includes
 extern "C"
@@ -43,50 +41,52 @@ extern "C"
 
 // Qt includes
 #include <QMutex>
+#include <QMutexLocker>
 
-namespace KSaneIface
+static KSaneFindDevicesThread *s_instance = 0;
+static QMutex s_mutex;
+
+KSaneFindDevicesThread *KSaneFindDevicesThread::getInstance()
 {
-static FindSaneDevicesThread *s_instancesane = 0;
-static QMutex s_mutexsane;
+    QMutexLocker loacker(&s_mutex);
 
-FindSaneDevicesThread *FindSaneDevicesThread::getInstance()
-{
-    s_mutexsane.lock();
-
-    if (s_instancesane == 0) {
-        s_instancesane = new FindSaneDevicesThread();
+    if (s_instance == 0) {
+        s_instance = new KSaneFindDevicesThread();
     }
-    s_mutexsane.unlock();
 
-    return s_instancesane;
+    return s_instance;
 }
 
-FindSaneDevicesThread::FindSaneDevicesThread() : QThread(0)
+KSaneFindDevicesThread::KSaneFindDevicesThread() : QThread(0)
 {
 }
 
-FindSaneDevicesThread::~FindSaneDevicesThread()
+KSaneFindDevicesThread::~KSaneFindDevicesThread()
 {
-    s_mutexsane.lock();
+    QMutexLocker loacker(&s_mutex);
     wait();
-    s_mutexsane.unlock();
+    s_instance = 0;
 }
 
 
-void FindSaneDevicesThread::run()
+void KSaneFindDevicesThread::run()
 {
     SANE_Device const **devList;
     //SANE_Int            version;
     SANE_Status         status;
 
+    // FIXME: it is probably not thread safe to request the device list while scanning...
+    // Add a global mutex?
     // This is unfortunately not very reliable as many back-ends do not refresh
     // the device list after the sane_init() call...
     status = sane_get_devices(&devList, SANE_FALSE);
 
+    QMutexLocker loacker(&s_mutex);
+
     m_deviceList.clear();
     if (status == SANE_STATUS_GOOD) {
         int i = 0;
-        KSaneWidget::DeviceInfo tmp;
+        KSaneDevice::Info tmp;
 
         while(devList[i] != 0) {
             tmp.name = devList[i]->name;
@@ -99,9 +99,9 @@ void FindSaneDevicesThread::run()
     }
 }
 
-const QList<KSaneWidget::DeviceInfo> FindSaneDevicesThread::devicesList() const
+const QList<KSaneDevice::Info> KSaneFindDevicesThread::devicesList() const
 {
+    QMutexLocker loacker(&s_mutex);
     return m_deviceList;
 }
 
-}

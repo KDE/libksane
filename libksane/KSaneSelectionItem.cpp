@@ -25,22 +25,18 @@
 *
 * ============================================================ */
 
-#include "selectionitem.h"
+#include "KSaneSelectionItem.h"
 #include <QGraphicsView>
 #include <QGraphicsScene>
 #include <QCursor>
 #include <QList>
-
-namespace KSaneIface
-{
-
 
 static const qreal selMargin = 4.0;
 static const QPointF boundMargin(selMargin,selMargin);
 static const qreal addRemMargin = 8.0;
 static const QPointF addRemMarginPoint(addRemMargin, addRemMargin);
 
-struct SelectionItem::Private
+struct KSaneSelectionItem::Private
 {
     QPen       penDark;
     QPen       penLight;
@@ -59,7 +55,7 @@ struct SelectionItem::Private
 };
 
 
-SelectionItem::SelectionItem(QRectF rect) : QGraphicsItem(), d(new Private)
+KSaneSelectionItem::KSaneSelectionItem(QRectF rect) : QGraphicsItem(), d(new Private)
 {
     d->hasMaxX = false;
     d->hasMaxY = false;
@@ -84,12 +80,12 @@ SelectionItem::SelectionItem(QRectF rect) : QGraphicsItem(), d(new Private)
     d->addRemRect = QRectF(0,0,0,0);
 }
 
-SelectionItem::~SelectionItem()
+KSaneSelectionItem::~KSaneSelectionItem()
 {
     delete d;
 }
 
-void SelectionItem::saveZoom(qreal zoom)
+void KSaneSelectionItem::saveZoom(qreal zoom)
 {
     if (zoom < 0.00001) zoom = 0.00001;
     d->invZoom = 1/zoom;
@@ -102,7 +98,7 @@ void SelectionItem::saveZoom(qreal zoom)
     d->penAddRemFg.setWidthF(3.0 * d->invZoom);
 }
 
-void SelectionItem::setSaved(bool isSaved)
+void KSaneSelectionItem::setSaved(bool isSaved)
 {
     if (isSaved) {
         d->penDark.setColor(Qt::darkBlue);
@@ -118,21 +114,21 @@ void SelectionItem::setSaved(bool isSaved)
     }
 }
 
-void SelectionItem::setMaxRight(qreal maxX)
+void KSaneSelectionItem::setMaxRight(qreal maxX)
 {
     d->maxX = maxX;
     d->hasMaxX = true;
     if (d->hasMaxY) d->hasMax = true;
 }
 
-void SelectionItem::setMaxBottom(qreal maxY)
+void KSaneSelectionItem::setMaxBottom(qreal maxY)
 {
     d->maxY = maxY;
     d->hasMaxY = true;
     if (d->hasMaxX) d->hasMax = true;
 }
 
-SelectionItem::Intersects SelectionItem::intersects(QPointF point)
+KSaneSelectionItem::Intersects KSaneSelectionItem::intersects(QPointF point)
 {
     bool oldState = d->showAddRem;
     d->showAddRem = false;
@@ -182,7 +178,7 @@ SelectionItem::Intersects SelectionItem::intersects(QPointF point)
     return Move;
 }
 
-void SelectionItem::setRect(QRectF rect)
+void KSaneSelectionItem::setRect(QRectF rect)
 {
     prepareGeometryChange();
     d->rect = rect;
@@ -200,7 +196,7 @@ void SelectionItem::setRect(QRectF rect)
     d->addRemRect = QRectF(d->rect.center()-pMargin, QSizeF(margin*2, margin*2));
 }
 
-QPointF SelectionItem::fixTranslation(QPointF dp)
+QPointF KSaneSelectionItem::fixTranslation(QPointF dp)
 {
     if ((d->rect.left()   + dp.x()) < 0) dp.setX(-d->rect.left());
     if ((d->rect.top()    + dp.y()) < 0) dp.setY(-d->rect.top());
@@ -209,12 +205,12 @@ QPointF SelectionItem::fixTranslation(QPointF dp)
     return dp;
 }
 
-QRectF SelectionItem::rect()
+QRectF KSaneSelectionItem::rect()
 {
     return d->rect;
 }
 
-QRectF SelectionItem::boundingRect() const
+QRectF KSaneSelectionItem::boundingRect() const
 {
     QRectF tmp(d->rect.topLeft()-boundMargin, d->rect.bottomRight()+boundMargin);
     if (tmp.top() > d->addRemRect.top()) {
@@ -235,7 +231,7 @@ QRectF SelectionItem::boundingRect() const
     return tmp;
 }
 
-void SelectionItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
+void KSaneSelectionItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
     painter->setPen(d->penDark);
     painter->drawRect(d->rect);
@@ -259,4 +255,3 @@ void SelectionItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, Q
     }
 }
 
-}  // NameSpace KSaneIface

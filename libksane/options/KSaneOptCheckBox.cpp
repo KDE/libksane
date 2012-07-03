@@ -25,10 +25,8 @@
  *
  * ============================================================ */
 // Local includes
-#include "ksane_opt_checkbox.h"
-#include "ksane_opt_checkbox.moc"
-
-#include "labeled_checkbox.h"
+#include "KSaneOptCheckBox.h"
+#include "KSaneOptCheckBox.moc"
 
 // Qt includes
 #include <QtCore/QVarLengthArray>
@@ -37,36 +35,12 @@
 #include <KDebug>
 #include <KLocale>
 
-namespace KSaneIface
-{
-
 KSaneOptCheckBox::KSaneOptCheckBox(const SANE_Handle handle, const int index)
-: KSaneOption(handle, index), m_checkbox(0)
+: KSaneOption(handle, index)
 {
 }
 
-void KSaneOptCheckBox::createWidget(QWidget *parent)
-{
-    if (m_widget) return;
-
-    readOption();
-
-    if (!m_optDesc) {
-        kDebug() << "This is a bug";
-        m_widget = new KSaneOptionWidget(parent, "");
-        return;
-    }
-
-    m_widget = m_checkbox = new LabeledCheckbox(parent, i18n(m_optDesc->title));
-    m_widget->setToolTip(i18n(m_optDesc->desc));
-
-    connect(m_checkbox, SIGNAL(toggled(bool)), this, SLOT(checkboxChanged(bool)));
-
-    updateVisibility();
-    readValue();
-}
-
-void KSaneOptCheckBox::checkboxChanged(bool toggled)
+void KSaneOptCheckBox::checkBoxChanged(bool toggled)
 {
     unsigned char data[4];
 
@@ -77,7 +51,7 @@ void KSaneOptCheckBox::checkboxChanged(bool toggled)
 
 void KSaneOptCheckBox::readValue()
 {
-    if (state() == STATE_HIDDEN) return;
+    if (visibility() == Hidden) return;
 
     // read the current value
     QVarLengthArray<unsigned char> data(m_optDesc->size);
@@ -89,50 +63,43 @@ void KSaneOptCheckBox::readValue()
     }
     bool old = m_checked;
     m_checked = (toSANE_Word(data.data()) != 0) ? true:false;
-    if (m_checkbox) {
-        m_checkbox->setChecked(m_checked);
-    }
+
+    // is this a HW button?
     if ((old != m_checked) && ((m_optDesc->cap & SANE_CAP_SOFT_SELECT) == 0)) {
-        emit buttonPressed(name(), i18n(m_optDesc->title), m_checked);
+        emit buttonPressed(saneName(), i18n(m_optDesc->title), m_checked);
     }
 }
 
-bool KSaneOptCheckBox::getValue(float &val)
+qreal KSaneOptCheckBox::value()
 {
-    if (state() == STATE_HIDDEN) return false;
-    val = m_checked ? 1.0 : 0.0;
-    return true;
+    return m_checked ? 1.0 : 0.0;
 }
 
-bool KSaneOptCheckBox::setValue(float val)
+bool KSaneOptCheckBox::setValue(qreal val)
 {
-    if (state() == STATE_HIDDEN) return false;
-    checkboxChanged(val == 0);
+    if (visibility() == Hidden) return false;
+    checkBoxChanged(val == 0);
     readValue();
     return true;
 }
 
-bool KSaneOptCheckBox::getValue(QString &val)
+const QString KSaneOptCheckBox::strValue()
 {
-    if (state() == STATE_HIDDEN) return false;
-    val = m_checked ? "true" : "false";
-    return true;
+    return m_checked ? "true" : "false";
 }
 
 bool KSaneOptCheckBox::setValue(const QString &val)
 {
-    if (state() == STATE_HIDDEN) return false;
+    if (visibility() == Hidden) return false;
     if ((val.compare("true", Qt::CaseInsensitive) == 0) ||
         (val.compare("1") == 0))
     {
-        checkboxChanged(true);
+        checkBoxChanged(true);
     }
     else {
-        checkboxChanged(false);
+        checkBoxChanged(false);
     }
     readValue();
     return true;
 }
 
-
-}  // NameSpace KSaneIface

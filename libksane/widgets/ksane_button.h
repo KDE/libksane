@@ -39,7 +39,7 @@ namespace KSaneIface
   */
 
 /**
- * A wrapper for a checkbox
+ * A wrapper for a checkBox
  */
 class KSaneButton : public KSaneOptionWidget
 {
@@ -47,10 +47,10 @@ class KSaneButton : public KSaneOptionWidget
 
 public:
    /**
-    * Create the checkbox.
+    * Create the checkBox.
     *
     * \param parent parent widget
-    * \param text is the text describing the checkbox.
+    * \param text is the text describing the checkBox.
     */
     KSaneButton(QWidget *parent, const QString& text);
     ~KSaneButton();

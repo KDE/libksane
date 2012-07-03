@@ -2,10 +2,10 @@
  *
  * This file is part of the KDE project
  *
- * Date        : 2007-09-13
+ * Date        : 2009-01-21
  * Description : Sane interface for KDE
  *
- * Copyright (C) 2007-2008 by Kare Sars <kare dot sars at iki dot fi>
+ * Copyright (C) 2009 by Kare Sars <kare dot sars at iki dot fi>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,33 +25,38 @@
  *
  * ============================================================ */
 
-#ifndef KSANE_FIND_DEVICES_THREAD_H
-#define KSANE_FIND_DEVICES_THREAD_H
+#ifndef KSANE_OPT_SLIDER_H
+#define KSANE_OPT_SLIDER_H
 
-#include "ksane.h"
+#include "KSaneOption.h"
 
-#include <QThread>
-#include <QList>
-
-namespace KSaneIface
+class KSaneOptSlider : public KSaneOption
 {
-
-class FindSaneDevicesThread : public QThread {
     Q_OBJECT
 
-    public:
-        static FindSaneDevicesThread *getInstance();
-        ~FindSaneDevicesThread();
-        void run();
+public:
+    KSaneOptSlider(const SANE_Handle handle, const int index);
 
-        const QList<KSaneWidget::DeviceInfo> devicesList() const;
+    void readValue();
 
-    private:
-        FindSaneDevicesThread();
+    bool editable() {return true;}
 
-        QList<KSaneWidget::DeviceInfo> m_deviceList;
+    qreal minValue();
+    qreal maxValue();
+    qreal value();
+    const QString strValue();
+
+    bool setValue(qreal val);
+    bool setStrValue(const QString &val);
+
+Q_SIGNALS:
+    void fValueRead(qreal);
+
+private Q_SLOTS:
+    void sliderChanged(int val);
+
+private:
+    int m_iVal;
 };
-
-}
 
 #endif

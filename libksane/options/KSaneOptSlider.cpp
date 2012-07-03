@@ -25,10 +25,8 @@
  *
  * ============================================================ */
 // Local includes
-#include "ksane_opt_slider.h"
-#include "ksane_opt_slider.moc"
-
-#include "labeled_slider.h"
+#include "KSaneOptSlider.h"
+#include "KSaneOptSlider.moc"
 
 // Qt includes
 #include <QtCore/QVarLengthArray>
@@ -41,29 +39,14 @@ static const int KSW_INT_MAX = 2147483647;
 static const int KSW_INT_MIN = -2147483647-1;  // prevent warning
 
 
-namespace KSaneIface
-{
-
 KSaneOptSlider::KSaneOptSlider(const SANE_Handle handle, const int index)
-: KSaneOption(handle, index), m_slider(0)
+: KSaneOption(handle, index)
 {
 }
-
-void KSaneOptSlider::createWidget(QWidget *parent)
-{
-    if (m_widget) return;
-
-    m_widget = m_slider = new LabeledSlider(parent, "", KSW_INT_MIN, KSW_INT_MAX, 1);
-    readOption();
-    m_widget->setToolTip(i18n(m_optDesc->desc));
-    connect(m_slider, SIGNAL(valueChanged(int)), this, SLOT(sliderChanged(int)));
-    readValue();
-}
-
 
 void KSaneOptSlider::readValue()
 {
-    if (state() == STATE_HIDDEN) return;
+    if (visibility() == Hidden) return;
 
     // read that current value
     QVarLengthArray<unsigned char> data(m_optDesc->size);
@@ -73,30 +56,12 @@ void KSaneOptSlider::readValue()
     if (status != SANE_STATUS_GOOD) {
         return;
     }
-    
+
     m_iVal = toSANE_Word(data.data());
-    if ((m_slider != 0) &&  (m_slider->value() != m_iVal)) {
-        m_slider->setValue(m_iVal);
-    }
-    emit fValueRead((float)m_iVal);
-}
-
-void KSaneOptSlider::readOption()
-{
-    KSaneOption::readOption();
-
-    if (!m_slider) return;
-
-    if (m_optDesc->constraint_type == SANE_CONSTRAINT_RANGE) {
-        m_slider->setRange(m_optDesc->constraint.range->min, m_optDesc->constraint.range->max);
-        m_slider->setStep(m_optDesc->constraint.range->quant);
-    }
-    else {
-        m_slider->setRange(KSW_INT_MIN, KSW_INT_MAX);
-        m_slider->setStep(1);
-    }
-    m_slider->setSuffix(unitString());
-    m_slider->setLabelText(i18n(m_optDesc->title));
+// //     if ((m_slider != 0) &&  (m_slider->value() != m_iVal)) {
+// //         m_slider->setValue(m_iVal);
+// //     }
+    emit fValueRead((qreal)m_iVal);
 }
 
 void KSaneOptSlider::sliderChanged(int val)
@@ -108,57 +73,45 @@ void KSaneOptSlider::sliderChanged(int val)
     writeData(data);
 }
 
-bool KSaneOptSlider::getMinValue(float &val)
+qreal KSaneOptSlider::minValue()
 {
     if (m_optDesc->constraint_type == SANE_CONSTRAINT_RANGE) {
-        val = (float)m_optDesc->constraint.range->min;
+        return (qreal)m_optDesc->constraint.range->min;
     }
-    else {
-        val = (float)KSW_INT_MIN;
-    }
-    return true;
+    return (qreal)KSW_INT_MIN;
 }
 
-bool KSaneOptSlider::getMaxValue(float &val)
+qreal KSaneOptSlider::maxValue()
 {
     if (m_optDesc->constraint_type == SANE_CONSTRAINT_RANGE) {
-        val = (float)m_optDesc->constraint.range->max;
+       return (qreal)m_optDesc->constraint.range->max;
     }
-    else {
-        val = (float)KSW_INT_MAX;
-    }
-    return true;
+    return (qreal)KSW_INT_MAX;
 }
 
-bool KSaneOptSlider::getValue(float &val)
+qreal KSaneOptSlider::value()
 {
-    if (state() == STATE_HIDDEN) return false;
-    val = (float)m_iVal;
-    return true;
+    return (qreal)m_iVal;
 }
 
-bool KSaneOptSlider::setValue(float val)
+const QString KSaneOptSlider::strValue()
 {
-    if (state() == STATE_HIDDEN) return false;
+    return QString::number(m_iVal);
+}
+
+bool KSaneOptSlider::setValue(qreal val)
+{
+    if (visibility() == Hidden) return false;
     sliderChanged((int)val);
     readValue();
     return true;
 }
 
-bool KSaneOptSlider::getValue(QString &val)
+bool KSaneOptSlider::setStrValue(const QString &val)
 {
-    if (state() == STATE_HIDDEN) return false;
-    val = QString::number(m_iVal);
-    return true;
-}
-
-bool KSaneOptSlider::setValue(const QString &val)
-{
-    if (state() == STATE_HIDDEN) return false;
+    if (visibility() == Hidden) return false;
     sliderChanged(val.toInt());
     readValue();
     return true;
 }
 
-
-}  // NameSpace KSaneIface

@@ -24,35 +24,23 @@
  * License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * ============================================================ */
+// Local includes
+#include "KSaneOptButton.h"
+#include "KSaneOptButton.moc"
 
-#ifndef KSANE_OPT_BUTTON_H
-#define KSANE_OPT_BUTTON_H
+#include "ksane_button.h"
 
-#include "ksane_option.h"
+// KDE includes
+#include <KDebug>
+#include <KLocale>
 
-namespace KSaneIface
+KSaneOptButton::KSaneOptButton(const SANE_Handle handle, const int index)
+: KSaneOption(handle, index)
 {
+}
 
-class KSaneButton;
-
-class KSaneOptButton : public KSaneOption
+void KSaneOptButton::buttonClicked()
 {
-    Q_OBJECT
-
-public:
-    KSaneOptButton(const SANE_Handle handle, const int index);
-    
-    void createWidget(QWidget *parent);
-
-    bool hasGui() {return true;}
-    
-private Q_SLOTS:
-    void buttonClicked();
-
-private:
-    KSaneButton  *m_button;
-};
-
-}  // NameSpace KSaneIface
-
-#endif // KSANE_BUTTON_OPT_H
+    unsigned char data[4];
+    writeData(data);
+}

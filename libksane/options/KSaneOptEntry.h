@@ -2,10 +2,10 @@
  *
  * This file is part of the KDE project
  *
- * Date        : 2007-09-13
+ * Date        : 2009-01-21
  * Description : Sane interface for KDE
  *
- * Copyright (C) 2007-2011 by Kare Sars <kare.sars@iki .fi>
+ * Copyright (C) 2009 by Kare Sars <kare dot sars at iki dot fi>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,38 +25,32 @@
  *
  * ============================================================ */
 
-// Local includes
-#include "labeled_checkbox.h"
-#include "labeled_checkbox.moc"
+#ifndef KSANE_OPT_ENTRY_H
+#define KSANE_OPT_ENTRY_H
 
-// Qt includes
-#include <KDebug>
+#include "KSaneOption.h"
 
-namespace KSaneIface
+class KSaneOptEntry : public KSaneOption
 {
+    Q_OBJECT
 
-LabeledCheckBox::LabeledCheckBox(QWidget *parent, const QString& ltext)
-: KSaneOptionWidget(parent, QString())
-{
-    chbx = new QCheckBox(ltext, this);
-    m_layout->addWidget(chbx, 0, 1);
-    m_layout->setColumnStretch(1, 50);
+public:
+    KSaneOptEntry(const SANE_Handle handle, const int index);
 
-    connect(chbx, SIGNAL(toggled(bool)), this, SIGNAL(toggled(bool)));
-}
+    void readValue();
 
-LabeledCheckBox::~LabeledCheckBox()
-{
-}
+    bool editable() {return true;}
 
-void LabeledCheckBox::setChecked(bool is_checked)
-{
-    if (is_checked != chbx->isChecked()) chbx->setChecked(is_checked);
-}
+    const QString strValue();
 
-bool LabeledCheckBox::isChecked()
-{
-    return chbx->isChecked();
-}
+    bool setStrValue(const QString &val);
 
-}  // NameSpace KSaneIface
+
+private Q_SLOTS:
+    void entryChanged(const QString &text);
+
+private:
+    QString       m_string;
+};
+
+#endif

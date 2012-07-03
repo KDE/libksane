@@ -25,36 +25,36 @@
 *
 * ============================================================ */
 
-#ifndef KSANE_VIEWER_H
-#define KSANE_VIEWER_H
+#ifndef KSaneViewer_h
+#define KSaneViewer_h
 
 #include <QGraphicsView>
 #include <QWheelEvent>
-
-namespace KSaneIface
-{
 
 class KSaneViewer : public QGraphicsView
 {
     Q_OBJECT
     public:
-        explicit KSaneViewer(QImage *img, QWidget *parent = 0);
+        explicit KSaneViewer(const QImage *img, QWidget *parent = 0);
         ~KSaneViewer();
 
-        void setQImage(QImage *img);
-        void updateImage();
-        /** Find selections in the picture
-        * \param area this parameter determine the area of the reduced sized image. */
-        void findSelections(float area = 10000.0);
-
+        void setQImage(const QImage *img);
         virtual QSize sizeHint() const;
         
     public Q_SLOTS:
         
-        void setTLX(float ratio);
-        void setTLY(float ratio);
-        void setBRX(float ratio);
-        void setBRY(float ratio);
+        void imageUpdated();
+        
+        void imageResized();
+        
+        /** Find selections in the picture
+         * \param area this parameter determine the area of the reduced sized image. */
+        void findSelections(qreal area = 10000.0);
+        
+        void setTLX(qreal ratio);
+        void setTLY(qreal ratio);
+        void setBRX(qreal ratio);
+        void setBRY(qreal ratio);
         
         /** This function is used to set a selection without the user setting it.
         * \note all parameters must be in the range 0.0 -> 1.0.
@@ -62,7 +62,7 @@ class KSaneViewer : public QGraphicsView
         * \param tl_y is the y coordinate of the top left corner 0=0 1=image height.
         * \param br_x is the x coordinate of the bottom right corner 0=0 1=image with.
         * \param br_y is the y coordinate of the bottom right corner 0=0 1=image height. */
-        void setSelection(float tl_x, float tl_y, float br_x, float br_y);
+        void setSelection(qreal tl_x, qreal tl_y, qreal br_x, qreal br_y);
         void clearActiveSelection();
         void clearSavedSelections();
         void clearSelections();
@@ -73,7 +73,7 @@ class KSaneViewer : public QGraphicsView
         * \param tl_y is the y coordinate of the top left corner 0=0 1=image height.
         * \param br_x is the x coordinate of the bottom right corner 0=0 1=image with.
         * \param br_y is the y coordinate of the bottom right corner 0=0 1=image height. */
-        void setHighlightArea(float tl_x, float tl_y, float br_x, float br_y);
+        void setHighlightArea(qreal tl_x, qreal tl_y, qreal br_x, qreal br_y);
 
         /** This function sets the percentage of the highlighted area that is visible. The rest is hidden.
         * \param percentage is the percentage of the highlighted area that is shown.
@@ -90,10 +90,10 @@ class KSaneViewer : public QGraphicsView
 
         int selListSize();
         /* This function returns the active visible selection in index 0 and after that the "saved" ones */
-        bool selectionAt(int index, float &tl_x, float &tl_y, float &br_x, float &br_y);
+        bool selectionAt(int index, qreal &tl_x, qreal &tl_y, qreal &br_x, qreal &br_y);
         
     Q_SIGNALS:
-        void newSelection(float tl_x, float tl_y, float br_x, float br_y);
+        void newSelection(qreal tl_x, qreal tl_y, qreal br_x, qreal br_y);
         
     protected:
         void wheelEvent(QWheelEvent *e);
@@ -105,7 +105,7 @@ class KSaneViewer : public QGraphicsView
     private:
         void updateSelVisibility();
         void updateHighlight();
-        bool activeSelection(float &tl_x, float &tl_y, float &br_x, float &br_y);
+        bool activeSelection(qreal &tl_x, qreal &tl_y, qreal &br_x, qreal &br_y);
         void refineSelections(int pixelMargin);
         
         // fromRow is the row to start the iterations from. fromRow can be grater than toRow. 
@@ -119,8 +119,6 @@ class KSaneViewer : public QGraphicsView
         Private * const d;
 
 };
-
-}  // NameSpace KSaneIface
 
 
 #endif
