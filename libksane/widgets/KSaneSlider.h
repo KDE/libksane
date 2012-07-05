@@ -25,69 +25,64 @@
  *
  * ============================================================ */
 
-#ifndef LABELED_GAMMA_H
-#define LABELED_GAMMA_H
+#ifndef KSaneSlider_h
+#define KSaneSlider_h
 
-// Local includes
-#include "labeled_slider.h"
-#include "gamma_disp.h"
+#include "KSaneOptionWidget.h"
 
 /**
   *@author Kåre Särs
   */
 
-namespace KSaneIface
-{
+class KIntNumInput;
+class KLocalizedString;
 
 /**
- * A wrapper for a checkBox
+ * A combination of a label a slider and a spinbox.
+ * The slider is connected to the spinbox so that they have the same value.
  */
-class LabeledGamma : public KSaneOptionWidget
+class KSaneSlider : public KSaneOptionWidget
 {
     Q_OBJECT
 
 public:
 
    /**
-    * Create the checkBox.
+    * Create the slider.
     *
     * \param parent parent widget
-    * \param text is the text describing the checkBox.
+    * \param text is the text describing the slider value. If the text
+    *        contains a '&', a buddy for the slider will be created.
+    * \param min minimum slider value
+    * \param max maximum slider value
+    * \param quant is the step between values.
     */
-    LabeledGamma(QWidget *parent, const QString& text, int elements);
-    ~LabeledGamma();
+    KSaneSlider(QWidget *parent, const QString& text,
+                int min, int max, int st);
+    ~KSaneSlider();
 
-    void setColor(const QColor &color);
-    void setSize(int size);
-    const QVector<int> &gammaTablePtr() { return m_gam_tbl; }
-    int size() {return (int)(m_max_val+1);}
-
-    bool getValues(int &bri, int &con, int &gam);
+    int value() const;
 
 public Q_SLOTS:
-    void setValues(int bri, int con, int gam);
-    void setValues(const QString &values);
-    
-private Q_SLOTS:
-    void calculateGT();
+
+  /** Set the slider value */
+    void setValue(int);
+    void setRange(int min, int max);
+    void setStep(int);
+    /** Set the unit */
+    void setSuffix(const KLocalizedString &text);
 
 Q_SIGNALS:
 
-    void gammaChanged(int bri, int con, int gam);
-    void gammaTableChanged(const QVector<int> &gamma_tbl);
+    /**
+     * Emit the slider value changes
+     */
+    void valueChanged(int);
 
 private:
 
-    LabeledSlider *m_bri_slider;
-    LabeledSlider *m_con_slider;
-    LabeledSlider *m_gam_slider;
-
-    QVector<int>   m_gam_tbl;
-    double         m_max_val;
-
-    GammaDisp     *m_gamma_disp;
+    KIntNumInput *m_numInput;
+    int           m_step;
 };
 
-}  // NameSpace KSaneIface
-
-#endif // LABELED_GAMMA_H
+#endif

@@ -2,9 +2,10 @@
  *
  * This file is part of the KDE project
  *
- * Description : Base class for option widgets
+ * Date        : 2007-09-13
+ * Description : Sane interface for KDE
  *
- * Copyright (C) 2011 by Kare Sars <kare.sars@iki.fi>
+ * Copyright (C) 2007-2011 by Kare Sars <kare.sars@iki .fi>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,50 +26,33 @@
  * ============================================================ */
 
 // Local includes
-#include "ksane_option_widget.h"
-#include "ksane_option_widget.moc"
+#include "KSaneCheckBox.h"
+#include "KSaneCheckBox.moc"
 
 // Qt includes
 #include <KDebug>
-#include <KLocale>
 
-namespace KSaneIface
+
+KSaneCheckBox::KSaneCheckBox(QWidget *parent, const QString& ltext)
+: KSaneOptionWidget(parent, QString())
 {
+    chbx = new QCheckBox(ltext, this);
+    m_layout->addWidget(chbx, 0, 1);
+    m_layout->setColumnStretch(1, 50);
 
-KSaneOptionWidget::KSaneOptionWidget(QWidget *parent, const QString& labelText)
-: QWidget(parent)
-{
-    m_label = new QLabel;
-    setLabelText(labelText);
-
-    m_layout = new QGridLayout(this);
-    m_layout->addWidget(m_label, 0, 0, Qt::AlignRight);
-    m_layout->setColumnStretch(0, 0);
-    m_layout->setContentsMargins(0,0,0,0);
+    connect(chbx, SIGNAL(toggled(bool)), this, SIGNAL(toggled(bool)));
 }
 
-KSaneOptionWidget::~KSaneOptionWidget()
+KSaneCheckBox::~KSaneCheckBox()
 {
 }
 
-void KSaneOptionWidget::setLabelText(const QString &text)
+void KSaneCheckBox::setChecked(bool is_checked)
 {
-    if (text.isEmpty()) {
-        m_label->setText(QString());
-    } else {
-        m_label->setText(i18nc("Label for a scanner option", "%1:", text));
-    }
+    if (is_checked != chbx->isChecked()) chbx->setChecked(is_checked);
 }
 
-
-int KSaneOptionWidget::labelWidthHint()
+bool KSaneCheckBox::isChecked()
 {
-    return m_label->sizeHint().width();
+    return chbx->isChecked();
 }
-
-void KSaneOptionWidget::setLabelWidth(int labelWidth)
-{
-    m_layout->setColumnMinimumWidth(0, labelWidth);
-}
-
-}  // NameSpace KSaneIface

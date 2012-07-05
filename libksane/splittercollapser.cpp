@@ -38,8 +38,7 @@ License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 // Local
 
-namespace KSaneIface {
-
+namespace KSane {
 
 enum Direction {
 	LTR      = 1 << 0,
@@ -302,5 +301,4 @@ void SplitterCollapser::paintEvent(QPaintEvent*) {
 	painter.drawControl(QStyle::CE_ToolButtonLabel, opt2);
 }
 
-
-} // namespace
+}

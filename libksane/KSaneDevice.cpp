@@ -183,6 +183,7 @@ bool KSaneDevice::openDevice(const QString &name)
     // Create the preview thread
     d->m_previewThread = new KSanePreviewThread(d->m_saneHandle);
     connect(d->m_previewThread, SIGNAL(finished()), d, SLOT(previewScanDone()));
+    connect(d->m_previewThread, SIGNAL(imageResized()), this, SIGNAL(previewImageResized()));
 
     // Create the read thread
     d->m_scanThread = new KSaneScanThread(d->m_saneHandle, &d->m_scanData);
@@ -447,6 +448,76 @@ void KSaneDevice::scanPreview()
     if (d->m_scanOngoing) return;
     d->m_scanOngoing = true;
     d->m_isPreview = true;
+
+    // store the current settings of parameters before changing them
+    KSaneOption *depth   = d->option(SANE_NAME_BIT_DEPTH);
+    KSaneOption *res     = d->option(SANE_NAME_SCAN_RESOLUTION);
+    KSaneOption *resX    = d->option(SANE_NAME_SCAN_X_RESOLUTION);
+    KSaneOption *resY    = d->option(SANE_NAME_SCAN_Y_RESOLUTION);
+    KSaneOption *preview = d->option(SANE_NAME_PREVIEW);
+
+    if (depth != 0)   depth->storeCurrentData();
+    if (res != 0)     res->storeCurrentData();
+    if (resX != 0)    resX->storeCurrentData();
+    if (resY != 0)    resY->storeCurrentData();
+    if (preview != 0) preview->storeCurrentData();
+
+    // Select the whole page if possible
+    KSaneOption *tlx = d->option(SANE_NAME_SCAN_TL_X);
+    KSaneOption *tly = d->option(SANE_NAME_SCAN_TL_Y);
+    KSaneOption *brx = d->option(SANE_NAME_SCAN_BR_X);
+    KSaneOption *bry = d->option(SANE_NAME_SCAN_BR_Y);
+
+    if ((tlx != 0) && (tly != 0) && (brx != 0) && (bry != 0)) {
+        // get maximums
+        qreal xmax = brx->maxValue();
+        qreal ymax = bry->maxValue();
+
+        // select the whole area
+        tlx->setValue(0);
+        tly->setValue(0);
+        brx->setValue(xmax);
+        bry->setValue(ymax);
+    }
+
+    if (res != 0) {
+        if (d->m_previewDPI >= 25.0) {
+            res->setValue(d->m_previewDPI);
+        }
+        else {
+            // set the res-option to getMinValue and increase if necessary
+            SANE_Parameters params;
+            SANE_Status status;
+            qreal dpi = res->minValue();
+            do {
+                res->setValue(dpi);
+                // FIXME check resx, resy
+                //check what image size we would get in a scan
+                status = sane_get_parameters(d->m_saneHandle, &params);
+                if (status != SANE_STATUS_GOOD) {
+                    emit (userMessage(KSaneDevice::ErrorGeneral, i18n(sane_strstatus(status))));
+                    emit (previewDone());
+                    return;
+                }
+
+                if (dpi > 600) break;
+
+                // Increase the dpi value
+                dpi += 25.0;
+            }
+            while ((params.pixels_per_line < 300) || ((params.lines > 0) && (params.lines < 300)));
+
+            if (params.pixels_per_line == 0) {
+                // This is a security measure for broken backends
+                res->setValue(res->minValue());
+                kDebug() << "Setting minimum DPI value for a broken back-end";
+            }
+        }
+    }
+
+    // set preview option to true if possible
+    if (preview != 0) preview->setValue(SANE_TRUE);
+
 
     // execute any pending value reload
     while (d->m_readValsTmr.isActive()) {

@@ -25,8 +25,8 @@
  *
  * ============================================================ */
 
-#ifndef KSANEDEVICE_H
-#define KSANEDEVICE_H
+#ifndef KSaneDevice_h
+#define KSaneDevice_h
 
 #include <QObject>
 #include <QImage>

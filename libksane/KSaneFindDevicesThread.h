@@ -25,8 +25,8 @@
  *
  * ============================================================ */
 
-#ifndef KSANE_FIND_DEVICES_THREAD_H
-#define KSANE_FIND_DEVICES_THREAD_H
+#ifndef KSaneFindDevicesThread_h
+#define KSaneFindDevicesThread_h
 
 #include "KSaneDevice.h"
 

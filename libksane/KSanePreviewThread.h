@@ -25,8 +25,8 @@
  *
  * ============================================================ */
 
-#ifndef KSANE_PREVIEW_THREAD_H
-#define KSANE_PREVIEW_THREAD_H
+#ifndef KSanePreviewThread_h
+#define KSanePreviewThread_h
 
 // Sane includes
 extern "C"
@@ -58,13 +58,15 @@ public:
     void cancelScan();
     int scanProgress();
     bool saneStartDone();
-    bool imageResized();
 
     // this will clear anything that was in the image
     bool setPreviewImageSize(const QSize &size);
     const QImage *image() { return &m_img; }
     QMutex *imageMutex() { return &m_imgMutex; }
     SANE_Status status;
+
+Q_SIGNALS:
+    void imageResized();
 
 private:
     void readData();
@@ -87,7 +89,6 @@ private:
     ReadStatus      m_readStatus;
     int             m_scanProgress;
     bool            m_saneStartDone;
-    bool            m_imageResized;
 };
 
 

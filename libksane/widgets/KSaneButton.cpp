@@ -2,7 +2,7 @@
  *
  * This file is part of the KDE project
  *
- * Copyright (C) 2008-2011 by Kare Sars <kare.sars@iki .fi>
+ * Copyright (C) 2008-2011 by Kare Sars <kare.sars@iki.fi>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -22,46 +22,26 @@
  *
  * ============================================================ */
 
-#ifndef KSANE_BUTTON_H
-#define KSANE_BUTTON_H
-
-#include "ksane_option_widget.h"
+// Local includes
+#include "KSaneButton.h"
+#include "KSaneButton.moc"
 
 // Qt includes
-#include <QPushButton>
-#include <QGridLayout>
+#include <KDebug>
 
-namespace KSaneIface
+KSaneButton::KSaneButton(QWidget *parent, const QString& ltext)
+: KSaneOptionWidget(parent, QString())
 {
+    m_button = new QPushButton(ltext, this);
+    m_layout->addWidget(m_button, 0, 1);
+    m_layout->addWidget(new QWidget(this), 0, 2);
+    m_layout->setColumnStretch(1, 0);
+    m_layout->setColumnStretch(2, 50);
+    
+    connect(m_button, SIGNAL(clicked(bool)), this, SIGNAL(clicked()));
+}
 
-/**
-  *@author Kåre Särs
-  */
-
-/**
- * A wrapper for a checkBox
- */
-class KSaneButton : public KSaneOptionWidget
+KSaneButton::~KSaneButton()
 {
-    Q_OBJECT
+}
 
-public:
-   /**
-    * Create the checkBox.
-    *
-    * \param parent parent widget
-    * \param text is the text describing the checkBox.
-    */
-    KSaneButton(QWidget *parent, const QString& text);
-    ~KSaneButton();
-
-Q_SIGNALS:
-    void clicked();
-
-private:
-    QPushButton *m_button;
-};
-
-}  // NameSpace KSaneIface
-
-#endif // KSANE_BUTTON_H

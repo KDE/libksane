@@ -25,8 +25,8 @@
  *
  * ============================================================ */
 
-#ifndef KSANE_SCAN_THREAD_H
-#define KSANE_SCAN_THREAD_H
+#ifndef KSaneScanThread_h
+#define KSaneScanThread_h
 
 // Sane includes
 extern "C"

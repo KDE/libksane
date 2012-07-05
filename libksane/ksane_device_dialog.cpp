@@ -45,9 +45,6 @@ extern "C"
 #include <KPushButton>
 
 #include <QScrollArea>
-namespace KSaneIface
-{
-
 KSaneDeviceDialog::KSaneDeviceDialog(QWidget *parent)
     : KDialog(parent)
 {
@@ -168,4 +165,3 @@ void KSaneDeviceDialog::updateDevicesList()
     enableButton(KDialog::User1, true);
 }
 
-}  // NameSpace KSaneIface

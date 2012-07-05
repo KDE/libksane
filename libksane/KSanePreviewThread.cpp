@@ -47,8 +47,7 @@ m_saneHandle(handle),
 m_invertColors(false),
 m_readStatus(READ_READY),
 m_scanProgress(0),
-m_saneStartDone(false),
-m_imageResized(false)
+m_saneStartDone(false)
 {
     m_px_colors[0] = 0;
     m_px_colors[1] = 0;
@@ -64,7 +63,7 @@ bool KSanePreviewThread::setPreviewImageSize(const QSize &size)
     m_img = QImage(size, QImage::Format_RGB32);
     m_img.fill(0xFFFFFFFF);
 
-    m_imageResized = true;
+    emit (imageResized());
     return true;
 }
 
@@ -131,7 +130,7 @@ void KSanePreviewThread::run()
         }
         m_img.fill(0xFFFFFFFF);
     }
-    m_imageResized = false;
+    emit (imageResized()); // make sure the preview is resized
     m_pixel_x     = 0;
     m_pixel_y     = 0;
     m_frameRead   = 0;
@@ -261,7 +260,7 @@ void KSanePreviewThread::copyToPreviewImg(int read_bytes)
                     if (m_pixel_y >= m_img.height()) {
                         // resize the image
                         m_img = m_img.copy(0, 0, m_img.width(), m_img.height() + m_img.width());
-                        m_imageResized = true;
+                        emit (imageResized());
                     }
                     for (j=7; j>=0; --j) {
                         if ((m_readData[i] & (1<<j)) == 0) {
@@ -293,7 +292,7 @@ void KSanePreviewThread::copyToPreviewImg(int read_bytes)
                         // resize the image
                         m_img = m_img.copy(0, 0, m_img.width(), m_img.height() + m_img.width());
                         imgBits = m_img.bits();
-                        m_imageResized = true;
+                        emit (imageResized());
                     }
                     imgBits[index    ] = m_readData[i];
                     imgBits[index + 1] = m_readData[i];
@@ -310,7 +309,7 @@ void KSanePreviewThread::copyToPreviewImg(int read_bytes)
                             // resize the image
                             m_img = m_img.copy(0, 0, m_img.width(), m_img.height() + m_img.width());
                             imgBits = m_img.bits();
-                            m_imageResized = true;
+                            emit (imageResized());
                         }
                         imgBits[index    ] = m_readData[i+1];
                         imgBits[index + 1] = m_readData[i+1];
@@ -332,7 +331,7 @@ void KSanePreviewThread::copyToPreviewImg(int read_bytes)
                             if (m_pixel_y >= m_img.height()) {
                                 // resize the image
                                 m_img = m_img.copy(0, 0, m_img.width(), m_img.height() + m_img.width());
-                                m_imageResized = true;
+                                emit (imageResized());
                             }
                             m_img.setPixel(m_pixel_x,
                                             m_pixel_y,
@@ -354,7 +353,7 @@ void KSanePreviewThread::copyToPreviewImg(int read_bytes)
                                 if (m_pixel_y >= m_img.height()) {
                                     // resize the image
                                     m_img = m_img.copy(0, 0, m_img.width(), m_img.height() + m_img.width());
-                                    m_imageResized = true;
+                                    emit (imageResized());
                                 }
                                 m_img.setPixel(m_pixel_x,
                                                 m_pixel_y,
@@ -376,7 +375,7 @@ void KSanePreviewThread::copyToPreviewImg(int read_bytes)
                             // resize the image
                             m_img = m_img.copy(0, 0, m_img.width(), m_img.height() + m_img.width());
                             imgBits = m_img.bits();
-                            m_imageResized = true;
+                            emit (imageResized());
                         }
                         imgBits[index_red8_to_argb8(m_frameRead)] = m_readData[i];
                         m_frameRead++;
@@ -390,7 +389,7 @@ void KSanePreviewThread::copyToPreviewImg(int read_bytes)
                                 // resize the image
                                 m_img = m_img.copy(0, 0, m_img.width(), m_img.height() + m_img.width());
                                 imgBits = m_img.bits();
-                                m_imageResized = true;
+                                emit (imageResized());
                             }
                             imgBits[index_red16_to_argb8(m_frameRead)] = m_readData[i+1];
                         }
@@ -407,7 +406,7 @@ void KSanePreviewThread::copyToPreviewImg(int read_bytes)
                             // resize the image
                             m_img = m_img.copy(0, 0, m_img.width(), m_img.height() + m_img.width());
                             imgBits = m_img.bits();
-                            m_imageResized = true;
+                            emit (imageResized());
                         }
                         imgBits[index_green8_to_argb8(m_frameRead)] = m_readData[i];
                         m_frameRead++;
@@ -421,7 +420,7 @@ void KSanePreviewThread::copyToPreviewImg(int read_bytes)
                                 // resize the image
                                 m_img = m_img.copy(0, 0, m_img.width(), m_img.height() + m_img.width());
                                 imgBits = m_img.bits();
-                                m_imageResized = true;
+                                emit (imageResized());
                             }
                             imgBits[index_green16_to_argb8(m_frameRead)] = m_readData[i+1];
                         }
@@ -438,7 +437,7 @@ void KSanePreviewThread::copyToPreviewImg(int read_bytes)
                             // resize the image
                             m_img = m_img.copy(0, 0, m_img.width(), m_img.height() + m_img.width());
                             imgBits = m_img.bits();
-                            m_imageResized = true;
+                            emit (imageResized());
                         }
                         imgBits[index_blue8_to_argb8(m_frameRead)] = m_readData[i];
                         m_frameRead++;
@@ -452,7 +451,7 @@ void KSanePreviewThread::copyToPreviewImg(int read_bytes)
                                 // resize the image
                                 m_img = m_img.copy(0, 0, m_img.width(), m_img.height() + m_img.width());
                                 imgBits = m_img.bits();
-                                m_imageResized = true;
+                                emit (imageResized());
                             }
                             imgBits[index_blue16_to_argb8(m_frameRead)] = m_readData[i+1];
                         }
@@ -473,13 +472,4 @@ void KSanePreviewThread::copyToPreviewImg(int read_bytes)
 bool KSanePreviewThread::saneStartDone()
 {
     return   m_saneStartDone;
-}
-
-bool KSanePreviewThread::imageResized()
-{
-    if (m_imageResized) {
-        m_imageResized = false;
-        return true;
-    }
-    return false;
 }

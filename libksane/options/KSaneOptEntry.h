@@ -25,8 +25,8 @@
  *
  * ============================================================ */
 
-#ifndef KSANE_OPT_ENTRY_H
-#define KSANE_OPT_ENTRY_H
+#ifndef KSaneOptEntry_h
+#define KSaneOptEntry_h
 
 #include "KSaneOption.h"
 

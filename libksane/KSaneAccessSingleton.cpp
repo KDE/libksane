@@ -27,7 +27,6 @@
 
 #include "KSaneAccessSingleton.h"
 #include "KSaneAccessSingleton.moc"
-#include "ksane_auth.h"
 #include <QMutexLocker>
 
 #include <KDebug>
@@ -61,7 +60,7 @@ m_reserveCount(0)
     SANE_Int    version;
     SANE_Status status;
 
-    status = sane_init(&version, &KSaneAuth::authorization);
+    status = sane_init(&version, &KSaneAccessSingleton::authorization);
     if (status != SANE_STATUS_GOOD) {
         kDebug() << "libksane: sane_init() failed:" << sane_strstatus(status);
     }

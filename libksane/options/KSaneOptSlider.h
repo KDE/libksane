@@ -25,8 +25,8 @@
  *
  * ============================================================ */
 
-#ifndef KSANE_OPT_SLIDER_H
-#define KSANE_OPT_SLIDER_H
+#ifndef KSaneOptSlider_h
+#define KSaneOptSlider_h
 
 #include "KSaneOption.h"
 

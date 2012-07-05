@@ -24,8 +24,8 @@
  * License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * ============================================================ */
-#include "labeled_combo.h"
-#include "labeled_combo.moc"
+#include "KSaneCombo.h"
+#include "KSaneCombo.moc"
 
 // Qt includes
 #include <QLabel>
@@ -34,10 +34,7 @@
 #include <KComboBox>
 #include <KDebug>
 
-namespace KSaneIface
-{
-
-LabeledCombo::LabeledCombo(QWidget *parent, const QString& ltext, const QStringList& list)
+KSaneCombo::KSaneCombo(QWidget *parent, const QString& ltext, const QStringList& list)
 : KSaneOptionWidget(parent, ltext)
 {
     m_combo  = new KComboBox(this);
@@ -54,7 +51,7 @@ LabeledCombo::LabeledCombo(QWidget *parent, const QString& ltext, const QStringL
     setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Fixed);
 }
 
-void LabeledCombo::addItems(const QStringList &list)
+void KSaneCombo::addItems(const QStringList &list)
 {
     m_combo->addItems(list);
 
@@ -66,7 +63,7 @@ void LabeledCombo::addItems(const QStringList &list)
 }
 
 
-void LabeledCombo::setCurrentText(const QString &t)
+void KSaneCombo::setCurrentText(const QString &t)
 {
     int i;
     for (i=0; i<m_combo->count(); i++) {
@@ -76,13 +73,13 @@ void LabeledCombo::setCurrentText(const QString &t)
     }
 }
 
-QString LabeledCombo::currentText()
+QString KSaneCombo::currentText()
 {
     return m_combo->currentText();
 }
 
 
-bool LabeledCombo::setIcon(const QIcon &icon, const QString& str)
+bool KSaneCombo::setIcon(const QIcon &icon, const QString& str)
 {
     for (int i=0; i < m_combo->count(); i++) {
         if (m_combo->itemText(i) == str) {
@@ -93,9 +90,8 @@ bool LabeledCombo::setIcon(const QIcon &icon, const QString& str)
     return false;
 }
 
-void LabeledCombo::setCurrentIndex(int i)
+void KSaneCombo::setCurrentIndex(int i)
 {
     m_combo->setCurrentIndex(i);
 }
 
-}  // NameSpace KSaneIface

@@ -25,8 +25,8 @@
  *
  * ============================================================ */
 
-#ifndef KSANEDEVICEPRIVATE_H
-#define KSANEDEVICEPRIVATE_H
+#ifndef KSaneDevicePrivate_h
+#define KSaneDevicePrivate_h
 
 #include "KSaneDevice.h"
 #include "KSaneOption.h"

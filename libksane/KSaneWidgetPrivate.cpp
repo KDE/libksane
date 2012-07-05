@@ -27,8 +27,8 @@
  * ============================================================ */
 
 // Local includes
-#include "ksane_widget_private.h"
-#include "ksane_widget_private.moc"
+#include "KSaneWidgetPrivate.h"
+#include "KSaneWidgetPrivate.moc"
 
 #include "KSaneDevice.h"
 
@@ -45,9 +45,6 @@
 #define SCALED_PREVIEW_MAX_SIDE 400
 
 static const int ActiveSelection = 100000;
-
-namespace KSaneIface
-{
 
 KSaneWidgetPrivate::KSaneWidgetPrivate(KSaneWidget *parent):
 q(parent)
@@ -368,8 +365,8 @@ void KSaneWidgetPrivate::createOptInterface()
     }
 
     if ((m_optGamR != 0) && (m_optGamG != 0) && (m_optGamB != 0)) {
-        LabeledGamma *gamma = reinterpret_cast<LabeledGamma *>(m_optGamR->widget());
-        m_commonGamma = new LabeledGamma(m_colorOpts, i18n(SANE_TITLE_GAMMA_VECTOR), gamma->size());
+        KSaneGamma *gamma = reinterpret_cast<KSaneGamma *>(m_optGamR->widget());
+        m_commonGamma = new KSaneGamma(m_colorOpts, i18n(SANE_TITLE_GAMMA_VECTOR), gamma->size());
         
         color_lay->addWidget(m_commonGamma);
         
@@ -379,7 +376,7 @@ void KSaneWidgetPrivate::createOptInterface()
         connect(m_commonGamma, SIGNAL(gammaChanged(int,int,int)), m_optGamG->widget(), SLOT(setValues(int,int,int)));
         connect(m_commonGamma, SIGNAL(gammaChanged(int,int,int)), m_optGamB->widget(), SLOT(setValues(int,int,int)));
 
-        m_splitGamChB = new LabeledCheckBox(m_colorOpts, i18n("Separate color intensity tables"));
+        m_splitGamChB = new KSaneCheckBox(m_colorOpts, i18n("Separate color intensity tables"));
         color_lay->addWidget(m_splitGamChB);
         
         connect (m_splitGamChB, SIGNAL(toggled(bool)), gamma_frm, SLOT(setVisible(bool)));
@@ -397,7 +394,7 @@ void KSaneWidgetPrivate::createOptInterface()
         color_lay->addWidget(option->widget());
     }
     
-    m_invertColors = new LabeledCheckBox(m_colorOpts, i18n("Invert colors"));
+    m_invertColors = new KSaneCheckBox(m_colorOpts, i18n("Invert colors"));
     color_lay->addWidget(m_invertColors);
     m_invertColors->setChecked(false);
     connect(m_invertColors, SIGNAL(toggled(bool)), this, SLOT(invertPreview()));
@@ -1140,5 +1137,3 @@ void KSaneWidgetPrivate::pollPollOptions()
     }
 }
 
-
-}  // NameSpace KSaneIface

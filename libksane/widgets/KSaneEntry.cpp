@@ -26,37 +26,51 @@
  * ============================================================ */
 
 // Local includes
-#include "labeled_checkbox.h"
-#include "labeled_checkbox.moc"
+#include "KSaneEntry.h"
+#include "KSaneEntry.moc"
 
 // Qt includes
-#include <KDebug>
+#include <QHBoxLayout>
+#include <QLabel>
+#include <KLineEdit>
+#include <KLocale>
+#include <QPushButton>
 
-namespace KSaneIface
+KSaneEntry::KSaneEntry(QWidget *parent, const QString& ltext)
+: KSaneOptionWidget(parent, ltext)
 {
+    m_entry = new KLineEdit(this);
+    m_reset = new QPushButton(this);
+    m_reset->setText(i18nc("Label for button to reset text in a KLineEdit", "Reset"));
+    m_set = new QPushButton(this);
+    m_set->setText(i18nc("Label for button to write text in a KLineEdit to sane", "Set"));
 
-LabeledCheckBox::LabeledCheckBox(QWidget *parent, const QString& ltext)
-: KSaneOptionWidget(parent, QString())
-{
-    chbx = new QCheckBox(ltext, this);
-    m_layout->addWidget(chbx, 0, 1);
+    m_layout->addWidget(m_entry, 1, 0, 1, 2);
+    m_layout->addWidget(m_reset, 1, 2);
+    m_layout->addWidget(m_set, 1, 3);
     m_layout->setColumnStretch(1, 50);
-
-    connect(chbx, SIGNAL(toggled(bool)), this, SIGNAL(toggled(bool)));
+    
+    connect(m_reset, SIGNAL(clicked()), this, SLOT(resetClicked()));
+    connect(m_set,   SIGNAL(clicked()), this, SLOT(setClicked()));
 }
 
-LabeledCheckBox::~LabeledCheckBox()
+KSaneEntry::~KSaneEntry()
 {
 }
 
-void LabeledCheckBox::setChecked(bool is_checked)
+void KSaneEntry::setText(const QString& text)
 {
-    if (is_checked != chbx->isChecked()) chbx->setChecked(is_checked);
+    m_eText = text;
+    m_entry->setText(text);
 }
 
-bool LabeledCheckBox::isChecked()
+void KSaneEntry::resetClicked()
 {
-    return chbx->isChecked();
+    m_entry->setText(m_eText);
 }
 
-}  // NameSpace KSaneIface
+void KSaneEntry::setClicked()
+{
+    m_eText = m_entry->text();
+    emit entryEdited(m_eText);
+}

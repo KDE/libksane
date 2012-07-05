@@ -28,7 +28,7 @@
 #include "KSaneOptButton.h"
 #include "KSaneOptButton.moc"
 
-#include "ksane_button.h"
+#include "KSaneButton.h"
 
 // KDE includes
 #include <KDebug>

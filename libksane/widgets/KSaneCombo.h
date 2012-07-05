@@ -24,21 +24,18 @@
  *
  * ============================================================ */
 
-#ifndef LABELED_COMBO_H
-#define LABELED_COMBO_H
+#ifndef KSaneCombo_h
+#define KSaneCombo_h
 
-#include "ksane_option_widget.h"
+#include "KSaneOptionWidget.h"
 
 // KDE includes
 #include <KComboBox>
 
-namespace KSaneIface
-{
-
 /**
  * A label and a combobox.
  */
-class LabeledCombo : public KSaneOptionWidget
+class KSaneCombo : public KSaneOptionWidget
 {
     Q_OBJECT
 
@@ -49,7 +46,7 @@ public:
     * \param label is the lext for the label
     * \param list a stringlist with values the list should contain.
     */
-    LabeledCombo(QWidget *parent, const QString& label, const QStringList& list);
+    KSaneCombo(QWidget *parent, const QString& label, const QStringList& list);
 
 
 public Q_SLOTS:
@@ -95,6 +92,4 @@ private:
     KComboBox   *m_combo;
 };
 
-}  // NameSpace KSaneIface
-
-#endif // LABELED_COMBO_H
+#endif

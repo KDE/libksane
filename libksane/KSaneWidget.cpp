@@ -47,7 +47,7 @@
 #include <kpushbutton.h>
 
 // Local includes
-#include "ksane_widget_private.h"
+#include "KSaneWidgetPrivate.h"
 #include "KSaneOption.h"
 #include "KSaneOptButton.h"
 #include "KSaneOptCheckBox.h"
@@ -57,12 +57,7 @@
 #include "KSaneOptGamma.h"
 #include "KSaneOptSlider.h"
 #include "ksane_device_dialog.h"
-#include "labeled_gamma.h"
-
-namespace KSaneIface
-{
-static int     s_objectCount = 0;
-static QMutex  s_objectMutex;
+#include "KSaneGamma.h"
 
 static const QString InvetColorsOption = QString("KSane::InvertColors");
 
@@ -72,8 +67,6 @@ KSaneWidget::KSaneWidget(QWidget* parent)
     SANE_Int    version;
     SANE_Status status;
 
-    //kDebug() <<  "The language is:" << KGlobal::locale()->language();
-    //kDebug() <<  "Languagelist" << KGlobal::locale()->languageList();
     KGlobal::locale()->insertCatalog("libksane");
     KGlobal::locale()->insertCatalog("sane-backends");
 
@@ -927,4 +920,3 @@ void KSaneWidget::setScanButtonHidden(bool hidden)
     d->m_scanBtn->setHidden(hidden);
 }
 
-}  // NameSpace KSaneIface

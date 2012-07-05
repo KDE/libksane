@@ -26,56 +26,62 @@
  * ============================================================ */
 
 // Local includes
-#include "labeled_entry.h"
-#include "labeled_entry.moc"
+#include "KSaneSlider.h"
+#include "KSaneSlider.moc"
+
+// KDE includes
+#include <KNumInput>
 
 // Qt includes
-#include <QHBoxLayout>
 #include <QLabel>
-#include <KLineEdit>
-#include <KLocale>
-#include <QPushButton>
+#include <QSlider>
 
-namespace KSaneIface
-{
-
-LabeledEntry::LabeledEntry(QWidget *parent, const QString& ltext)
+KSaneSlider::KSaneSlider(QWidget *parent, const QString& ltext,
+                             int min, int max, int ste)
 : KSaneOptionWidget(parent, ltext)
 {
-    m_entry = new KLineEdit(this);
-    m_reset = new QPushButton(this);
-    m_reset->setText(i18nc("Label for button to reset text in a KLineEdit", "Reset"));
-    m_set = new QPushButton(this);
-    m_set->setText(i18nc("Label for button to write text in a KLineEdit to sane", "Set"));
+    m_step = ste;
+    if (m_step == 0) m_step = 1;
 
-    m_layout->addWidget(m_entry, 1, 0, 1, 2);
-    m_layout->addWidget(m_reset, 1, 2);
-    m_layout->addWidget(m_set, 1, 3);
+    m_numInput = new KIntNumInput(this);
+    m_numInput->setMinimum(min);
+    m_numInput->setMaximum(max);
+    m_numInput->setSingleStep(m_step);
+    m_numInput->setValue(min);
+    connect(m_numInput, SIGNAL(valueChanged(int)), SIGNAL(valueChanged(int)));
+    m_label->setBuddy(m_numInput);
+
+    m_layout->addWidget(m_numInput, 0, 1);
     m_layout->setColumnStretch(1, 50);
-    
-    connect(m_reset, SIGNAL(clicked()), this, SLOT(resetClicked()));
-    connect(m_set,   SIGNAL(clicked()), this, SLOT(setClicked()));
 }
 
-LabeledEntry::~LabeledEntry()
+KSaneSlider::~KSaneSlider()
 {
 }
 
-void LabeledEntry::setText(const QString& text)
+void KSaneSlider::setSuffix(const KLocalizedString &text)
 {
-    m_eText = text;
-    m_entry->setText(text);
+    m_numInput->setSuffix(text);
 }
 
-void LabeledEntry::resetClicked()
+void KSaneSlider::setValue(int value)
 {
-    m_entry->setText(m_eText);
+    m_numInput->setValue(value);
 }
 
-void LabeledEntry::setClicked()
+void KSaneSlider::setRange(int min, int max)
 {
-    m_eText = m_entry->text();
-    emit entryEdited(m_eText);
+    m_numInput->setRange(min, max);
 }
 
-}  // NameSpace KSaneIface
+void KSaneSlider::setStep(int st)
+{
+    m_step = st;
+    if (m_step == 0) m_step = 1;
+    m_numInput->setSingleStep(m_step);
+}
+
+int KSaneSlider::value() const
+{
+    return m_numInput->value();
+}

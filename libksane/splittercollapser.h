@@ -20,8 +20,8 @@ You should have received a copy of the GNU Lesser General Public
 License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
-#ifndef SPLITTERCOLLAPSER_H
-#define SPLITTERCOLLAPSER_H
+#ifndef SplitterCollapser_h
+#define SplitterCollapser_h
 
 // Qt
 #include <QToolButton>
@@ -30,7 +30,7 @@ License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class QSplitter;
 
-namespace KSaneIface {
+namespace KSane {
 
 
 class SplitterCollapserPrivate;
@@ -66,4 +66,4 @@ private Q_SLOTS:
 
 } // namespace
 
-#endif /* SPLITTERCOLLAPSER_H */
+#endif

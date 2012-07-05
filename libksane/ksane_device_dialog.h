@@ -26,8 +26,8 @@
  *
  * ============================================================ */
 
-#ifndef KSANE_DEVICE_DIALOG_H
-#define KSANE_DEVICE_DIALOG_H
+#ifndef KSaneDeviceDialog_h
+#define KSaneDeviceDialog_h
 
 #include "KSaneFindDevicesThread.h"
 
@@ -45,9 +45,6 @@
 // KDE includes
 #include <KDialog>
 #include <klocale.h>
-
-namespace KSaneIface
-{
 
 class KSaneDeviceDialog : public KDialog
 {
@@ -77,7 +74,5 @@ private:
     QString                 m_selectedDevice;
     KSaneFindDevicesThread  *m_findDevThread;
 };
-
-}  // NameSpace KSaneIface
 
 #endif

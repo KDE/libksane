@@ -25,57 +25,64 @@
  *
  * ============================================================ */
 
-#ifndef LABELED_ENTRY_H
-#define LABELED_ENTRY_H
+#ifndef KSaneGamma_h
+#define KSaneGamma_h
 
-#include "ksane_option_widget.h"
-
-/**
- *@author Kåre Särs
- */
-
-class QPushButton;
-class KLineEdit;
-
-namespace KSaneIface
-{
+// Local includes
+#include "KSaneSlider.h"
+#include "KSaneGammaDisp.h"
 
 /**
- * A text entry field with a set and reset button
+  *@author Kåre Särs
+  */
+
+/**
+ * A wrapper for a checkBox
  */
-class LabeledEntry : public KSaneOptionWidget
+class KSaneGamma : public KSaneOptionWidget
 {
     Q_OBJECT
 
 public:
 
    /**
-    * Create the entry.
+    * Create the checkBox.
     *
     * \param parent parent widget
-    * \param text is the text describing the entry.
+    * \param text is the text describing the checkBox.
     */
-    LabeledEntry(QWidget *parent, const QString& text);
-    ~LabeledEntry();
-    void setText(const QString& text);
+    KSaneGamma(QWidget *parent, const QString& text, int elements);
+    ~KSaneGamma();
 
+    void setColor(const QColor &color);
+    void setSize(int size);
+    const QVector<int> &gammaTablePtr() { return m_gam_tbl; }
+    int size() {return (int)(m_max_val+1);}
+
+    bool getValues(int &bri, int &con, int &gam);
+
+public Q_SLOTS:
+    void setValues(int bri, int con, int gam);
+    void setValues(const QString &values);
+    
 private Q_SLOTS:
-
-    void setClicked();
-    void resetClicked();
+    void calculateGT();
 
 Q_SIGNALS:
 
-    void entryEdited(const QString& text);
+    void gammaChanged(int bri, int con, int gam);
+    void gammaTableChanged(const QVector<int> &gamma_tbl);
 
 private:
 
-    KLineEdit *m_entry;
-    QPushButton *m_set;
-    QPushButton *m_reset;
-    QString m_eText;
+    KSaneSlider *m_bri_slider;
+    KSaneSlider *m_con_slider;
+    KSaneSlider *m_gam_slider;
+
+    QVector<int>   m_gam_tbl;
+    double         m_max_val;
+
+    KSaneGammaDisp     *m_KSaneGammaDisp;
 };
 
-}  // NameSpace KSaneIface
-
-#endif // LABELED_ENTRY_H
+#endif

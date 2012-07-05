@@ -25,8 +25,8 @@
  *
  * ============================================================ */
 
-#ifndef KSANE_OPT_COMBO_H
-#define KSANE_OPT_COMBO_H
+#ifndef KSaneOptCombo_h
+#define KSaneOptCombo_h
 
 #include "KSaneOption.h"
 

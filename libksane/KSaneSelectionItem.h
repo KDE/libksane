@@ -24,8 +24,8 @@
 * License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 *
 * ============================================================ */
-#ifndef SELECTIONITEM_H
-#define SELECTIONITEM_H
+#ifndef KSaneSelectionItem_h
+#define KSaneSelectionItem_h
 
 #include <QGraphicsPixmapItem>
 #include <QPainter>

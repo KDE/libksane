@@ -26,43 +26,40 @@
  * ============================================================ */
 
 // Local includes
-#include "gamma_disp.h"
-#include "gamma_disp.moc"
+#include "KSaneGammaDisp.h"
+#include "KSaneGammaDisp.moc"
 
 // Qt includes
 #include <QPainter>
 
-namespace KSaneIface
-{
-
-GammaDisp::GammaDisp(QWidget *parent, QVector<int> *tbl)
+KSaneGammaDisp::KSaneGammaDisp(QWidget *parent, QVector<int> *tbl)
          : QWidget(parent)
 {
     gam_tbl = tbl;
     gam_color.setRgb(0,0,0);
 }
 
-QSize GammaDisp::minimumSizeHint() const
+QSize KSaneGammaDisp::minimumSizeHint() const
 {
     return QSize(75, 75);
 }
 
-QSize GammaDisp::sizeHint() const
+QSize KSaneGammaDisp::sizeHint() const
 {
     return QSize(75, 75);
 }
 
-void GammaDisp::setColor(const QColor &color)
+void KSaneGammaDisp::setColor(const QColor &color)
 {
     gam_color = color;
 }
 
-void GammaDisp::resizeEvent (QResizeEvent*)
+void KSaneGammaDisp::resizeEvent (QResizeEvent*)
 {
     repaint();
 }
 
-void GammaDisp::paintEvent(QPaintEvent *)
+void KSaneGammaDisp::paintEvent(QPaintEvent *)
 {
 /*    QMemArray<QRect> rects = event->region().rects();
     for (int i = 0; i < (int)rects.size(); i++) {
@@ -86,5 +83,3 @@ void GammaDisp::paintEvent(QPaintEvent *)
         painter.drawLine(p1, p2);
     }
 }
-
-}  // NameSpace KSaneIface

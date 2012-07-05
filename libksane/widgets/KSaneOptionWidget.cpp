@@ -2,10 +2,9 @@
  *
  * This file is part of the KDE project
  *
- * Date        : 2007-09-13
- * Description : Sane interface for KDE
+ * Description : Base class for option widgets
  *
- * Copyright (C) 2007-2011 by Kare Sars <kare.sars@iki .fi>
+ * Copyright (C) 2011 by Kare Sars <kare.sars@iki.fi>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,50 +24,47 @@
  *
  * ============================================================ */
 
-#ifndef LABELED_CHECKBOX_H
-#define LABELED_CHECKBOX_H
-
-#include "ksane_option_widget.h"
+// Local includes
+#include "KSaneOptionWidget.h"
+#include "KSaneOptionWidget.moc"
 
 // Qt includes
-#include <QCheckBox>
-#include <QGridLayout>
+#include <KDebug>
+#include <KLocale>
 
-namespace KSaneIface
+KSaneOptionWidget::KSaneOptionWidget(QWidget *parent, const QString& labelText)
+: QWidget(parent)
 {
+    m_label = new QLabel;
+    setLabelText(labelText);
 
-/**
-  *@author Kåre Särs
-  */
+    m_layout = new QGridLayout(this);
+    m_layout->addWidget(m_label, 0, 0, Qt::AlignRight);
+    m_layout->setColumnStretch(0, 0);
+    m_layout->setContentsMargins(0,0,0,0);
+}
 
-/**
- * A wrapper for a checkBox
- */
-class LabeledCheckBox : public KSaneOptionWidget
+KSaneOptionWidget::~KSaneOptionWidget()
 {
-    Q_OBJECT
+}
 
-public:
+void KSaneOptionWidget::setLabelText(const QString &text)
+{
+    if (text.isEmpty()) {
+        m_label->setText(QString());
+    } else {
+        m_label->setText(i18nc("Label for a scanner option", "%1:", text));
+    }
+}
 
-   /**
-    * Create the checkBox.
-    *
-    * \param parent parent widget
-    * \param text is the text describing the checkBox.
-    */
-    LabeledCheckBox(QWidget *parent, const QString& text);
-    ~LabeledCheckBox();
-    void setChecked(bool);
-    bool isChecked();
 
-Q_SIGNALS:
-    void toggled(bool);
+int KSaneOptionWidget::labelWidthHint()
+{
+    return m_label->sizeHint().width();
+}
 
-private:
+void KSaneOptionWidget::setLabelWidth(int labelWidth)
+{
+    m_layout->setColumnMinimumWidth(0, labelWidth);
+}
 
-    QCheckBox *chbx;
-};
-
-}  // NameSpace KSaneIface
-
-#endif // LABELED_CHECKBOX_H

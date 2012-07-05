@@ -25,8 +25,8 @@
  *
  * ============================================================ */
 
-#ifndef KSaneOption_H
-#define KSaneOption_H
+#ifndef KSaneOption_h
+#define KSaneOption_h
 
 //KDE includes
 #include <KLocalizedString>
@@ -98,6 +98,7 @@ public:
 Q_SIGNALS:
     void optsNeedReload();
     void valsNeedReload();
+
     void valueChanged();
     void strValueChanged();
 

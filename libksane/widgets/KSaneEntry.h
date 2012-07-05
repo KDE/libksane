@@ -2,10 +2,10 @@
  *
  * This file is part of the KDE project
  *
- * Date        : 2009-01-31
+ * Date        : 2007-09-13
  * Description : Sane interface for KDE
  *
- * Copyright (C) 2009 by Kare Sars <kare dot sars at iki dot fi>
+ * Copyright (C) 2007-2011 by Kare Sars <kare.sars@iki .fi>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,28 +25,52 @@
  *
  * ============================================================ */
 
-#ifndef KSaneOptGamma_h
-#define KSaneOptGamma_h
+#ifndef KSaneEntry_h
+#define KSaneEntry_h
 
-#include "KSaneOption.h"
+#include "KSaneOptionWidget.h"
 
-class KSaneOptGamma : public KSaneOption
+/**
+ *@author Kåre Särs
+ */
+
+class QPushButton;
+class KLineEdit;
+
+/**
+ * A text entry field with a set and reset button
+ */
+class KSaneEntry : public KSaneOptionWidget
 {
     Q_OBJECT
 
 public:
-    KSaneOptGamma(const SANE_Handle handle, const int index);
 
-    void readValue();
-
-    bool editable() {return true;}
-
-    const QString strValue();
-    bool setStrValue(const QString &val);
+   /**
+    * Create the entry.
+    *
+    * \param parent parent widget
+    * \param text is the text describing the entry.
+    */
+    KSaneEntry(QWidget *parent, const QString& text);
+    ~KSaneEntry();
+    void setText(const QString& text);
 
 private Q_SLOTS:
-    void gammaTableChanged(const QVector<int> &gam_tbl);
 
+    void setClicked();
+    void resetClicked();
+
+Q_SIGNALS:
+
+    void entryEdited(const QString& text);
+
+private:
+
+    KLineEdit *m_entry;
+    QPushButton *m_set;
+    QPushButton *m_reset;
+    QString m_eText;
 };
 
 #endif

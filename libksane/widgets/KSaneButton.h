@@ -2,9 +2,7 @@
  *
  * This file is part of the KDE project
  *
- * Description : Base class for option widgets
- *
- * Copyright (C) 2011 by Kare Sars <kare.sars@iki.fi>
+ * Copyright (C) 2008-2011 by Kare Sars <kare.sars@iki .fi>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -24,16 +22,14 @@
  *
  * ============================================================ */
 
-#ifndef KSANE_OPTION_WIDGET_H
-#define KSANE_OPTION_WIDGET_H
+#ifndef KSaneButton_h
+#define KSaneButton_h
+
+#include "KSaneOptionWidget.h"
 
 // Qt includes
-#include <QWidget>
-#include <QLabel>
+#include <QPushButton>
 #include <QGridLayout>
-
-namespace KSaneIface
-{
 
 /**
   *@author Kåre Särs
@@ -42,29 +38,25 @@ namespace KSaneIface
 /**
  * A wrapper for a checkBox
  */
-class KSaneOptionWidget : public QWidget
+class KSaneButton : public KSaneOptionWidget
 {
     Q_OBJECT
 
 public:
    /**
-    * Create the Wodget.
+    * Create the checkBox.
+    *
     * \param parent parent widget
-    * \param Label text.
+    * \param text is the text describing the checkBox.
     */
-    KSaneOptionWidget(QWidget *parent, const QString &labelText);
-    ~KSaneOptionWidget();
+    KSaneButton(QWidget *parent, const QString& text);
+    ~KSaneButton();
 
-    void setLabelText(const QString &text);
+Q_SIGNALS:
+    void clicked();
 
-    int labelWidthHint();
-    void setLabelWidth(int labelWidth);
-
-protected:
-    QLabel      *m_label;
-    QGridLayout *m_layout;
+private:
+    QPushButton *m_button;
 };
 
-}  // NameSpace KSaneIface
-
-#endif // KSANE_OPTION_WIDGET_H
+#endif

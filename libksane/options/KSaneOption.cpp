@@ -32,7 +32,7 @@
 #include <KDebug>
 #include <KLocale>
 
-#include "ksane_option_widget.h"
+#include "KSaneOptionWidget.h"
 
 KSaneOption::KSaneOption(const SANE_Handle handle, const int index)
     : QObject(), m_handle(handle), m_index(index)

@@ -94,9 +94,6 @@ KSaneOption *KSaneDevicePrivate::option(const QString &name)
 void KSaneDevicePrivate::updateProgress()
 {
     if (m_isPreview) {
-        if (m_previewThread->imageResized()) {
-            emit (q->previewImageResized());
-        }
         emit (q->previewProgress(m_previewThread->scanProgress()));
     }
     else {

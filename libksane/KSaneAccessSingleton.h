@@ -25,8 +25,8 @@
  *
  * ============================================================ */
 
-#ifndef KSaneAccessSingleton_H
-#define KSaneAccessSingleton_H
+#ifndef KSaneAccessSingleton_h
+#define KSaneAccessSingleton_h
 
 #include "KSaneDevice.h"
 

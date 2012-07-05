@@ -51,6 +51,8 @@ int main (int argc, char *argv[])
 
     KSaneViewer *viewer= new KSaneViewer(device.previewImage());
 
+    //device.setPreviewResolution(200);
+
     QObject::connect(&device, SIGNAL(previewImageResized()), viewer, SLOT(imageResized()));
     QObject::connect(&device, SIGNAL(previewProgress(int)), viewer, SLOT(imageUpdated()));
 

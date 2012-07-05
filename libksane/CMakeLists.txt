@@ -5,25 +5,24 @@ INCLUDE_DIRECTORIES(${SANE_INCLUDE_DIR}
 )
 
 SET(ksane_LIB_SRCS
-    widgets/gamma_disp.cpp
-    widgets/labeled_gamma.cpp
-    widgets/labeled_checkbox.cpp
-    widgets/labeled_entry.cpp
-    widgets/labeled_combo.cpp
-    widgets/labeled_fslider.cpp
-    widgets/labeled_slider.cpp
-    widgets/ksane_button.cpp
-    widgets/ksane_option_widget.cpp
+    widgets/KSaneGammaDisp.cpp
+    widgets/KSaneGamma.cpp
+    widgets/KSaneCheckBox.cpp
+    widgets/KSaneEntry.cpp
+    widgets/KSaneCombo.cpp
+    widgets/KSaneSliderF.cpp
+    widgets/KSaneSlider.cpp
+    widgets/KSaneButton.cpp
+    widgets/KSaneOptionWidget.cpp
     KSaneViewer.cpp
     KSaneSelectionItem.cpp
     ksane_device_dialog.cpp
     KSaneFindDevicesThread.cpp
-    #ksane_widget.cpp
     KSaneScanThread.cpp
     KSanePreviewThread.cpp
-    #ksane_widget_private.cpp
     splittercollapser.cpp
-    ksane_auth.cpp
+    #KSaneWidgetPrivate.cpp
+    #KSaneWidget.cpp
     options/KSaneOptButton.cpp
     options/KSaneOptCheckBox.cpp
     options/KSaneOptEntry.cpp

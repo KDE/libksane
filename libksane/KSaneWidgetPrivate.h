@@ -25,8 +25,8 @@
  *
  * ============================================================ */
 
-#ifndef KSANE_WIDGET_PRIVATE_H
-#define KSANE_WIDGET_PRIVATE_H
+#ifndef KSaneWidgetPrivate_h
+#define KSaneWidgetPrivate_h
 
 // Sane includes
 extern "C"
@@ -54,19 +54,16 @@ extern "C"
 #include "ksane.h"
 #include "KSaneOption.h"
 #include "KSaneViewer.h"
-#include "labeled_gamma.h"
-#include "labeled_checkBox.h"
+#include "KSaneGamma.h"
+#include "KSaneCheckBox.h"
 #include "splittercollapser.h"
 #include "KSaneScanThread.h"
 #include "KSanePreviewThread.h"
 #include "KSaneFindDevicesThread.h"
-#include "ksane_auth.h"
 
 #define IMG_DATA_R_SIZE 100000
 
 /** This namespace collects all methods and classes in LibKSane. */
-namespace KSaneIface
-{
     class KSaneWidgetPrivate: public QObject
     {
         Q_OBJECT
@@ -117,7 +114,7 @@ namespace KSaneIface
             QWidget            *m_colorOpts;
             QScrollArea        *m_otherScrollA;
             QWidget            *m_otherOptsTab;
-            LabeledCheckBox    *m_invertColors;
+            KSaneCheckBox    *m_invertColors;
 
             QSplitter          *m_splitter;
             SplitterCollapser  *m_optionsCollapser;
@@ -162,8 +159,8 @@ namespace KSaneIface
             KSaneOption        *m_optGamR;
             KSaneOption        *m_optGamG;
             KSaneOption        *m_optGamB;
-            LabeledCheckBox    *m_splitGamChB;
-            LabeledGamma       *m_commonGamma;
+            KSaneCheckBox    *m_splitGamChB;
+            KSaneGamma       *m_commonGamma;
             KSaneOption        *m_optWaitForBtn;
 
             // preview variables
@@ -197,7 +194,4 @@ namespace KSaneIface
             KSaneWidget           *q;
     };
 
-
-}  // NameSpace KSaneIface
-
-#endif // SANE_WIDGET_H
+#endif

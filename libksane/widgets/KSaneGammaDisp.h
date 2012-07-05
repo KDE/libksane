@@ -25,8 +25,8 @@
  *
  * ============================================================ */
 
-#ifndef GAMMA_DISP_H
-#define GAMMA_DISP_H
+#ifndef KSaneGammaDisp_h
+#define KSaneGammaDisp_h
 
 // Qt includes
 
@@ -38,10 +38,7 @@
  * This is the widget that displays the gamma table.
  */
 
-namespace KSaneIface
-{
-
-class GammaDisp : public QWidget
+class KSaneGammaDisp : public QWidget
 {
     Q_OBJECT
 
@@ -51,8 +48,8 @@ public:
     * Create a gamma display.
     * \param parent parent widget
     */
-    GammaDisp(QWidget *parent, QVector<int> *tbl);
-    ~GammaDisp() {};
+    KSaneGammaDisp(QWidget *parent, QVector<int> *tbl);
+    ~KSaneGammaDisp() {};
 
     QSize sizeHint() const;
     QSize minimumSizeHint() const;
@@ -70,7 +67,5 @@ private:
     QColor gam_color;
 };
 
-}  // NameSpace KSaneIface
-
-#endif // GAMMA_DISP_H
+#endif
 

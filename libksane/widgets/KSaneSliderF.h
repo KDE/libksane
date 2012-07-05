@@ -25,27 +25,22 @@
  *
  * ============================================================ */
 
-#ifndef LABELED_FSLIDER_H
-#define LABELED_FSLIDER_H
+#ifndef KSaneSliderF_h
+#define KSaneSliderF_h
 
-#include "ksane_option_widget.h"
-
-// Qt includes
-#include <QSlider>
-#include <QDoubleSpinBox>
+#include "KSaneOptionWidget.h"
 
 /**
  *@author Kåre Särs
  */
 
-namespace KSaneIface
-{
+class KDoubleNumInput;
 
 /**
  * A combination of a label a slider and a spinbox.
  * The slider is connected to the spinbox so that they have the same value.
  */
-class LabeledFSlider : public KSaneOptionWidget
+class KSaneSliderF : public KSaneOptionWidget
 {
     Q_OBJECT
 
@@ -61,14 +56,14 @@ public:
     * \param max maximum slider value
     * \param quant is the step between values.
     */
-    LabeledFSlider(QWidget *parent, const QString& text,
+    KSaneSliderF(QWidget *parent, const QString& text,
                    qreal min, qreal max, qreal st);
-    ~LabeledFSlider();
+    ~KSaneSliderF();
 
    /**
     * \return the slider value.
     */
-    qreal value() const {return (qreal)m_spinb->value();}
+    qreal value() const;
     qreal step() const {return m_fstep;}
 
 public Q_SLOTS:
@@ -80,16 +75,6 @@ public Q_SLOTS:
     /** Set the unit */
     void setSuffix(const QString &text);
 
-private Q_SLOTS:
-
-    /**
-     * Sync the values and emit valueChanged()
-     */
-    // FIXME this has to be changes later
-    void syncValues(int);
-    void syncValues(double);
-    void fixValue();
-
 Q_SIGNALS:
 
     /**
@@ -99,12 +84,9 @@ Q_SIGNALS:
 
 private:
 
-    QSlider        *m_slider;
-    QDoubleSpinBox *m_spinb;
-    qreal           m_fstep;
-    int             m_istep;
+    KDoubleNumInput* m_numInput;
+    float            m_fstep;
+    int              m_istep;
 };
 
-}  // NameSpace KSaneIface
-
-#endif // LABELED_SFSLIDER_H
+#endif

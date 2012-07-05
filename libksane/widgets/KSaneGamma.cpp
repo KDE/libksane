@@ -26,8 +26,8 @@
  * ============================================================ */
 
 // Local includes
-#include "labeled_gamma.h"
-#include "labeled_gamma.moc"
+#include "KSaneGamma.h"
+#include "KSaneGamma.moc"
 
 // C++ includes
 #include <cmath>
@@ -38,19 +38,16 @@
 // KDE includes
 #include <klocale.h>
 
-namespace KSaneIface
-{
-
-LabeledGamma::LabeledGamma(QWidget *parent, const QString& text, int size)
+KSaneGamma::KSaneGamma(QWidget *parent, const QString& text, int size)
 : KSaneOptionWidget(parent, text)
 {
-    m_bri_slider = new LabeledSlider(this, i18n("Brightness"), -50, 50, 1);
+    m_bri_slider = new KSaneSlider(this, i18n("Brightness"), -50, 50, 1);
     m_bri_slider->setValue(0);
 
-    m_con_slider = new LabeledSlider(this, i18n("Contrast"), -50, 50, 1);
+    m_con_slider = new KSaneSlider(this, i18n("Contrast"), -50, 50, 1);
     m_con_slider->setValue(0);
 
-    m_gam_slider = new LabeledSlider(this, i18n("Gamma"), 30, 300, 1);
+    m_gam_slider = new KSaneSlider(this, i18n("Gamma"), 30, 300, 1);
     m_gam_slider->setValue(100);
 
     // Calculate the size of the widgets in the sliders
@@ -68,7 +65,7 @@ LabeledGamma::LabeledGamma(QWidget *parent, const QString& text, int size)
     }
     m_max_val = size-1; // assume a gamma table 0 -> max
 
-    m_gamma_disp = new GammaDisp(this, &m_gam_tbl);
+    m_KSaneGammaDisp = new KSaneGammaDisp(this, &m_gam_tbl);
 
     QGroupBox *groupBox = new QGroupBox(text, this);
     QGridLayout *gr_lay = new QGridLayout(groupBox);
@@ -76,7 +73,7 @@ LabeledGamma::LabeledGamma(QWidget *parent, const QString& text, int size)
     gr_lay->addWidget(m_bri_slider, 0, 0);
     gr_lay->addWidget(m_con_slider, 1, 0);
     gr_lay->addWidget(m_gam_slider, 2, 0);
-    gr_lay->addWidget(m_gamma_disp, 0, 1, 3, 1);
+    gr_lay->addWidget(m_KSaneGammaDisp, 0, 1, 3, 1);
 
     m_label->hide();
     m_layout->addWidget(groupBox, 1, 0, 1,3);
@@ -86,18 +83,18 @@ LabeledGamma::LabeledGamma(QWidget *parent, const QString& text, int size)
     connect(m_gam_slider, SIGNAL(valueChanged(int)), this, SLOT(calculateGT()));
 }
 
-LabeledGamma::~LabeledGamma()
+KSaneGamma::~KSaneGamma()
 {
 }
 
-void LabeledGamma::setColor(const QColor &color)
+void KSaneGamma::setColor(const QColor &color)
 {
-    if (m_gamma_disp != 0) {
-        m_gamma_disp->setColor(color);
+    if (m_KSaneGammaDisp != 0) {
+        m_KSaneGammaDisp->setColor(color);
     }
 }
 
-void LabeledGamma::setValues(int bri, int con, int gam)
+void KSaneGamma::setValues(int bri, int con, int gam)
 {
     m_bri_slider->blockSignals(true);
     m_con_slider->blockSignals(true);
@@ -114,7 +111,7 @@ void LabeledGamma::setValues(int bri, int con, int gam)
     m_gam_slider->blockSignals(false);
 }
 
-void LabeledGamma::setValues(const QString &values)
+void KSaneGamma::setValues(const QString &values)
 {
     m_bri_slider->blockSignals(true);
     m_con_slider->blockSignals(true);
@@ -144,7 +141,7 @@ void LabeledGamma::setValues(const QString &values)
 }
 
 
-bool LabeledGamma::getValues(int &bri, int &con, int &gam)
+bool KSaneGamma::getValues(int &bri, int &con, int &gam)
 {
 
     bri = m_bri_slider->value();
@@ -153,7 +150,7 @@ bool LabeledGamma::getValues(int &bri, int &con, int &gam)
     return true;
 }
 
-void LabeledGamma::setSize(int size)
+void KSaneGamma::setSize(int size)
 {
     m_gam_tbl.resize(size);
     for (int i=0; i<m_gam_tbl.size(); i++) {
@@ -165,7 +162,7 @@ void LabeledGamma::setSize(int size)
 }
 
 
-void LabeledGamma::calculateGT()
+void KSaneGamma::calculateGT()
 {
     double gam      = 100.0/m_gam_slider->value();
     double con      = (200.0/(100.0 - m_con_slider->value()))-1;
@@ -190,10 +187,8 @@ void LabeledGamma::calculateGT()
         m_gam_tbl[i] = (int)x;
     }
 
-    m_gamma_disp->update();
+    m_KSaneGammaDisp->update();
     emit gammaChanged(m_bri_slider->value(), m_con_slider->value(), m_gam_slider->value());
     emit gammaTableChanged(m_gam_tbl);
 }
 
-
-}  // NameSpace KSaneIface
