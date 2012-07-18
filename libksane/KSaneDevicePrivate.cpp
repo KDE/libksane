@@ -2,9 +2,6 @@
  *
  * This file is part of the KDE project
  *
- * Date        : 2012-05-24
- * Description : Sane interface for KDE
- *
  * Copyright (C) 2012 by Kare Sars <kare.sars@iki.fi>
  *
  * This library is free software; you can redistribute it and/or

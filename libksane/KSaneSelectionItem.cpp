@@ -2,10 +2,7 @@
 *
 * This file is part of the KDE project
 *
-* Date        : 2008-11-15
-* Description :Selection QGraphicsItem for the image viewer.
-*
-* Copyright (C) 2008 by Kare Sars <kare dot sars at iki dot fi>
+* Copyright (C) 2008-2012 by Kare Sars <kare.sars@iki.fi>
 *
 * This library is free software; you can redistribute it and/or
 * modify it under the terms of the GNU Lesser General Public

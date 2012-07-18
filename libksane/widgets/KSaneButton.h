@@ -2,7 +2,7 @@
  *
  * This file is part of the KDE project
  *
- * Copyright (C) 2008-2011 by Kare Sars <kare.sars@iki .fi>
+ * Copyright (C) 2008-2011 by Kare Sars <kare.sars@iki.fi>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public

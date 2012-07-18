@@ -2,9 +2,6 @@
  *
  * This file is part of the KDE project
  *
- * Date        : 2007-09-13
- * Description : Sane interface for KDE
- *
  * Copyright (C) 2009 by Grzegorz Kurtyka <grzegorz dot kurtyka at gmail dot com>
  * Copyright (C) 2010-2012 by Kåre Särs <kare.sars@iki.fi>
  *

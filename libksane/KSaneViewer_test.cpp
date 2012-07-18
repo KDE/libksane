@@ -2,10 +2,7 @@
 *
 * This file is part of the KDE project
 *
-* Date        : 2010-03-17
-* Description : Preview image viewer that can handle a selection.
-*
-* Copyright (C) 2010 by Kare Sars <kare dot sars at iki dot fi>
+* Copyright (C) 2010 by Kare Sars <kare.sars@iki.fi>
 *
 * This library is free software; you can redistribute it and/or
 * modify it under the terms of the GNU Lesser General Public
