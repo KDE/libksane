@@ -44,6 +44,8 @@ extern "C"
 #include <KPushButton>
 
 #include <QScrollArea>
+#include <QLabel>
+
 namespace KSaneIface
 {
 
@@ -55,23 +57,35 @@ KSaneDeviceDialog::KSaneDeviceDialog(QWidget *parent)
     setButtonText(User1, i18n("Reload devices list"));
     
     m_btnGroup = new QButtonGroup(this);
-    
+
     m_btnBox = new QGroupBox;
-    m_btnLayout = new QVBoxLayout;
     QVBoxLayout *layout = new QVBoxLayout;
     m_btnContainer = new QWidget;
     m_btnLayout = new QVBoxLayout(m_btnContainer);
     QScrollArea *area = new QScrollArea;
     
     m_btnBox->setLayout(layout);
-    
+
+    QLabel *explanation =
+      new QLabel(i18n("<html>The SANE (Scanner Access Now Easy) system could not find any device.<br>"
+                      "Check that the scanner is plugged in and turned on<br>"
+                      "or check your systems scanner setup.<br>"
+                      "For details about SANE see the "
+                      "<a href='http://www.sane-project.org/'>SANE homepage</a>.</html>"));
+    explanation->setOpenExternalLinks(true);
+    int l,t,r,b;
+    layout->getContentsMargins(&l, &t, &r, &b);
+    explanation->setContentsMargins(l, t, r, b);
+
+    layout->addWidget(explanation);
+    m_btnBox->adjustSize();  // make sure to see the complete explanation text
     layout->addWidget(area);
     layout->setContentsMargins(0,0,0,0);
 
     area->setWidgetResizable(true);
     area->setFrameShape(QFrame::NoFrame);
     area->setWidget(m_btnContainer);
-    
+
     setMainWidget(m_btnBox);
     setMinimumHeight(200);
     m_findDevThread = FindSaneDevicesThread::getInstance();
@@ -93,6 +107,7 @@ void KSaneDeviceDialog::reloadDevicesList()
         delete m_btnGroup->buttons().takeFirst();
     }
     m_btnBox->setTitle(i18n("Looking for devices. Please wait."));
+    m_btnBox->layout()->itemAt(0)->widget()->hide();  // explanation
     enableButton(KDialog::User1, false);
 
     if(!m_findDevThread->isRunning()) {
@@ -131,6 +146,8 @@ void KSaneDeviceDialog::updateDevicesList()
     const QList<KSaneWidget::DeviceInfo> list = m_findDevThread->devicesList();
     if (list.isEmpty()) {
         m_btnBox->setTitle(i18n("Sorry. No devices found."));
+        m_btnBox->layout()->itemAt(0)->widget()->show();  // explanation
+        m_btnBox->layout()->itemAt(1)->widget()->hide();  // scroll area
         enableButton(KDialog::User1, true);
         return;
     }
@@ -139,7 +156,9 @@ void KSaneDeviceDialog::updateDevicesList()
     m_btnLayout = new QVBoxLayout;
     m_btnContainer->setLayout(m_btnLayout);
     m_btnBox->setTitle(i18n("Found devices:"));
-    
+    m_btnBox->layout()->itemAt(0)->widget()->hide();  // explanation
+    m_btnBox->layout()->itemAt(1)->widget()->show();  // scroll area
+
     for (int i=0; i< list.size(); i++) {
         QRadioButton *b = new QRadioButton(this);
         b->setObjectName(list[i].name);
