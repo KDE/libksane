@@ -33,16 +33,11 @@ INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/../libksane/ksane.h
               ${CMAKE_CURRENT_BINARY_DIR}/version.h
         DESTINATION ${INCLUDE_INSTALL_DIR}/libksane COMPONENT Devel)
 
-set(INCLUDE_DIRECTORY ${CMAKE_INSTALL_PREFIX}/include)
-get_target_property(LIB_OUT_NAME ksane LOCATION)
-get_filename_component(LIB_OUT_NAME ${LIB_OUT_NAME} NAME)
-set(LIBPATH ${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX})
-
 configure_file(
     ../KSaneConfig.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/KSaneConfig.cmake @ONLY
 )
 
 install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/KSaneConfig.cmake
-    DESTINATION ${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}/cmake/KSane
+    DESTINATION ${LIB_INSTALL_DIR}/cmake/KSane
 )
