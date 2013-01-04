@@ -538,7 +538,7 @@ void KSaneViewer::mousePressEvent(QMouseEvent *e)
                 d->selection->intersects(scenePoint); // just to disable add/remove
                 d->change = SelectionItem::BottomRight;
             }
-            else if (!d->selection->contains(scenePoint)) {
+            else if (d->selection->intersects(scenePoint) == SelectionItem::None) {
                 d->selection->setRect(QRectF(scenePoint, QSizeF(0,0)));
                 d->change = SelectionItem::BottomRight;
             }
