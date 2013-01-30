@@ -22,34 +22,33 @@
  *
  * ============================================================ */
 
-#ifndef KSaneOption_h
-#define KSaneOption_h
-
-#include "libksane_export.h"
+#ifndef KSaneOptInternal_h
+#define KSaneOptInternal_h
 
 #include <KLocalizedString>
 
-#include <QVariant>
-#include <QObject>
+// Sane includes
+extern "C"
+{
+    #include <sane/sane.h>
+    #include <sane/saneopts.h>
+}
 
-class KSaneOptInternal;
-
-class LIBKSANE_EXPORT KSaneOption : public QObject
+class KSaneOptInternal : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QVariant value READ value WRITE setValue NOTIFY valueChanged)
 
 public:
 
-    enum Type {
-        Type_None,
-        Type_CheckBox,
-        Type_Slider,
-        Type_SliderF,
-        Type_Combo,
-        Type_Entry,
-        Type_Gamma,
-        Type_Button
+    enum KSaneOptType {
+        TYPE_DETECT_FAIL,
+        TYPE_CHECKBOX,
+        TYPE_SLIDER,
+        TYPE_SLIDER_F,
+        TYPE_COMBO,
+        TYPE_ENTRY,
+        TYPE_GAMMA,
+        TYPE_BUTTON
     };
 
     enum Visibility {
@@ -58,21 +57,14 @@ public:
         Shown
     };
 
-    enum Unit {
-        Unit_None,         /* the value is unit-less (e.g., # of scans) */
-        Unit_Pixel,        /* value is number of pixels */
-        Unit_Bit,          /* value is number of bits */
-        Unit_mm,           /* value is millimeters */
-        Unit_DPI,          /* value is resolution in dots/inch */
-        Unit_Percent,      /* value is a percentage */
-        Unit_Microsecond   /* value is micro seconds */
-    };
+    KSaneOptInternal(const SANE_Handle handle, int index);
+    ~KSaneOptInternal();
 
-    explicit KSaneOption(KSaneOptInternal *option);
-    ~KSaneOption();
+    static KSaneOptType optionType(const SANE_Option_Descriptor *optDesc);
 
-    Type type() const;
+    KSaneOptType optionType() const;
 
+    bool needsPolling() const;
     Visibility visibility() const;
 
     /** Returns the technical name of the option */
@@ -84,24 +76,43 @@ public:
     /** Returns a translated description of the option for the user */
     const QString description() const;
 
-
-    QVariant value() const;
-    Q_INVOKABLE QVariant minValue() const;
-    Q_INVOKABLE QVariant maxValue() const;
-    Q_INVOKABLE const QStringList valueList() const;
-    Unit unit() const;
     const KLocalizedString unitString() const;
-    Q_INVOKABLE const QString unitSpinBoxDoubleString() const;
+    const QString unitSpinBoxDoubleString() const;
 
-    Q_INVOKABLE bool editable() const;
-    bool setValue(const QVariant &val);
+    virtual void readOption();
+    virtual void readValue();
+
+    virtual qreal minValue() const;
+    virtual qreal maxValue() const;
+    virtual qreal value() const;
+    virtual const QString strValue() const;
+    virtual const QStringList comboStringList() const;
+
+    virtual bool setValue(qreal val);
+    virtual bool setStrValue(const QString &val);
+    virtual int  unit() const;
+    virtual bool editable() const {return false;}
+
+    bool storeCurrentData();
+    bool restoreSavedData();
 
 Q_SIGNALS:
-    void valueChanged();
-    void visibilityChanged();
+    void optsNeedReload();
+    void valsNeedReload();
 
-private:
-    KSaneOptInternal * const d;
+    void valueChanged();
+
+protected:
+
+    static SANE_Word toSANE_Word(unsigned char *data);
+    static void fromSANE_Word(unsigned char *data, SANE_Word from);
+    bool writeData(void *data);
+    void updateVisibility();
+
+    SANE_Handle                   m_handle;
+    int                           m_index;
+    const SANE_Option_Descriptor *m_optDesc; ///< This pointer is provided by sane
+    unsigned char                *m_data;
 };
 
 #endif // KSANE_OPTION_H

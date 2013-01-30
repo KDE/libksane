@@ -32,7 +32,7 @@
 #include <KLocale>
 
 KSaneOptButton::KSaneOptButton(const SANE_Handle handle, const int index)
-: KSaneOption(handle, index)
+: KSaneOptInternal(handle, index)
 {
 }
 
@@ -41,3 +41,10 @@ void KSaneOptButton::buttonClicked()
     unsigned char data[4];
     writeData(data);
 }
+
+bool KSaneOptButton::setValue(qreal)
+{
+    buttonClicked();
+    return true;
+}
+

@@ -25,9 +25,9 @@
 #ifndef KSaneOptSlider_h
 #define KSaneOptSlider_h
 
-#include "KSaneOption.h"
+#include "KSaneOptInternal.h"
 
-class KSaneOptSlider : public KSaneOption
+class KSaneOptSlider : public KSaneOptInternal
 {
     Q_OBJECT
 
@@ -36,12 +36,12 @@ public:
 
     void readValue();
 
-    bool editable() {return true;}
+    bool editable() const {return true;}
 
-    qreal minValue();
-    qreal maxValue();
-    qreal value();
-    const QString strValue();
+    qreal minValue() const;
+    qreal maxValue() const;
+    qreal value() const;
+    const QString strValue() const;
 
     bool setValue(qreal val);
     bool setStrValue(const QString &val);

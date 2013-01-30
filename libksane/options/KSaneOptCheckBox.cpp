@@ -33,7 +33,7 @@
 #include <KLocale>
 
 KSaneOptCheckBox::KSaneOptCheckBox(const SANE_Handle handle, const int index)
-: KSaneOption(handle, index)
+: KSaneOptInternal(handle, index), m_checked(false)
 {
 }
 
@@ -50,6 +50,7 @@ void KSaneOptCheckBox::readValue()
 {
     if (visibility() == Hidden) return;
 
+    kDebug() << saneName();
     // read the current value
     QVarLengthArray<unsigned char> data(m_optDesc->size);
     SANE_Status status;
@@ -61,32 +62,36 @@ void KSaneOptCheckBox::readValue()
     bool old = m_checked;
     m_checked = (toSANE_Word(data.data()) != 0) ? true:false;
 
+    kDebug() << saneName() << m_checked;
+
     // is this a HW button?
     if ((old != m_checked) && ((m_optDesc->cap & SANE_CAP_SOFT_SELECT) == 0)) {
         emit buttonPressed(saneName(), i18n(m_optDesc->title), m_checked);
     }
 }
 
-qreal KSaneOptCheckBox::value()
+qreal KSaneOptCheckBox::value() const
 {
     return m_checked ? 1.0 : 0.0;
 }
 
 bool KSaneOptCheckBox::setValue(qreal val)
 {
+    kDebug() << saneName() << "real" << val;
     if (visibility() == Hidden) return false;
-    checkBoxChanged(val == 0);
+    checkBoxChanged(val != 0);
     readValue();
     return true;
 }
 
-const QString KSaneOptCheckBox::strValue()
+const QString KSaneOptCheckBox::strValue()  const
 {
     return m_checked ? "true" : "false";
 }
 
 bool KSaneOptCheckBox::setValue(const QString &val)
 {
+    kDebug() << saneName() << val;
     if (visibility() == Hidden) return false;
     if ((val.compare("true", Qt::CaseInsensitive) == 0) ||
         (val.compare("1") == 0))

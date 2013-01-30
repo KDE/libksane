@@ -30,6 +30,8 @@
 #include <QApplication>
 #include <QDialog>
 #include <QHBoxLayout>
+#include <QLabel>
+#include <QTime>
 
 int main (int argc, char *argv[])
 {
@@ -57,6 +59,51 @@ int main (int argc, char *argv[])
     QHBoxLayout *layout = new QHBoxLayout(&dialog);
     layout->addWidget(viewer);
 
+    QList<KSaneOption*> options = device.options();
+
+    KSaneOption *test = device.option("enable-test-options");
+    test->setValue(true);
+
+    QDialog optdialog;
+    QVBoxLayout *optlayout = new QVBoxLayout(&optdialog);
+    QLabel *label;
+    for (int i=0; i<options.size(); i++) {
+        kDebug() << options[i]->saneName() << options[i]->title() << options[i]->value() << options[i]->visibility();
+        switch (options[i]->type())
+        {
+            case KSaneOption::Type_None:
+                label = 0;
+                break;
+            case KSaneOption::Type_CheckBox:
+                label = new QLabel("CheckBox " + options[i]->title() + options[i]->value().toString());
+                break;
+            case KSaneOption::Type_Slider:
+                label = new QLabel("Slider   " + options[i]->title() + options[i]->value().toString());
+                break;
+            case KSaneOption::Type_SliderF:
+                label = new QLabel("SliderF  " + options[i]->title() + options[i]->value().toString());
+                break;
+            case KSaneOption::Type_Combo:
+                label = new QLabel("Combo    " + options[i]->title() + options[i]->value().toString() + options[i]->valueList().join(","));
+                break;
+            case KSaneOption::Type_Entry:
+                label = new QLabel("Entry    " + options[i]->title() + options[i]->value().toString());
+                break;
+            case KSaneOption::Type_Gamma:
+                label = new QLabel("Gamma    " + options[i]->title() + options[i]->value().toString());
+                break;
+            case KSaneOption::Type_Button:
+                label = new QLabel("Button   " + options[i]->title() + options[i]->value().toString());
+                break;
+        }
+
+        if (label) {
+            optlayout->addWidget(label);
+            label->setVisible(options[i]->visibility() != KSaneOption::Hidden);
+        }
+    }
+    optdialog.show();
+    dialog.show();
     QTimer::singleShot(2000, &device, SLOT(scanPreview()));
     return dialog.exec();
 }

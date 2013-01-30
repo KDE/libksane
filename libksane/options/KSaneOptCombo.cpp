@@ -36,7 +36,7 @@
 static const char tmp_binary[] = "Binary";
 
 KSaneOptCombo::KSaneOptCombo(const SANE_Handle handle, const int index)
-: KSaneOption(handle, index)
+: KSaneOptInternal(handle, index)
 {
 }
 
@@ -56,38 +56,37 @@ void KSaneOptCombo::readValue()
     m_currentText = getSaneComboString(data.data());
 }
 
-QStringList &KSaneOptCombo::genComboStringList()
+const QStringList KSaneOptCombo::comboStringList() const
 {
     int i;
-    m_strList.clear();
+    QStringList strList;
 
     switch (m_optDesc->type)
     {
         case SANE_TYPE_INT:
             for (i=1; i<=m_optDesc->constraint.word_list[0]; ++i) {
-                m_strList += getSaneComboString((int)m_optDesc->constraint.word_list[i]);
+                strList += getSaneComboString((int)m_optDesc->constraint.word_list[i]);
             }
             break;
         case SANE_TYPE_FIXED:
             for (i=1; i<=m_optDesc->constraint.word_list[0]; ++i) {
-                m_strList += getSaneComboString((qreal)SANE_UNFIX(m_optDesc->constraint.word_list[i]));
+                strList += getSaneComboString((qreal)SANE_UNFIX(m_optDesc->constraint.word_list[i]));
             }
             break;
         case SANE_TYPE_STRING:
             i=0;
             while (m_optDesc->constraint.string_list[i] != 0) {
-                m_strList += getSaneComboString((unsigned char *)m_optDesc->constraint.string_list[i]);
+                strList += getSaneComboString((unsigned char *)m_optDesc->constraint.string_list[i]);
                 i++;
             }
             break;
         default :
-            m_strList += "NOT HANDELED";
             break;
     }
-    return m_strList;
+    return strList;
 }
 
-QString KSaneOptCombo::getSaneComboString(int ival)
+const QString KSaneOptCombo::getSaneComboString(int ival) const
 {
     switch(m_optDesc->unit)
     {
@@ -102,7 +101,7 @@ QString KSaneOptCombo::getSaneComboString(int ival)
     return QString::number(ival);
 }
 
-QString KSaneOptCombo::getSaneComboString(qreal fval)
+const QString KSaneOptCombo::getSaneComboString(qreal fval) const
 {
     switch(m_optDesc->unit)
     {
@@ -117,7 +116,7 @@ QString KSaneOptCombo::getSaneComboString(qreal fval)
     return QString::number(fval, 'F', 4);
 }
 
-QString KSaneOptCombo::getSaneComboString(unsigned char *data)
+const QString KSaneOptCombo::getSaneComboString(unsigned char *data) const
 {
     QString tmp;
     if (data == 0) return QString();
@@ -168,7 +167,7 @@ void KSaneOptCombo::comboboxChangedIndex(int i)
     emit valueChanged();
 }
 
-qreal KSaneOptCombo::minValue()
+qreal KSaneOptCombo::minValue() const
 {
     qreal val=0.0;
     switch (m_optDesc->type)
@@ -191,7 +190,7 @@ qreal KSaneOptCombo::minValue()
     return val;
 }
 
-qreal KSaneOptCombo::value()
+qreal KSaneOptCombo::value() const
 {
     // FIXME this function needs checking
     // read that current value
@@ -217,7 +216,7 @@ qreal KSaneOptCombo::value()
     return 0.0;
 }
 
-const QString KSaneOptCombo::strValue()
+const QString KSaneOptCombo::strValue() const
 {
     return m_currentText;
 }

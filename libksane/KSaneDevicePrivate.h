@@ -26,7 +26,7 @@
 #define KSaneDevicePrivate_h
 
 #include "KSaneDevice.h"
-#include "KSaneOption.h"
+#include "KSaneOptInternal.h"
 #include "KSaneScanThread.h"
 #include "KSanePreviewThread.h"
 
@@ -47,6 +47,7 @@ public:
     KSaneDevicePrivate(KSaneDevice *parent);
 
     void setDefaultValues();
+    KSaneOptInternal *optionInternal(const QString &name);
     KSaneOption *option(const QString &name);
     qreal currentXDPI();
     qreal currentYDPI();
@@ -74,8 +75,9 @@ public:
     KSaneDevice::Info  m_info;
     bool               m_closeDevicePending;
 
+    QList<KSaneOptInternal*> m_optIntList;
+    QList<KSaneOptInternal*> m_pollList;
     QList<KSaneOption*> m_optList;
-    QList<KSaneOption*> m_pollList;
     QTimer              m_optionPollTmr;
     QTimer              m_readValsTmr;
     bool                m_invertColors;

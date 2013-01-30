@@ -25,9 +25,9 @@
 #ifndef KSaneOptCheckBox_h
 #define KSaneOptCheckBox_h
 
-#include "KSaneOption.h"
+#include "KSaneOptInternal.h"
 
-class KSaneOptCheckBox : public KSaneOption
+class KSaneOptCheckBox : public KSaneOptInternal
 {
     Q_OBJECT
 
@@ -36,11 +36,11 @@ public:
 
     void readValue();
 
-    qreal value();
-    const QString strValue();
+    qreal value() const;
+    const QString strValue() const;
     bool setValue(qreal val);
     bool setValue(const QString &val);
-    bool editable() {return true;}
+    bool editable() const {return true;}
 
 private Q_SLOTS:
     void checkBoxChanged(bool toggled);

@@ -27,6 +27,8 @@
 #ifndef KSaneOptionWidget_h
 #define KSaneOptionWidget_h
 
+#include "libksane_export.h"
+
 // Qt includes
 #include <QWidget>
 #include <QLabel>
@@ -39,7 +41,7 @@
 /**
  * A wrapper for a checkBox
  */
-class KSaneOptionWidget : public QWidget
+class LIBKSANE_EXPORT KSaneOptionWidget : public QWidget
 {
     Q_OBJECT
 

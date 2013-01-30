@@ -37,7 +37,7 @@ static const int KSW_INT_MIN = -2147483647-1;  // prevent warning
 
 
 KSaneOptSlider::KSaneOptSlider(const SANE_Handle handle, const int index)
-: KSaneOption(handle, index)
+: KSaneOptInternal(handle, index)
 {
 }
 
@@ -70,7 +70,7 @@ void KSaneOptSlider::sliderChanged(int val)
     writeData(data);
 }
 
-qreal KSaneOptSlider::minValue()
+qreal KSaneOptSlider::minValue()  const
 {
     if (m_optDesc->constraint_type == SANE_CONSTRAINT_RANGE) {
         return (qreal)m_optDesc->constraint.range->min;
@@ -78,7 +78,7 @@ qreal KSaneOptSlider::minValue()
     return (qreal)KSW_INT_MIN;
 }
 
-qreal KSaneOptSlider::maxValue()
+qreal KSaneOptSlider::maxValue() const
 {
     if (m_optDesc->constraint_type == SANE_CONSTRAINT_RANGE) {
        return (qreal)m_optDesc->constraint.range->max;
@@ -86,12 +86,13 @@ qreal KSaneOptSlider::maxValue()
     return (qreal)KSW_INT_MAX;
 }
 
-qreal KSaneOptSlider::value()
+qreal KSaneOptSlider::value() const
 {
+    //kDebug() << m_iVal;
     return (qreal)m_iVal;
 }
 
-const QString KSaneOptSlider::strValue()
+const QString KSaneOptSlider::strValue() const
 {
     return QString::number(m_iVal);
 }

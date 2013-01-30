@@ -2,7 +2,7 @@
  *
  * This file is part of the KDE project
  *
- * Copyright (C) 2011-2012 by Kare Sars <kare.sars@iki.fi>
+ * Copyright (C) 2011-2013 by Kare Sars <kare.sars@iki.fi>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -30,7 +30,7 @@
 #include "KSaneFindDevicesThread.h"
 #include "KSaneAccessSingleton.h"
 
-#include "KSaneOption.h"
+#include "KSaneOptInternal.h"
 #include "KSaneOptButton.h"
 #include "KSaneOptCheckBox.h"
 #include "KSaneOptCombo.h"
@@ -74,6 +74,8 @@ void KSaneDevice::requestDeviceList(bool rescanDeviceList)
         emit availableDevices(findDevThread->devicesList());
     }
 }
+
+
 
 bool KSaneDevice::openDevice(const QString &name)
 {
@@ -127,44 +129,51 @@ bool KSaneDevice::openDevice(const QString &name)
 
     // read the rest of the options
     for (int i=1; i<numSaneOptions; ++i) {
-        switch (KSaneOption::optionType(sane_get_option_descriptor(d->m_saneHandle, i))) {
-            case KSaneOption::TYPE_DETECT_FAIL:
-                d->m_optList.append(new KSaneOption(d->m_saneHandle, i));
+        switch (KSaneOptInternal::optionType(sane_get_option_descriptor(d->m_saneHandle, i))) {
+            case KSaneOptInternal::TYPE_DETECT_FAIL:
+                d->m_optIntList.append(new KSaneOptInternal(d->m_saneHandle, i));
                 break;
-            case KSaneOption::TYPE_CHECKBOX:
-                d->m_optList.append(new KSaneOptCheckBox(d->m_saneHandle, i));
+            case KSaneOptInternal::TYPE_CHECKBOX:
+                d->m_optIntList.append(new KSaneOptCheckBox(d->m_saneHandle, i));
+                d->m_optList.append(new KSaneOption(d->m_optIntList.last()));
                 break;
-            case KSaneOption::TYPE_SLIDER:
-                d->m_optList.append(new KSaneOptSlider(d->m_saneHandle, i));
+            case KSaneOptInternal::TYPE_SLIDER:
+                d->m_optIntList.append(new KSaneOptSlider(d->m_saneHandle, i));
+                d->m_optList.append(new KSaneOption(d->m_optIntList.last()));
                 break;
-            case KSaneOption::TYPE_SLIDER_F:
-                d->m_optList.append(new KSaneOptSliderF(d->m_saneHandle, i));
+            case KSaneOptInternal::TYPE_SLIDER_F:
+                d->m_optIntList.append(new KSaneOptSliderF(d->m_saneHandle, i));
+                d->m_optList.append(new KSaneOption(d->m_optIntList.last()));
                 break;
-            case KSaneOption::TYPE_COMBO:
-                d->m_optList.append(new KSaneOptCombo(d->m_saneHandle, i));
+            case KSaneOptInternal::TYPE_COMBO:
+                d->m_optIntList.append(new KSaneOptCombo(d->m_saneHandle, i));
+                d->m_optList.append(new KSaneOption(d->m_optIntList.last()));
                 break;
-            case KSaneOption::TYPE_ENTRY:
-                d->m_optList.append(new KSaneOptEntry(d->m_saneHandle, i));
+            case KSaneOptInternal::TYPE_ENTRY:
+                d->m_optIntList.append(new KSaneOptEntry(d->m_saneHandle, i));
+                d->m_optList.append(new KSaneOption(d->m_optIntList.last()));
                 break;
-            case KSaneOption::TYPE_GAMMA:
-                d->m_optList.append(new KSaneOptGamma(d->m_saneHandle, i));
+            case KSaneOptInternal::TYPE_GAMMA:
+                d->m_optIntList.append(new KSaneOptGamma(d->m_saneHandle, i));
+                d->m_optList.append(new KSaneOption(d->m_optIntList.last()));
                 break;
-            case KSaneOption::TYPE_BUTTON:
-                d->m_optList.append(new KSaneOptButton(d->m_saneHandle, i));
+            case KSaneOptInternal::TYPE_BUTTON:
+                d->m_optIntList.append(new KSaneOptButton(d->m_saneHandle, i));
+                d->m_optList.append(new KSaneOption(d->m_optIntList.last()));
                 break;
         }
     }
 
     // do the connections of the option parameters
-    for (int i=1; i<d->m_optList.size(); ++i) {
-        //kDebug() << d->m_optList.at(i)->saneName();
-        connect (d->m_optList.at(i), SIGNAL(optsNeedReload()), d, SLOT(optReload()));
-        connect (d->m_optList.at(i), SIGNAL(valsNeedReload()), d, SLOT(scheduleValReload()));
+    for (int i=1; i<d->m_optIntList.size(); ++i) {
+        //kDebug() << d->m_optIntList.at(i)->saneName();
+        connect(d->m_optIntList.at(i), SIGNAL(optsNeedReload()), d, SLOT(optReload()));
+        connect(d->m_optIntList.at(i), SIGNAL(valsNeedReload()), d, SLOT(scheduleValReload()));
 
-        if (d->m_optList.at(i)->needsPolling()) {
-            //kDebug() << d->m_optList.at(i)->saneName() << " needs polling";
-            d->m_pollList.append(d->m_optList.at(i));
-            KSaneOptCheckBox *buttonOption = qobject_cast<KSaneOptCheckBox *>(d->m_optList.at(i));
+        if (d->m_optIntList.at(i)->needsPolling()) {
+            //kDebug() << d->m_optIntList.at(i)->saneName() << " needs polling";
+            d->m_pollList.append(d->m_optIntList.at(i));
+            KSaneOptCheckBox *buttonOption = qobject_cast<KSaneOptCheckBox *>(d->m_optIntList.at(i));
             if (buttonOption) {
                 connect(buttonOption, SIGNAL(buttonPressed(QString,QString,bool)),
                         this, SIGNAL(buttonPressed(QString,QString,bool)));
@@ -286,7 +295,7 @@ qreal KSaneDevice::scanAreaWidth()
         return 0;
     }
 
-    KSaneOption *brx = d->option(SANE_NAME_SCAN_BR_X);
+    KSaneOptInternal *brx = d->optionInternal(SANE_NAME_SCAN_BR_X);
 
     if (brx) {
         if (brx->unit() == SANE_UNIT_PIXEL) {
@@ -307,7 +316,7 @@ qreal KSaneDevice::scanAreaHeight()
         return 0;
     }
 
-    KSaneOption *bry = d->option(SANE_NAME_SCAN_BR_Y);
+    KSaneOptInternal *bry = d->optionInternal(SANE_NAME_SCAN_BR_Y);
 
     if (bry) {
         if (bry->unit() == SANE_UNIT_PIXEL) {
@@ -322,10 +331,10 @@ qreal KSaneDevice::scanAreaHeight()
 
 bool KSaneDevice::setSelection(QPointF topLeft, QPointF bottomRight)
 {
-    KSaneOption *tlx = d->option(SANE_NAME_SCAN_TL_X);
-    KSaneOption *tly = d->option(SANE_NAME_SCAN_TL_Y);
-    KSaneOption *brx = d->option(SANE_NAME_SCAN_BR_X);
-    KSaneOption *bry = d->option(SANE_NAME_SCAN_BR_Y);
+    KSaneOptInternal *tlx = d->optionInternal(SANE_NAME_SCAN_TL_X);
+    KSaneOptInternal *tly = d->optionInternal(SANE_NAME_SCAN_TL_Y);
+    KSaneOptInternal *brx = d->optionInternal(SANE_NAME_SCAN_BR_X);
+    KSaneOptInternal *bry = d->optionInternal(SANE_NAME_SCAN_BR_Y);
     
     if (!brx || !bry || !tlx || !tly) {
         return false;
@@ -447,11 +456,11 @@ void KSaneDevice::scanPreview()
     d->m_isPreview = true;
 
     // store the current settings of parameters before changing them
-    KSaneOption *depth   = d->option(SANE_NAME_BIT_DEPTH);
-    KSaneOption *res     = d->option(SANE_NAME_SCAN_RESOLUTION);
-    KSaneOption *resX    = d->option(SANE_NAME_SCAN_X_RESOLUTION);
-    KSaneOption *resY    = d->option(SANE_NAME_SCAN_Y_RESOLUTION);
-    KSaneOption *preview = d->option(SANE_NAME_PREVIEW);
+    KSaneOptInternal *depth   = d->optionInternal(SANE_NAME_BIT_DEPTH);
+    KSaneOptInternal *res     = d->optionInternal(SANE_NAME_SCAN_RESOLUTION);
+    KSaneOptInternal *resX    = d->optionInternal(SANE_NAME_SCAN_X_RESOLUTION);
+    KSaneOptInternal *resY    = d->optionInternal(SANE_NAME_SCAN_Y_RESOLUTION);
+    KSaneOptInternal *preview = d->optionInternal(SANE_NAME_PREVIEW);
 
     if (depth != 0)   depth->storeCurrentData();
     if (res != 0)     res->storeCurrentData();
@@ -460,10 +469,10 @@ void KSaneDevice::scanPreview()
     if (preview != 0) preview->storeCurrentData();
 
     // Select the whole page if possible
-    KSaneOption *tlx = d->option(SANE_NAME_SCAN_TL_X);
-    KSaneOption *tly = d->option(SANE_NAME_SCAN_TL_Y);
-    KSaneOption *brx = d->option(SANE_NAME_SCAN_BR_X);
-    KSaneOption *bry = d->option(SANE_NAME_SCAN_BR_Y);
+    KSaneOptInternal *tlx = d->optionInternal(SANE_NAME_SCAN_TL_X);
+    KSaneOptInternal *tly = d->optionInternal(SANE_NAME_SCAN_TL_Y);
+    KSaneOptInternal *brx = d->optionInternal(SANE_NAME_SCAN_BR_X);
+    KSaneOptInternal *bry = d->optionInternal(SANE_NAME_SCAN_BR_Y);
 
     if ((tlx != 0) && (tly != 0) && (brx != 0) && (bry != 0)) {
         // get maximums

@@ -33,7 +33,7 @@
 #include <KLocale>
 
 KSaneOptEntry::KSaneOptEntry(const SANE_Handle handle, const int index)
-: KSaneOption(handle, index)
+: KSaneOptInternal(handle, index)
 {
 }
 
@@ -62,7 +62,7 @@ void KSaneOptEntry::readValue()
     m_string = QString(reinterpret_cast<char*>(data.data()));
 }
 
-const QString KSaneOptEntry::strValue()
+const QString KSaneOptEntry::strValue() const
 {
     return m_string;
 }

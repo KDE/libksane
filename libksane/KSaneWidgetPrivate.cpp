@@ -222,7 +222,7 @@ int KSaneWidgetPrivate::getBytesPerLines(SANE_Parameters &params)
 }
 
 
-KSaneOption *KSaneWidgetPrivate::getOption(const QString &name)
+KSaneOptInternal *KSaneWidgetPrivate::getOption(const QString &name)
 {
     int i;
     for (i=0; i<m_optList.size(); i++) {
@@ -239,7 +239,7 @@ void KSaneWidgetPrivate::createOptInterface()
     m_basicScrollA->setWidget(m_basicOptsTab);
 
     QVBoxLayout *basic_layout = new QVBoxLayout(m_basicOptsTab);
-    KSaneOption *option;
+    KSaneOptInternal *option;
     // Scan Source
     if ((option = getOption(SANE_NAME_SCAN_SOURCE)) != 0) {
         m_optSource = option;
@@ -492,7 +492,7 @@ void KSaneWidgetPrivate::createOptInterface()
 
 void KSaneWidgetPrivate::setDefaultValues()
 {
-    KSaneOption *option;
+    KSaneOptInternal *option;
 
     // Try to get Color mode by default
     if ((option = getOption(SANE_NAME_SCAN_MODE)) != 0) {
@@ -526,8 +526,8 @@ void KSaneWidgetPrivate::optReload()
     }
     // Gamma table special case
     if (m_optGamR && m_optGamG && m_optGamB) {
-        m_commonGamma->setHidden(m_optGamR->state() == KSaneOption::Hidden);
-        m_splitGamChB->setHidden(m_optGamR->state() == KSaneOption::Hidden);
+        m_commonGamma->setHidden(m_optGamR->state() == KSaneOptInternal::Hidden);
+        m_splitGamChB->setHidden(m_optGamR->state() == KSaneOptInternal::Hidden);
     }
 
     // estimate the preview size and create an empty image

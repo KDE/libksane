@@ -25,9 +25,9 @@
 #ifndef KSaneOptEntry_h
 #define KSaneOptEntry_h
 
-#include "KSaneOption.h"
+#include "KSaneOptInternal.h"
 
-class KSaneOptEntry : public KSaneOption
+class KSaneOptEntry : public KSaneOptInternal
 {
     Q_OBJECT
 
@@ -36,9 +36,9 @@ public:
 
     void readValue();
 
-    bool editable() {return true;}
+    bool editable() const {return true;}
 
-    const QString strValue();
+    const QString strValue() const;
 
     bool setStrValue(const QString &val);
 

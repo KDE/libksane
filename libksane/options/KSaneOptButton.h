@@ -25,20 +25,21 @@
 #ifndef KSaneOptButton_h
 #define KSaneOptButton_h
 
-#include "KSaneOption.h"
+#include "KSaneOptInternal.h"
 
 
 class KSaneButton;
 
-class KSaneOptButton : public KSaneOption
+class KSaneOptButton : public KSaneOptInternal
 {
     Q_OBJECT
 
 public:
     KSaneOptButton(const SANE_Handle handle, const int index);
 
-    bool editable() {return true;}
-
+    bool editable() const {return true;}
+    bool setValue(qreal val);
+    
 private Q_SLOTS:
     void buttonClicked();
 };

@@ -2,7 +2,7 @@
  *
  * This file is part of the KDE project
  *
- * Copyright (C) 2007-2012 by Kare Sars <kare.sars@iki.fi>
+ * Copyright (C) 2007-2013 by Kare Sars <kare.sars@iki.fi>
  * Copyright (C) 2009 by Matthias Nagl <matthias at nagl dot info>
  * Copyright (C) 2009 by Grzegorz Kurtyka <grzegorz dot kurtyka at gmail dot com>
  * Copyright (C) 2007-2008 by Gilles Caulier <caulier dot gilles at gmail dot com>
@@ -31,8 +31,6 @@
 #include <unistd.h>
 
 // Qt includes
-#include <QApplication>
-#include <QVarLengthArray>
 #include <QLabel>
 #include <QSplitter>
 #include <QMutex>
@@ -45,7 +43,7 @@
 
 // Local includes
 #include "KSaneWidgetPrivate.h"
-#include "KSaneOption.h"
+#include "KSaneOptInternal.h"
 #include "KSaneOptButton.h"
 #include "KSaneOptCheckBox.h"
 #include "KSaneOptCombo.h"
@@ -400,29 +398,29 @@ bool KSaneWidget::openDevice(const QString &deviceName)
 
     // read the rest of the options
     for (i=1; i<numSaneOptions; ++i) {
-        switch (KSaneOption::optionType(sane_get_option_descriptor(d->m_saneHandle, i))) {
-            case KSaneOption::TYPE_DETECT_FAIL:
-                d->m_optList.append(new KSaneOption(d->m_saneHandle, i));
+        switch (KSaneOptInternal::optionType(sane_get_option_descriptor(d->m_saneHandle, i))) {
+            case KSaneOptInternal::TYPE_DETECT_FAIL:
+                d->m_optList.append(new KSaneOptInternal(d->m_saneHandle, i));
                 break;
-            case KSaneOption::TYPE_CHECKBOX:
+            case KSaneOptInternal::TYPE_CHECKBOX:
                 d->m_optList.append(new KSaneOptCheckBox(d->m_saneHandle, i));
                 break;
-            case KSaneOption::TYPE_SLIDER:
+            case KSaneOptInternal::TYPE_SLIDER:
                 d->m_optList.append(new KSaneOptSlider(d->m_saneHandle, i));
                 break;
-            case KSaneOption::TYPE_SLIDER_F:
+            case KSaneOptInternal::TYPE_SLIDER_F:
                 d->m_optList.append(new KSaneOptSliderF(d->m_saneHandle, i));
                 break;
-            case KSaneOption::TYPE_COMBO:
+            case KSaneOptInternal::TYPE_COMBO:
                 d->m_optList.append(new KSaneOptCombo(d->m_saneHandle, i));
                 break;
-            case KSaneOption::TYPE_ENTRY:
+            case KSaneOptInternal::TYPE_ENTRY:
                 d->m_optList.append(new KSaneOptEntry(d->m_saneHandle, i));
                 break;
-            case KSaneOption::TYPE_GAMMA:
+            case KSaneOptInternal::TYPE_GAMMA:
                 d->m_optList.append(new KSaneOptGamma(d->m_saneHandle, i));
                 break;
-            case KSaneOption::TYPE_BUTTON:
+            case KSaneOptInternal::TYPE_BUTTON:
                 d->m_optList.append(new KSaneOptButton(d->m_saneHandle, i));
                 break;
         }
@@ -656,7 +654,7 @@ void KSaneWidget::setPreviewResolution(qreal dpi)
 
 void KSaneWidget::getOptVals(QMap <QString, QString> &opts)
 {
-    KSaneOption *option;
+    KSaneOptInternal *option;
     opts.clear();
     QString tmp;
 
@@ -672,7 +670,7 @@ void KSaneWidget::getOptVals(QMap <QString, QString> &opts)
 
 bool KSaneWidget::getOptVal(const QString &optname, QString &value)
 {
-    KSaneOption *option;
+    KSaneOptInternal *option;
 
     if ((option = d->getOption(optname)) != 0) {
         return option->getValue(value);
@@ -739,7 +737,7 @@ int KSaneWidget::setOptVals(const QMap <QString, QString> &opts)
 
 bool KSaneWidget::setOptVal(const QString &option, const QString &value)
 {
-    KSaneOption *opt;
+    KSaneOptInternal *opt;
 
     if ((opt = d->getOption(option)) != 0) {
         if (opt->setValue(value)) {

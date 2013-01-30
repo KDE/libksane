@@ -37,7 +37,7 @@ static const qreal FIXED_MIN =-32768.0;
 static const qreal MIN_FIXED_STEP = 0.0001;
 
 KSaneOptSliderF::KSaneOptSliderF(const SANE_Handle handle, const int index)
-: KSaneOption(handle, index), m_fVal(0), m_minChange(MIN_FIXED_STEP)
+: KSaneOptInternal(handle, index), m_fVal(0), m_minChange(MIN_FIXED_STEP)
 {
 }
 
@@ -72,7 +72,7 @@ void KSaneOptSliderF::sliderChanged(qreal val)
     }
 }
 
-qreal KSaneOptSliderF::minValue()
+qreal KSaneOptSliderF::minValue() const
 {
     if (m_optDesc->constraint_type == SANE_CONSTRAINT_RANGE) {
         return SANE_UNFIX(m_optDesc->constraint.range->min);
@@ -80,7 +80,7 @@ qreal KSaneOptSliderF::minValue()
     return FIXED_MIN;
 }
 
-qreal KSaneOptSliderF::maxValue()
+qreal KSaneOptSliderF::maxValue() const
 {
     if (m_optDesc->constraint_type == SANE_CONSTRAINT_RANGE) {
         return SANE_UNFIX(m_optDesc->constraint.range->max);
@@ -88,12 +88,13 @@ qreal KSaneOptSliderF::maxValue()
     return FIXED_MAX;
 }
 
-qreal KSaneOptSliderF::value()
+qreal KSaneOptSliderF::value() const
 {
+    kDebug() << m_fVal;
     return m_fVal;
 }
 
-const QString KSaneOptSliderF::strValue()
+const QString KSaneOptSliderF::strValue() const
 {
     return QString::number(m_fVal, 'F', 6);
 }

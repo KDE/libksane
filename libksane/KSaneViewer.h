@@ -25,10 +25,12 @@
 #ifndef KSaneViewer_h
 #define KSaneViewer_h
 
+#include "libksane_export.h"
+
 #include <QGraphicsView>
 #include <QWheelEvent>
 
-class KSaneViewer : public QGraphicsView
+class LIBKSANE_EXPORT KSaneViewer : public QGraphicsView
 {
     Q_OBJECT
     public:

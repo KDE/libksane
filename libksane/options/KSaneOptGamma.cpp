@@ -33,7 +33,7 @@
 #include <KLocale>
 
 KSaneOptGamma::KSaneOptGamma(const SANE_Handle handle, const int index)
-: KSaneOption(handle, index)
+: KSaneOptInternal(handle, index)
 {
 }
 
@@ -51,7 +51,7 @@ void KSaneOptGamma::readValue()
 }
 
 
-const QString KSaneOptGamma::strValue()
+const QString KSaneOptGamma::strValue()  const
 {
     int bri = 0;
     int con = 0;

@@ -49,7 +49,7 @@ extern "C"
 
 // Local includes
 #include "ksane.h"
-#include "KSaneOption.h"
+#include "KSaneOptInternal.h"
 #include "KSaneViewer.h"
 #include "KSaneGamma.h"
 #include "KSaneCheckBox.h"
@@ -72,7 +72,7 @@ extern "C"
             void updatePreviewSize();
             void setDefaultValues();
             void setBusy(bool busy);
-            KSaneOption *getOption(const QString &name);
+            KSaneOptInternal *getOption(const QString &name);
             KSaneWidget::ImageFormat getImgFormat(SANE_Parameters &params);
             int getBytesPerLines(SANE_Parameters &params);
 
@@ -138,27 +138,27 @@ extern "C"
             QString             m_model;
 
             // Option variables
-            QList<KSaneOption*> m_optList;
-            QList<KSaneOption*> m_pollList;
-            KSaneOption        *m_optSource;
-            KSaneOption        *m_optNegative;
-            KSaneOption        *m_optFilmType;
-            KSaneOption        *m_optMode;
-            KSaneOption        *m_optDepth;
-            KSaneOption        *m_optRes;
-            KSaneOption        *m_optResX;
-            KSaneOption        *m_optResY;
-            KSaneOption        *m_optTlX;
-            KSaneOption        *m_optTlY;
-            KSaneOption        *m_optBrX;
-            KSaneOption        *m_optBrY;
-            KSaneOption        *m_optPreview;
-            KSaneOption        *m_optGamR;
-            KSaneOption        *m_optGamG;
-            KSaneOption        *m_optGamB;
+            QList<KSaneOptInternal*> m_optList;
+            QList<KSaneOptInternal*> m_pollList;
+            KSaneOptInternal        *m_optSource;
+            KSaneOptInternal        *m_optNegative;
+            KSaneOptInternal        *m_optFilmType;
+            KSaneOptInternal        *m_optMode;
+            KSaneOptInternal        *m_optDepth;
+            KSaneOptInternal        *m_optRes;
+            KSaneOptInternal        *m_optResX;
+            KSaneOptInternal        *m_optResY;
+            KSaneOptInternal        *m_optTlX;
+            KSaneOptInternal        *m_optTlY;
+            KSaneOptInternal        *m_optBrX;
+            KSaneOptInternal        *m_optBrY;
+            KSaneOptInternal        *m_optPreview;
+            KSaneOptInternal        *m_optGamR;
+            KSaneOptInternal        *m_optGamG;
+            KSaneOptInternal        *m_optGamB;
             KSaneCheckBox    *m_splitGamChB;
             KSaneGamma       *m_commonGamma;
-            KSaneOption        *m_optWaitForBtn;
+            KSaneOptInternal        *m_optWaitForBtn;
 
             // preview variables
             qreal               m_previewWidth;

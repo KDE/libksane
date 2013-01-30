@@ -25,9 +25,9 @@
 #ifndef KSaneOptCombo_h
 #define KSaneOptCombo_h
 
-#include "KSaneOption.h"
+#include "KSaneOptInternal.h"
 
-class KSaneOptCombo : public KSaneOption
+class KSaneOptCombo : public KSaneOptInternal
 {
     Q_OBJECT
 
@@ -36,15 +36,18 @@ public:
 
     void readValue();
 
-    bool editable() {return true;}
+    bool editable() const {return true;}
 
-    qreal minValue();
+    qreal minValue() const;
 
-    qreal value();
-    const QString strValue();
+    qreal value() const;
+    const QString strValue() const;
+
+    const QStringList comboStringList() const;
 
     bool setValue(qreal val);
     bool setStrValue(const QString &val);
+
 
 private Q_SLOTS:
     void comboboxChangedIndex(int val);
@@ -53,13 +56,11 @@ Q_SIGNALS:
     void valueChanged();
 
 private:
-    QStringList &genComboStringList();
-    QString getSaneComboString(int ival);
-    QString getSaneComboString(qreal fval);
-    QString getSaneComboString(unsigned char *data);
+    const QString getSaneComboString(int ival) const;
+    const QString getSaneComboString(qreal fval) const;
+    const QString getSaneComboString(unsigned char *data) const;
 
-    QString       m_currentText;
-    QStringList   m_strList;
+    QString m_currentText;
 };
 
 #endif

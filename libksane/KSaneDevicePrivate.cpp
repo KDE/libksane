@@ -29,33 +29,33 @@
 
 #include <KDebug>
 
-KSaneDevicePrivate::KSaneDevicePrivate(KSaneDevice *parent): q(parent) {}
+KSaneDevicePrivate::KSaneDevicePrivate(KSaneDevice *parent): q(parent), m_closeDevicePending(false), m_scanOngoing(false) {}
 
 void KSaneDevicePrivate::setDefaultValues()
 {
-    KSaneOption *opt;
+    KSaneOptInternal *opt;
 
     // Try to get Color mode by default
-    if ((opt = option(SANE_NAME_SCAN_MODE)) != 0) {
+    if ((opt = optionInternal(SANE_NAME_SCAN_MODE)) != 0) {
         opt->setStrValue(i18n(SANE_VALUE_SCAN_MODE_COLOR));
     }
 
     // Try to set 8 bit color
-    if ((opt = option(SANE_NAME_BIT_DEPTH)) != 0) {
+    if ((opt = optionInternal(SANE_NAME_BIT_DEPTH)) != 0) {
         opt->setValue(8);
     }
 
     // Try to set Scan resolution to 600 DPI
-    if ((opt = option(SANE_NAME_SCAN_RESOLUTION)) != 0) {
+    if ((opt = optionInternal(SANE_NAME_SCAN_RESOLUTION)) != 0) {
         opt->setValue(300);
     }
 }
 
 qreal KSaneDevicePrivate::currentXDPI()
 {
-    KSaneOption *dpi = option(SANE_NAME_SCAN_X_RESOLUTION);
+    KSaneOptInternal *dpi = optionInternal(SANE_NAME_SCAN_X_RESOLUTION);
     if (!dpi) {
-        dpi = option(SANE_NAME_SCAN_RESOLUTION);
+        dpi = optionInternal(SANE_NAME_SCAN_RESOLUTION);
     }
     if (!dpi) {
         // failed to get the object
@@ -66,9 +66,9 @@ qreal KSaneDevicePrivate::currentXDPI()
 
 qreal KSaneDevicePrivate::currentYDPI()
 {
-    KSaneOption *dpi = option(SANE_NAME_SCAN_Y_RESOLUTION);
+    KSaneOptInternal *dpi = optionInternal(SANE_NAME_SCAN_Y_RESOLUTION);
     if (!dpi) {
-        dpi = option(SANE_NAME_SCAN_RESOLUTION);
+        dpi = optionInternal(SANE_NAME_SCAN_RESOLUTION);
     }
     if (!dpi) {
         // failed to get the object
@@ -77,10 +77,19 @@ qreal KSaneDevicePrivate::currentYDPI()
     return dpi->maxValue();
 }
 
+KSaneOptInternal *KSaneDevicePrivate::optionInternal(const QString &name)
+{
+    for (int i=0; i<m_optIntList.size(); i++) {
+        if (m_optIntList.at(i)->saneName() == name) {
+            return m_optIntList.at(i);
+        }
+    }
+    return 0;
+}
+
 KSaneOption *KSaneDevicePrivate::option(const QString &name)
 {
-    int i;
-    for (i=0; i<m_optList.size(); i++) {
+    for (int i=0; i<m_optList.size(); i++) {
         if (m_optList.at(i)->saneName() == name) {
             return m_optList.at(i);
         }
@@ -105,10 +114,10 @@ void KSaneDevicePrivate::scheduleValReload()
 
 void KSaneDevicePrivate::optReload()
 {
-    for (int i=0; i<m_optList.size(); i++) {
-        m_optList.at(i)->readOption();
+    for (int i=0; i<m_optIntList.size(); i++) {
+        m_optIntList.at(i)->readOption();
         // Also read the values
-        m_optList.at(i)->readValue();
+        m_optIntList.at(i)->readValue();
     }
 
     // estimate the preview size and create an empty image
@@ -119,8 +128,8 @@ void KSaneDevicePrivate::optReload()
 
 void KSaneDevicePrivate::valReload()
 {
-    for (int i=0; i<m_optList.size(); i++) {
-        m_optList.at(i)->readValue();
+    for (int i=0; i<m_optIntList.size(); i++) {
+        m_optIntList.at(i)->readValue();
     }
 }
 
@@ -161,11 +170,11 @@ void KSaneDevicePrivate::previewScanDone()
     }
 
     // restore the original settings of the changed parameters
-    KSaneOption *depth = option(SANE_NAME_BIT_DEPTH);
-    KSaneOption *res = option(SANE_NAME_SCAN_RESOLUTION);
-    KSaneOption *resX = option(SANE_NAME_SCAN_X_RESOLUTION);
-    KSaneOption *resY = option(SANE_NAME_SCAN_Y_RESOLUTION);
-    KSaneOption *preview = option(SANE_NAME_PREVIEW);
+    KSaneOptInternal *depth = optionInternal(SANE_NAME_BIT_DEPTH);
+    KSaneOptInternal *res = optionInternal(SANE_NAME_SCAN_RESOLUTION);
+    KSaneOptInternal *resX = optionInternal(SANE_NAME_SCAN_X_RESOLUTION);
+    KSaneOptInternal *resY = optionInternal(SANE_NAME_SCAN_Y_RESOLUTION);
+    KSaneOptInternal *preview = optionInternal(SANE_NAME_PREVIEW);
 
     if (depth != 0)   depth->restoreSavedData();
     if (res != 0)     res->restoreSavedData();
@@ -272,7 +281,7 @@ void KSaneDevicePrivate::oneFinalScanDone()
              );
 
         // now check if we should have automatic ADF batch scaning
-        KSaneOption *source = option(SANE_NAME_SCAN_SOURCE);
+        KSaneOptInternal *source = optionInternal(SANE_NAME_SCAN_SOURCE);
         if (source){
             if (source->strValue().contains("Automatic Document Feeder")) {
                 // in batch mode only one area can be scanned per page
@@ -283,7 +292,7 @@ void KSaneDevicePrivate::oneFinalScanDone()
         }
 
         // Check if we have a "wait for button" batch scanning
-        KSaneOption *waitForButton = option("wait-for-button");
+        KSaneOptInternal *waitForButton = optionInternal("wait-for-button");
         if (waitForButton && (waitForButton->strValue() == "true")) {
             // in batch mode only one area can be scanned per page
             m_updProgressTmr.start();

@@ -1,5 +1,6 @@
 
 INCLUDE_DIRECTORIES(${SANE_INCLUDE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/options
     ${CMAKE_CURRENT_SOURCE_DIR}/widgets
 )
@@ -30,6 +31,7 @@ SET(ksane_LIB_SRCS
     options/KSaneOptSlider.cpp
     options/KSaneOptSliderF.cpp
     options/KSaneOptCombo.cpp
+    options/KSaneOptInternal.cpp
 
     options/KSaneOption.cpp
 
@@ -56,14 +58,16 @@ OPTION(COMPILE_TESTAPP "Compile a small test application for KSaneDevice")
 
 IF (COMPILE_TESTAPP)
     message("Compile KSaneDevice testapp")
-    kde4_add_executable(testDevice KSaneDeviceTest.cpp ${ksane_LIB_SRCS})
-    target_link_libraries(testDevice ${KDE4_KDEUI_LIBS} ${SANE_LIBRARY})
+    kde4_add_executable(testDevice KSaneDeviceTest.cpp)
+    target_link_libraries(testDevice ${KDE4_KDEUI_LIBS} ${SANE_LIBRARY} ksane)
 ENDIF()
 
 INSTALL(TARGETS ksane ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 INSTALL(FILES ksane.h
               libksane_export.h
+              KSaneDevice.h
+              options/KSaneOption.h
               ${CMAKE_CURRENT_BINARY_DIR}/version.h
         DESTINATION ${INCLUDE_INSTALL_DIR}/libksane COMPONENT Devel)
 
