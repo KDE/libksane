@@ -312,6 +312,11 @@ bool KSaneWidget::openDevice(const QString &deviceName)
     QString                        myFolderName("ksane");
     QMap<QString, QString>         wallet_entry;
 
+    if (d->m_saneHandle != 0) {
+        // this KSaneWidget already has an open device
+        return false;
+    }
+
     // don't bother trying to open if the device string is empty
     if (deviceName.isEmpty()) {
         return false;
