@@ -535,9 +535,8 @@ QImage KSaneWidget::toQImageSilent(const QByteArray &data,
 {
     QImage img;
     int j=0;
-    int pixel_x = 0;
-    int pixel_y = 0;
     QVector<QRgb> table;
+    QRgb *imgLine;
 
     switch (format)
     {
@@ -554,69 +553,57 @@ QImage KSaneWidget::toQImageSilent(const QByteArray &data,
             break;
 
         case FormatGrayScale8:
-            img = QImage(width,
-                         height,
-                         QImage::Format_RGB32);
-            j=0;
-            for (int i=0; i<data.size(); i++) {
-                img.bits()[j+0] = data.data()[i];
-                img.bits()[j+1] = data.data()[i];
-                img.bits()[j+2] = data.data()[i];
-                j+=4;
+        {
+            img = QImage(width, height, QImage::Format_RGB32);
+            int dI = 0;
+            for (int i=0; (i<img.height() && dI<data.size()); i++) {
+                imgLine = (QRgb *)img.scanLine(i);
+                for (j=0; (j<img.width() && dI<data.size()); j++) {
+                    imgLine[j] = qRgb(data[dI], data[dI], data[dI]);
+                    dI++;
+                }
             }
             break;
-
+        }
         case FormatGrayScale16:
-            img = QImage(width,
-                         height,
-                         QImage::Format_RGB32);
-            j=0;
-            for (int i=1; i<data.size(); i+=2) {
-                img.bits()[j+0] = data.data()[i];
-                img.bits()[j+1] = data.data()[i];
-                img.bits()[j+2] = data.data()[i];
-                j+=4;
+        {
+            img = QImage(width, height, QImage::Format_RGB32);
+            int dI = 1;
+            for (int i=0; (i<img.height() && dI<data.size()); i++) {
+                imgLine = (QRgb *)img.scanLine(i);
+                for (j=0; (j<img.width() && dI<data.size()); j++) {
+                    imgLine[j] = qRgb(data[dI], data[dI], data[dI]);
+                    dI+=2;
+                }
             }
             break;
-
+        }
         case FormatRGB_8_C:
-            pixel_x = 0;
-            pixel_y = 0;
-
-            img = QImage(width,
-                         height,
-                         QImage::Format_RGB32);
-
-            for (int i=0; i<data.size(); i+=3) {
-                img.setPixel(pixel_x,
-                             pixel_y,
-                             qRgb(data[i],
-                                  data[i+1],
-                                  data[i+2]));
-
-                inc_pixel(pixel_x, pixel_y, width);
+        {
+            img = QImage(width, height, QImage::Format_RGB32);
+            int dI = 0;
+            for (int i=0; (i<img.height() && dI<data.size()); i++) {
+                imgLine = (QRgb *)img.scanLine(i);
+                for (j=0; (j<img.width() && dI<data.size()); j++) {
+                    imgLine[j] = qRgb(data[dI], data[dI+1], data[dI+2]);
+                    dI+=3;
+                }
             }
             break;
-
+        }
         case FormatRGB_16_C:
-            pixel_x = 0;
-            pixel_y = 0;
-
-            img = QImage(width,
-                         height,
-                         QImage::Format_RGB32);
-
-            for (int i=1; i<data.size(); i+=6) {
-                img.setPixel(pixel_x,
-                             pixel_y,
-                             qRgb(data[i],
-                                  data[i+2],
-                                  data[i+4]));
-
-                inc_pixel(pixel_x, pixel_y, width);
+        {
+            img = QImage(width, height, QImage::Format_RGB32);
+            int dI = 1;
+            for (int i=0; (i<img.height() && dI<data.size()); i++) {
+                imgLine = (QRgb *)img.scanLine(i);
+                for (j=0; (j<img.width() && dI<data.size()); j++) {
+                    imgLine[j] = qRgb(data[dI], data[dI+2], data[dI+4]);
+                    dI+=6;
+                }
             }
             break;
-
+        }
         case FormatNone:
         default:
             kDebug() << "Unsupported conversion";
