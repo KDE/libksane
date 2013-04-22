@@ -45,7 +45,7 @@ namespace KSaneIface
 {
 
 KSaneOptSlider::KSaneOptSlider(const SANE_Handle handle, const int index)
-: KSaneOption(handle, index), m_slider(0)
+: KSaneOption(handle, index), m_slider(0), m_iVal(0)
 {
 }
 
