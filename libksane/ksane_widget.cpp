@@ -373,7 +373,9 @@ bool KSaneWidget::openDevice(const QString &deviceName)
             QMap<QString, QString> entry;
             entry["username"] = dlg->username().toUtf8();
             entry["password"] = dlg->password().toUtf8();
-            saneWallet->writeMap(deviceName.toLatin1(), entry);
+            if(saneWallet) {
+                saneWallet->writeMap(deviceName.toLatin1(), entry);
+            }
         }
     }
 
