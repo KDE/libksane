@@ -41,7 +41,7 @@ namespace KSaneIface
 {
 
 KSaneOptCheckBox::KSaneOptCheckBox(const SANE_Handle handle, const int index)
-: KSaneOption(handle, index), m_checkbox(0)
+: KSaneOption(handle, index), m_checkbox(0), m_checked(false)
 {
 }
 
