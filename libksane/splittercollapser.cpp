@@ -54,7 +54,8 @@ const int TIMELINE_DURATION = 500;
 const qreal MINIMUM_OPACITY = 0.3;
 
 struct ArrowTypes {
-	ArrowTypes() {}
+	ArrowTypes()
+    : visible(Qt::NoArrow), notVisible(Qt::NoArrow){}
 
 	ArrowTypes(Qt::ArrowType t1, Qt::ArrowType t2)
 	: visible(t1), notVisible(t2) {}
