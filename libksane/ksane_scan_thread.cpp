@@ -44,6 +44,7 @@ namespace KSaneIface
     m_dataSize(0),
     m_saneStatus(SANE_STATUS_GOOD),
     m_readStatus(READ_READY),
+    m_invertColors(false),
     m_saneStartDone(false)
     {}
 
