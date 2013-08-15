@@ -58,6 +58,7 @@ q(parent)
     m_zOutBtn       = 0;
     m_zSelBtn       = 0;
     m_zFitBtn       = 0;
+    m_clearSelBtn   = 0;
     m_prevBtn       = 0;
     m_scanBtn       = 0;
     m_cancelBtn     = 0;

@@ -159,7 +159,13 @@ KSaneWidget::KSaneWidget(QWidget* parent)
     d->m_zFitBtn->setIcon(KIcon("document-preview"));
     d->m_zFitBtn->setToolTip(i18n("Zoom to Fit"));
     connect(d->m_zFitBtn, SIGNAL(clicked()), d->m_previewViewer, SLOT(zoom2Fit()));
-    
+
+    d->m_clearSelBtn = new QToolButton(this);
+    d->m_clearSelBtn->setAutoRaise(true);
+    d->m_clearSelBtn->setIcon(KIcon("edit-clear"));
+    d->m_clearSelBtn->setToolTip(i18n("Clear Selections"));
+    connect(d->m_clearSelBtn, SIGNAL(clicked()), d->m_previewViewer, SLOT(clearSelections()));
+
     d->m_prevBtn = new KPushButton(this);
     d->m_prevBtn->setIcon(KIcon("document-import"));
     d->m_prevBtn->setToolTip(i18n("Scan Preview Image"));
@@ -180,6 +186,7 @@ KSaneWidget::KSaneWidget(QWidget* parent)
     btn_lay->addWidget(d->m_zOutBtn);
     btn_lay->addWidget(d->m_zSelBtn);
     btn_lay->addWidget(d->m_zFitBtn);
+    btn_lay->addWidget(d->m_clearSelBtn);
     btn_lay->addStretch(100);
     btn_lay->addWidget(d->m_prevBtn);
     btn_lay->addWidget(d->m_scanBtn);

@@ -129,6 +129,7 @@ namespace KSaneIface
             QToolButton        *m_zOutBtn;
             QToolButton        *m_zSelBtn;
             QToolButton        *m_zFitBtn;
+            QToolButton        *m_clearSelBtn;
             KPushButton        *m_scanBtn;
             KPushButton        *m_prevBtn;
 
