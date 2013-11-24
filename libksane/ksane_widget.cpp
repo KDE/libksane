@@ -566,7 +566,7 @@ QImage KSaneWidget::toQImageSilent(const QByteArray &data,
             img = QImage(width, height, QImage::Format_RGB32);
             int dI = 0;
             for (int i=0; (i<img.height() && dI<data.size()); i++) {
-                imgLine = (QRgb *)img.scanLine(i);
+                imgLine = reinterpret_cast<QRgb*>(img.scanLine(i));
                 for (j=0; (j<img.width() && dI<data.size()); j++) {
                     imgLine[j] = qRgb(data[dI], data[dI], data[dI]);
                     dI++;
@@ -579,7 +579,7 @@ QImage KSaneWidget::toQImageSilent(const QByteArray &data,
             img = QImage(width, height, QImage::Format_RGB32);
             int dI = 1;
             for (int i=0; (i<img.height() && dI<data.size()); i++) {
-                imgLine = (QRgb *)img.scanLine(i);
+                imgLine = reinterpret_cast<QRgb*>(img.scanLine(i));
                 for (j=0; (j<img.width() && dI<data.size()); j++) {
                     imgLine[j] = qRgb(data[dI], data[dI], data[dI]);
                     dI+=2;
@@ -592,7 +592,7 @@ QImage KSaneWidget::toQImageSilent(const QByteArray &data,
             img = QImage(width, height, QImage::Format_RGB32);
             int dI = 0;
             for (int i=0; (i<img.height() && dI<data.size()); i++) {
-                imgLine = (QRgb *)img.scanLine(i);
+                imgLine = reinterpret_cast<QRgb*>(img.scanLine(i));
                 for (j=0; (j<img.width() && dI<data.size()); j++) {
                     imgLine[j] = qRgb(data[dI], data[dI+1], data[dI+2]);
                     dI+=3;
@@ -605,7 +605,7 @@ QImage KSaneWidget::toQImageSilent(const QByteArray &data,
             img = QImage(width, height, QImage::Format_RGB32);
             int dI = 1;
             for (int i=0; (i<img.height() && dI<data.size()); i++) {
-                imgLine = (QRgb *)img.scanLine(i);
+                imgLine = reinterpret_cast<QRgb*>(img.scanLine(i));
                 for (j=0; (j<img.width() && dI<data.size()); j++) {
                     imgLine[j] = qRgb(data[dI], data[dI+2], data[dI+4]);
                     dI+=6;

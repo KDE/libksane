@@ -48,7 +48,7 @@ namespace KSaneIface
     m_saneHandle(handle),
     m_invertColors(false),
     m_readStatus(READ_READY),
-    m_scanProgress(0),
+//    m_scanProgress(0),
     m_saneStartDone(false),
     m_imageResized(false)
     {

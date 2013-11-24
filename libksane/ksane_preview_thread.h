@@ -84,7 +84,7 @@ namespace KSaneIface
             SANE_Handle     m_saneHandle;
             bool            m_invertColors;
             ReadStatus      m_readStatus;
-            int             m_scanProgress;
+//            int             m_scanProgress;
             bool            m_saneStartDone;
             bool            m_imageResized;
     };
