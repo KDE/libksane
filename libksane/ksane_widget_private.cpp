@@ -819,6 +819,9 @@ void KSaneWidgetPrivate::previewScanDone()
     if (m_optResY != 0) m_optResY->restoreSavedData();
     if (m_optPreview != 0) m_optPreview->restoreSavedData();
 
+    m_previewViewer->setQImage(&m_previewImg);
+    m_previewViewer->zoom2Fit();
+
     if ((m_previewThread->status != SANE_STATUS_GOOD) &&
         (m_previewThread->status != SANE_STATUS_EOF))
     {
@@ -831,8 +834,6 @@ void KSaneWidgetPrivate::previewScanDone()
     setBusy(false);
     m_scanOngoing = false;
     m_updProgressTmr.stop();
-    
-    m_previewViewer->updateImage();
     
     emit (q->scanDone(KSaneWidget::NoError, ""));
     
