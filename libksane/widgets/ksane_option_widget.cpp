@@ -24,13 +24,10 @@
  *
  * ============================================================ */
 
-// Local includes
 #include "ksane_option_widget.h"
 #include "ksane_option_widget.moc"
 
-// Qt includes
-#include <KDebug>
-#include <KLocale>
+#include <KLocalizedString>
 
 namespace KSaneIface
 {

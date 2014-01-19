@@ -6,6 +6,7 @@
  * Description : Sane interface for KDE
  *
  * Copyright (C) 2007-2011 by Kare Sars <kare.sars@iki .fi>
+ * Copyright (C) 2014 by Gregor Mitsch: port to KDE5 frameworks
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -35,7 +36,7 @@
  */
 
 class QPushButton;
-class KLineEdit;
+class QLineEdit;
 
 namespace KSaneIface
 {
@@ -70,7 +71,7 @@ Q_SIGNALS:
 
 private:
 
-    KLineEdit *m_entry;
+    QLineEdit *m_entry;
     QPushButton *m_set;
     QPushButton *m_reset;
     QString m_eText;

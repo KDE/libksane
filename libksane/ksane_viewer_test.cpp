@@ -27,7 +27,7 @@
 
 #include "ksane_viewer.h"
 
-#include <KDebug>
+#include <qDebug>
 #include <QApplication>
 
 int main (int argc, char *argv[])
@@ -35,7 +35,7 @@ int main (int argc, char *argv[])
     QApplication app(argc, argv);
 
     if (argc != 2) {
-        kDebug() << "An image filename is needed.";
+        qDebug() << "An image filename is needed.";
         return 1;
     }
     QImage img(argv[1]);

@@ -7,6 +7,7 @@
  *
  * Copyright (C) 2007-2008 by Kare Sars <kare dot sars at iki dot fi>
  * Copyright (C) 2007-2008 by Gilles Caulier <caulier dot gilles at gmail dot com>
+ * Copyright (C) 2014 by Gregor Mitsch: port to KDE5 frameworks
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -36,9 +37,9 @@
 #include <QScrollBar>
 #include <QList>
 #include <QLabel>
-
-// KDE includes
-#include <KPushButton>
+#include <QPushButton>
+#include <QMessageBox>
+#include <QDebug>
 
 #define SCALED_PREVIEW_MAX_SIDE 400
 
@@ -146,7 +147,7 @@ void KSaneWidgetPrivate::devListUpdated()
         const QList<KSaneWidget::DeviceInfo> list = m_findDevThread->devicesList();
         if (list.size() == 0) return;
         for (int i=0; i<list.size(); i++) {
-            kDebug() << list[i].name;
+            qDebug() << list[i].name;
             if (list[i].name == m_devName) {
                 m_vendor    = list[i].vendor;
                 m_model     = list[i].model;
@@ -588,10 +589,10 @@ void KSaneWidgetPrivate::setTLX(float ftlx)
     
     float max, ratio;
     
-    //kDebug() << "setTLX " << ftlx;
+    //qDebug() << "setTLX " << ftlx;
     m_optBrX->getMaxValue(max);
     ratio = ftlx / max;
-    //kDebug() << " -> " << ratio;
+    //qDebug() << " -> " << ratio;
     m_previewViewer->setTLX(ratio);
 }
 
@@ -604,10 +605,10 @@ void KSaneWidgetPrivate::setTLY(float ftly)
     
     float max, ratio;
     
-    //kDebug() << "setTLY " << ftly;
+    //qDebug() << "setTLY " << ftly;
     m_optBrY->getMaxValue(max);
     ratio = ftly / max;
-    //kDebug() << " -> " << ratio;
+    //qDebug() << " -> " << ratio;
     m_previewViewer->setTLY(ratio);
 }
 
@@ -620,10 +621,10 @@ void KSaneWidgetPrivate::setBRX(float fbrx)
     
     float max, ratio;
     
-    //kDebug() << "setBRX " << fbrx;
+    //qDebug() << "setBRX " << fbrx;
     m_optBrX->getMaxValue(max);
     ratio = fbrx / max;
-    //kDebug() << " -> " << ratio;
+    //qDebug() << " -> " << ratio;
     m_previewViewer->setBRX(ratio);
 }
 
@@ -636,10 +637,10 @@ void KSaneWidgetPrivate::setBRY(float fbry)
     
     float max, ratio;
     
-    //kDebug() << "setBRY " << fbry;
+    //qDebug() << "setBRY " << fbry;
     m_optBrY->getMaxValue(max);
     ratio = fbry / max;
-    //kDebug() << " -> " << ratio;
+    //qDebug() << " -> " << ratio;
     m_previewViewer->setBRY(ratio);
 }
 
@@ -657,7 +658,7 @@ void KSaneWidgetPrivate::updatePreviewSize()
         m_optBrY->getMaxValue(max_y);
     }
     if ((max_x == m_previewWidth) && (max_y == m_previewHeight)) {
-        //kDebug() << "no preview size change";
+        //qDebug() << "no preview size change";
         return;
     }
     
@@ -753,7 +754,7 @@ void KSaneWidgetPrivate::startPreviewScan()
                 //check what image size we would get in a scan
                 status = sane_get_parameters(m_saneHandle, &params);
                 if (status != SANE_STATUS_GOOD) {
-                    kDebug() << "sane_get_parameters=" << sane_strstatus(status);
+                    qDebug() << "sane_get_parameters=" << sane_strstatus(status);
                     previewScanDone();
                     return;
                 }
@@ -769,7 +770,7 @@ void KSaneWidgetPrivate::startPreviewScan()
                 // This is a security measure for broken backends
                 m_optRes->getMinValue(dpi);
                 m_optRes->setValue(dpi);
-                kDebug() << "Setting minimum DPI value for a broken back-end"; 
+                qDebug() << "Setting minimum DPI value for a broken back-end"; 
             }
         }
     }
@@ -920,7 +921,7 @@ void KSaneWidgetPrivate::oneFinalScanDone()
 
             if (source.contains("Automatic Document Feeder")) {
                 // in batch mode only one area can be scanned per page
-                //kDebug() << "source == \"Automatic Document Feeder\"";
+                //qDebug() << "source == \"Automatic Document Feeder\"";
                 m_updProgressTmr.start();
                 m_scanThread->start();
                 return;
@@ -929,14 +930,14 @@ void KSaneWidgetPrivate::oneFinalScanDone()
 
         // Check if we have a "wait for button" batch scanning
         if (m_optWaitForBtn) {
-            kDebug() << m_optWaitForBtn->name();
+            qDebug() << m_optWaitForBtn->name();
             QString wait;
             m_optWaitForBtn->getValue(wait);
 
-            kDebug() << "wait ==" << wait;
+            qDebug() << "wait ==" << wait;
             if (wait == "true") {
                 // in batch mode only one area can be scanned per page
-                //kDebug() << "source == \"Automatic Document Feeder\"";
+                //qDebug() << "source == \"Automatic Document Feeder\"";
                 m_updProgressTmr.start();
                 m_scanThread->start();
                 return;
@@ -946,7 +947,7 @@ void KSaneWidgetPrivate::oneFinalScanDone()
         // not batch scan, call sane_cancel to be able to change parameters.
         sane_cancel(m_saneHandle);
 
-        //kDebug() << "index=" << m_selIndex << "size=" << m_previewViewer->selListSize();
+        //qDebug() << "index=" << m_selIndex << "size=" << m_previewViewer->selListSize();
         // check if we have multiple selections.
         if (m_previewViewer->selListSize() > m_selIndex)
         {
@@ -1111,10 +1112,10 @@ void KSaneWidgetPrivate::alertUser(int type, const QString &strStatus)
     if (q->receivers(SIGNAL(userMessage(int,QString))) == 0) {
         switch (type) {
             case KSaneWidget::ErrorGeneral:
-                KMessageBox::sorry(0, strStatus);
+                QMessageBox::critical(nullptr, "General Error", strStatus);
                 break;
             default:
-                KMessageBox::information(0, strStatus);
+                QMessageBox::information(nullptr, "Information", strStatus);
                 break;
         }
     }

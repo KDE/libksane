@@ -27,12 +27,9 @@
 #include "labeled_combo.h"
 #include "labeled_combo.moc"
 
-// Qt includes
 #include <QLabel>
 
-// KDE includes
-#include <KComboBox>
-#include <KDebug>
+#include <QComboBox>
 
 namespace KSaneIface
 {
@@ -40,7 +37,7 @@ namespace KSaneIface
 LabeledCombo::LabeledCombo(QWidget *parent, const QString& ltext, const QStringList& list)
 : KSaneOptionWidget(parent, ltext)
 {
-    m_combo  = new KComboBox(this);
+    m_combo  = new QComboBox(this);
     m_combo->addItems(list);
 
     m_label->setBuddy(m_combo);
@@ -96,6 +93,9 @@ bool LabeledCombo::setIcon(const QIcon &icon, const QString& str)
 void LabeledCombo::setCurrentIndex(int i)
 {
     m_combo->setCurrentIndex(i);
+}
+void LabeledCombo::clear() {
+    m_combo->clear();
 }
 
 }  // NameSpace KSaneIface

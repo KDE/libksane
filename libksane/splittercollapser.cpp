@@ -23,9 +23,7 @@ License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #include "splittercollapser.h"
-#include "splittercollapser.moc"
 
-// Qt
 #include <QApplication>
 #include <QEvent>
 #include <QMouseEvent>
@@ -34,10 +32,8 @@ License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QStylePainter>
 #include <QTimeLine>
 
-// KDE
-#include <kdebug.h>
+#include <QDebug>
 
-// Local
 
 namespace KSaneIface {
 

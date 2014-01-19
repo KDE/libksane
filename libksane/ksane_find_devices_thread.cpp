@@ -7,6 +7,7 @@
  *
  * Copyright (C) 2009 by Grzegorz Kurtyka <grzegorz dot kurtyka at gmail dot com>
  * Copyright (C) 2010 by Kare Sars <kare dot sars at iki dot fi>
+ * Copyright (C) 2014 by Gregor Mitsch: port to KDE5 frameworks
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -38,10 +39,6 @@ extern "C"
 #include <sane/sane.h>
 }
 
-// KDE includes
-#include <KDebug>
-
-// Qt includes
 #include <QMutex>
 
 namespace KSaneIface

@@ -44,11 +44,6 @@ extern "C"
 #include <QTabWidget>
 #include <QPushButton>
 
-#include <KLocale>
-#include <KDebug>
-#include <KMessageBox>
-#include <KToolBar>
-
 #include "ksane_widget.h"
 #include "ksane_option.h"
 #include "ksane_viewer.h"

@@ -22,12 +22,8 @@
  *
  * ============================================================ */
 
-// Local includes
 #include "ksane_button.h"
 #include "ksane_button.moc"
-
-// Qt includes
-#include <KDebug>
 
 namespace KSaneIface
 {

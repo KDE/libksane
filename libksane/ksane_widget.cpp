@@ -33,20 +33,18 @@
 
 #include <unistd.h>
 
-// Qt includes
 #include <QApplication>
 #include <QVarLengthArray>
 #include <QLabel>
 #include <QSplitter>
 #include <QMutex>
 #include <QPointer>
+#include <QDebug>
+#include <QIcon>
 
-// KDE includes
 #include <kpassworddialog.h>
 #include <kwallet.h>
-#include <kpushbutton.h>
 
-// Local includes
 #include "ksane_widget_private.h"
 #include "ksane_option.h"
 #include "ksane_opt_button.h"
@@ -59,7 +57,6 @@
 #include "ksane_device_dialog.h"
 #include "labeled_gamma.h"
 #include "kglobal.h"
-#include "kicon.h"
 
 namespace KSaneIface
 {
@@ -74,8 +71,8 @@ KSaneWidget::KSaneWidget(QWidget* parent)
     SANE_Int    version;
     SANE_Status status;
 
-    //kDebug() <<  "The language is:" << KGlobal::locale()->language();
-    //kDebug() <<  "Languagelist" << KGlobal::locale()->languageList();
+    //qDebug() <<  "The language is:" << KGlobal::locale()->language();
+    //qDebug() <<  "Languagelist" << KGlobal::locale()->languageList();
     //KGlobal::locale()->insertCatalog("libksane"); // FIXME KF5
     //KGlobal::locale()->insertCatalog("sane-backends"); // FIXME KF5
 
@@ -86,11 +83,11 @@ KSaneWidget::KSaneWidget(QWidget* parent)
         // only call sane init for the first instance
         status = sane_init(&version, &KSaneAuth::authorization);
         if (status != SANE_STATUS_GOOD) {
-            kDebug() << "libksane: sane_init() failed("
+            qDebug() << "libksane: sane_init() failed("
             << sane_strstatus(status) << ")";
         }
         else {
-            //kDebug() << "Sane Version = "
+            //qDebug() << "Sane Version = "
             //         << SANE_VERSION_MAJOR(version) << "."
             //         << SANE_VERSION_MINORparent(version) << "."
             //         << SANE_VERSION_BUILD(version);
@@ -127,7 +124,7 @@ KSaneWidget::KSaneWidget(QWidget* parent)
     d->m_progressBar->setMaximum(100);
 
     d->m_cancelBtn   = new QPushButton;
-    d->m_cancelBtn->setIcon(KIcon("process-stop"));
+    d->m_cancelBtn->setIcon(QIcon::fromTheme("process-stop"));
     d->m_cancelBtn->setToolTip(i18n("Cancel current scan operation"));
     connect(d->m_cancelBtn, SIGNAL(clicked()), this, SLOT(scanCancel()));
     
@@ -140,42 +137,42 @@ KSaneWidget::KSaneWidget(QWidget* parent)
     
     d->m_zInBtn  = new QToolButton(this);
     d->m_zInBtn->setAutoRaise(true);
-    d->m_zInBtn->setIcon(KIcon("zoom-in"));
+    d->m_zInBtn->setIcon(QIcon::fromTheme("zoom-in"));
     d->m_zInBtn->setToolTip(i18n("Zoom In"));
     connect(d->m_zInBtn, SIGNAL(clicked()), d->m_previewViewer, SLOT(zoomIn()));
     
     d->m_zOutBtn = new QToolButton(this);
     d->m_zOutBtn->setAutoRaise(true);
-    d->m_zOutBtn->setIcon(KIcon("zoom-out"));
+    d->m_zOutBtn->setIcon(QIcon::fromTheme("zoom-out"));
     d->m_zOutBtn->setToolTip(i18n("Zoom Out"));
     connect(d->m_zOutBtn, SIGNAL(clicked()), d->m_previewViewer, SLOT(zoomOut()));
     
     d->m_zSelBtn = new QToolButton(this);
     d->m_zSelBtn->setAutoRaise(true);
-    d->m_zSelBtn->setIcon(KIcon("zoom-fit-best"));
+    d->m_zSelBtn->setIcon(QIcon::fromTheme("zoom-fit-best"));
     d->m_zSelBtn->setToolTip(i18n("Zoom to Selection"));
     connect(d->m_zSelBtn, SIGNAL(clicked()), d->m_previewViewer, SLOT(zoomSel()));
     
     d->m_zFitBtn = new QToolButton(this);
     d->m_zFitBtn->setAutoRaise(true);
-    d->m_zFitBtn->setIcon(KIcon("document-preview"));
+    d->m_zFitBtn->setIcon(QIcon::fromTheme("document-preview"));
     d->m_zFitBtn->setToolTip(i18n("Zoom to Fit"));
     connect(d->m_zFitBtn, SIGNAL(clicked()), d->m_previewViewer, SLOT(zoom2Fit()));
 
     d->m_clearSelBtn = new QToolButton(this);
     d->m_clearSelBtn->setAutoRaise(true);
-    d->m_clearSelBtn->setIcon(KIcon("edit-clear"));
+    d->m_clearSelBtn->setIcon(QIcon::fromTheme("edit-clear"));
     d->m_clearSelBtn->setToolTip(i18n("Clear Selections"));
     connect(d->m_clearSelBtn, SIGNAL(clicked()), d->m_previewViewer, SLOT(clearSelections()));
 
     d->m_prevBtn = new QPushButton(this);
-    d->m_prevBtn->setIcon(KIcon("document-import"));
+    d->m_prevBtn->setIcon(QIcon::fromTheme("document-import"));
     d->m_prevBtn->setToolTip(i18n("Scan Preview Image"));
     d->m_prevBtn->setText(i18nc("Preview button text", "Preview"));
     connect(d->m_prevBtn,   SIGNAL(clicked()), d, SLOT(startPreviewScan()));
     
     d->m_scanBtn = new QPushButton(this);
-    d->m_scanBtn->setIcon(KIcon("document-save"));
+    d->m_scanBtn->setIcon(QIcon::fromTheme("document-save"));
     d->m_scanBtn->setToolTip(i18n("Scan Final Image"));
     d->m_scanBtn->setText(i18nc("Final scan button text", "Scan"));
     d->m_scanBtn->setFocus(Qt::OtherFocusReason);
@@ -289,9 +286,12 @@ QString KSaneWidget::selectDevice(QWidget* parent)
   QPointer<KSaneDeviceDialog> sel = new KSaneDeviceDialog(parent);
 
   // sel.setDefault(prev_backend); // set default scanner - perhaps application using libksane should remember that
-  if(sel->exec() == KDialog::Accepted) {
-      selected_name = sel->getSelectedName();
-  }
+  
+  Q_ASSERT_X(false, "KSaneWidget::selectDevice", "FIXME KF5"); // FIXME KF5
+  //if(sel->exec() == KDialog::Accepted) {
+  //    selected_name = sel->getSelectedName();
+  //}
+  
   delete sel;
   return selected_name;
 }
@@ -300,11 +300,11 @@ void KSaneWidget::initGetDeviceList() const
 {
     // update the device list if needed to get the vendor and model info
     if (d->m_findDevThread->devicesList().size() == 0) {
-        //kDebug() << "initGetDeviceList() starting thread...";
+        //qDebug() << "initGetDeviceList() starting thread...";
         d->m_findDevThread->start();
     }
     else {
-        //kDebug() << "initGetDeviceList() have existing data...";
+        //qDebug() << "initGetDeviceList() have existing data...";
         d->signalDevListUpdate();
     }
 }
@@ -389,7 +389,7 @@ bool KSaneWidget::openDevice(const QString &deviceName)
     }
 
     if (status != SANE_STATUS_GOOD) {
-        kDebug() << "sane_open(\"" << deviceName << "\", &handle) failed! status = " << sane_strstatus(status);
+        qDebug() << "sane_open(\"" << deviceName << "\", &handle) failed! status = " << sane_strstatus(status);
         d->m_auth->clearDeviceAuth(d->m_devName);
         d->m_devName.clear();
         return false;
@@ -456,12 +456,12 @@ bool KSaneWidget::openDevice(const QString &deviceName)
 
     // do the connections of the option parameters
     for (i=1; i<d->m_optList.size(); ++i) {
-        //kDebug() << d->m_optList.at(i)->name();
+        //qDebug() << d->m_optList.at(i)->name();
         connect (d->m_optList.at(i), SIGNAL(optsNeedReload()), d, SLOT(optReload()));
         connect (d->m_optList.at(i), SIGNAL(valsNeedReload()), d, SLOT(scheduleValReload()));
 
         if (d->m_optList.at(i)->needsPolling()) {
-            //kDebug() << d->m_optList.at(i)->name() << " needs polling";
+            //qDebug() << d->m_optList.at(i)->name() << " needs polling";
             d->m_pollList.append(d->m_optList.at(i));
             KSaneOptCheckBox *buttonOption = qobject_cast<KSaneOptCheckBox *>(d->m_optList.at(i));
             if (buttonOption) {
@@ -617,7 +617,7 @@ QImage KSaneWidget::toQImageSilent(const QByteArray &data,
         }
         case FormatNone:
         default:
-            kDebug() << "Unsupported conversion";
+            qDebug() << "Unsupported conversion";
             break;
     }
     float dpm = currentDPI() * (1000.0 / 25.4);
@@ -804,7 +804,7 @@ bool KSaneWidget::setOptVal(const QString &option, const QString &value)
 void KSaneWidget::setScanButtonText(const QString &scanLabel)
 {
     if (d->m_scanBtn == 0) {
-        kError() << "setScanButtonText was called before KSaneWidget was initialized";
+        qCritical() << "setScanButtonText was called before KSaneWidget was initialized";
         return;
     }
     d->m_scanBtn->setText(scanLabel);
@@ -813,7 +813,7 @@ void KSaneWidget::setScanButtonText(const QString &scanLabel)
 void KSaneWidget::setPreviewButtonText(const QString &previewLabel)
 {
     if (d->m_scanBtn == 0) {
-        kError() << "setPreviewButtonText was called before KSaneWidget was initialized";
+        qCritical() << "setPreviewButtonText was called before KSaneWidget was initialized";
         return;
     }
     d->m_prevBtn->setText(previewLabel);

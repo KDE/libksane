@@ -29,8 +29,7 @@
 
 #include "ksane_option_widget.h"
 
-// KDE includes
-#include <KComboBox>
+class QComboBox;
 
 namespace KSaneIface
 {
@@ -62,7 +61,7 @@ public Q_SLOTS:
     /**
      * Remove all string entries
      */
-    void clear() { m_combo->clear(); }
+    void clear();
 
    /**
     * If the given string can be found in the comobox, activate that entry.
@@ -92,7 +91,7 @@ Q_SIGNALS:
     void activated(int);
 
 private:
-    KComboBox   *m_combo;
+    QComboBox   *m_combo;
 };
 
 }  // NameSpace KSaneIface

@@ -6,6 +6,7 @@
  * Description : Sane interface for KDE
  *
  * Copyright (C) 2009 by Kare Sars <kare dot sars at iki dot fi>
+ * Copyright (C) 2014 by Gregor Mitsch: port to KDE5 frameworks
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -24,18 +25,14 @@
  * License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * ============================================================ */
-// Local includes
+
 #include "ksane_opt_gamma.h"
-#include "ksane_opt_gamma.moc"
 
 #include "labeled_gamma.h"
 
-// Qt includes
 #include <QtCore/QVarLengthArray>
 
-// KDE includes
-#include <KDebug>
-#include <KLocale>
+#include <QDebug>
 
 namespace KSaneIface
 {
@@ -52,7 +49,7 @@ void KSaneOptGamma::createWidget(QWidget *parent)
     readOption();
 
     if (!m_optDesc) {
-        kDebug() << "This is a bug";
+        qDebug() << "This is a bug";
         m_widget = new KSaneOptionWidget(parent, "");
         return;
     }

@@ -25,18 +25,14 @@
  * License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * ============================================================ */
-// Local includes
+
 #include "ksane_opt_slider.h"
-#include "ksane_opt_slider.moc"
 
 #include "labeled_slider.h"
 
-// Qt includes
 #include <QtCore/QVarLengthArray>
 
-// KDE includes
-#include <KDebug>
-#include <KLocale>
+#include <QDebug>
 
 static const int KSW_INT_MAX = 2147483647;
 static const int KSW_INT_MIN = -2147483647-1;  // prevent warning

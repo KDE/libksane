@@ -6,6 +6,7 @@
  * Description : Sane interface for KDE
  *
  * Copyright (C) 2009 by Kare Sars <kare dot sars at iki dot fi>
+ * Copyright (C) 2014 by Gregor Mitsch: port to KDE5 frameworks
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -24,19 +25,15 @@
  * License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * ============================================================ */
-// Local includes
+
 #include "ksane_opt_combo.h"
-#include "ksane_opt_combo.moc"
 
 #include "labeled_combo.h"
 
-// Qt includes
 #include <QtCore/QVarLengthArray>
 
-// KDE includes
-#include <kicon.h>
-#include <KDebug>
-#include <KLocale>
+#include <QDebug>
+#include <QIcon>
 
 namespace KSaneIface
 {
@@ -93,13 +90,13 @@ void KSaneOptCombo::readOption()
     m_combo->clear();
     m_combo->setLabelText(i18n(m_optDesc->title));
     m_combo->addItems(m_strList);
-    m_combo->setIcon(KIcon("color"), getSaneComboString((unsigned char*)SANE_VALUE_SCAN_MODE_COLOR));
-    m_combo->setIcon(KIcon("gray-scale"),
+    m_combo->setIcon(QIcon::fromTheme("color"), getSaneComboString((unsigned char*)SANE_VALUE_SCAN_MODE_COLOR));
+    m_combo->setIcon(QIcon::fromTheme("gray-scale"),
                      getSaneComboString((unsigned char*)SANE_VALUE_SCAN_MODE_GRAY));
-    m_combo->setIcon(KIcon("black-white"),
+    m_combo->setIcon(QIcon::fromTheme("black-white"),
                      getSaneComboString((unsigned char*)SANE_VALUE_SCAN_MODE_LINEART));
                      // The epkowa/epson backend uses "Binary" which is the same as "Lineart"
-    m_combo->setIcon(KIcon("black-white"), i18n(tmp_binary));
+    m_combo->setIcon(QIcon::fromTheme("black-white"), i18n(tmp_binary));
     
     // set the previous value
     m_combo->setCurrentText(saved);
@@ -210,7 +207,7 @@ void KSaneOptCombo::comboboxChangedIndex(int i)
             dataPtr = (void *)m_optDesc->constraint.string_list[i];
             break;
         default:
-            kDebug() << "can not handle type:" << m_optDesc->type;
+            qDebug() << "can not handle type:" << m_optDesc->type;
             return;
     }
     writeData(dataPtr);
@@ -236,7 +233,7 @@ bool KSaneOptCombo::getMinValue(float &val)
             }
             break;
         default:
-            kDebug() << "can not handle type:" << m_optDesc->type;
+            qDebug() << "can not handle type:" << m_optDesc->type;
             return false;
     }
     return true;
@@ -252,7 +249,7 @@ bool KSaneOptCombo::getValue(float &val)
     SANE_Int res;
     status = sane_control_option (m_handle, m_index, SANE_ACTION_GET_VALUE, data.data(), &res);
     if (status != SANE_STATUS_GOOD) {
-        kDebug() << m_optDesc->name << "sane_control_option returned" << status;
+        qDebug() << m_optDesc->name << "sane_control_option returned" << status;
         return false;
     }
     
@@ -265,7 +262,7 @@ bool KSaneOptCombo::getValue(float &val)
             val = SANE_UNFIX(toSANE_Word(data.data()));
             return true;
         default:
-            kDebug() << "Type" << m_optDesc->type << "not supported!";
+            qDebug() << "Type" << m_optDesc->type << "not supported!";
             break;
     }
     return false;
@@ -310,7 +307,7 @@ bool KSaneOptCombo::setValue(float value)
             readValue();
             return (minDiff < 1.0);
         default:
-            kDebug() << "can not handle type:" << m_optDesc->type;
+            qDebug() << "can not handle type:" << m_optDesc->type;
             break;
     }
     return false;
@@ -367,7 +364,7 @@ bool KSaneOptCombo::setValue(const QString &val)
             if (m_optDesc->constraint.string_list[i] == 0) return false;
             break;
         default:
-            kDebug() << "can only handle SANE_TYPE: INT, FIXED and STRING";
+            qDebug() << "can only handle SANE_TYPE: INT, FIXED and STRING";
             return false;
     }
     writeData(data_ptr);

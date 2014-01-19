@@ -7,6 +7,7 @@
  *
  * Copyright (C) 2007-2008 by Kare Sars <kare dot sars at iki dot fi>
  * Copyright (C) 2009 by Grzegorz Kurtyka <grzegorz dot kurtyka at gmail dot com>
+ * Copyright (C) 2014 by Gregor Mitsch: port to KDE5 frameworks
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -38,23 +39,24 @@ extern "C"
 #include <sane/sane.h>
 }
 
-
-// KDE includes
-#include <KDebug>
-#include <KPushButton>
-
 #include <QScrollArea>
 #include <QLabel>
+#include <QDialogButtonBox>
+
+
+#include <KLocalizedString>
 
 namespace KSaneIface
 {
 
 KSaneDeviceDialog::KSaneDeviceDialog(QWidget *parent)
-    : KDialog(parent)
+    : QDialog(parent)
 {
-
-    setButtons(KDialog::User1 | KDialog::Ok | KDialog::Cancel);
-    setButtonText(User1, i18n("Reload devices list"));
+    //setButtons(KDialog::User1 | KDialog::Ok | KDialog::Cancel); // FIXME KF5
+    //setButtonText(User1, i18n("Reload devices list")); // FIXME KF5
+  
+    QDialogButtonBox* buttonbox = new QDialogButtonBox();
+    buttonbox->setStandardButtons(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     
     m_btnGroup = new QButtonGroup(this);
 
@@ -86,7 +88,7 @@ KSaneDeviceDialog::KSaneDeviceDialog(QWidget *parent)
     area->setFrameShape(QFrame::NoFrame);
     area->setWidget(m_btnContainer);
 
-    setMainWidget(m_btnBox);
+    //setMainWidget(m_btnBox); // FIXME KF5
     setMinimumHeight(200);
     m_findDevThread = FindSaneDevicesThread::getInstance();
 
@@ -108,7 +110,7 @@ void KSaneDeviceDialog::reloadDevicesList()
     }
     m_btnBox->setTitle(i18n("Looking for devices. Please wait."));
     m_btnBox->layout()->itemAt(0)->widget()->hide();  // explanation
-    enableButton(KDialog::User1, false);
+    //enableButton(KDialog::User1, false); // FIXME KF5
 
     if(!m_findDevThread->isRunning()) {
         m_findDevThread->start();
@@ -117,10 +119,10 @@ void KSaneDeviceDialog::reloadDevicesList()
 
 void KSaneDeviceDialog::setAvailable(bool avail)
 {
-    enableButtonOk(avail);
+    // enableButtonOk(avail); // FIXME KF5
     if(avail) {
         m_selectedDevice = getSelectedName();
-        setButtonFocus(KDialog::Ok);
+        //setButtonFocus(KDialog::Ok); // FIXME KF5
     }
 }
 
@@ -148,7 +150,7 @@ void KSaneDeviceDialog::updateDevicesList()
         m_btnBox->setTitle(i18n("Sorry. No devices found."));
         m_btnBox->layout()->itemAt(0)->widget()->show();  // explanation
         m_btnBox->layout()->itemAt(1)->widget()->hide();  // scroll area
-        enableButton(KDialog::User1, true);
+        //enableButton(KDialog::User1, true); // FIXME KF5
         return;
     }
 
@@ -180,10 +182,10 @@ void KSaneDeviceDialog::updateDevicesList()
     m_btnLayout->addStretch();
 
     if(list.size() == 1) {
-        button(KDialog::Ok)->animateClick();
+        //button(KDialog::Ok)->animateClick(); // FIXME KF5
     }
 
-    enableButton(KDialog::User1, true);
+    //enableButton(KDialog::User1, true); // FIXME KF5
 }
 
 }  // NameSpace KSaneIface

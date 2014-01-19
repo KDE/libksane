@@ -25,13 +25,10 @@
  * License along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * ============================================================ */
-// Local includes
-#include "ksane_option.h"
-#include "ksane_option.moc"
 
-// KDE includes
-#include <KDebug>
-#include <KLocale>
+#include "ksane_option.h"
+
+#include <QDebug>
 
 #include "ksane_option_widget.h"
 
@@ -111,7 +108,7 @@ bool KSaneOption::needsPolling()
     if (!m_optDesc) return false;
 
     if ((m_optDesc->cap & SANE_CAP_SOFT_DETECT) && !(m_optDesc->cap & SANE_CAP_SOFT_SELECT)) {
-        kDebug() << name() << "optDesc->cap =" << m_optDesc->cap;
+        qDebug() << name() << "optDesc->cap =" << m_optDesc->cap;
         return true;
     }
 
@@ -135,13 +132,13 @@ bool KSaneOption::writeData(void *data)
 
     status = sane_control_option (m_handle, m_index, SANE_ACTION_SET_VALUE, data, &res);
     if (status != SANE_STATUS_GOOD) {
-        kDebug() << m_optDesc->name << "sane_control_option returned:" << sane_strstatus(status);
+        qDebug() << m_optDesc->name << "sane_control_option returned:" << sane_strstatus(status);
         // write failed. re read the current setting
         readValue();
         return false;
     }
     if ((res & SANE_INFO_INEXACT) && (m_widget != 0)) {
-        //kDebug() << "write was inexact. Reload value just in case...";
+        //qDebug() << "write was inexact. Reload value just in case...";
         readValue();
     }
 
@@ -216,7 +213,7 @@ bool KSaneOption::storeCurrentData()
     m_data = (unsigned char *)malloc(m_optDesc->size);
     status = sane_control_option (m_handle, m_index, SANE_ACTION_GET_VALUE, m_data, &res);
     if (status != SANE_STATUS_GOOD) {
-        kDebug() << m_optDesc->name << "sane_control_option returned" << status;
+        qDebug() << m_optDesc->name << "sane_control_option returned" << status;
         return false;
     }
     return true;
@@ -249,15 +246,15 @@ KSaneOption::KSaneOptType KSaneOption::optionType(const SANE_Option_Descriptor *
                     return TYPE_CHECKBOX;
                 case SANE_TYPE_INT:
                     if (optDesc->size == sizeof(SANE_Word)) return TYPE_SLIDER;
-                    kDebug() << "Can not handle:"<< optDesc->title;
-                    kDebug() << "SANE_CONSTRAINT_NONE && SANE_TYPE_INT";
-                    kDebug() << "size" << optDesc->size<< "!= sizeof(SANE_Word)";
+                    qDebug() << "Can not handle:"<< optDesc->title;
+                    qDebug() << "SANE_CONSTRAINT_NONE && SANE_TYPE_INT";
+                    qDebug() << "size" << optDesc->size<< "!= sizeof(SANE_Word)";
                     break;
                 case SANE_TYPE_FIXED:
                     if (optDesc->size == sizeof(SANE_Word)) return TYPE_F_SLIDER;
-                    kDebug() << "Can not handle:"<< optDesc->title;
-                    kDebug() << "SANE_CONSTRAINT_NONE && SANE_TYPE_FIXED";
-                    kDebug() << "size" << optDesc->size<< "!= sizeof(SANE_Word)";
+                    qDebug() << "Can not handle:"<< optDesc->title;
+                    qDebug() << "SANE_CONSTRAINT_NONE && SANE_TYPE_FIXED";
+                    qDebug() << "size" << optDesc->size<< "!= sizeof(SANE_Word)";
                     break;
                 case SANE_TYPE_BUTTON:
                     return TYPE_BUTTON;
@@ -281,20 +278,20 @@ KSaneOption::KSaneOptType KSaneOption::optionType(const SANE_Option_Descriptor *
                     {
                         return TYPE_GAMMA;
                     }
-                    kDebug() << "Can not handle:"<< optDesc->title;
-                    kDebug() << "SANE_CONSTRAINT_RANGE && SANE_TYPE_INT && !SANE_NAME_GAMMA_VECTOR...";
-                    kDebug() << "size" << optDesc->size<< "!= sizeof(SANE_Word)";
+                    qDebug() << "Can not handle:"<< optDesc->title;
+                    qDebug() << "SANE_CONSTRAINT_RANGE && SANE_TYPE_INT && !SANE_NAME_GAMMA_VECTOR...";
+                    qDebug() << "size" << optDesc->size<< "!= sizeof(SANE_Word)";
                     break;
                 case SANE_TYPE_FIXED:
                     if (optDesc->size == sizeof(SANE_Word)) return TYPE_F_SLIDER;
-                    kDebug() << "Can not handle:"<< optDesc->title;
-                    kDebug() << "SANE_CONSTRAINT_RANGE && SANE_TYPE_FIXED";
-                    kDebug() << "size" << optDesc->size<< "!= sizeof(SANE_Word)";
-                    kDebug() << "Analog Gamma vector?";
+                    qDebug() << "Can not handle:"<< optDesc->title;
+                    qDebug() << "SANE_CONSTRAINT_RANGE && SANE_TYPE_FIXED";
+                    qDebug() << "size" << optDesc->size<< "!= sizeof(SANE_Word)";
+                    qDebug() << "Analog Gamma vector?";
                     break;
                 case SANE_TYPE_STRING:
-                    kDebug() << "Can not handle:" << optDesc->title;
-                    kDebug() << "SANE_CONSTRAINT_RANGE && SANE_TYPE_STRING";
+                    qDebug() << "Can not handle:" << optDesc->title;
+                    qDebug() << "SANE_CONSTRAINT_RANGE && SANE_TYPE_STRING";
                     return TYPE_DETECT_FAIL;
                 case SANE_TYPE_BUTTON:
                     return TYPE_BUTTON;

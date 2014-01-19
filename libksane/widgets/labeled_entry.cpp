@@ -6,6 +6,7 @@
  * Description : Sane interface for KDE
  *
  * Copyright (C) 2007-2011 by Kare Sars <kare.sars@iki .fi>
+ * Copyright (C) 2014 by Gregor Mitsch: port to KDE5 frameworks
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -32,9 +33,10 @@
 // Qt includes
 #include <QHBoxLayout>
 #include <QLabel>
-#include <KLineEdit>
-#include <KLocale>
+#include <QLineEdit>
 #include <QPushButton>
+
+#include <KLocalizedString>
 
 namespace KSaneIface
 {
@@ -42,7 +44,7 @@ namespace KSaneIface
 LabeledEntry::LabeledEntry(QWidget *parent, const QString& ltext)
 : KSaneOptionWidget(parent, ltext)
 {
-    m_entry = new KLineEdit(this);
+    m_entry = new QLineEdit(this);
     m_reset = new QPushButton(this);
     m_reset->setText(i18nc("Label for button to reset text in a KLineEdit", "Reset"));
     m_set = new QPushButton(this);

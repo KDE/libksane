@@ -6,6 +6,7 @@
 * Description : Sane authentication helpers.
 *
 * Copyright (C) 2010 by Kare Sars <kare dot sars at iki dot fi>
+* Copyright (C) 2014 by Gregor Mitsch: port to KDE5 frameworks
 *
 * This library is free software; you can redistribute it and/or
 * modify it under the terms of the GNU Lesser General Public
@@ -30,9 +31,7 @@
 // Qt includes
 #include <QMutex>
 #include <QList>
-
-// KDE includes
-#include <KDebug>
+#include <QDebug>
 
 namespace KSaneIface
 {
@@ -108,7 +107,7 @@ void KSaneAuth::clearDeviceAuth(const QString &resource)
 /** static function called by sane_open to get authorization from user */
 void KSaneAuth::authorization(SANE_String_Const resource, SANE_Char *username, SANE_Char *password)
 {
-    kDebug() << resource;
+    qDebug() << resource;
     // This is vague in the standard... what can I find in the resource string?
     // I have found that "resource contains the backend name + "$MD5$....."
     // it does not contain unique identifiers like ":libusb:001:004"
@@ -116,11 +115,11 @@ void KSaneAuth::authorization(SANE_String_Const resource, SANE_Char *username, S
     QString res(resource);
     int end = res.indexOf("$MD5$");
     res = res.left(end);
-    kDebug() << res;
+    qDebug() << res;
     
     QList<Private::AuthStruct> list = getInstance()->d->authList;
     for (int i=0; i<list.size(); i++) {
-        kDebug() << res << list.at(i).resource;
+        qDebug() << res << list.at(i).resource;
         if (list.at(i).resource.contains(res)) {
             qstrncpy(username, list.at(i).username.toLocal8Bit(), SANE_MAX_USERNAME_LEN);
             qstrncpy(password, list.at(i).password.toLocal8Bit(), SANE_MAX_PASSWORD_LEN);

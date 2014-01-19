@@ -6,6 +6,7 @@
  * Description : Sane interface for KDE
  *
  * Copyright (C) 2009 by Kare Sars <kare dot sars at iki dot fi>
+ * Copyright (C) 2014 by Gregor Mitsch: port to KDE5 frameworks
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -30,12 +31,9 @@
 
 #include "labeled_fslider.h"
 
-// Qt includes
 #include <QtCore/QVarLengthArray>
 
-// KDE includes
-#include <KDebug>
-#include <KLocale>
+#include <QDebug>
 
 static const float FIXED_MAX = 32767.0;
 static const float FIXED_MIN =-32768.0;
@@ -112,7 +110,7 @@ void KSaneOptFSlider::sliderChanged(float val)
     if (((val-m_fVal) >= m_minChange) || ((m_fVal-val) >= m_minChange)) {
         unsigned char data[4];
         SANE_Word fixed;
-        //kDebug() <<m_optDesc->name << fVal << "!=" << val;
+        //qDebug() <<m_optDesc->name << fVal << "!=" << val;
         m_fVal = val;
         fixed = SANE_FIX(val);
         fromSANE_Word(data, fixed);

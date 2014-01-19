@@ -6,6 +6,7 @@
 * Description : Preview image viewer that can handle a selection.
 *
 * Copyright (C) 2008 by Kare Sars <kare dot sars at iki dot fi>
+* Copyright (C) 2014 by Gregor Mitsch: port to KDE5 frameworks
 *
 * This library is free software; you can redistribute it and/or
 * modify it under the terms of the GNU Lesser General Public
@@ -37,10 +38,9 @@
 #include <QAction>
 #include <QList>
 #include <QVector>
-#include <KIcon>
-#include <KLocale>
+#include <QIcon>
 
-#include <KDebug>
+#include <KLocalizedString>
 
 #include <math.h>
 
@@ -128,19 +128,19 @@ KSaneViewer::KSaneViewer(QImage * img, QWidget *parent) : QGraphicsView(parent),
     d->selectionList.clear();
     
     // create context menu
-    d->zoomInAction = new QAction(KIcon("zoom-in"), i18n("Zoom In"), this);
+    d->zoomInAction = new QAction(QIcon::fromTheme("zoom-in"), i18n("Zoom In"), this);
     connect(d->zoomInAction, SIGNAL(triggered()), this, SLOT(zoomIn()));
     
-    d->zoomOutAction = new QAction(KIcon("zoom-out"), i18n("Zoom Out"), this);
+    d->zoomOutAction = new QAction(QIcon::fromTheme("zoom-out"), i18n("Zoom Out"), this);
     connect(d->zoomOutAction, SIGNAL(triggered()), this, SLOT(zoomOut()));
     
-    d->zoomSelAction = new QAction(KIcon("zoom-fit-best"), i18n("Zoom to Selection"), this);
+    d->zoomSelAction = new QAction(QIcon::fromTheme("zoom-fit-best"), i18n("Zoom to Selection"), this);
     connect(d->zoomSelAction, SIGNAL(triggered()), this, SLOT(zoomSel()));
     
-    d->zoom2FitAction = new QAction(KIcon("document-preview"), i18n("Zoom to Fit"), this);
+    d->zoom2FitAction = new QAction(QIcon::fromTheme("document-preview"), i18n("Zoom to Fit"), this);
     connect(d->zoom2FitAction, SIGNAL(triggered()), this, SLOT(zoom2Fit()));
     
-    d->clrSelAction = new QAction(KIcon("edit-clear"), i18n("Clear Selections"), this);
+    d->clrSelAction = new QAction(QIcon::fromTheme("edit-clear"), i18n("Clear Selections"), this);
     connect(d->clrSelAction, SIGNAL(triggered()), this, SLOT(clearSelections()));
     
     addAction(d->zoomInAction);

@@ -28,7 +28,7 @@
 
 #include "ksane_scan_thread.h"
 
-#include <KDebug>
+#include <QDebug>
 
 namespace KSaneIface
 {
@@ -104,7 +104,7 @@ namespace KSaneIface
         }
 
         if (m_saneStatus != SANE_STATUS_GOOD) {
-            kDebug() << "sane_start=" << sane_strstatus(m_saneStatus);
+            qDebug() << "sane_start=" << sane_strstatus(m_saneStatus);
             m_readStatus = READ_ERROR;
             // oneFinalScanDone() does the sane_cancel()
             return;
@@ -113,7 +113,7 @@ namespace KSaneIface
         // Read image parameters
         m_saneStatus = sane_get_parameters(m_saneHandle, &m_params);
         if (m_saneStatus != SANE_STATUS_GOOD) {
-            kDebug() << "sane_get_parameters=" << sane_strstatus(m_saneStatus);
+            qDebug() << "sane_get_parameters=" << sane_strstatus(m_saneStatus);
             m_readStatus = READ_ERROR;
             // oneFinalScanDone() does the sane_cancel()
             return;
@@ -157,9 +157,9 @@ namespace KSaneIface
 
             case SANE_STATUS_EOF:
                 if (m_frameRead < m_frameSize) {
-                    kDebug() << "frameRead =" << m_frameRead  << ", frameSize =" << m_frameSize << "readBytes =" << readBytes;
+                    qDebug() << "frameRead =" << m_frameRead  << ", frameSize =" << m_frameSize << "readBytes =" << readBytes;
                     if ((readBytes > 0) && ((m_frameRead + readBytes) <= m_frameSize)) {
-                        kDebug() << "This is not a standard compliant backend";
+                        qDebug() << "This is not a standard compliant backend";
                         copyToScanData(readBytes);
                     }
                     m_readStatus = READ_READY; // It is better to return a broken image than nothing
@@ -174,24 +174,24 @@ namespace KSaneIface
                     // start reading next frame
                     m_saneStatus = sane_start(m_saneHandle);
                     if (m_saneStatus != SANE_STATUS_GOOD) {
-                        kDebug() << "sane_start =" << sane_strstatus(m_saneStatus);
+                        qDebug() << "sane_start =" << sane_strstatus(m_saneStatus);
                         m_readStatus = READ_ERROR;
                         return;
                     }
                     m_saneStatus = sane_get_parameters(m_saneHandle, &m_params);
                     if (m_saneStatus != SANE_STATUS_GOOD) {
-                        kDebug() << "sane_get_parameters =" << sane_strstatus(m_saneStatus);
+                        qDebug() << "sane_get_parameters =" << sane_strstatus(m_saneStatus);
                         m_readStatus = READ_ERROR;
                         sane_cancel(m_saneHandle);
                         return;
                     }
-                    //kDebug() << "New Frame";
+                    //qDebug() << "New Frame";
                     m_frameRead = 0;
                     m_frame_t_count++;
                     break;
                 }
             default:
-                kDebug() << "sane_read=" << m_saneStatus << "=" << sane_strstatus(m_saneStatus);
+                qDebug() << "sane_read=" << m_saneStatus << "=" << sane_strstatus(m_saneStatus);
                 m_readStatus = READ_ERROR;
                 sane_cancel(m_saneHandle);
                 return;
@@ -296,7 +296,7 @@ namespace KSaneIface
                 break;
         }
         
-        kDebug() << "Format" << m_params.format
+        qDebug() << "Format" << m_params.format
         << "and depth" << m_params.format
         << "is not yet suppoeted by libksane!";
         m_readStatus = READ_ERROR;
