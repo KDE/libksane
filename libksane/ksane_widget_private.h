@@ -36,7 +36,7 @@ extern "C"
 }
 
 // Qt includes
-#include <QtGui/QWidget>
+#include <QWidget>
 #include <QCheckBox>
 #include <QTimer>
 #include <QTime>
@@ -51,7 +51,7 @@ extern "C"
 #include <KToolBar>
 
 // Local includes
-#include "ksane.h"
+#include "ksane_widget.h"
 #include "ksane_option.h"
 #include "ksane_viewer.h"
 #include "labeled_gamma.h"

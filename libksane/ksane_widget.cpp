@@ -28,7 +28,7 @@
  *
  * ============================================================ */
 
-#include "ksane.h"
+#include "ksane_widget.h"
 
 #include <unistd.h>
 
@@ -101,7 +101,7 @@ KSaneWidget::KSaneWidget(QWidget* parent)
     d->m_findDevThread->start();
 
     d->m_readValsTmr.setSingleShot(true);
-    connect(&d->m_readValsTmr,   SIGNAL(timeout()), d, SLOT(valReload()));
+    connect(&d->m_readValsTmr, SIGNAL(timeout()), d, SLOT(valReload()));
 
     d->m_updProgressTmr.setSingleShot(false);
     d->m_updProgressTmr.setInterval(300);

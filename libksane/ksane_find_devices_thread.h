@@ -28,7 +28,7 @@
 #ifndef KSANE_FIND_DEVICES_THREAD_H
 #define KSANE_FIND_DEVICES_THREAD_H
 
-#include "ksane.h"
+#include "ksane_widget.h"
 
 #include <QThread>
 #include <QList>

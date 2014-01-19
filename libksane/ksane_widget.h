@@ -30,7 +30,7 @@
 #define KSANE_H
 
 // Qt includes
-#include <QtGui/QWidget>
+#include <QWidget>
 
 // Local includes
 #include "libksane_export.h"

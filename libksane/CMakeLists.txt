@@ -35,12 +35,12 @@ set(ksane_LIB_SRCS
 
 add_library(ksane SHARED ${ksane_LIB_SRCS})
 
-# TODO KDE4_KDEUI_LIBS
 target_link_libraries (ksane
     LINK_PRIVATE
       KF5::I18n
       KF5::PrintUtils
       KF5::KDE4Support
+      KF5::Wallet
       ${SANE_LIBRARY})
 
 set_target_properties(ksane PROPERTIES VERSION ${KSANE_LIB_SO_VERSION_STRING} SOVERSION ${KSANE_LIB_SO_CUR_VERSION})
