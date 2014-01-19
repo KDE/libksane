@@ -61,12 +61,13 @@ endif()
 
 install(TARGETS ksane ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
-install(FILES ksane.h
+# FIXME: split widget and logic into two components
+install(FILES ksane_widget.h
               libksane_export.h
               ${CMAKE_CURRENT_BINARY_DIR}/version.h
         DESTINATION ${INCLUDE_INSTALL_DIR}/libksane COMPONENT Devel)
 
-# TODO: KDE4_INSTALL_ICONS
+# FIXME KF5: KDE4_INSTALL_ICONS
 #KDE4_INSTALL_ICONS(${ICON_INSTALL_DIR})
 
 
