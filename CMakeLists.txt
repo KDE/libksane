@@ -48,7 +48,6 @@ find_package(KF5PrintUtils ${KF5_VERSION} REQUIRED)
 find_package(KF5XmlGui ${KF5_VERSION} REQUIRED)
 #find_package(KF5Notifications ${KF5_VERSION} REQUIRED)
 find_package(KF5Wallet ${KF5_VERSION} REQUIRED)
-find_package(KF5KDE4Support ${KF5_VERSION} REQUIRED)
 
 # Check if sane API is available.
 if (NOT WIN32)
