@@ -165,7 +165,7 @@ void KSaneDeviceDialog::updateDevicesList()
         QRadioButton *b = new QRadioButton(this);
         b->setObjectName(list[i].name);
         b->setToolTip(list[i].name);
-        b->setText(QString("%1 : %2\n%3")
+        b->setText(QString(QLatin1String("%1 : %2\n%3"))
                     .arg(list[i].vendor)
                     .arg(list[i].model)
                     .arg(list[i].name));

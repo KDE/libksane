@@ -1,9 +1,4 @@
-include_directories(${SANE_INCLUDE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/options
-    ${CMAKE_CURRENT_SOURCE_DIR}/widgets
-)
-
-set(ksane_LIB_SRCS
+set(ksane_SRCS
     widgets/gamma_disp.cpp
     widgets/labeled_gamma.cpp
     widgets/labeled_checkbox.cpp
@@ -31,51 +26,70 @@ set(ksane_LIB_SRCS
     options/ksane_opt_slider.cpp
     options/ksane_opt_fslider.cpp
     options/ksane_opt_combo.cpp
-    )
+)
 
-add_library(ksane SHARED ${ksane_LIB_SRCS})
+add_library(KF5Sane ${ksane_SRCS})
+generate_export_header(KF5Sane BASE_NAME KSane)
+add_library(KF5::KSane ALIAS KF5Sane)
 
-target_link_libraries (ksane
-    LINK_PRIVATE
-      KF5::I18n
-      KF5::PrintUtils
-      KF5::Wallet
-      KF5::WidgetsAddons
-      ${SANE_LIBRARY})
+target_include_directories(KF5Sane INTERFACE "$<INSTALL_INTERFACE:${INCLUDE_INSTALL_DIR}/KSane>")
 
-set_target_properties(ksane PROPERTIES VERSION ${KSANE_LIB_SO_VERSION_STRING} SOVERSION ${KSANE_LIB_SO_CUR_VERSION})
+target_link_libraries(KF5Sane
+  PUBLIC
+    Qt5::Core
+  # PRIVATE
+  #  KF5::CoreAddons
+  #  Other private libs
+    KF5::I18n
+    KF5::PrintUtils
+    KF5::Wallet
+    KF5::WidgetsAddons
+    ${SANE_LIBRARY}
+)
+
+set_target_properties(KF5Sane
+  PROPERTIES VERSION ${KSANE_VERSION_STRING}
+  SOVERSION ${KSANE_SOVERSION}
+)
+
 
 option(COMPILE_VIEWER_TESTAPP "Compile a small test application for the viewer")
-
 if (COMPILE_VIEWER_TESTAPP)
     message("Compile testapp")
     add_executable(viewer_test ksane_viewer.cpp ksane_viewer_test.cpp selectionitem.cpp)
     target_link_libraries(viewer_test
       LINK_PRIVATE
-	KF5::I18n
-	KF5::PrintUtils
-	KF5::Wallet
-	KF5::WidgetsAddons
-	${SANE_LIBRARY})
+    KF5::I18n
+    KF5::PrintUtils
+    KF5::Wallet
+    KF5::WidgetsAddons
+    ${SANE_LIBRARY})
 endif()
 
-install(TARGETS ksane ${INSTALL_TARGETS_DEFAULT_ARGS} )
+# FIXME?
+ecm_generate_headers(
+  KSane_Viewer
+  KSane_Widget
+  # FIXME? more?
 
-# FIXME: split widget and logic into two components
-install(FILES ksane_widget.h
-              libksane_export.h
-              ${CMAKE_CURRENT_BINARY_DIR}/version.h
-        DESTINATION ${INCLUDE_INSTALL_DIR}/libksane COMPONENT Devel)
+  MODULE_NAME KSane
+  REQUIRED_HEADERS KSane_HEADERS
+)
+
+# Install files
+install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/KSane DESTINATION ${INCLUDE_INSTALL_DIR} COMPONENT Devel)
 
 # FIXME KF5: KDE4_INSTALL_ICONS
 #KDE4_INSTALL_ICONS(${ICON_INSTALL_DIR})
 
-
-configure_file(
-    ../KSaneConfig.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/KSaneConfig.cmake @ONLY
+install(TARGETS KF5Sane
+  EXPORT KF5SaneTargets
+  ${INSTALL_TARGETS_DEFAULT_ARGS}
 )
 
-install(
-    FILES ${CMAKE_CURRENT_BINARY_DIR}/KSaneConfig.cmake
-    DESTINATION ${LIB_INSTALL_DIR}/cmake/KSane
+install(FILES
+  ${CMAKE_CURRENT_BINARY_DIR}/ksane_export.h
+  ${KSane_HEADERS}
+  DESTINATION ${INCLUDE_INSTALL_DIR}/KSane
+  COMPONENT Devel
 )

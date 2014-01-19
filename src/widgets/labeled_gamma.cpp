@@ -6,6 +6,7 @@
  * Description : Sane interface for KDE
  *
  * Copyright (C) 2007-2011 by Kare Sars <kare.sars@iki .fi>
+ * Copyright (C) 2014 by Gregor Mitsch: port to KDE5 frameworks 
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -29,14 +30,11 @@
 #include "labeled_gamma.h"
 #include "labeled_gamma.moc"
 
-// C++ includes
-#include <cmath>
-
-// Qt includes
 #include <QGroupBox>
 
-// KDE includes
-#include <klocale.h>
+#include <klocalizedstring.h>
+
+#include <cmath>
 
 namespace KSaneIface
 {
@@ -126,7 +124,7 @@ void LabeledGamma::setValues(const QString &values)
     int gam;
     bool ok = true;
     
-    gammaValues = values.split(':');
+    gammaValues = values.split(QLatin1Char(':'));
     bri = gammaValues.at(0).toInt(&ok);
     if (ok) con = gammaValues.at(1).toInt(&ok);
     if (ok) gam = gammaValues.at(2).toInt(&ok);

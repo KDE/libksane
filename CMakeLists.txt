@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 2.8.12)
 
-project(libksane)
+project(KSane)
 
 #message(STATUS "-------------------------------------------")
 #message(STATUS "Starting CMake configuration for: libksane")
@@ -10,7 +10,6 @@ find_package(ECM 0.0.9 REQUIRED NO_MODULE)
 # ECM setup2 and include find same cmake module (copied from /usr/share/kde4/apps/cmake/modules/FindSane.cmake)
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${ECM_KDE_MODULE_DIR} ${CMAKE_SOURCE_DIR}/cmake-modules)
 
-# TODO: don't know if all these includes are required (copied from ktexteditor)
 include(FeatureSummary)
 include(ECMSetupVersion)
 include(ECMGenerateHeaders)
@@ -27,14 +26,11 @@ ecm_setup_version(
   ${KF5_VERSION}
   VARIABLE_PREFIX LIBKSANE
   VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/libksane_version.h"
-  PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/libksane/version.h.cmake"
+  PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/src/version.h.cmake"
 )
 
-# TODO: Remove these
-remove_definitions(-DQT_NO_CAST_TO_ASCII)
-remove_definitions(-DQT_NO_CAST_FROM_ASCII)
-remove_definitions(-DQT_NO_URL_CAST_FROM_STRING)
-remove_definitions(-DQT_NO_CAST_FROM_BYTEARRAY)
+# Dependencies
+set(REQUIRED_QT_VERSION "5.2.0")
 
 # Required Qt5 components to build this framework
 find_package(Qt5 ${REQUIRED_QT_VERSION} NO_MODULE REQUIRED Core Widgets)
@@ -50,19 +46,58 @@ find_package(KF5XmlGui ${KF5_VERSION} REQUIRED)
 find_package(KF5Wallet ${KF5_VERSION} REQUIRED)
 find_package(KF5WidgetsAddons ${KF5_VERSION} REQUIRED)
 
+# ...
+
+# Subdirectories
+add_subdirectory(src)
+add_subdirectory(autotests)
+add_subdirectory(tests)
+
+# TODO: Remove these later
+remove_definitions(-DQT_NO_CAST_TO_ASCII)
+remove_definitions(-DQT_NO_CAST_FROM_ASCII)
+remove_definitions(-DQT_NO_URL_CAST_FROM_STRING)
+remove_definitions(-DQT_NO_CAST_FROM_BYTEARRAY)
+
+# Create a Config.cmake and a ConfigVersion.cmake file and install them
+set(CMAKECONFIG_INSTALL_DIR "${CMAKECONFIG_INSTALL_PREFIX}/KSane")
+
+configure_package_config_file(
+  "${CMAKE_CURRENT_SOURCE_DIR}/KF5SaneConfig.cmake.in"
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5SaneConfig.cmake"
+  INSTALL_DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
+)
+
+install(FILES
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5SaneConfig.cmake"
+  "${CMAKE_CURRENT_BINARY_DIR}/KF5SaneConfigVersion.cmake"
+  DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
+  COMPONENT Devel
+)
+
+install(EXPORT
+  KF5SaneTargets
+  DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
+  FILE KF5SaneTargets.cmake
+  NAMESPACE KF5::
+)
+
+install(FILES
+  "${CMAKE_CURRENT_BINARY_DIR}/ksane_version.h"
+  DESTINATION "${INCLUDE_INSTALL_DIR}"
+  COMPONENT Devel
+)
+
 # Check if sane API is available.
 if (NOT WIN32)
     find_package(Sane)
     # macro_log_feature(SANE_FOUND "SANE development toolkit" "Scanner Access Now Easy (SANE) development package" "http://www.sane-project.org" TRUE "" "Needed by libksane")
 endif (NOT WIN32)
 
-# Dependencies
-set(REQUIRED_QT_VERSION "5.2.0")
-add_definitions (${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
-include_directories (${CMAKE_SOURCE_DIR}
-                     ${CMAKE_BINARY_DIR}
-                     ${KDE4_INCLUDES}
-                     ${CMAKE_CURRENT_BINARY_DIR}/libksane)
+# needed?
+#include_directories (${CMAKE_SOURCE_DIR}
+#                     ${CMAKE_BINARY_DIR}
+#                     ${CMAKE_CURRENT_BINARY_DIR}/libksane)
 
 # =======================================================
 # Information to update before to release this library.
@@ -105,7 +140,7 @@ SET(KSANE_LIB_SO_VERSION_STRING "${KSANE_LIB_SO_CUR_VERSION}.${KSANE_LIB_SO_REV_
 
 ADD_DEFINITIONS(-DKDE_DEFAULT_DEBUG_AREA=51004) 
 
-CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/libksane/version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/libksane/version.h)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/src/version.h)
 
 # =======================================================
 
@@ -118,11 +153,11 @@ ENDIF(WIN32 AND MSVC)
 
 # =======================================================
 
-IF (SANE_FOUND)
-    ADD_SUBDIRECTORY(libksane)
-ELSE (SANE_FOUND)
-    ADD_SUBDIRECTORY(ksanetwain)
-ENDIF (SANE_FOUND)
+#IF (SANE_FOUND)
+#    # ADD_SUBDIRECTORY(src)  # old: was already done above
+#ELSE (SANE_FOUND)
+#    ADD_SUBDIRECTORY(ksanetwain)
+#.ENDIF (SANE_FOUND)
 
 IF(NOT WIN32)
   CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/libksane.pc.cmake ${CMAKE_CURRENT_BINARY_DIR}/libksane.pc)
@@ -130,5 +165,6 @@ IF(NOT WIN32)
   INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/libksane.pc DESTINATION ${LIB_INSTALL_DIR}/pkgconfig )
 ENDIF(NOT WIN32)
 
-feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
-
+if ("${CMAKE_BINARY_DIR}" STREQUAL "${CMAKE_CURRENT_BINARY_DIR}")
+  feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
+endif()
