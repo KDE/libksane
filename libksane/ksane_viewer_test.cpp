@@ -6,6 +6,7 @@
 * Description : Preview image viewer that can handle a selection.
 *
 * Copyright (C) 2010 by Kare Sars <kare dot sars at iki dot fi>
+* Copyright (C) 2014 by Gregor Mitsch: port to KDE5 frameworks
 *
 * This library is free software; you can redistribute it and/or
 * modify it under the terms of the GNU Lesser General Public
