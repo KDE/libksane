@@ -1,10 +1,9 @@
-
-INCLUDE_DIRECTORIES(${SANE_INCLUDE_DIR}
+include_directories(${SANE_INCLUDE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/options
     ${CMAKE_CURRENT_SOURCE_DIR}/widgets
 )
 
-SET(ksane_LIB_SRCS
+set(ksane_LIB_SRCS
     widgets/gamma_disp.cpp
     widgets/labeled_gamma.cpp
     widgets/labeled_checkbox.cpp
@@ -34,37 +33,44 @@ SET(ksane_LIB_SRCS
     options/ksane_opt_combo.cpp
     )
 
-KDE4_ADD_LIBRARY(ksane SHARED ${ksane_LIB_SRCS})
+add_library(ksane SHARED ${ksane_LIB_SRCS})
 
-TARGET_LINK_LIBRARIES(ksane ${KDE4_KDEUI_LIBS}
-                            ${SANE_LIBRARY}
-                     )
+# TODO KDE4_KDEUI_LIBS
+target_link_libraries (ksane
+    LINK_PRIVATE
+      KF5::I18n
+      KF5::PrintUtils
+      KF5::KDE4Support
+      ${SANE_LIBRARY})
 
-SET_TARGET_PROPERTIES(ksane PROPERTIES VERSION ${KSANE_LIB_SO_VERSION_STRING} SOVERSION ${KSANE_LIB_SO_CUR_VERSION})
+set_target_properties(ksane PROPERTIES VERSION ${KSANE_LIB_SO_VERSION_STRING} SOVERSION ${KSANE_LIB_SO_CUR_VERSION})
 
-OPTION(COMPILE_VIEWER_TESTAPP "Compile a small test application for the viewer")
+option(COMPILE_VIEWER_TESTAPP "Compile a small test application for the viewer")
 
-IF (COMPILE_VIEWER_TESTAPP)
-    message("Compile testapp")
-    kde4_add_executable(viewer_test ksane_viewer.cpp ksane_viewer_test.cpp selectionitem.cpp)
-    target_link_libraries(viewer_test ${KDE4_KDEUI_LIBS})
-ENDIF()
+# TODO later
+#if (COMPILE_VIEWER_TESTAPP)
+#    message("Compile testapp")
+#    # TODO later
+#    kde4_add_executable(viewer_test ksane_viewer.cpp ksane_viewer_test.cpp selectionitem.cpp)
+#    target_link_libraries(viewer_test ${KDE4_KDEUI_LIBS})
+#endif()
 
-INSTALL(TARGETS ksane ${INSTALL_TARGETS_DEFAULT_ARGS} )
+install(TARGETS ksane ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
-INSTALL(FILES ksane.h
+install(FILES ksane.h
               libksane_export.h
               ${CMAKE_CURRENT_BINARY_DIR}/version.h
         DESTINATION ${INCLUDE_INSTALL_DIR}/libksane COMPONENT Devel)
 
-KDE4_INSTALL_ICONS(${ICON_INSTALL_DIR})
+# TODO: KDE4_INSTALL_ICONS
+#KDE4_INSTALL_ICONS(${ICON_INSTALL_DIR})
 
 
-CONFIGURE_FILE(
+configure_file(
     ../KSaneConfig.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/KSaneConfig.cmake @ONLY
 )
 
-INSTALL(
+install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/KSaneConfig.cmake
     DESTINATION ${LIB_INSTALL_DIR}/cmake/KSane
 )

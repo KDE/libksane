@@ -29,7 +29,6 @@
  * ============================================================ */
 
 #include "ksane.h"
-#include "ksane.moc"
 
 #include <unistd.h>
 
@@ -58,6 +57,8 @@
 #include "ksane_opt_slider.h"
 #include "ksane_device_dialog.h"
 #include "labeled_gamma.h"
+#include "kglobal.h"
+#include "kicon.h"
 
 namespace KSaneIface
 {

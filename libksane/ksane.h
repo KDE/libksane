@@ -298,7 +298,6 @@ Q_SIGNALS:
     void buttonPressed(const QString &optionName, const QString &optionLabel, bool pressed);
 
 private:
-
     KSaneWidgetPrivate * const d;
 };
 

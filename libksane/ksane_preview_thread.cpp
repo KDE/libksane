@@ -25,8 +25,7 @@
 *
 * ============================================================ */
 
-// Local includes
-#include "ksane_preview_thread.moc"
+#include "ksane_preview_thread.h"
 
 #include <KDebug>
 #include <QMutexLocker>

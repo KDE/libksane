@@ -25,8 +25,7 @@
 *
 * ============================================================ */
 
-// Local includes
-#include "ksane_scan_thread.moc"
+#include "ksane_scan_thread.h"
 
 #include <KDebug>
 

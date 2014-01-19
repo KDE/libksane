@@ -1,21 +1,64 @@
-PROJECT(libksane)
+cmake_minimum_required(VERSION 2.8.12)
 
-MESSAGE(STATUS "----------------------------------------------------------------------------------")
-MESSAGE(STATUS "Starting CMake configuration for: libksane")
+project(libksane)
 
-# building separately or as part of kdegraphics ?
-IF(NOT KDE4_FOUND)
-    FIND_PACKAGE(KDE4 REQUIRED)
-ENDIF(NOT KDE4_FOUND)
+#message(STATUS "-------------------------------------------")
+#message(STATUS "Starting CMake configuration for: libksane")
+
+# ECM setup (Extended Cmake Modules)
+find_package(ECM 0.0.9 REQUIRED NO_MODULE)
+# ECM setup2 and include find same cmake module (copied from /usr/share/kde4/apps/cmake/modules/FindSane.cmake)
+set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${ECM_KDE_MODULE_DIR} ${CMAKE_SOURCE_DIR}/cmake-modules)
+
+# TODO: don't know if all these includes are required (copied from ktexteditor)
+include(FeatureSummary)
+include(ECMSetupVersion)
+include(ECMGenerateHeaders)
+include(CMakePackageConfigHelpers)
+include(CheckFunctionExists)
+include(KDEInstallDirs)
+include(KDEFrameworkCompilerSettings)
+include(KDECMakeSettings)
+include(GenerateExportHeader)
+
+set(KF5_VERSION "5.0.0")
+
+ecm_setup_version(
+  ${KF5_VERSION}
+  VARIABLE_PREFIX LIBKSANE
+  VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/libksane_version.h"
+  PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/libksane/version.h.cmake"
+)
+
+# TODO: Remove these
+remove_definitions(-DQT_NO_CAST_TO_ASCII)
+remove_definitions(-DQT_NO_CAST_FROM_ASCII)
+remove_definitions(-DQT_NO_URL_CAST_FROM_STRING)
+remove_definitions(-DQT_NO_CAST_FROM_BYTEARRAY)
+
+# Required Qt5 components to build this framework
+find_package(Qt5 ${REQUIRED_QT_VERSION} NO_MODULE REQUIRED Core Widgets)
+
+# Required KF5 frameworks
+find_package(KF5Config ${KF5_VERSION} REQUIRED)
+#find_package(KF5GuiAddons ${KF5_VERSION} REQUIRED)
+find_package(KF5I18n ${KF5_VERSION} REQUIRED)
+#find_package(KF5KIO ${KF5_VERSION} REQUIRED)
+find_package(KF5PrintUtils ${KF5_VERSION} REQUIRED)
+find_package(KF5XmlGui ${KF5_VERSION} REQUIRED)
+#find_package(KF5Notifications ${KF5_VERSION} REQUIRED)
+find_package(KF5KDE4Support ${KF5_VERSION} REQUIRED)
 
 # Check if sane API is available.
-IF (NOT WIN32)
-    FIND_PACKAGE(Sane)
-    macro_log_feature(SANE_FOUND "SANE development toolkit" "Scanner Access Now Easy (SANE) development package" "http://www.sane-project.org" TRUE "" "Needed by libksane")
-ENDIF (NOT WIN32)
+if (NOT WIN32)
+    find_package(Sane)
+    # macro_log_feature(SANE_FOUND "SANE development toolkit" "Scanner Access Now Easy (SANE) development package" "http://www.sane-project.org" TRUE "" "Needed by libksane")
+endif (NOT WIN32)
 
-ADD_DEFINITIONS (${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
-INCLUDE_DIRECTORIES (${CMAKE_SOURCE_DIR}
+# Dependencies
+set(REQUIRED_QT_VERSION "5.2.0")
+add_definitions (${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
+include_directories (${CMAKE_SOURCE_DIR}
                      ${CMAKE_BINARY_DIR}
                      ${KDE4_INCLUDES}
                      ${CMAKE_CURRENT_BINARY_DIR}/libksane)
@@ -86,4 +129,5 @@ IF(NOT WIN32)
   INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/libksane.pc DESTINATION ${LIB_INSTALL_DIR}/pkgconfig )
 ENDIF(NOT WIN32)
 
-macro_display_feature_log()
+feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
+
