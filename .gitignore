@@ -1,2 +1,6 @@
 *.kate-swp
 tests/databases/*/*.db
+.directory
+.kdev4/
+build/
+libksane.kdev4
