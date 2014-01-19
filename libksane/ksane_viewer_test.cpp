@@ -27,7 +27,7 @@
 
 #include "ksane_viewer.h"
 
-#include <qDebug>
+#include <QDebug>
 #include <QApplication>
 
 int main (int argc, char *argv[])

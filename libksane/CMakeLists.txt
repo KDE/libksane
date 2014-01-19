@@ -47,13 +47,17 @@ set_target_properties(ksane PROPERTIES VERSION ${KSANE_LIB_SO_VERSION_STRING} SO
 
 option(COMPILE_VIEWER_TESTAPP "Compile a small test application for the viewer")
 
-# TODO later
-#if (COMPILE_VIEWER_TESTAPP)
-#    message("Compile testapp")
-#    # TODO later
-#    kde4_add_executable(viewer_test ksane_viewer.cpp ksane_viewer_test.cpp selectionitem.cpp)
-#    target_link_libraries(viewer_test ${KDE4_KDEUI_LIBS})
-#endif()
+if (COMPILE_VIEWER_TESTAPP)
+    message("Compile testapp")
+    add_executable(viewer_test ksane_viewer.cpp ksane_viewer_test.cpp selectionitem.cpp)
+    target_link_libraries(viewer_test
+      LINK_PRIVATE
+	KF5::I18n
+	KF5::PrintUtils
+	KF5::Wallet
+	KF5::WidgetsAddons
+	${SANE_LIBRARY})
+endif()
 
 install(TARGETS ksane ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
