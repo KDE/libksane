@@ -6,6 +6,7 @@
  * Description : Sane interface for KDE
  *
  * Copyright (C) 2007-2011 by Kare Sars <kare.sars@iki .fi>
+ * 2014: Gregor Mitsch: port to KDE5 frameworks
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,16 +26,12 @@
  *
  * ============================================================ */
 
-// Local includes
 #include "labeled_slider.h"
 #include "labeled_slider.moc"
 
-// KDE includes
-#include <KNumInput>
-
-// Qt includes
 #include <QLabel>
 #include <QSlider>
+#include <QSpinBox>
 
 namespace KSaneIface
 {
@@ -52,7 +49,7 @@ LabeledSlider::LabeledSlider(QWidget *parent, const QString& ltext,
     m_slider->setMaximum(max);
     m_slider->setSingleStep(m_step);
 
-    m_spinb = new KIntSpinBox(this);
+    m_spinb = new QSpinBox(this);
     m_spinb->setMinimum(min);
     m_spinb->setMaximum(max);
     m_slider->setSingleStep(m_step);
@@ -79,7 +76,7 @@ LabeledSlider::~LabeledSlider()
 {
 }
 
-void LabeledSlider::setSuffix(const KLocalizedString &text)
+void LabeledSlider::setSuffix(const QString &text)
 {
     m_spinb->setSuffix(text);
 }
@@ -136,6 +133,9 @@ void LabeledSlider::fixValue()
         else                 m_slider->setValue(m_slider->value()-rest);
         m_spinb->setValue(m_slider->value());
     }
+}
+int LabeledSlider::value() const {
+    return( m_slider->value());
 }
 
 }  // NameSpace KSaneIface

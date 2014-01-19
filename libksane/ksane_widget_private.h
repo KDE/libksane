@@ -6,6 +6,7 @@
  * Description : Sane interface for KDE
  *
  * Copyright (C) 2009 by Kare Sars <kare dot sars at iki dot fi>
+ * 2014: Gregor Mitsch: port to KDE5 frameworks
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -35,22 +36,19 @@ extern "C"
     #include <sane/sane.h>
 }
 
-// Qt includes
 #include <QWidget>
 #include <QCheckBox>
 #include <QTimer>
 #include <QTime>
 #include <QProgressBar>
+#include <QTabWidget>
+#include <QPushButton>
 
-// KDE includes
-#include <KTabWidget>
 #include <KLocale>
 #include <KDebug>
 #include <KMessageBox>
-#include <KPushButton>
 #include <KToolBar>
 
-// Local includes
 #include "ksane_widget.h"
 #include "ksane_option.h"
 #include "ksane_viewer.h"
@@ -111,7 +109,7 @@ namespace KSaneIface
 
         public:
             // backend independent
-            KTabWidget         *m_optsTabWidget;
+            QTabWidget         *m_optsTabWidget;
             QScrollArea        *m_basicScrollA;
             QWidget            *m_basicOptsTab;
             QWidget            *m_colorOpts;
@@ -130,13 +128,13 @@ namespace KSaneIface
             QToolButton        *m_zSelBtn;
             QToolButton        *m_zFitBtn;
             QToolButton        *m_clearSelBtn;
-            KPushButton        *m_scanBtn;
-            KPushButton        *m_prevBtn;
+            QPushButton        *m_scanBtn;
+            QPushButton        *m_prevBtn;
 
             QWidget            *m_activityFrame;
             QLabel             *m_warmingUp;
             QProgressBar       *m_progressBar;
-            KPushButton        *m_cancelBtn;
+            QPushButton        *m_cancelBtn;
 
             // device info
             SANE_Handle         m_saneHandle;

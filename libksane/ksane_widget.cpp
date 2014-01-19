@@ -9,6 +9,7 @@
  * Copyright (C) 2009 by Matthias Nagl <matthias at nagl dot info>
  * Copyright (C) 2009 by Grzegorz Kurtyka <grzegorz dot kurtyka at gmail dot com>
  * Copyright (C) 2007-2008 by Gilles Caulier <caulier dot gilles at gmail dot com>
+ * 2014: Gregor Mitsch: port to KDE5 frameworks
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -75,8 +76,8 @@ KSaneWidget::KSaneWidget(QWidget* parent)
 
     //kDebug() <<  "The language is:" << KGlobal::locale()->language();
     //kDebug() <<  "Languagelist" << KGlobal::locale()->languageList();
-    KGlobal::locale()->insertCatalog("libksane");
-    KGlobal::locale()->insertCatalog("sane-backends");
+    //KGlobal::locale()->insertCatalog("libksane"); // FIXME KF5
+    //KGlobal::locale()->insertCatalog("sane-backends"); // FIXME KF5
 
     s_objectMutex.lock();
     s_objectCount++;
@@ -125,7 +126,7 @@ KSaneWidget::KSaneWidget(QWidget* parent)
     d->m_progressBar = new QProgressBar;
     d->m_progressBar->setMaximum(100);
 
-    d->m_cancelBtn   = new KPushButton;
+    d->m_cancelBtn   = new QPushButton;
     d->m_cancelBtn->setIcon(KIcon("process-stop"));
     d->m_cancelBtn->setToolTip(i18n("Cancel current scan operation"));
     connect(d->m_cancelBtn, SIGNAL(clicked()), this, SLOT(scanCancel()));
@@ -167,13 +168,13 @@ KSaneWidget::KSaneWidget(QWidget* parent)
     d->m_clearSelBtn->setToolTip(i18n("Clear Selections"));
     connect(d->m_clearSelBtn, SIGNAL(clicked()), d->m_previewViewer, SLOT(clearSelections()));
 
-    d->m_prevBtn = new KPushButton(this);
+    d->m_prevBtn = new QPushButton(this);
     d->m_prevBtn->setIcon(KIcon("document-import"));
     d->m_prevBtn->setToolTip(i18n("Scan Preview Image"));
     d->m_prevBtn->setText(i18nc("Preview button text", "Preview"));
     connect(d->m_prevBtn,   SIGNAL(clicked()), d, SLOT(startPreviewScan()));
     
-    d->m_scanBtn = new KPushButton(this);
+    d->m_scanBtn = new QPushButton(this);
     d->m_scanBtn->setIcon(KIcon("document-save"));
     d->m_scanBtn->setToolTip(i18n("Scan Final Image"));
     d->m_scanBtn->setText(i18nc("Final scan button text", "Scan"));
@@ -209,10 +210,10 @@ KSaneWidget::KSaneWidget(QWidget* parent)
     preview_layout->addWidget(d->m_btnFrame, 0);
     
     // Create Options Widget
-    d->m_optsTabWidget = new KTabWidget;
+    d->m_optsTabWidget = new QTabWidget();
     
     // Add the basic options tab
-    d->m_basicScrollA = new QScrollArea;
+    d->m_basicScrollA = new QScrollArea();
     d->m_basicScrollA->setWidgetResizable(true);
     d->m_basicScrollA->setFrameShape(QFrame::NoFrame);
     d->m_optsTabWidget->addTab(d->m_basicScrollA, i18n("Basic Options"));

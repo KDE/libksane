@@ -3,6 +3,7 @@
 Gwenview: an image viewer
 Copyright 2009 Aurélien Gâteau <agateau@kde.org>
 Copyright 2009 Kåre Sårs <kare.sars@iki.fi>
+2014: Gregor Mitsch: port to KDE5 frameworks
 
 This library is free software; you can redistribute it and/or
 modify it under the terms of the GNU Lesser General Public

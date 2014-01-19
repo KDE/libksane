@@ -6,6 +6,7 @@
  * Description : Sane interface for KDE
  *
  * Copyright (C) 2007-2011 by Kare Sars <kare.sars@iki .fi>
+ * 2014: Gregor Mitsch: port to KDE5 frameworks
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -30,8 +31,8 @@
 
 #include "ksane_option_widget.h"
 
-// Qt includes
-#include <QSlider>
+class QSlider;
+class QSpinBox;
 
 /**
   *@author Kåre Särs
@@ -67,7 +68,7 @@ public:
                 int min, int max, int st);
     ~LabeledSlider();
 
-    int value() const { return( m_slider->value()); }
+    int value() const;
 
 public Q_SLOTS:
 
@@ -76,7 +77,7 @@ public Q_SLOTS:
     void setRange(int min, int max);
     void setStep(int);
     /** Set the unit */
-    void setSuffix(const KLocalizedString &text);
+    void setSuffix(const QString &text);
 
 private Q_SLOTS:
 
@@ -93,10 +94,9 @@ Q_SIGNALS:
     void valueChanged(int);
 
 private:
-
-    QSlider     *m_slider;
-    KIntSpinBox *m_spinb;
-    int          m_step;
+    QSlider   *m_slider;
+    QSpinBox  *m_spinb;
+    int        m_step;
 };
 
 }  // NameSpace KSaneIface
