@@ -1,12 +1,16 @@
+# KSane
+
+## Introduction
+
 SANE Library interface for KDE
 
 This library is a part of Kipi-Plugins project (http://www.digikam.org)
 
--- AUTHORS ------------------------------------------------------------
+## Authors
 
 See AUTHORS file for details.
 
--- ABOUT --------------------------------------------------------------
+## About
 
 Libksane is a KDE interface for SANE library to control flat scanners.
 
@@ -14,14 +18,14 @@ This library is used by kipi-plugins, digiKam and others kipi host programs.
 
 The library documentation is available on header files.
 
--- DEPENDENCIES -------------------------------------------------------
+## Dependencies
 
 CMake      >= 2.4.x                     http://www.cmake.org
 libqt      >= 4.2.x                     http://www.qtsoftware.com
 libkde     >= 4.0.x                     http://www.kde.org
 libsane    >= 1.0.18                    http://www.sane-project.org
 
--- INSTALL ------------------------------------------------------------
+## Install
 
 In order to compile, especially when QT3/Qt4 are installed at the same time, 
 just use something like that:
@@ -48,7 +52,7 @@ Note: To know KDE install path on your computer, use 'kde-config --prefix' comma
 
 "cmake . -DCMAKE_BUILD_TYPE=debugfull -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix`"
 
--- CONTACT ------------------------------------------------------------
+## Contact
 
 If you have questions, comments, suggestions to make do email at:
 
@@ -58,7 +62,7 @@ IRC channel from freenode.net server:
 
 #kde-imaging
 
--- BUGS ---------------------------------------------------------------
+## Bugs
 
 IMPORTANT : the bugreports and wishlist are hosted by the KDE bugs report 
 system who can be contacted by the standard Kde help menu of plugins dialog. 
