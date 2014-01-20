@@ -48,7 +48,7 @@ find_package(KF5WidgetsAddons ${KF5_VERSION} REQUIRED)
 
 # ...
 
-# TODO: Remove these later
+# be not so strict with the poor developer who just wants to use strings
 remove_definitions(-DQT_NO_CAST_TO_ASCII)
 remove_definitions(-DQT_NO_CAST_FROM_ASCII)
 remove_definitions(-DQT_NO_URL_CAST_FROM_STRING)
