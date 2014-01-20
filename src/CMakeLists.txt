@@ -1,3 +1,8 @@
+include_directories(${SANE_INCLUDE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/options
+    ${CMAKE_CURRENT_SOURCE_DIR}/widgets
+)
+
 set(ksane_SRCS
     widgets/gamma_disp.cpp
     widgets/labeled_gamma.cpp
