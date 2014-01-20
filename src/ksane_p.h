@@ -44,7 +44,7 @@ extern "C"
 #include <QTabWidget>
 #include <QPushButton>
 
-#include "ksane_widget.h"
+#include "ksane.h"
 #include "ksane_option.h"
 #include "ksane_viewer.h"
 #include "labeled_gamma.h"

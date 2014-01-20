@@ -29,7 +29,7 @@
  *
  * ============================================================ */
 
-#include "ksane_widget.h"
+#include "ksane.h"
 
 #include <unistd.h>
 
@@ -45,7 +45,7 @@
 #include <kpassworddialog.h>
 #include <kwallet.h>
 
-#include "ksane_widget_private.h"
+#include "ksane_p.h"
 #include "ksane_option.h"
 #include "ksane_opt_button.h"
 #include "ksane_opt_checkbox.h"

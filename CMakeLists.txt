@@ -24,9 +24,9 @@ set(KF5_VERSION "5.0.0")
 
 ecm_setup_version(
   ${KF5_VERSION}
-  VARIABLE_PREFIX LIBKSANE
-  VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/libksane_version.h"
-  PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/src/version.h.cmake"
+  VARIABLE_PREFIX KSANE
+  VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/ksane_version.h"
+  PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5SaneConfigVersion.cmake"
 )
 
 # Dependencies
@@ -54,13 +54,19 @@ remove_definitions(-DQT_NO_CAST_FROM_ASCII)
 remove_definitions(-DQT_NO_URL_CAST_FROM_STRING)
 remove_definitions(-DQT_NO_CAST_FROM_BYTEARRAY)
 
+# Check if sane API is available.
+if (NOT WIN32)
+    find_package(Sane)
+    # macro_log_feature(SANE_FOUND "SANE development toolkit" "Scanner Access Now Easy (SANE) development package" "http://www.sane-project.org" TRUE "" "Needed by libksane")
+endif (NOT WIN32)
+
 # Subdirectories
 add_subdirectory(src)
 add_subdirectory(autotests)
 add_subdirectory(tests)
 
 # Create a Config.cmake and a ConfigVersion.cmake file and install them
-set(CMAKECONFIG_INSTALL_DIR "${CMAKECONFIG_INSTALL_PREFIX}/KSane")
+set(CMAKECONFIG_INSTALL_DIR "${CMAKECONFIG_INSTALL_PREFIX}/KF5Sane")
 
 configure_package_config_file(
   "${CMAKE_CURRENT_SOURCE_DIR}/KF5SaneConfig.cmake.in"
@@ -87,12 +93,6 @@ install(FILES
   DESTINATION "${INCLUDE_INSTALL_DIR}"
   COMPONENT Devel
 )
-
-# Check if sane API is available.
-if (NOT WIN32)
-    find_package(Sane)
-    # macro_log_feature(SANE_FOUND "SANE development toolkit" "Scanner Access Now Easy (SANE) development package" "http://www.sane-project.org" TRUE "" "Needed by libksane")
-endif (NOT WIN32)
 
 # needed?
 #include_directories (${CMAKE_SOURCE_DIR}
@@ -165,6 +165,5 @@ IF(NOT WIN32)
   INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/libksane.pc DESTINATION ${LIB_INSTALL_DIR}/pkgconfig )
 ENDIF(NOT WIN32)
 
-if ("${CMAKE_BINARY_DIR}" STREQUAL "${CMAKE_CURRENT_BINARY_DIR}")
-  feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
-endif()
+feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
+

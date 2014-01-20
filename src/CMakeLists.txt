@@ -17,10 +17,10 @@ set(ksane_SRCS
     selectionitem.cpp
     ksane_device_dialog.cpp
     ksane_find_devices_thread.cpp
-    ksane_widget.cpp
+    ksane.cpp
     ksane_scan_thread.cpp
     ksane_preview_thread.cpp
-    ksane_widget_private.cpp
+    ksane_p.cpp
     splittercollapser.cpp
     ksane_auth.cpp
     options/ksane_option.cpp
@@ -72,9 +72,10 @@ if (COMPILE_VIEWER_TESTAPP)
 endif()
 
 # FIXME?
+# Crazy method to convert wrongly named _ classes to proper KF5 headers
 ecm_generate_headers(
   KSane_Viewer
-  KSane_Widget
+  KSane
   # FIXME? more?
 
   MODULE_NAME KSane

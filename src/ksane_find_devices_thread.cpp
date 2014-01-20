@@ -30,7 +30,7 @@
 #include "ksane_find_devices_thread.h"
 #include "ksane_find_devices_thread.moc"
 
-#include "ksane_widget_private.h"
+#include "ksane_p.h"
 
 // Sane includes
 extern "C"
