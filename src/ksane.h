@@ -30,11 +30,9 @@
 #ifndef KSANE_H
 #define KSANE_H
 
-// Qt includes
-#include <QWidget>
+#include "ksane_export.h"
 
-// Local includes
-#include "libksane_export.h"
+#include <QWidget>
 
 /** This namespace collects all methods and classes in LibKSane. */
 namespace KSaneIface
@@ -46,7 +44,7 @@ class KSaneWidgetPrivate;
  * This class provides the widget containing the scan options and the preview.
  * @author Kare Sars <kare.sars@iki.fi>
  */
-class LIBKSANE_EXPORT KSaneWidget : public QWidget
+class KSANE_EXPORT KSaneWidget : public QWidget
 {
     Q_OBJECT
     friend class KSaneWidgetPrivate;
@@ -115,7 +113,7 @@ public:
     * @return 'true' if all goes well and 'false' if no device is open. */
     bool closeDevice();
     
-    KDE_DEPRECATED bool makeQImage(const QByteArray &, int, int, int, ImageFormat, QImage &);
+    KSANE_DEPRECATED bool makeQImage(const QByteArray &, int, int, int, ImageFormat, QImage &);
      
     /**
      * This is a convenience method that can be used to create a QImage from the image data
