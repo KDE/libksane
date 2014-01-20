@@ -41,7 +41,7 @@ target_include_directories(KF5Sane INTERFACE "$<INSTALL_INTERFACE:${INCLUDE_INST
 
 target_link_libraries(KF5Sane
   PUBLIC
-    Qt5::Core
+    Qt5::Widgets
   # PRIVATE
   #  KF5::CoreAddons
   #  Other private libs
@@ -55,6 +55,7 @@ target_link_libraries(KF5Sane
 set_target_properties(KF5Sane
   PROPERTIES VERSION ${KSANE_VERSION_STRING}
   SOVERSION ${KSANE_SOVERSION}
+  EXPORT_NAME "Sane"
 )
 
 
