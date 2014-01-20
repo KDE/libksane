@@ -6,6 +6,7 @@
  * Description : Sane interface for KDE
  *
  * Copyright (C) 2007-2008 by Kare Sars <kare.sars@iki .fi>
+ * Copyright (C) 2014 by Gregor Mitsch: port to KDE5 frameworks
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public

@@ -35,7 +35,7 @@ set(ksane_SRCS
 
 add_library(KF5Sane ${ksane_SRCS})
 generate_export_header(KF5Sane BASE_NAME KSane)
-add_library(KF5::KSane ALIAS KF5Sane)
+add_library(KF5::Sane ALIAS KF5Sane)
 
 target_include_directories(KF5Sane INTERFACE "$<INSTALL_INTERFACE:${INCLUDE_INSTALL_DIR}/KSane>")
 
