@@ -32,7 +32,6 @@
 
 #include "ksane_find_devices_thread.h"
 
-// Qt includes
 #include <QGroupBox>
 #include <QStringList>
 #include <QButtonGroup>
@@ -75,6 +74,6 @@ private:
     FindSaneDevicesThread  *m_findDevThread;
 };
 
-}  // NameSpace KSaneIface
+}
 
 #endif

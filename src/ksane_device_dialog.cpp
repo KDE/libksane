@@ -27,10 +27,7 @@
  *
  * ============================================================ */
 
-// Local includes
 #include "ksane_device_dialog.h"
-#include "ksane_device_dialog.moc"
-
 
 // Sane includes
 extern "C"
@@ -43,7 +40,6 @@ extern "C"
 #include <QLabel>
 #include <QDialogButtonBox>
 
-
 #include <KLocalizedString>
 
 namespace KSaneIface
@@ -54,9 +50,8 @@ KSaneDeviceDialog::KSaneDeviceDialog(QWidget *parent)
 {
     //setButtons(KDialog::User1 | KDialog::Ok | KDialog::Cancel); // FIXME KF5
     //setButtonText(User1, i18n("Reload devices list")); // FIXME KF5
-  
-    QDialogButtonBox* buttonbox = new QDialogButtonBox();
-    buttonbox->setStandardButtons(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+    
+    QVBoxLayout * top = new QVBoxLayout(this);
     
     m_btnGroup = new QButtonGroup(this);
 
@@ -87,13 +82,24 @@ KSaneDeviceDialog::KSaneDeviceDialog(QWidget *parent)
     area->setWidgetResizable(true);
     area->setFrameShape(QFrame::NoFrame);
     area->setWidget(m_btnContainer);
+    
+    QDialogButtonBox* buttonBox = new QDialogButtonBox(this);
+    buttonBox->setStandardButtons(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+    QPushButton* reloadDevicesButton = buttonBox->addButton(i18n("Reload devices list"), QDialogButtonBox::ButtonRole::ActionRole);
+    layout->addWidget(buttonBox);
+    //connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
+    //connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+    connect(buttonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
+    connect(buttonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
+    connect(reloadDevicesButton, &QPushButton::clicked, this, &KSaneDeviceDialog::reloadDevicesList);
 
-    //setMainWidget(m_btnBox); // FIXME KF5
+    top->addWidget(m_btnBox);
+    top->addWidget(buttonBox);
+    
     setMinimumHeight(200);
     m_findDevThread = FindSaneDevicesThread::getInstance();
 
     connect(m_findDevThread, SIGNAL(finished()), this, SLOT(updateDevicesList()));
-    connect(this, SIGNAL(user1Clicked()),        this, SLOT(reloadDevicesList()));
 
     reloadDevicesList();
 }
