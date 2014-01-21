@@ -114,7 +114,7 @@ void KSaneDeviceDialog::reloadDevicesList()
     }
     m_gbDevices->setTitle(i18n("Looking for devices. Please wait."));
     m_gbDevices->layout()->itemAt(0)->widget()->hide();  // explanation
-    m_btnReloadDevices->setEnabled(true);
+    m_btnReloadDevices->setEnabled(false);
 
     if (!m_findDevThread->isRunning()) {
         m_findDevThread->start();
