@@ -28,7 +28,6 @@
  * ============================================================ */
 
 #include "ksane_find_devices_thread.h"
-#include "ksane_find_devices_thread.moc"
 
 #include "ksane_p.h"
 
@@ -83,14 +82,14 @@ void FindSaneDevicesThread::run()
     m_deviceList.clear();
     if (status == SANE_STATUS_GOOD) {
         int i = 0;
-        KSaneWidget::DeviceInfo tmp;
+        KSaneWidget::DeviceInfo deviceInfo;
 
         while(devList[i] != 0) {
-            tmp.name = devList[i]->name;
-            tmp.vendor = devList[i]->vendor;
-            tmp.model = devList[i]->model;
-            tmp.type = devList[i]->type;
-            m_deviceList << tmp;
+            deviceInfo.name = devList[i]->name;
+            deviceInfo.vendor = devList[i]->vendor;
+            deviceInfo.model = devList[i]->model;
+            deviceInfo.type = devList[i]->type;
+            m_deviceList << deviceInfo;
             i++;
         }
     }
