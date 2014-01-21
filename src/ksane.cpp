@@ -285,12 +285,13 @@ QString KSaneWidget::selectDevice(QWidget* parent)
   QString selected_name;
   QPointer<KSaneDeviceDialog> sel = new KSaneDeviceDialog(parent);
 
-  // sel.setDefault(prev_backend); // set default scanner - perhaps application using libksane should remember that
+  // set default scanner - perhaps application using libksane should remember that
+  // 2014-01-21: gm: +1
+  // sel.setDefault(prev_backend);
   
-  Q_ASSERT_X(false, "KSaneWidget::selectDevice", "FIXME KF5"); // FIXME KF5
-  //if(sel->exec() == KDialog::Accepted) {
-  //    selected_name = sel->getSelectedName();
-  //}
+  if(sel->exec() == QDialog::Accepted) {
+      selected_name = sel->getSelectedName();
+  }
   
   delete sel;
   return selected_name;
