@@ -72,13 +72,11 @@ if (COMPILE_VIEWER_TESTAPP)
     ${SANE_LIBRARY})
 endif()
 
-# FIXME?
-# Crazy method to convert wrongly named _ classes to proper KF5 headers
+# method to convert wrongly named _ class file names to proper KF5 headers (camel case)
+# FIXME: remove _ from filenames
 ecm_generate_headers(
   KSane_Viewer
   KSane
-  # FIXME? more?
-
   MODULE_NAME KSane
   REQUIRED_HEADERS KSane_HEADERS
 )

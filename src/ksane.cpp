@@ -73,6 +73,15 @@ KSaneWidget::KSaneWidget(QWidget* parent)
 
     //qDebug() <<  "The language is:" << KGlobal::locale()->language();
     //qDebug() <<  "Languagelist" << KGlobal::locale()->languageList();
+
+    /*
+        see http://community.kde.org/Frameworks/Porting_Notes#KDECore_Changes:
+        For translation support, use KLocalizedString (ki18n framework). Translation catalogs are no longer dynamically inserted,
+        so the idiom KGlobal::locale()->insertCatalog("somecatalog") is no longer available.
+        To simply make the code build, for the sake of porting other things first, just remove or comment out these calls.
+        This will stop translations from working, and to fully port them eventually, follow the section
+        "Connecting Calls to Catalogs" in ki18n programmer's guide.
+     */
     //KGlobal::locale()->insertCatalog("libksane"); // FIXME KF5
     //KGlobal::locale()->insertCatalog("sane-backends"); // FIXME KF5
 
