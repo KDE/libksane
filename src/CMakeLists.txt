@@ -74,15 +74,14 @@ endif()
 
 # method to convert wrongly named _ class file names to proper KF5 headers (camel case)
 # FIXME: remove _ from filenames
-ecm_generate_headers(
-  KSane_Viewer
-  KSane
-  MODULE_NAME KSane
+ecm_generate_headers(KSane_HEADERS
+  HEADER_NAMES
+    KSane_Viewer
+    KSane
   REQUIRED_HEADERS KSane_HEADERS
 )
 
 # Install files
-install(DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/KSane DESTINATION ${INCLUDE_INSTALL_DIR} COMPONENT Devel)
 
 # FIXME KF5: KDE4_INSTALL_ICONS
 #KDE4_INSTALL_ICONS(${ICON_INSTALL_DIR})
