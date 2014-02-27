@@ -46,7 +46,6 @@ target_link_libraries(KF5Sane
   #  KF5::CoreAddons
   #  Other private libs
     KF5::I18n
-    KF5::PrintUtils
     KF5::Wallet
     KF5::WidgetsAddons
     ${SANE_LIBRARY}
@@ -66,7 +65,6 @@ if (COMPILE_VIEWER_TESTAPP)
     target_link_libraries(viewer_test
       LINK_PRIVATE
     KF5::I18n
-    KF5::PrintUtils
     KF5::Wallet
     KF5::WidgetsAddons
     ${SANE_LIBRARY})
