@@ -7,7 +7,7 @@
  *
  * Copyright (C) 2002-2003 Stephan Stapel <stephan dot stapel at web dot de>
  * Copyright (C) 2008-2009 by Gilles Caulier <caulier dot gilles at gmail dot com>
- * Copyright (C) 2009 by Kare Sars <kare dot sars at iki dot fi>
+ * Copyright (C) 2009      by Kare Sars <kare dot sars at iki dot fi>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -40,7 +40,6 @@
 namespace KSaneIface
 {
 
-
 class KSaneWidgetPrivate : public QWidget
 {
     Q_OBJECT
@@ -61,13 +60,14 @@ public:
     QString SelectSource();
     bool OpenSource(const QString &device);
 
-
 public Q_SLOTS:
+
     bool OpenDialog();
     bool ReOpenDialog();
 
 
 Q_SIGNALS:
+
     void ImageReady(QByteArray &data, int width, int height, int bytes_per_line, int format);
 
 private:
@@ -122,6 +122,6 @@ protected:
     HWND         m_hMessageWnd;
 };
 
-}
+} // namespace KSaneIface
 
 #endif /* TWAINIFACE_H */

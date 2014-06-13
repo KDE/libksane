@@ -7,7 +7,7 @@
  *
  * Copyright (C) 2002-2003 Stephan Stapel <stephan dot stapel at web dot de>
  * Copyright (C) 2008-2009 by Gilles Caulier <caulier dot gilles at gmail dot com>
- * Copyright (C) 2009 by Kare Sars <kare dot sars at iki dot fi>
+ * Copyright (C) 2009      by Kare Sars <kare dot sars at iki dot fi>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -30,7 +30,6 @@
  // I renamed the class to KSaneWidgetPrivate to remove 
  // the need for a wrapper class with this name. (Kare)
 
-#include "twainiface.h"
 #include "twainiface.moc"
 #include "ksane.h"
 
@@ -405,7 +404,7 @@ bool KSaneWidgetPrivate::SetImageCount(TW_INT16 nCount)
     }
     else {
         if(m_returnCode == TWRC_CHECKSTATUS) {
-            TW_UINT32 count;
+            TW_UINT32 count = 0;
 
             if(GetCapability(CAP_XFERCOUNT, count)) {
                 nCount = (TW_INT16)count;
@@ -593,4 +592,4 @@ void KSaneWidgetPrivate::ImageData(TW_MEMREF pdata, TW_IMAGEINFO& info)
     }
 }
 
-}
+} // namespace KSaneIface
