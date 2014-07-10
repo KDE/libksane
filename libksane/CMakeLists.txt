@@ -59,12 +59,7 @@ INSTALL(FILES ksane.h
 
 KDE4_INSTALL_ICONS(${ICON_INSTALL_DIR})
 
+CONFIGURE_FILE(../cmake/templates/KSaneConfig.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/KSaneConfig.cmake @ONLY)
 
-CONFIGURE_FILE(
-    ../KSaneConfig.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/KSaneConfig.cmake @ONLY
-)
-
-INSTALL(
-    FILES ${CMAKE_CURRENT_BINARY_DIR}/KSaneConfig.cmake
-    DESTINATION ${LIB_INSTALL_DIR}/cmake/KSane
-)
+INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/KSaneConfig.cmake
+        DESTINATION ${LIB_INSTALL_DIR}/cmake/KSane)

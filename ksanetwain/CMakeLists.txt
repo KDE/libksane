@@ -1,14 +1,11 @@
-CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/../libksane/version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/version.h)
+CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/../libksane/version.h.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/version.h)
 
-
-INCLUDE_DIRECTORIES(
-    ${CMAKE_CURRENT_SOURCE_DIR}/../libksane
-    ${CMAKE_CURRENT_BINARY_DIR}
-)
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/../libksane
+                    ${CMAKE_CURRENT_BINARY_DIR})
 
 IF( WIN32 )
     ADD_DEFINITIONS( -DMAKE_KSANE_LIB )
-ENDIF( WIN32 )
+ENDIF()
 
 set(ktwain_src
     twainiface.cpp
@@ -16,7 +13,6 @@ set(ktwain_src
 )
 
 KDE4_ADD_LIBRARY(ksane SHARED ${ktwain_src})
-
 
 TARGET_LINK_LIBRARIES(ksane ${KDE4_KDEUI_LIBS})
 
@@ -33,11 +29,7 @@ INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/../libksane/ksane.h
               ${CMAKE_CURRENT_BINARY_DIR}/version.h
         DESTINATION ${INCLUDE_INSTALL_DIR}/libksane COMPONENT Devel)
 
-configure_file(
-    ../KSaneConfig.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/KSaneConfig.cmake @ONLY
-)
+configure_file(../cmake/templates/KSaneConfig.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/KSaneConfig.cmake @ONLY)
 
-install(
-    FILES ${CMAKE_CURRENT_BINARY_DIR}/KSaneConfig.cmake
-    DESTINATION ${LIB_INSTALL_DIR}/cmake/KSane
-)
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/KSaneConfig.cmake
+        DESTINATION ${LIB_INSTALL_DIR}/cmake/KSane)

@@ -61,7 +61,7 @@ SET(KSANE_LIB_SO_VERSION_STRING "${KSANE_LIB_SO_CUR_VERSION}.${KSANE_LIB_SO_REV_
 
 ADD_DEFINITIONS(-DKDE_DEFAULT_DEBUG_AREA=51004) 
 
-CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/libksane/version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/libksane/version.h)
+CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/libksane/version.h.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/libksane/version.h)
 
 # =======================================================
 
@@ -81,9 +81,9 @@ ELSE (SANE_FOUND)
 ENDIF (SANE_FOUND)
 
 IF(NOT WIN32)
-  CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/libksane.pc.cmake ${CMAKE_CURRENT_BINARY_DIR}/libksane.pc)
-  CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/libksane.lsm.cmake ${CMAKE_CURRENT_BINARY_DIR}/libksane.lsm)
-  INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/libksane.pc DESTINATION ${LIB_INSTALL_DIR}/pkgconfig )
+    CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/cmake/templates/libksane.pc.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/libksane.pc)
+    CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/cmake/templates/libksane.lsm.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/libksane.lsm)
+    INSTALL(FILES ${CMAKE_CURRENT_BINARY_DIR}/libksane.pc DESTINATION ${LIB_INSTALL_DIR}/pkgconfig )
 ENDIF(NOT WIN32)
 
 macro_display_feature_log()
