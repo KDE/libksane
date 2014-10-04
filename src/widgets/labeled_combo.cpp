@@ -42,7 +42,7 @@ LabeledCombo::LabeledCombo(QWidget *parent, const QString& ltext, const QStringL
 
     m_label->setBuddy(m_combo);
 
-    connect(m_combo, SIGNAL(activated(int)), this, SIGNAL(activated(int)));
+    connect(m_combo, static_cast<void (QComboBox::*)(int)>(&QComboBox::activated), this, &LabeledCombo::activated);
 
     m_layout->addWidget(m_combo, 0, 1);
     m_layout->addWidget(new QWidget(this), 0, 2);

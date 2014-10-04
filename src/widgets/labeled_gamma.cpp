@@ -79,9 +79,9 @@ LabeledGamma::LabeledGamma(QWidget *parent, const QString& text, int size)
     m_label->hide();
     m_layout->addWidget(groupBox, 1, 0, 1,3);
 
-    connect(m_bri_slider, SIGNAL(valueChanged(int)), this, SLOT(calculateGT()));
-    connect(m_con_slider, SIGNAL(valueChanged(int)), this, SLOT(calculateGT()));
-    connect(m_gam_slider, SIGNAL(valueChanged(int)), this, SLOT(calculateGT()));
+    connect(m_bri_slider, &LabeledSlider::valueChanged, this, &LabeledGamma::calculateGT);
+    connect(m_con_slider, &LabeledSlider::valueChanged, this, &LabeledGamma::calculateGT);
+    connect(m_gam_slider, &LabeledSlider::valueChanged, this, &LabeledGamma::calculateGT);
 }
 
 LabeledGamma::~LabeledGamma()

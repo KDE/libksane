@@ -38,7 +38,7 @@ LabeledCheckbox::LabeledCheckbox(QWidget *parent, const QString& ltext)
     m_layout->addWidget(chbx, 0, 1);
     m_layout->setColumnStretch(1, 50);
 
-    connect(chbx, SIGNAL(toggled(bool)), this, SIGNAL(toggled(bool)));
+    connect(chbx, &QCheckBox::toggled, this, &LabeledCheckbox::toggled);
 }
 
 LabeledCheckbox::~LabeledCheckbox()

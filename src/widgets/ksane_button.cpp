@@ -37,7 +37,7 @@ KSaneButton::KSaneButton(QWidget *parent, const QString& ltext)
     m_layout->setColumnStretch(1, 0);
     m_layout->setColumnStretch(2, 50);
     
-    connect(m_button, SIGNAL(clicked(bool)), this, SIGNAL(clicked()));
+    connect(m_button, &QPushButton::clicked, this, &KSaneButton::clicked);
 }
 
 KSaneButton::~KSaneButton()

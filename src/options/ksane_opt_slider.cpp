@@ -53,7 +53,7 @@ void KSaneOptSlider::createWidget(QWidget *parent)
     m_widget = m_slider = new LabeledSlider(parent, "", KSW_INT_MIN, KSW_INT_MAX, 1);
     readOption();
     m_widget->setToolTip(i18n(m_optDesc->desc));
-    connect(m_slider, SIGNAL(valueChanged(int)), this, SLOT(sliderChanged(int)));
+    connect(m_slider, &LabeledSlider::valueChanged, this, &KSaneOptSlider::sliderChanged);
     readValue();
 }
 

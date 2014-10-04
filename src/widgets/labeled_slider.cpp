@@ -61,9 +61,9 @@ LabeledSlider::LabeledSlider(QWidget *parent, const QString& ltext,
     m_spinb->setValue(min);
     m_label->setBuddy(m_spinb);
 
-    connect(m_spinb,  SIGNAL(valueChanged(int)), this, SLOT(syncValues(int)));
-    connect(m_slider, SIGNAL(valueChanged(int)), this, SLOT(syncValues(int)));
-    connect(m_slider, SIGNAL(sliderReleased()),  this, SLOT(fixValue()));
+    connect(m_spinb, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), this, &LabeledSlider::syncValues);
+    connect(m_slider, &QSlider::valueChanged, this, &LabeledSlider::syncValues);
+    connect(m_slider, &QSlider::sliderReleased, this, &LabeledSlider::fixValue);
 
     m_layout->addWidget(m_slider, 0, 2);
     m_layout->addWidget(m_spinb, 0, 1);

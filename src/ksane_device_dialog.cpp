@@ -97,7 +97,7 @@ KSaneDeviceDialog::KSaneDeviceDialog(QWidget *parent)
     setMinimumHeight(200);
     m_findDevThread = FindSaneDevicesThread::getInstance();
 
-    connect(m_findDevThread, SIGNAL(finished()), this, SLOT(updateDevicesList()));
+    connect(m_findDevThread, &FindSaneDevicesThread::finished, this, &KSaneDeviceDialog::updateDevicesList);
 
     reloadDevicesList();
 }
@@ -176,7 +176,7 @@ void KSaneDeviceDialog::updateDevicesList()
 
         m_btnLayout->addWidget(b);
         m_btnGroupDevices->addButton(b);
-        connect(b, SIGNAL(clicked(bool)), this, SLOT(setAvailable(bool)));
+        connect(b, &QRadioButton::clicked, this, &KSaneDeviceDialog::setAvailable);
         if((i==0) || (list[i].name == m_selectedDevice)) {
             b->setChecked(true);
             setAvailable(true);

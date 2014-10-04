@@ -58,7 +58,7 @@ void KSaneOptCheckBox::createWidget(QWidget *parent)
     m_widget = m_checkbox = new LabeledCheckbox(parent, i18n(m_optDesc->title));
     m_widget->setToolTip(i18n(m_optDesc->desc));
 
-    connect(m_checkbox, SIGNAL(toggled(bool)), this, SLOT(checkboxChanged(bool)));
+    connect(m_checkbox, &LabeledCheckbox::toggled, this, &KSaneOptCheckBox::checkboxChanged);
 
     updateVisibility();
     readValue();

@@ -129,19 +129,19 @@ KSaneViewer::KSaneViewer(QImage * img, QWidget *parent) : QGraphicsView(parent),
     
     // create context menu
     d->zoomInAction = new QAction(QIcon::fromTheme(QLatin1String("zoom-in")), i18n("Zoom In"), this);
-    connect(d->zoomInAction, SIGNAL(triggered()), this, SLOT(zoomIn()));
+    connect(d->zoomInAction, &QAction::triggered, this, &KSaneViewer::zoomIn);
     
     d->zoomOutAction = new QAction(QIcon::fromTheme(QLatin1String("zoom-out")), i18n("Zoom Out"), this);
-    connect(d->zoomOutAction, SIGNAL(triggered()), this, SLOT(zoomOut()));
+    connect(d->zoomOutAction, &QAction::triggered, this, &KSaneViewer::zoomOut);
     
     d->zoomSelAction = new QAction(QIcon::fromTheme(QLatin1String("zoom-fit-best")), i18n("Zoom to Selection"), this);
-    connect(d->zoomSelAction, SIGNAL(triggered()), this, SLOT(zoomSel()));
+    connect(d->zoomSelAction, &QAction::triggered, this, &KSaneViewer::zoomSel);
     
     d->zoom2FitAction = new QAction(QIcon::fromTheme(QLatin1String("document-preview")), i18n("Zoom to Fit"), this);
-    connect(d->zoom2FitAction, SIGNAL(triggered()), this, SLOT(zoom2Fit()));
+    connect(d->zoom2FitAction, &QAction::triggered, this, &KSaneViewer::zoom2Fit);
     
     d->clrSelAction = new QAction(QIcon::fromTheme(QLatin1String("edit-clear")), i18n("Clear Selections"), this);
-    connect(d->clrSelAction, SIGNAL(triggered()), this, SLOT(clearSelections()));
+    connect(d->clrSelAction, &QAction::triggered, this, &KSaneViewer::clearSelections);
     
     addAction(d->zoomInAction);
     addAction(d->zoomOutAction);

@@ -55,8 +55,8 @@ LabeledEntry::LabeledEntry(QWidget *parent, const QString& ltext)
     m_layout->addWidget(m_set, 1, 3);
     m_layout->setColumnStretch(1, 50);
     
-    connect(m_reset, SIGNAL(clicked()), this, SLOT(resetClicked()));
-    connect(m_set,   SIGNAL(clicked()), this, SLOT(setClicked()));
+    connect(m_reset, &QPushButton::clicked, this, &LabeledEntry::resetClicked);
+    connect(m_set, &QPushButton::clicked, this, &LabeledEntry::setClicked);
 }
 
 LabeledEntry::~LabeledEntry()
