@@ -1,3 +1,6 @@
+add_definitions(-DTRANSLATION_DOMAIN=\"libksane\")
+
+
 include_directories(${SANE_INCLUDE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/options
     ${CMAKE_CURRENT_SOURCE_DIR}/widgets
