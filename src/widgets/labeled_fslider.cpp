@@ -27,7 +27,7 @@
 
 // Local includes
 #include "labeled_fslider.h"
-#include "labeled_fslider.moc"
+
 
 #define FLOAT_MULTIP 32768.0
 #define TO_FLOAT(v) ((float)v / FLOAT_MULTIP)

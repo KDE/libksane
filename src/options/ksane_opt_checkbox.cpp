@@ -27,7 +27,7 @@
  * ============================================================ */
 // Local includes
 #include "ksane_opt_checkbox.h"
-#include "ksane_opt_checkbox.moc"
+
 
 #include "labeled_checkbox.h"
 

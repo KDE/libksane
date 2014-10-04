@@ -27,7 +27,7 @@
  * ============================================================ */
 
 #include "labeled_slider.h"
-#include "labeled_slider.moc"
+
 
 #include <QLabel>
 #include <QSlider>

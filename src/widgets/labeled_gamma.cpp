@@ -28,7 +28,7 @@
 
 // Local includes
 #include "labeled_gamma.h"
-#include "labeled_gamma.moc"
+
 
 #include <QGroupBox>
 

@@ -26,7 +26,7 @@
  * ============================================================ */
 
 #include "../libksane/ksane.h"
-#include "../libksane/ksane.moc"
+
 
 // Qt includes
 #include <QMap>

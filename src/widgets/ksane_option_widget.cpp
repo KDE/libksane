@@ -25,7 +25,7 @@
  * ============================================================ */
 
 #include "ksane_option_widget.h"
-#include "ksane_option_widget.moc"
+
 
 #include <KLocalizedString>
 

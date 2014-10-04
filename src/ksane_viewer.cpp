@@ -27,7 +27,7 @@
 * ============================================================ */
 
 #include "ksane_viewer.h"
-#include "ksane_viewer.moc"
+
 #include "selectionitem.h"
 
 #include <QGraphicsPixmapItem>
