@@ -59,8 +59,8 @@ public:
 
     void setColor(const QColor &color);
     void setSize(int size);
-    const QVector<int> &gammaTablePtr() { return m_gam_tbl; }
-    int size() {return (int)(m_max_val+1);}
+    const QVector<int> &gammaTablePtr();
+    int size();
 
     bool getValues(int &bri, int &con, int &gam);
 

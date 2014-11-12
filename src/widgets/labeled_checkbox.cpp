@@ -47,7 +47,8 @@ LabeledCheckbox::~LabeledCheckbox()
 
 void LabeledCheckbox::setChecked(bool is_checked)
 {
-    if (is_checked != chbx->isChecked()) chbx->setChecked(is_checked);
+    if (is_checked != chbx->isChecked())
+        chbx->setChecked(is_checked);
 }
 
 bool LabeledCheckbox::isChecked()

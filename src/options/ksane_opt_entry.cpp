@@ -109,4 +109,9 @@ bool KSaneOptEntry::setValue(const QString &val)
     return true;
 }
 
+bool KSaneOptEntry::hasGui()
+{
+    return true;
+}
+
 }  // NameSpace KSaneIface

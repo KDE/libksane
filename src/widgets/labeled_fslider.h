@@ -68,8 +68,8 @@ public:
    /**
     * \return the slider value.
     */
-    float value() const {return (float)m_spinb->value();}
-    float step() const {return m_fstep;}
+    float value() const;
+    float step() const;
 
 public Q_SLOTS:
 

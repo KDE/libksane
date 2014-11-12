@@ -87,7 +87,7 @@ void KSaneOption::updateVisibility()
     }
 }
 
-KSaneOption::KSaneOptWState KSaneOption::state()
+KSaneOption::KSaneOptWState KSaneOption::state() const
 {
     if (!m_optDesc) return STATE_HIDDEN;
 
@@ -103,7 +103,7 @@ KSaneOption::KSaneOptWState KSaneOption::state()
     return STATE_SHOWN;
 }
 
-bool KSaneOption::needsPolling()
+bool KSaneOption::needsPolling() const
 {
     if (!m_optDesc) return false;
 
@@ -115,7 +115,7 @@ bool KSaneOption::needsPolling()
     return false;
 }
 
-QString KSaneOption::name()
+QString KSaneOption::name() const
 {
     if (m_optDesc == 0) return QString("");
     return QString(m_optDesc->name);

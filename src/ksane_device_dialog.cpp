@@ -130,12 +130,12 @@ void KSaneDeviceDialog::setAvailable(bool isAvailable)
     }
 }
 
-void KSaneDeviceDialog::setDefault(QString defaultBackend)
+void KSaneDeviceDialog::setDefault(const QString &defaultBackend)
 {
     m_selectedDevice = defaultBackend;
 }
 
-QString KSaneDeviceDialog::getSelectedName() {
+QString KSaneDeviceDialog::getSelectedName() const {
     QAbstractButton *selectedButton = m_btnGroupDevices->checkedButton();
     if(selectedButton) {
         return selectedButton->objectName();
@@ -165,11 +165,11 @@ void KSaneDeviceDialog::updateDevicesList()
     m_gbDevices->layout()->itemAt(0)->widget()->hide();  // explanation
     m_gbDevices->layout()->itemAt(1)->widget()->show();  // scroll area
 
-    for (int i=0; i< list.size(); i++) {
+    for (int i=0; i< list.size(); ++i) {
         QRadioButton *b = new QRadioButton(this);
         b->setObjectName(list[i].name);
         b->setToolTip(list[i].name);
-        b->setText(QString(QLatin1String("%1 : %2\n%3"))
+        b->setText(QStringLiteral("%1 : %2\n%3")
                     .arg(list[i].vendor)
                     .arg(list[i].model)
                     .arg(list[i].name));
@@ -177,7 +177,7 @@ void KSaneDeviceDialog::updateDevicesList()
         m_btnLayout->addWidget(b);
         m_btnGroupDevices->addButton(b);
         connect(b, &QRadioButton::clicked, this, &KSaneDeviceDialog::setAvailable);
-        if((i==0) || (list[i].name == m_selectedDevice)) {
+        if((i==0) || (list.at(i).name == m_selectedDevice)) {
             b->setChecked(true);
             setAvailable(true);
         }

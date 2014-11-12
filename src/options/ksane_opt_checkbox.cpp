@@ -132,5 +132,10 @@ bool KSaneOptCheckBox::setValue(const QString &val)
     return true;
 }
 
+bool KSaneOptCheckBox::hasGui()
+{
+    return true;
+}
+
 
 }  // NameSpace KSaneIface

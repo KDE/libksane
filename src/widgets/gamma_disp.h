@@ -52,7 +52,7 @@ public:
     * \param parent parent widget
     */
     GammaDisp(QWidget *parent, QVector<int> *tbl);
-    ~GammaDisp() {};
+    ~GammaDisp() {}
 
     QSize sizeHint() const;
     QSize minimumSizeHint() const;

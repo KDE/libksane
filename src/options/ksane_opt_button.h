@@ -44,7 +44,7 @@ public:
     
     void createWidget(QWidget *parent);
 
-    bool hasGui() {return true;}
+    bool hasGui();
     
 private Q_SLOTS:
     void buttonClicked();

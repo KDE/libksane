@@ -53,8 +53,8 @@ public:
     KSaneDeviceDialog(QWidget *parent=0);
     ~KSaneDeviceDialog();
 
-    QString getSelectedName();
-    void setDefault(QString);
+    QString getSelectedName() const;
+    void setDefault(const QString &);
 
 public Q_SLOTS:
     void reloadDevicesList();

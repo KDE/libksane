@@ -78,9 +78,9 @@ public:
     
     KSaneOptionWidget *widget() {return m_widget;}
     virtual bool hasGui() {return false;}
-    bool needsPolling();
-    KSaneOptWState state();
-    QString name();
+    bool needsPolling() const;
+    KSaneOptWState state() const;
+    QString name() const;
     
     virtual void createWidget(QWidget *parent);
 

@@ -157,5 +157,10 @@ bool KSaneOptSlider::setValue(const QString &val)
     return true;
 }
 
+bool KSaneOptSlider::hasGui()
+{
+    return true;
+}
+
 
 }  // NameSpace KSaneIface

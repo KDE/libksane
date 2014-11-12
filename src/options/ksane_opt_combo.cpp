@@ -373,5 +373,10 @@ bool KSaneOptCombo::setValue(const QString &val)
     return true;
 }
 
+bool KSaneOptCombo::hasGui()
+{
+    return true;
+}
+
 
 }  // NameSpace KSaneIface

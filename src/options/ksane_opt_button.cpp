@@ -60,6 +60,11 @@ void KSaneOptButton::createWidget(QWidget *parent)
     readValue();
 }
 
+bool KSaneOptButton::hasGui()
+{
+    return true;
+}
+
 void KSaneOptButton::buttonClicked()
 {
     unsigned char data[4];

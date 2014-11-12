@@ -93,6 +93,10 @@ LabeledFSlider::~LabeledFSlider()
 {
 }
 
+float LabeledFSlider::value() const {return (float)m_spinb->value();}
+
+float LabeledFSlider::step() const {return m_fstep;}
+
 void LabeledFSlider::setSuffix(const QString &text)
 {
     m_spinb->setSuffix(text);

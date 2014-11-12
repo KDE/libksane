@@ -50,7 +50,7 @@ public:
     bool setValue(float val);
     bool getValue(QString &val);
     bool setValue(const QString &val);
-    bool hasGui() {return true;}
+    bool hasGui();
     
 private Q_SLOTS:
     void entryChanged(const QString &text);

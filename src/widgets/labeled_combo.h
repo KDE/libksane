@@ -72,7 +72,7 @@ public Q_SLOTS:
    /** 
     * This function is used to read the current string of the combobox
     */
-   QString currentText();
+   QString currentText() const;
    
    /**
     * set the current item of the combobox.

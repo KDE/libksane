@@ -53,10 +53,10 @@ public:
     bool setValue(float val);
     bool getValue(QString &val);
     bool setValue(const QString &val);
-    bool hasGui() {return true;}
+    bool hasGui();
 
-    Q_SIGNALS:
-        void fValueRead(float);
+Q_SIGNALS:
+    void fValueRead(float);
         
 private Q_SLOTS:
     void sliderChanged(float val);

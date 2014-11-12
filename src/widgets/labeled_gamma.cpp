@@ -162,6 +162,10 @@ void LabeledGamma::setSize(int size)
     m_gam_slider->setValue(0);
 }
 
+const QVector<int> &LabeledGamma::gammaTablePtr() { return m_gam_tbl; }
+
+int LabeledGamma::size() {return (int)(m_max_val+1);}
+
 
 void LabeledGamma::calculateGT()
 {

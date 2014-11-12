@@ -51,7 +51,7 @@ KSaneOptionWidget::~KSaneOptionWidget()
 void KSaneOptionWidget::setLabelText(const QString &text)
 {
     if (text.isEmpty()) {
-        m_label->setText(QString());
+        m_label->clear();
     } else {
         m_label->setText(i18nc("Label for a scanner option", "%1:", text));
     }

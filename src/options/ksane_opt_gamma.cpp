@@ -102,4 +102,9 @@ bool KSaneOptGamma::setValue(const QString &val)
     return true;
 }
 
+bool KSaneOptGamma::hasGui()
+{
+    return true;
+}
+
 }  // NameSpace KSaneIface

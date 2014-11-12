@@ -56,7 +56,7 @@ void LabeledCombo::addItems(const QStringList &list)
     m_combo->addItems(list);
 
     QString tmp;
-    for (int i=0; i<m_combo->count(); i++) {
+    for (int i=0; i<m_combo->count(); ++i) {
         tmp = m_combo->itemText(i);
         m_combo->setItemData(i, tmp, Qt::ToolTipRole);
     }
@@ -65,15 +65,14 @@ void LabeledCombo::addItems(const QStringList &list)
 
 void LabeledCombo::setCurrentText(const QString &t)
 {
-    int i;
-    for (i=0; i<m_combo->count(); i++) {
+    for (int i=0; i<m_combo->count(); ++i) {
         if (m_combo->itemText(i) == t) {
             m_combo->setCurrentIndex(i);
         }
     }
 }
 
-QString LabeledCombo::currentText()
+QString LabeledCombo::currentText() const
 {
     return m_combo->currentText();
 }
@@ -81,7 +80,7 @@ QString LabeledCombo::currentText()
 
 bool LabeledCombo::setIcon(const QIcon &icon, const QString& str)
 {
-    for (int i=0; i < m_combo->count(); i++) {
+    for (int i=0; i < m_combo->count(); ++i) {
         if (m_combo->itemText(i) == str) {
             m_combo->setItemIcon(i, icon);
             return true;
@@ -94,7 +93,8 @@ void LabeledCombo::setCurrentIndex(int i)
 {
     m_combo->setCurrentIndex(i);
 }
-void LabeledCombo::clear() {
+void LabeledCombo::clear()
+{
     m_combo->clear();
 }
 
