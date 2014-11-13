@@ -64,12 +64,12 @@ private Q_SLOTS:
     void updateDevicesList();
 
 private:
+    QString                 m_defaultBackend;
+    QString                 m_selectedDevice;
     QWidget                *m_btnContainer;
     QGroupBox              *m_gbDevices;
     QButtonGroup           *m_btnGroupDevices;
     QVBoxLayout            *m_btnLayout;
-    QString                 m_defaultBackend;
-    QString                 m_selectedDevice;
     FindSaneDevicesThread  *m_findDevThread;
     QPushButton            *m_btnReloadDevices;
     QPushButton            *m_btnOk;

@@ -352,6 +352,16 @@ KSaneOption::KSaneOptType KSaneOption::optionType(const SANE_Option_Descriptor *
     return TYPE_DETECT_FAIL;
 }
 
+KSaneOptionWidget *KSaneOption::widget()
+{
+    return m_widget;
+}
+
+bool KSaneOption::hasGui()
+{
+    return false;
+}
+
 KLocalizedString KSaneOption::unitString()
 {
     switch (m_optDesc->unit) {

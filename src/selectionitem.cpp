@@ -56,7 +56,7 @@ struct SelectionItem::Private {
     QRectF     addRemRect;
 };
 
-SelectionItem::SelectionItem(QRectF rect) : QGraphicsItem(), d(new Private)
+SelectionItem::SelectionItem(const QRectF &rect) : QGraphicsItem(), d(new Private)
 {
     d->hasMaxX = false;
     d->hasMaxY = false;
@@ -134,7 +134,7 @@ void SelectionItem::setMaxBottom(qreal maxY)
     }
 }
 
-SelectionItem::Intersects SelectionItem::intersects(QPointF point)
+SelectionItem::Intersects SelectionItem::intersects(const QPointF &point)
 {
     bool oldState = d->showAddRem;
     d->showAddRem = false;
@@ -202,7 +202,7 @@ SelectionItem::Intersects SelectionItem::intersects(QPointF point)
     return Move;
 }
 
-void SelectionItem::setRect(QRectF rect)
+void SelectionItem::setRect(const QRectF &rect)
 {
     prepareGeometryChange();
     d->rect = rect;

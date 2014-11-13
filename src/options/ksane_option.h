@@ -74,14 +74,8 @@ public:
     ~KSaneOption();
     static KSaneOptType optionType(const SANE_Option_Descriptor *optDesc);
 
-    KSaneOptionWidget *widget()
-    {
-        return m_widget;
-    }
-    virtual bool hasGui()
-    {
-        return false;
-    }
+    KSaneOptionWidget *widget();
+    virtual bool hasGui();
     bool needsPolling() const;
     KSaneOptWState state() const;
     QString name() const;

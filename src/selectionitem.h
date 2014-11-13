@@ -50,19 +50,19 @@ public:
         AddRemove
     } Intersects;
 
-    explicit SelectionItem(QRectF rect);
+    explicit SelectionItem(const QRectF &rect);
     ~SelectionItem();
 
     void setMaxRight(qreal maxRight);
     void setMaxBottom(qreal maxBottom);
     void setSaved(bool isSaved);
 
-    Intersects intersects(QPointF point);
+    Intersects intersects(const QPointF &point);
 
     void saveZoom(qreal zoom);
 
-    void setRect(QRectF rect);
-    QPointF fixTranslation(QPointF dp);
+    void setRect(const QRectF &rect);
+    QPointF fixTranslation( QPointF dp);
     QRectF rect();
 
 public:
