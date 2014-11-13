@@ -352,18 +352,18 @@ KSaneOption::KSaneOptType KSaneOption::optionType(const SANE_Option_Descriptor *
     return TYPE_DETECT_FAIL;
 }
 
-QString KSaneOption::unitString()
+KLocalizedString KSaneOption::unitString()
 {
     switch (m_optDesc->unit) {
-    case SANE_UNIT_NONE:        return QString();
-    case SANE_UNIT_PIXEL:       return ki18ncp("SpinBox parameter unit", " Pixel", " Pixels").toString();
-    case SANE_UNIT_BIT:         return ki18ncp("SpinBox parameter unit", " Bit", " Bits").toString();
-    case SANE_UNIT_MM:          return ki18nc("SpinBox parameter unit (Millimeter)", " mm").toString();
-    case SANE_UNIT_DPI:         return ki18nc("SpinBox parameter unit (Dots Per Inch)", " DPI").toString();
-    case SANE_UNIT_PERCENT:     return ki18nc("SpinBox parameter unit (Percentage)", " %").toString();
-    case SANE_UNIT_MICROSECOND: return ki18nc("SpinBox parameter unit (Microseconds)", " µs").toString();
+    case SANE_UNIT_NONE:        return KLocalizedString();
+    case SANE_UNIT_PIXEL:       return ki18ncp("SpinBox parameter unit", " Pixel", " Pixels");
+    case SANE_UNIT_BIT:         return ki18ncp("SpinBox parameter unit", " Bit", " Bits");
+    case SANE_UNIT_MM:          return ki18nc("SpinBox parameter unit (Millimeter)", " mm");
+    case SANE_UNIT_DPI:         return ki18nc("SpinBox parameter unit (Dots Per Inch)", " DPI");
+    case SANE_UNIT_PERCENT:     return ki18nc("SpinBox parameter unit (Percentage)", " %");
+    case SANE_UNIT_MICROSECOND: return ki18nc("SpinBox parameter unit (Microseconds)", " µs");
     }
-    return QString();
+    return KLocalizedString();
 }
 
 QString KSaneOption::unitDoubleString()

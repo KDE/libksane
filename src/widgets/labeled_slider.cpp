@@ -28,9 +28,9 @@
 
 #include "labeled_slider.h"
 
+#include <KPluralHandlingSpinBox>
 #include <QLabel>
 #include <QSlider>
-#include <QSpinBox>
 
 namespace KSaneIface
 {
@@ -50,7 +50,7 @@ LabeledSlider::LabeledSlider(QWidget *parent, const QString &ltext,
     m_slider->setMaximum(max);
     m_slider->setSingleStep(m_step);
 
-    m_spinb = new QSpinBox(this);
+    m_spinb = new KPluralHandlingSpinBox(this);
     m_spinb->setMinimum(min);
     m_spinb->setMaximum(max);
     m_slider->setSingleStep(m_step);
@@ -77,7 +77,7 @@ LabeledSlider::~LabeledSlider()
 {
 }
 
-void LabeledSlider::setSuffix(const QString &text)
+void LabeledSlider::setSuffix(const KLocalizedString &text)
 {
     m_spinb->setSuffix(text);
 }

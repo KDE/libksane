@@ -38,7 +38,7 @@ class QSpinBox;
   *@author Kåre Särs
   */
 
-class KIntSpinBox;
+class KPluralHandlingSpinBox;
 class KLocalizedString;
 
 namespace KSaneIface
@@ -77,7 +77,7 @@ public Q_SLOTS:
     void setRange(int min, int max);
     void setStep(int);
     /** Set the unit */
-    void setSuffix(const QString &text);
+    void setSuffix(const KLocalizedString &text);
 
 private Q_SLOTS:
 
@@ -95,7 +95,7 @@ Q_SIGNALS:
 
 private:
     QSlider   *m_slider;
-    QSpinBox  *m_spinb;
+    KPluralHandlingSpinBox  *m_spinb;
     int        m_step;
 };
 
