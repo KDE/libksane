@@ -39,10 +39,8 @@ namespace KSaneIface
 static KSaneAuth *s_instance = 0;
 static QMutex     s_mutex;
 
-struct KSaneAuth::Private
-{
-    struct AuthStruct
-    {
+struct KSaneAuth::Private {
+    struct AuthStruct {
         QString resource;
         QString username;
         QString password;
@@ -75,7 +73,7 @@ void KSaneAuth::setDeviceAuth(const QString &resource, const QString &username, 
 {
     // This is a short list so we do not need a QMap...
     int i;
-    for (i=0; i<d->authList.size(); i++) {
+    for (i = 0; i < d->authList.size(); i++) {
         if (resource == d->authList.at(i).resource) {
             // update the existing node
             d->authList[i].username = username;
@@ -83,7 +81,7 @@ void KSaneAuth::setDeviceAuth(const QString &resource, const QString &username, 
             break;
         }
     }
-    if (i==d->authList.size()) {
+    if (i == d->authList.size()) {
         // Add a new list node
         Private::AuthStruct tmp;
         tmp.resource = resource;
@@ -96,7 +94,7 @@ void KSaneAuth::setDeviceAuth(const QString &resource, const QString &username, 
 void KSaneAuth::clearDeviceAuth(const QString &resource)
 {
     // This is a short list so we do not need a QMap...
-    for (int i=0; i<d->authList.size(); i++) {
+    for (int i = 0; i < d->authList.size(); i++) {
         if (resource == d->authList.at(i).resource) {
             d->authList.removeAt(i);
             return;
@@ -116,9 +114,9 @@ void KSaneAuth::authorization(SANE_String_Const resource, SANE_Char *username, S
     int end = res.indexOf("$MD5$");
     res = res.left(end);
     qDebug() << res;
-    
+
     QList<Private::AuthStruct> list = getInstance()->d->authList;
-    for (int i=0; i<list.size(); i++) {
+    for (int i = 0; i < list.size(); i++) {
         qDebug() << res << list.at(i).resource;
         if (list.at(i).resource.contains(res)) {
             qstrncpy(username, list.at(i).username.toLocal8Bit(), SANE_MAX_USERNAME_LEN);
@@ -127,9 +125,6 @@ void KSaneAuth::authorization(SANE_String_Const resource, SANE_Char *username, S
         }
     }
 }
-
-
-
 
 }
 

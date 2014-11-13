@@ -54,25 +54,25 @@ class LabeledSlider : public KSaneOptionWidget
 
 public:
 
-   /**
-    * Create the slider.
-    *
-    * \param parent parent widget
-    * \param text is the text describing the slider value. If the text
-    *        contains a '&', a buddy for the slider will be created.
-    * \param min minimum slider value
-    * \param max maximum slider value
-    * \param quant is the step between values.
-    */
-    LabeledSlider(QWidget *parent, const QString& text,
-                int min, int max, int st);
+    /**
+     * Create the slider.
+     *
+     * \param parent parent widget
+     * \param text is the text describing the slider value. If the text
+     *        contains a '&', a buddy for the slider will be created.
+     * \param min minimum slider value
+     * \param max maximum slider value
+     * \param quant is the step between values.
+     */
+    LabeledSlider(QWidget *parent, const QString &text,
+                  int min, int max, int st);
     ~LabeledSlider();
 
     int value() const;
 
 public Q_SLOTS:
 
-  /** Set the slider value */
+    /** Set the slider value */
     void setValue(int);
     void setRange(int min, int max);
     void setStep(int);

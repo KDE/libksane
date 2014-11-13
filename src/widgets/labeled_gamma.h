@@ -48,13 +48,13 @@ class LabeledGamma : public KSaneOptionWidget
 
 public:
 
-   /**
-    * Create the checkbox.
-    *
-    * \param parent parent widget
-    * \param text is the text describing the checkbox.
-    */
-    LabeledGamma(QWidget *parent, const QString& text, int elements);
+    /**
+     * Create the checkbox.
+     *
+     * \param parent parent widget
+     * \param text is the text describing the checkbox.
+     */
+    LabeledGamma(QWidget *parent, const QString &text, int elements);
     ~LabeledGamma();
 
     void setColor(const QColor &color);
@@ -67,7 +67,7 @@ public:
 public Q_SLOTS:
     void setValues(int bri, int con, int gam);
     void setValues(const QString &values);
-    
+
 private Q_SLOTS:
     void calculateGT();
 

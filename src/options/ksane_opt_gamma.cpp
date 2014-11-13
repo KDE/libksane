@@ -38,13 +38,15 @@ namespace KSaneIface
 {
 
 KSaneOptGamma::KSaneOptGamma(const SANE_Handle handle, const int index)
-: KSaneOption(handle, index), m_gamma(0)
+    : KSaneOption(handle, index), m_gamma(0)
 {
 }
 
 void KSaneOptGamma::createWidget(QWidget *parent)
 {
-    if (m_widget) return;
+    if (m_widget) {
+        return;
+    }
 
     readOption();
 
@@ -55,11 +57,17 @@ void KSaneOptGamma::createWidget(QWidget *parent)
     }
 
     m_widget = m_gamma = new LabeledGamma(parent, i18n(m_optDesc->title),
-                                          m_optDesc->size/sizeof(SANE_Word));
+                                          m_optDesc->size / sizeof(SANE_Word));
     connect(m_gamma, &LabeledGamma::gammaTableChanged, this, &KSaneOptGamma::gammaTableChanged);
-    if (strcmp(m_optDesc->name, SANE_NAME_GAMMA_VECTOR_R) == 0) m_gamma->setColor(Qt::red);
-    if (strcmp(m_optDesc->name, SANE_NAME_GAMMA_VECTOR_G) == 0) m_gamma->setColor(Qt::green);
-    if (strcmp(m_optDesc->name, SANE_NAME_GAMMA_VECTOR_B) == 0) m_gamma->setColor(Qt::blue);
+    if (strcmp(m_optDesc->name, SANE_NAME_GAMMA_VECTOR_R) == 0) {
+        m_gamma->setColor(Qt::red);
+    }
+    if (strcmp(m_optDesc->name, SANE_NAME_GAMMA_VECTOR_G) == 0) {
+        m_gamma->setColor(Qt::green);
+    }
+    if (strcmp(m_optDesc->name, SANE_NAME_GAMMA_VECTOR_B) == 0) {
+        m_gamma->setColor(Qt::blue);
+    }
 
     m_widget->setToolTip(i18n(m_optDesc->desc));
     updateVisibility();
@@ -78,13 +86,23 @@ void KSaneOptGamma::readValue()
     // not easy nor fast.. ergo not done
 }
 
-bool KSaneOptGamma::getValue(float &) {return false;}
-bool KSaneOptGamma::setValue(float) {return false;}
+bool KSaneOptGamma::getValue(float &)
+{
+    return false;
+}
+bool KSaneOptGamma::setValue(float)
+{
+    return false;
+}
 
 bool KSaneOptGamma::getValue(QString &val)
 {
-    if (!m_gamma) return false;
-    if (state() == STATE_HIDDEN) return false;
+    if (!m_gamma) {
+        return false;
+    }
+    if (state() == STATE_HIDDEN) {
+        return false;
+    }
     int bri;
     int con;
     int gam;
@@ -95,8 +113,12 @@ bool KSaneOptGamma::getValue(QString &val)
 
 bool KSaneOptGamma::setValue(const QString &val)
 {
-    if (!m_gamma) return false;
-    if (state() == STATE_HIDDEN) return false;
+    if (!m_gamma) {
+        return false;
+    }
+    if (state() == STATE_HIDDEN) {
+        return false;
+    }
 
     m_gamma->setValues(val);
     return true;

@@ -32,8 +32,8 @@
 // Sane includes
 extern "C"
 {
-    #include <sane/saneopts.h>
-    #include <sane/sane.h>
+#include <sane/saneopts.h>
+#include <sane/sane.h>
 }
 
 #include <QWidget>
@@ -60,137 +60,136 @@ extern "C"
 /** This namespace collects all methods and classes in LibKSane. */
 namespace KSaneIface
 {
-    class KSaneWidgetPrivate: public QObject
-    {
-        Q_OBJECT
+class KSaneWidgetPrivate: public QObject
+{
+    Q_OBJECT
 
-        public:
-            KSaneWidgetPrivate(KSaneWidget *);
-            void clearDeviceOptions();
-            void createOptInterface();
-            void updatePreviewSize();
-            void setDefaultValues();
-            void setBusy(bool busy);
-            KSaneOption *getOption(const QString &name);
-            KSaneWidget::ImageFormat getImgFormat(SANE_Parameters &params);
-            int getBytesPerLines(SANE_Parameters &params);
+public:
+    KSaneWidgetPrivate(KSaneWidget *);
+    void clearDeviceOptions();
+    void createOptInterface();
+    void updatePreviewSize();
+    void setDefaultValues();
+    void setBusy(bool busy);
+    KSaneOption *getOption(const QString &name);
+    KSaneWidget::ImageFormat getImgFormat(SANE_Parameters &params);
+    int getBytesPerLines(SANE_Parameters &params);
 
-        public Q_SLOTS:
-            void devListUpdated();
-            void signalDevListUpdate();
-            void startFinalScan();
-            void previewScanDone();
-            void oneFinalScanDone();
-            void updateProgress();
+public Q_SLOTS:
+    void devListUpdated();
+    void signalDevListUpdate();
+    void startFinalScan();
+    void previewScanDone();
+    void oneFinalScanDone();
+    void updateProgress();
 
-        private Q_SLOTS:
-            void scheduleValReload();
-            void optReload();
-            void valReload();
-            void handleSelection(float tl_x, float tl_y, float br_x, float br_y);
-            void setTLX(float x);
-            void setTLY(float y);
-            void setBRX(float x);
-            void setBRY(float y);
+private Q_SLOTS:
+    void scheduleValReload();
+    void optReload();
+    void valReload();
+    void handleSelection(float tl_x, float tl_y, float br_x, float br_y);
+    void setTLX(float x);
+    void setTLY(float y);
+    void setBRX(float x);
+    void setBRY(float y);
 
-            void startPreviewScan();
+    void startPreviewScan();
 
-            void checkInvert();
-            void invertPreview();
-            void pollPollOptions();
+    void checkInvert();
+    void invertPreview();
+    void pollPollOptions();
 
-        public:
-            void alertUser(int type, const QString &strStatus);
+public:
+    void alertUser(int type, const QString &strStatus);
 
-        public:
-            // backend independent
-            QTabWidget         *m_optsTabWidget;
-            QScrollArea        *m_basicScrollA;
-            QWidget            *m_basicOptsTab;
-            QWidget            *m_colorOpts;
-            QScrollArea        *m_otherScrollA;
-            QWidget            *m_otherOptsTab;
-            LabeledCheckbox    *m_invertColors;
+public:
+    // backend independent
+    QTabWidget         *m_optsTabWidget;
+    QScrollArea        *m_basicScrollA;
+    QWidget            *m_basicOptsTab;
+    QWidget            *m_colorOpts;
+    QScrollArea        *m_otherScrollA;
+    QWidget            *m_otherOptsTab;
+    LabeledCheckbox    *m_invertColors;
 
-            QSplitter          *m_splitter;
-            SplitterCollapser  *m_optionsCollapser;
+    QSplitter          *m_splitter;
+    SplitterCollapser  *m_optionsCollapser;
 
-            QWidget            *m_previewFrame;
-            KSaneViewer        *m_previewViewer;
-            QWidget            *m_btnFrame;
-            QToolButton        *m_zInBtn;
-            QToolButton        *m_zOutBtn;
-            QToolButton        *m_zSelBtn;
-            QToolButton        *m_zFitBtn;
-            QToolButton        *m_clearSelBtn;
-            QPushButton        *m_scanBtn;
-            QPushButton        *m_prevBtn;
+    QWidget            *m_previewFrame;
+    KSaneViewer        *m_previewViewer;
+    QWidget            *m_btnFrame;
+    QToolButton        *m_zInBtn;
+    QToolButton        *m_zOutBtn;
+    QToolButton        *m_zSelBtn;
+    QToolButton        *m_zFitBtn;
+    QToolButton        *m_clearSelBtn;
+    QPushButton        *m_scanBtn;
+    QPushButton        *m_prevBtn;
 
-            QWidget            *m_activityFrame;
-            QLabel             *m_warmingUp;
-            QProgressBar       *m_progressBar;
-            QPushButton        *m_cancelBtn;
+    QWidget            *m_activityFrame;
+    QLabel             *m_warmingUp;
+    QProgressBar       *m_progressBar;
+    QPushButton        *m_cancelBtn;
 
-            // device info
-            SANE_Handle         m_saneHandle;
-            QString             m_devName;
-            QString             m_vendor;
-            QString             m_model;
+    // device info
+    SANE_Handle         m_saneHandle;
+    QString             m_devName;
+    QString             m_vendor;
+    QString             m_model;
 
-            // Option variables
-            QList<KSaneOption*> m_optList;
-            QList<KSaneOption*> m_pollList;
-            KSaneOption        *m_optSource;
-            KSaneOption        *m_optNegative;
-            KSaneOption        *m_optFilmType;
-            KSaneOption        *m_optMode;
-            KSaneOption        *m_optDepth;
-            KSaneOption        *m_optRes;
-            KSaneOption        *m_optResX;
-            KSaneOption        *m_optResY;
-            KSaneOption        *m_optTlX;
-            KSaneOption        *m_optTlY;
-            KSaneOption        *m_optBrX;
-            KSaneOption        *m_optBrY;
-            KSaneOption        *m_optPreview;
-            KSaneOption        *m_optGamR;
-            KSaneOption        *m_optGamG;
-            KSaneOption        *m_optGamB;
-            LabeledCheckbox    *m_splitGamChB;
-            LabeledGamma       *m_commonGamma;
-            KSaneOption        *m_optWaitForBtn;
+    // Option variables
+    QList<KSaneOption *> m_optList;
+    QList<KSaneOption *> m_pollList;
+    KSaneOption        *m_optSource;
+    KSaneOption        *m_optNegative;
+    KSaneOption        *m_optFilmType;
+    KSaneOption        *m_optMode;
+    KSaneOption        *m_optDepth;
+    KSaneOption        *m_optRes;
+    KSaneOption        *m_optResX;
+    KSaneOption        *m_optResY;
+    KSaneOption        *m_optTlX;
+    KSaneOption        *m_optTlY;
+    KSaneOption        *m_optBrX;
+    KSaneOption        *m_optBrY;
+    KSaneOption        *m_optPreview;
+    KSaneOption        *m_optGamR;
+    KSaneOption        *m_optGamG;
+    KSaneOption        *m_optGamB;
+    LabeledCheckbox    *m_splitGamChB;
+    LabeledGamma       *m_commonGamma;
+    KSaneOption        *m_optWaitForBtn;
 
-            // preview variables
-            float               m_previewWidth;
-            float               m_previewHeight;
-            float               m_previewDPI;
-            QImage              m_previewImg;
-            bool                m_isPreview;
-            bool                m_autoSelect;
+    // preview variables
+    float               m_previewWidth;
+    float               m_previewHeight;
+    float               m_previewDPI;
+    QImage              m_previewImg;
+    bool                m_isPreview;
+    bool                m_autoSelect;
 
-            int                 m_selIndex;
+    int                 m_selIndex;
 
-            bool                m_scanOngoing;
-            bool                m_closeDevicePending;
+    bool                m_scanOngoing;
+    bool                m_closeDevicePending;
 
-            // final image data
-            QByteArray          m_scanData;
+    // final image data
+    QByteArray          m_scanData;
 
-            // option handling
-            QTimer              m_readValsTmr;
-            QTimer              m_updProgressTmr;
-            QTimer              m_optionPollTmr;
-            KSaneScanThread    *m_scanThread;
-            KSanePreviewThread *m_previewThread;
+    // option handling
+    QTimer              m_readValsTmr;
+    QTimer              m_updProgressTmr;
+    QTimer              m_optionPollTmr;
+    KSaneScanThread    *m_scanThread;
+    KSanePreviewThread *m_previewThread;
 
-            QString             m_saneUserName;
-            QString             m_sanePassword;
+    QString             m_saneUserName;
+    QString             m_sanePassword;
 
-            FindSaneDevicesThread *m_findDevThread;
-            KSaneAuth             *m_auth;
-            KSaneWidget           *q;
-    };
-
+    FindSaneDevicesThread *m_findDevThread;
+    KSaneAuth             *m_auth;
+    KSaneWidget           *q;
+};
 
 }  // NameSpace KSaneIface
 

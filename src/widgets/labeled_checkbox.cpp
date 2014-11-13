@@ -31,8 +31,8 @@
 namespace KSaneIface
 {
 
-LabeledCheckbox::LabeledCheckbox(QWidget *parent, const QString& ltext)
-: KSaneOptionWidget(parent, QString())
+LabeledCheckbox::LabeledCheckbox(QWidget *parent, const QString &ltext)
+    : KSaneOptionWidget(parent, QString())
 {
     chbx = new QCheckBox(ltext, this);
     m_layout->addWidget(chbx, 0, 1);
@@ -47,8 +47,9 @@ LabeledCheckbox::~LabeledCheckbox()
 
 void LabeledCheckbox::setChecked(bool is_checked)
 {
-    if (is_checked != chbx->isChecked())
+    if (is_checked != chbx->isChecked()) {
         chbx->setChecked(is_checked);
+    }
 }
 
 bool LabeledCheckbox::isChecked()

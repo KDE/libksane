@@ -32,8 +32,8 @@
 // Sane includes
 extern "C"
 {
-    #include <sane/saneopts.h>
-    #include <sane/sane.h>
+#include <sane/saneopts.h>
+#include <sane/sane.h>
 }
 
 #include <QThread>
@@ -43,47 +43,45 @@ extern "C"
 
 namespace KSaneIface
 {
-    class KSaneScanThread: public QThread
-    {
-        Q_OBJECT
-        public:
-            typedef enum
-            {
-                READ_ON_GOING,
-                READ_ERROR,
-                READ_CANCEL,
-                READ_READY
-            } ReadStatus;
-            
-            KSaneScanThread(SANE_Handle handle, QByteArray *data);
-            void run();
-            void setImageInverted(bool);
-            void cancelScan();
-            int scanProgress();
-            bool saneStartDone();
-            
-            ReadStatus frameStatus();
-            SANE_Status saneStatus();
-            SANE_Parameters saneParameters();
-            
-        private:
-            void readData();
-            void copyToScanData(int readBytes);
+class KSaneScanThread: public QThread
+{
+    Q_OBJECT
+public:
+    typedef enum {
+        READ_ON_GOING,
+        READ_ERROR,
+        READ_CANCEL,
+        READ_READY
+    } ReadStatus;
 
-            SANE_Byte       m_readData[SCAN_READ_CHUNK_SIZE];
-            QByteArray     *m_data;
-            SANE_Handle     m_saneHandle;
-            SANE_Parameters m_params;
-            int             m_frameSize;
-            int             m_frameRead;
-            int             m_frame_t_count;
-            int             m_dataSize;
-            SANE_Status     m_saneStatus;
-            ReadStatus      m_readStatus;
-            bool            m_invertColors;
-            bool            m_saneStartDone;
-    };
+    KSaneScanThread(SANE_Handle handle, QByteArray *data);
+    void run();
+    void setImageInverted(bool);
+    void cancelScan();
+    int scanProgress();
+    bool saneStartDone();
+
+    ReadStatus frameStatus();
+    SANE_Status saneStatus();
+    SANE_Parameters saneParameters();
+
+private:
+    void readData();
+    void copyToScanData(int readBytes);
+
+    SANE_Byte       m_readData[SCAN_READ_CHUNK_SIZE];
+    QByteArray     *m_data;
+    SANE_Handle     m_saneHandle;
+    SANE_Parameters m_params;
+    int             m_frameSize;
+    int             m_frameRead;
+    int             m_frame_t_count;
+    int             m_dataSize;
+    SANE_Status     m_saneStatus;
+    ReadStatus      m_readStatus;
+    bool            m_invertColors;
+    bool            m_saneStartDone;
+};
 }
-
 
 #endif

@@ -68,7 +68,6 @@ FindSaneDevicesThread::~FindSaneDevicesThread()
     s_mutexsane.unlock();
 }
 
-
 void FindSaneDevicesThread::run()
 {
     SANE_Device const **devList;
@@ -84,7 +83,7 @@ void FindSaneDevicesThread::run()
         int i = 0;
         KSaneWidget::DeviceInfo deviceInfo;
 
-        while(devList[i] != 0) {
+        while (devList[i] != 0) {
             deviceInfo.name = devList[i]->name;
             deviceInfo.vendor = devList[i]->vendor;
             deviceInfo.model = devList[i]->model;

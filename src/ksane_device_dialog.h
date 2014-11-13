@@ -50,7 +50,7 @@ class KSaneDeviceDialog : public QDialog
     Q_OBJECT
 
 public:
-    KSaneDeviceDialog(QWidget *parent=0);
+    KSaneDeviceDialog(QWidget *parent = 0);
     ~KSaneDeviceDialog();
 
     QString getSelectedName() const;
@@ -78,5 +78,4 @@ private:
 }
 
 #endif
-
 

@@ -24,19 +24,18 @@
 
 #include "ksane_button.h"
 
-
 namespace KSaneIface
 {
 
-KSaneButton::KSaneButton(QWidget *parent, const QString& ltext)
-: KSaneOptionWidget(parent, QString())
+KSaneButton::KSaneButton(QWidget *parent, const QString &ltext)
+    : KSaneOptionWidget(parent, QString())
 {
     m_button = new QPushButton(ltext, this);
     m_layout->addWidget(m_button, 0, 1);
     m_layout->addWidget(new QWidget(this), 0, 2);
     m_layout->setColumnStretch(1, 0);
     m_layout->setColumnStretch(2, 50);
-    
+
     connect(m_button, &QPushButton::clicked, this, &KSaneButton::clicked);
 }
 

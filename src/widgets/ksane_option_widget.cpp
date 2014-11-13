@@ -26,14 +26,13 @@
 
 #include "ksane_option_widget.h"
 
-
 #include <KLocalizedString>
 
 namespace KSaneIface
 {
 
-KSaneOptionWidget::KSaneOptionWidget(QWidget *parent, const QString& labelText)
-: QWidget(parent)
+KSaneOptionWidget::KSaneOptionWidget(QWidget *parent, const QString &labelText)
+    : QWidget(parent)
 {
     m_label = new QLabel;
     setLabelText(labelText);
@@ -41,7 +40,7 @@ KSaneOptionWidget::KSaneOptionWidget(QWidget *parent, const QString& labelText)
     m_layout = new QGridLayout(this);
     m_layout->addWidget(m_label, 0, 0, Qt::AlignRight);
     m_layout->setColumnStretch(0, 0);
-    m_layout->setContentsMargins(0,0,0,0);
+    m_layout->setContentsMargins(0, 0, 0, 0);
 }
 
 KSaneOptionWidget::~KSaneOptionWidget()
@@ -56,7 +55,6 @@ void KSaneOptionWidget::setLabelText(const QString &text)
         m_label->setText(i18nc("Label for a scanner option", "%1:", text));
     }
 }
-
 
 int KSaneOptionWidget::labelWidthHint()
 {

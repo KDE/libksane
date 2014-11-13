@@ -41,11 +41,11 @@ class KSaneOptButton : public KSaneOption
 
 public:
     KSaneOptButton(const SANE_Handle handle, const int index);
-    
+
     void createWidget(QWidget *parent);
 
     bool hasGui();
-    
+
 private Q_SLOTS:
     void buttonClicked();
 

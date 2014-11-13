@@ -47,9 +47,9 @@ namespace KSaneIface
 
 KSaneDeviceDialog::KSaneDeviceDialog(QWidget *parent)
     : QDialog(parent)
-{ 
+{
     QVBoxLayout *topLayout = new QVBoxLayout(this);
-    
+
     m_btnGroupDevices = new QButtonGroup(this);
 
     m_gbDevices = new QGroupBox;
@@ -57,30 +57,30 @@ KSaneDeviceDialog::KSaneDeviceDialog(QWidget *parent)
     m_btnContainer = new QWidget;
     m_btnLayout = new QVBoxLayout(m_btnContainer);
     QScrollArea *area = new QScrollArea;
-    
+
     m_gbDevices->setLayout(layout);
 
     QLabel *explanation =
-      new QLabel(i18n("<html>The SANE (Scanner Access Now Easy) system could not find any device.<br>"
-                      "Check that the scanner is plugged in and turned on<br>"
-                      "or check your systems scanner setup.<br>"
-                      "For details about SANE see the "
-                      "<a href='http://www.sane-project.org/'>SANE homepage</a>.</html>"));
+        new QLabel(i18n("<html>The SANE (Scanner Access Now Easy) system could not find any device.<br>"
+                        "Check that the scanner is plugged in and turned on<br>"
+                        "or check your systems scanner setup.<br>"
+                        "For details about SANE see the "
+                        "<a href='http://www.sane-project.org/'>SANE homepage</a>.</html>"));
     explanation->setOpenExternalLinks(true);
-    int l,t,r,b;
+    int l, t, r, b;
     layout->getContentsMargins(&l, &t, &r, &b);
     explanation->setContentsMargins(l, t, r, b);
 
     layout->addWidget(explanation);
     m_gbDevices->adjustSize();  // make sure to see the complete explanation text
     layout->addWidget(area);
-    layout->setContentsMargins(0,0,0,0);
+    layout->setContentsMargins(0, 0, 0, 0);
 
     area->setWidgetResizable(true);
     area->setFrameShape(QFrame::NoFrame);
     area->setWidget(m_btnContainer);
-    
-    QDialogButtonBox* bottomButtonBox = new QDialogButtonBox(this);
+
+    QDialogButtonBox *bottomButtonBox = new QDialogButtonBox(this);
     bottomButtonBox->setStandardButtons(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     m_btnOk = bottomButtonBox->button(QDialogButtonBox::Ok);
     m_btnReloadDevices = bottomButtonBox->addButton(i18n("Reload devices list"), QDialogButtonBox::ButtonRole::ActionRole);
@@ -93,7 +93,7 @@ KSaneDeviceDialog::KSaneDeviceDialog(QWidget *parent)
 
     topLayout->addWidget(m_gbDevices);
     topLayout->addWidget(bottomButtonBox);
-    
+
     setMinimumHeight(200);
     m_findDevThread = FindSaneDevicesThread::getInstance();
 
@@ -102,7 +102,8 @@ KSaneDeviceDialog::KSaneDeviceDialog(QWidget *parent)
     reloadDevicesList();
 }
 
-KSaneDeviceDialog::~KSaneDeviceDialog() {
+KSaneDeviceDialog::~KSaneDeviceDialog()
+{
     ///@todo wait for thread to finish if its running
 }
 
@@ -135,9 +136,10 @@ void KSaneDeviceDialog::setDefault(const QString &defaultBackend)
     m_selectedDevice = defaultBackend;
 }
 
-QString KSaneDeviceDialog::getSelectedName() const {
+QString KSaneDeviceDialog::getSelectedName() const
+{
     QAbstractButton *selectedButton = m_btnGroupDevices->checkedButton();
-    if(selectedButton) {
+    if (selectedButton) {
         return selectedButton->objectName();
     }
     return QString();
@@ -165,19 +167,19 @@ void KSaneDeviceDialog::updateDevicesList()
     m_gbDevices->layout()->itemAt(0)->widget()->hide();  // explanation
     m_gbDevices->layout()->itemAt(1)->widget()->show();  // scroll area
 
-    for (int i=0; i< list.size(); ++i) {
+    for (int i = 0; i < list.size(); ++i) {
         QRadioButton *b = new QRadioButton(this);
         b->setObjectName(list[i].name);
         b->setToolTip(list[i].name);
         b->setText(QStringLiteral("%1 : %2\n%3")
-                    .arg(list[i].vendor)
-                    .arg(list[i].model)
-                    .arg(list[i].name));
+                   .arg(list[i].vendor)
+                   .arg(list[i].model)
+                   .arg(list[i].name));
 
         m_btnLayout->addWidget(b);
         m_btnGroupDevices->addButton(b);
         connect(b, &QRadioButton::clicked, this, &KSaneDeviceDialog::setAvailable);
-        if((i==0) || (list.at(i).name == m_selectedDevice)) {
+        if ((i == 0) || (list.at(i).name == m_selectedDevice)) {
             b->setChecked(true);
             setAvailable(true);
         }

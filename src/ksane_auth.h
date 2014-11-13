@@ -41,23 +41,22 @@ extern "C"
 namespace KSaneIface
 {
 
-class KSaneAuth 
+class KSaneAuth
 {
-    public:
-        static KSaneAuth *getInstance();
-        ~KSaneAuth();
+public:
+    static KSaneAuth *getInstance();
+    ~KSaneAuth();
 
-        void setDeviceAuth(const QString &resource, const QString &username, const QString &password);
-        void clearDeviceAuth(const QString &resource);
-        static void authorization(SANE_String_Const resource, SANE_Char *username, SANE_Char *password);
+    void setDeviceAuth(const QString &resource, const QString &username, const QString &password);
+    void clearDeviceAuth(const QString &resource);
+    static void authorization(SANE_String_Const resource, SANE_Char *username, SANE_Char *password);
 
-    private:
-        KSaneAuth();
-        struct Private;
-        Private * const d;
+private:
+    KSaneAuth();
+    struct Private;
+    Private *const d;
 };
 
 }
-
 
 #endif

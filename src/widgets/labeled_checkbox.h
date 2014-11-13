@@ -50,13 +50,13 @@ class LabeledCheckbox : public KSaneOptionWidget
 
 public:
 
-   /**
-    * Create the checkbox.
-    *
-    * \param parent parent widget
-    * \param text is the text describing the checkbox.
-    */
-    LabeledCheckbox(QWidget *parent, const QString& text);
+    /**
+     * Create the checkbox.
+     *
+     * \param parent parent widget
+     * \param text is the text describing the checkbox.
+     */
+    LabeledCheckbox(QWidget *parent, const QString &text);
     ~LabeledCheckbox();
     void setChecked(bool);
     bool isChecked();

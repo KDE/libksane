@@ -27,7 +27,6 @@
 
 #include "../libksane/ksane.h"
 
-
 // Qt includes
 #include <QMap>
 #include <QHBoxLayout>
@@ -44,8 +43,7 @@
 namespace KSaneIface
 {
 
-
-KSaneWidget::KSaneWidget(QWidget* parent)
+KSaneWidget::KSaneWidget(QWidget *parent)
     : QWidget(parent), d(new KSaneWidgetPrivate)
 {
     KPushButton *openDialog = new KPushButton;
@@ -61,8 +59,6 @@ KSaneWidget::KSaneWidget(QWidget* parent)
     connect(d, SIGNAL(ImageReady(QByteArray&,int,int,int,int)),
             this, SIGNAL(imageReady(QByteArray&,int,int,int,int)));
     //connect(d, SIGNAL(scanDone(int,QString)), this, SIGNAL(scanDone(int,QString)));
-    
-
 
 }
 
@@ -71,21 +67,22 @@ KSaneWidget::~KSaneWidget()
     delete d;
 }
 
-QString KSaneWidget::selectDevice(QWidget* parent)
+QString KSaneWidget::selectDevice(QWidget *parent)
 {
-  //qDebug() << "KSaneWidget::selectDevice";
-  return d->SelectSource();
+    //qDebug() << "KSaneWidget::selectDevice";
+    return d->SelectSource();
 }
 
 bool KSaneWidget::openDevice(const QString &device_name)
 {
     //qDebug() << "KSaneWidget::openDevice" << device_name;
-    if (!d->OpenSource(device_name)) return false;
+    if (!d->OpenSource(device_name)) {
+        return false;
+    }
     QTimer::singleShot(0, d, SLOT(OpenDialog()));
 
     return true;
 }
-
 
 bool KSaneWidget::closeDevice()
 {
@@ -95,10 +92,10 @@ bool KSaneWidget::closeDevice()
 }
 
 QImage KSaneWidget::toQImage(const QByteArray &data,
-                              int width,
-                              int height,
-                              int bytes_per_line,
-                              ImageFormat format)
+                             int width,
+                             int height,
+                             int bytes_per_line,
+                             ImageFormat format)
 {
     QImage img = QImage::fromData(data, "BMP");
     return img;
@@ -111,12 +108,11 @@ QImage KSaneWidget::toQImageSilent(const QByteArray &data,
                                    ImageFormat format)
 {
     return KSaneWidget::toQImage(data,
-                                width,
-                                height,
-                                bytes_per_line,
-                                format);
+                                 width,
+                                 height,
+                                 bytes_per_line,
+                                 format);
 }
-
 
 void KSaneWidget::scanFinal()
 {
@@ -128,22 +124,52 @@ void KSaneWidget::scanCancel()
 }
 
 // stubbed functions that will not get an implementation any time soon.
-QString KSaneWidget::vendor() const {return QString();}
-QString KSaneWidget::make() const {return QString();}
-QString KSaneWidget::model() const {return QString();}
-void KSaneWidget::getOptVals(QMap <QString, QString> &opts) {opts.clear();}
-bool KSaneWidget::getOptVal(const QString &optname, QString &value){return false;}
-int KSaneWidget::setOptVals(const QMap <QString, QString> &opts) {return 0;}
-bool KSaneWidget::setOptVal(const QString &option, const QString &value) {return false;}
+QString KSaneWidget::vendor() const
+{
+    return QString();
+}
+QString KSaneWidget::make() const
+{
+    return QString();
+}
+QString KSaneWidget::model() const
+{
+    return QString();
+}
+void KSaneWidget::getOptVals(QMap <QString, QString> &opts)
+{
+    opts.clear();
+}
+bool KSaneWidget::getOptVal(const QString &optname, QString &value)
+{
+    return false;
+}
+int KSaneWidget::setOptVals(const QMap <QString, QString> &opts)
+{
+    return 0;
+}
+bool KSaneWidget::setOptVal(const QString &option, const QString &value)
+{
+    return false;
+}
 void KSaneWidget::setScanButtonText(const QString &scanLabel) {}
 void KSaneWidget::setPreviewButtonText(const QString &previewLabel) {}
 void KSaneWidget::enableAutoSelect(bool enable) {}
-float KSaneWidget::currentDPI() {return 0.0;}
-void KSaneWidget::setPreviewResolution(float dpi){Q_UNUSED(dpi);}
-void KSaneWidget::setSelection(QPointF lefttop, QPointF rightbottom){Q_UNUSED(lefttop); Q_UNUSED(rightbottom);}
-void KSaneWidget::setOptionsCollapsed(bool){}
-void KSaneWidget::setScanButtonHidden(bool){}
+float KSaneWidget::currentDPI()
+{
+    return 0.0;
+}
+void KSaneWidget::setPreviewResolution(float dpi)
+{
+    Q_UNUSED(dpi);
+}
+void KSaneWidget::setSelection(QPointF lefttop, QPointF rightbottom)
+{
+    Q_UNUSED(lefttop);
+    Q_UNUSED(rightbottom);
+}
+void KSaneWidget::setOptionsCollapsed(bool) {}
+void KSaneWidget::setScanButtonHidden(bool) {}
 void KSaneWidget::initGetDeviceList() const {}
-
 
 }  // NameSpace KSaneIface

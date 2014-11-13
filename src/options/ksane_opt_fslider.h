@@ -41,7 +41,7 @@ class KSaneOptFSlider : public KSaneOption
 
 public:
     KSaneOptFSlider(const SANE_Handle handle, const int index);
-    
+
     void createWidget(QWidget *parent);
 
     void readValue();
@@ -57,7 +57,7 @@ public:
 
 Q_SIGNALS:
     void fValueRead(float);
-        
+
 private Q_SLOTS:
     void sliderChanged(float val);
 

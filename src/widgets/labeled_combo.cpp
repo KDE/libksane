@@ -26,7 +26,6 @@
  * ============================================================ */
 #include "labeled_combo.h"
 
-
 #include <QLabel>
 
 #include <QComboBox>
@@ -34,8 +33,8 @@
 namespace KSaneIface
 {
 
-LabeledCombo::LabeledCombo(QWidget *parent, const QString& ltext, const QStringList& list)
-: KSaneOptionWidget(parent, ltext)
+LabeledCombo::LabeledCombo(QWidget *parent, const QString &ltext, const QStringList &list)
+    : KSaneOptionWidget(parent, ltext)
 {
     m_combo  = new QComboBox(this);
     m_combo->addItems(list);
@@ -56,16 +55,15 @@ void LabeledCombo::addItems(const QStringList &list)
     m_combo->addItems(list);
 
     QString tmp;
-    for (int i=0; i<m_combo->count(); ++i) {
+    for (int i = 0; i < m_combo->count(); ++i) {
         tmp = m_combo->itemText(i);
         m_combo->setItemData(i, tmp, Qt::ToolTipRole);
     }
 }
 
-
 void LabeledCombo::setCurrentText(const QString &t)
 {
-    for (int i=0; i<m_combo->count(); ++i) {
+    for (int i = 0; i < m_combo->count(); ++i) {
         if (m_combo->itemText(i) == t) {
             m_combo->setCurrentIndex(i);
         }
@@ -77,10 +75,9 @@ QString LabeledCombo::currentText() const
     return m_combo->currentText();
 }
 
-
-bool LabeledCombo::setIcon(const QIcon &icon, const QString& str)
+bool LabeledCombo::setIcon(const QIcon &icon, const QString &str)
 {
-    for (int i=0; i < m_combo->count(); ++i) {
+    for (int i = 0; i < m_combo->count(); ++i) {
         if (m_combo->itemText(i) == str) {
             m_combo->setItemIcon(i, icon);
             return true;

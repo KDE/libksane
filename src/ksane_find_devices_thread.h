@@ -37,20 +37,21 @@
 namespace KSaneIface
 {
 
-class FindSaneDevicesThread : public QThread {
+class FindSaneDevicesThread : public QThread
+{
     Q_OBJECT
 
-    public:
-        static FindSaneDevicesThread *getInstance();
-        ~FindSaneDevicesThread();
-        void run();
+public:
+    static FindSaneDevicesThread *getInstance();
+    ~FindSaneDevicesThread();
+    void run();
 
-        const QList<KSaneWidget::DeviceInfo> devicesList() const;
+    const QList<KSaneWidget::DeviceInfo> devicesList() const;
 
-    private:
-        FindSaneDevicesThread();
+private:
+    FindSaneDevicesThread();
 
-        QList<KSaneWidget::DeviceInfo> m_deviceList;
+    QList<KSaneWidget::DeviceInfo> m_deviceList;
 };
 
 }

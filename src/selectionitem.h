@@ -35,45 +35,44 @@ namespace KSaneIface
 
 class SelectionItem : public QGraphicsItem
 {
-    public:
-        typedef enum
-        {
-            None,
-            Top,
-            TopRight,
-            Right,
-            BottomRight,
-            Bottom,
-            BottomLeft,
-            Left,
-            TopLeft,
-            Move,
-            AddRemove
-        } Intersects;
-        
-        explicit SelectionItem(QRectF rect);
-        ~SelectionItem();
+public:
+    typedef enum {
+        None,
+        Top,
+        TopRight,
+        Right,
+        BottomRight,
+        Bottom,
+        BottomLeft,
+        Left,
+        TopLeft,
+        Move,
+        AddRemove
+    } Intersects;
 
-        void setMaxRight(qreal maxRight);
-        void setMaxBottom(qreal maxBottom);
-        void setSaved(bool isSaved);
+    explicit SelectionItem(QRectF rect);
+    ~SelectionItem();
 
-        Intersects intersects(QPointF point);
+    void setMaxRight(qreal maxRight);
+    void setMaxBottom(qreal maxBottom);
+    void setSaved(bool isSaved);
 
-        void saveZoom(qreal zoom);
+    Intersects intersects(QPointF point);
 
-        void setRect(QRectF rect);
-        QPointF fixTranslation(QPointF dp);
-        QRectF rect();
+    void saveZoom(qreal zoom);
 
-    public:
-        // Graphics Item methods
-        QRectF boundingRect() const;
-        void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    void setRect(QRectF rect);
+    QPointF fixTranslation(QPointF dp);
+    QRectF rect();
 
-    private:
-        struct Private;
-        Private * const d;
+public:
+    // Graphics Item methods
+    QRectF boundingRect() const;
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+
+private:
+    struct Private;
+    Private *const d;
 };
 
 }  // NameSpace KSaneIface

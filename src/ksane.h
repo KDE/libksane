@@ -52,8 +52,7 @@ class KSANE_EXPORT KSaneWidget : public QWidget
 public:
     /** This enumeration describes the type of the returned data.
      * The number of formats might grow, so it is wise to be prepared fro more.*/
-    typedef enum
-    {
+    typedef enum {
         FormatBlackWhite,   /**< One bit per pixel 1 = black 0 = white */
         FormatGrayScale8,   /**< Grayscale with one byte per pixel 0 = black 255 = white */
         FormatGrayScale16,  /**< Grayscale withtTwo bytes per pixel.
@@ -68,8 +67,7 @@ public:
     } ImageFormat;
 
     /** @note There might come more enumerations in the future. */
-    typedef enum
-    {
+    typedef enum {
         NoError,            /**< The scanning was finished successfully.*/
         ErrorCannotSegment, /**< If this error status is returned libksane can not segment the
                              * returned data. Scanning without segmentation should work.
@@ -77,9 +75,8 @@ public:
         ErrorGeneral,        /**< The error string should contain an error message. */
         Information          /**< There is some information to the user. */
     } ScanStatus;
-    
-    struct DeviceInfo
-    {
+
+    struct DeviceInfo {
         QString name;     /* unique device name */
         QString vendor;   /* device vendor string */
         QString model;    /* device model name */
@@ -88,14 +85,14 @@ public:
 
     /** This constructor initializes the private class variables, but the widget is left empty.
      * The options and the preview are added with the call to openDevice(). */
-    KSaneWidget(QWidget* parent=0);
+    KSaneWidget(QWidget *parent = 0);
 
     /** Standard destructor */
     ~KSaneWidget();
 
     /** This helper method displays a dialog for selecting a scanner. The libsane
      * device name of the selected scanner device is returned. */
-    QString selectDevice(QWidget* parent=0);
+    QString selectDevice(QWidget *parent = 0);
 
     /**
      * Get the list of available scanning devices. Connect to availableDevices()
@@ -112,13 +109,13 @@ public:
     /** This method closes the currently open scanner device.
     * @return 'true' if all goes well and 'false' if no device is open. */
     bool closeDevice();
-    
+
     KSANE_DEPRECATED bool makeQImage(const QByteArray &, int, int, int, ImageFormat, QImage &);
-     
+
     /**
      * This is a convenience method that can be used to create a QImage from the image data
-     * returned by the imageReady(...) signal. 
-     * @note: If the image data has 16 bits/color the * data is truncated to 8 bits/color 
+     * returned by the imageReady(...) signal.
+     * @note: If the image data has 16 bits/color the * data is truncated to 8 bits/color
      * since QImage does not support 16 bits/color. A warning message will be shown.
      *
      * @param data is the byte data containing the image.
@@ -136,7 +133,7 @@ public:
 
     /**
      * This is a convenience method that can be used to create a QImage from the image data
-     * returned by the imageReady(...) signal. 
+     * returned by the imageReady(...) signal.
      * @note: If the image data has 16 bits/color the * data is truncated to 8 bits/color, but
      * unlike toQImage() this function will not give a warning.
      *
@@ -148,10 +145,10 @@ public:
      * @param format is the KSane image format of the data.
      * @return This function returns the provided image data as a QImage. */
     QImage toQImageSilent(const QByteArray &data,
-                    int width,
-                    int height,
-                    int bytes_per_line,
-                    ImageFormat format);
+                          int width,
+                          int height,
+                          int bytes_per_line,
+                          ImageFormat format);
 
     /** This method returns the vendor name of the scanner (Same as make). */
     QString vendor() const;
@@ -180,7 +177,7 @@ public:
     * @param topLeft Upper left corner of the selection (in mm)
     * @param bottomRight Lower right corner of the selection (in mm) */
     void setSelection(QPointF topLeft, QPointF bottomRight);
-    
+
     /** This function is used to set the preferred resolution for scanning the preview.
     * @param dpi is the wanted scan resolution for the preview
     * @note if the set value is not supported, the cloasest one is used
@@ -297,7 +294,7 @@ Q_SIGNALS:
     void buttonPressed(const QString &optionName, const QString &optionLabel, bool pressed);
 
 private:
-    KSaneWidgetPrivate * const d;
+    KSaneWidgetPrivate *const d;
 };
 
 }  // NameSpace KSaneIface

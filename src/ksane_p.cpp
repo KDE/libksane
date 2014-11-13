@@ -46,7 +46,7 @@ namespace KSaneIface
 {
 
 KSaneWidgetPrivate::KSaneWidgetPrivate(KSaneWidget *parent):
-q(parent)
+    q(parent)
 {
     // Device independent UI variables
     m_optsTabWidget = 0;
@@ -77,16 +77,16 @@ q(parent)
     m_commonGamma   = 0;
     m_previewDPI    = 0;
     m_invertColors  = 0;
-    
+
     m_previewWidth  = 0;
     m_previewHeight = 0;
-    
+
     clearDeviceOptions();
-    
+
     m_findDevThread = FindSaneDevicesThread::getInstance();
     connect(m_findDevThread, SIGNAL(finished()), this, SLOT(devListUpdated()));
     connect(m_findDevThread, SIGNAL(finished()), this, SLOT(signalDevListUpdate()));
-    
+
     m_auth = KSaneAuth::getInstance();
     m_optionPollTmr.setInterval(100);
     connect(&m_optionPollTmr, SIGNAL(timeout()), this, SLOT(pollPollOptions()));
@@ -142,8 +142,10 @@ void KSaneWidgetPrivate::devListUpdated()
 {
     if (m_vendor.isEmpty()) {
         const QList<KSaneWidget::DeviceInfo> list = m_findDevThread->devicesList();
-        if (list.size() == 0) return;
-        for (int i=0; i<list.size(); i++) {
+        if (list.size() == 0) {
+            return;
+        }
+        for (int i = 0; i < list.size(); i++) {
             qDebug() << list[i].name;
             if (list[i].name == m_devName) {
                 m_vendor    = list[i].vendor;
@@ -156,69 +158,64 @@ void KSaneWidgetPrivate::devListUpdated()
 
 void KSaneWidgetPrivate::signalDevListUpdate()
 {
-    emit (q->availableDevices(m_findDevThread->devicesList()));
+    emit(q->availableDevices(m_findDevThread->devicesList()));
 }
 
 KSaneWidget::ImageFormat KSaneWidgetPrivate::getImgFormat(SANE_Parameters &params)
 {
-    switch(params.format)
-    {
-        case SANE_FRAME_GRAY:
-            switch(params.depth)
-            {
-                case 1:
-                    return KSaneWidget::FormatBlackWhite;
-                case 8:
-                    return KSaneWidget::FormatGrayScale8;
-                case 16:
-                    return KSaneWidget::FormatGrayScale16;
-                default:
-                    return KSaneWidget::FormatNone;
-            }
-        case SANE_FRAME_RGB:
-        case SANE_FRAME_RED:
-        case SANE_FRAME_GREEN:
-        case SANE_FRAME_BLUE:
-            switch (params.depth)
-            {
-                case 8:
-                    return KSaneWidget::FormatRGB_8_C;
-                case 16:
-                    return KSaneWidget::FormatRGB_16_C;
-                default:
-                    return KSaneWidget::FormatNone;
-            }
-}
+    switch (params.format) {
+    case SANE_FRAME_GRAY:
+        switch (params.depth) {
+        case 1:
+            return KSaneWidget::FormatBlackWhite;
+        case 8:
+            return KSaneWidget::FormatGrayScale8;
+        case 16:
+            return KSaneWidget::FormatGrayScale16;
+        default:
+            return KSaneWidget::FormatNone;
+        }
+    case SANE_FRAME_RGB:
+    case SANE_FRAME_RED:
+    case SANE_FRAME_GREEN:
+    case SANE_FRAME_BLUE:
+        switch (params.depth) {
+        case 8:
+            return KSaneWidget::FormatRGB_8_C;
+        case 16:
+            return KSaneWidget::FormatRGB_16_C;
+        default:
+            return KSaneWidget::FormatNone;
+        }
+    }
     return KSaneWidget::FormatNone;
 }
 
 int KSaneWidgetPrivate::getBytesPerLines(SANE_Parameters &params)
 {
-    switch (getImgFormat(params))
-    {
-        case KSaneWidget::FormatBlackWhite:
-        case KSaneWidget::FormatGrayScale8:
-        case KSaneWidget::FormatGrayScale16:
-            return params.bytes_per_line;
+    switch (getImgFormat(params)) {
+    case KSaneWidget::FormatBlackWhite:
+    case KSaneWidget::FormatGrayScale8:
+    case KSaneWidget::FormatGrayScale16:
+        return params.bytes_per_line;
 
-        case KSaneWidget::FormatRGB_8_C:
-            return params.pixels_per_line*3;
+    case KSaneWidget::FormatRGB_8_C:
+        return params.pixels_per_line * 3;
 
-        case KSaneWidget::FormatRGB_16_C:
-            return params.pixels_per_line*6;
+    case KSaneWidget::FormatRGB_16_C:
+        return params.pixels_per_line * 6;
 
-        case KSaneWidget::FormatNone:
-        case KSaneWidget::FormatBMP: // to remove warning (BMP is omly valid in the twain wrapper)
-            return 0;
+    case KSaneWidget::FormatNone:
+    case KSaneWidget::FormatBMP: // to remove warning (BMP is omly valid in the twain wrapper)
+        return 0;
     }
     return 0;
 }
 
-
 KSaneOption *KSaneWidgetPrivate::getOption(const QString &name)
 {
     int i;
-    for (i=0; i<m_optList.size(); i++) {
+    for (i = 0; i < m_optList.size(); i++) {
         if (m_optList.at(i)->name() == name) {
             return m_optList.at(i);
         }
@@ -246,8 +243,7 @@ void KSaneWidgetPrivate::createOptInterface()
         option->createWidget(m_basicOptsTab);
         basic_layout->addWidget(option->widget());
         connect(m_optFilmType, SIGNAL(valueChanged()), this, SLOT(checkInvert()), Qt::QueuedConnection);
-    }
-    else if ((option = getOption(SANE_NAME_NEGATIVE)) != 0) {
+    } else if ((option = getOption(SANE_NAME_NEGATIVE)) != 0) {
         m_optNegative = option;
         option->createWidget(m_basicOptsTab);
         basic_layout->addWidget(option->widget());
@@ -278,7 +274,9 @@ void KSaneWidgetPrivate::createOptInterface()
     // These two next resolution options are a bit tricky.
     if ((option = getOption(SANE_NAME_SCAN_X_RESOLUTION)) != 0) {
         m_optResX = option;
-        if (!m_optRes) m_optRes = m_optResX;
+        if (!m_optRes) {
+            m_optRes = m_optResX;
+        }
         option->createWidget(m_basicOptsTab);
         basic_layout->addWidget(option->widget());
     }
@@ -301,27 +299,27 @@ void KSaneWidgetPrivate::createOptInterface()
     // scan area (Do not add the widgets)
     if ((option = getOption(SANE_NAME_SCAN_TL_X)) != 0) {
         m_optTlX = option;
-        connect (option, SIGNAL(fValueRead(float)), this, SLOT(setTLX(float)));
+        connect(option, SIGNAL(fValueRead(float)), this, SLOT(setTLX(float)));
     }
     if ((option = getOption(SANE_NAME_SCAN_TL_Y)) != 0) {
         m_optTlY = option;
-        connect (option, SIGNAL(fValueRead(float)), this, SLOT(setTLY(float)));
+        connect(option, SIGNAL(fValueRead(float)), this, SLOT(setTLY(float)));
     }
     if ((option = getOption(SANE_NAME_SCAN_BR_X)) != 0) {
         m_optBrX = option;
-        connect (option, SIGNAL(fValueRead(float)), this, SLOT(setBRX(float)));
+        connect(option, SIGNAL(fValueRead(float)), this, SLOT(setBRX(float)));
     }
     if ((option = getOption(SANE_NAME_SCAN_BR_Y)) != 0) {
         m_optBrY = option;
-        connect (option, SIGNAL(fValueRead(float)), this, SLOT(setBRY(float)));
+        connect(option, SIGNAL(fValueRead(float)), this, SLOT(setBRY(float)));
     }
 
     // Color Options Frame
     m_colorOpts = new QWidget(m_basicOptsTab);
     basic_layout->addWidget(m_colorOpts);
     QVBoxLayout *color_lay = new QVBoxLayout(m_colorOpts);
-    color_lay->setContentsMargins(0,0,0,0);
-    
+    color_lay->setContentsMargins(0, 0, 0, 0);
+
     // Add Color correction to the color "frame"
     if ((option = getOption(SANE_NAME_BRIGHTNESS)) != 0) {
         option->createWidget(m_colorOpts);
@@ -331,12 +329,12 @@ void KSaneWidgetPrivate::createOptInterface()
         option->createWidget(m_colorOpts);
         color_lay->addWidget(option->widget());
     }
-    
+
     // Add gamma tables to the color "frame"
     QWidget *gamma_frm = new QWidget(m_colorOpts);
     color_lay->addWidget(gamma_frm);
     QVBoxLayout *gam_frm_l = new QVBoxLayout(gamma_frm);
-    gam_frm_l->setContentsMargins(0,0,0,0);
+    gam_frm_l->setContentsMargins(0, 0, 0, 0);
 
     if ((option = getOption(SANE_NAME_GAMMA_VECTOR_R)) != 0) {
         m_optGamR = option;
@@ -357,24 +355,24 @@ void KSaneWidgetPrivate::createOptInterface()
     if ((m_optGamR != 0) && (m_optGamG != 0) && (m_optGamB != 0)) {
         LabeledGamma *gamma = reinterpret_cast<LabeledGamma *>(m_optGamR->widget());
         m_commonGamma = new LabeledGamma(m_colorOpts, i18n(SANE_TITLE_GAMMA_VECTOR), gamma->size());
-        
+
         color_lay->addWidget(m_commonGamma);
-        
+
         m_commonGamma->setToolTip(i18n(SANE_DESC_GAMMA_VECTOR));
-        
+
         connect(m_commonGamma, SIGNAL(gammaChanged(int,int,int)), m_optGamR->widget(), SLOT(setValues(int,int,int)));
         connect(m_commonGamma, SIGNAL(gammaChanged(int,int,int)), m_optGamG->widget(), SLOT(setValues(int,int,int)));
         connect(m_commonGamma, SIGNAL(gammaChanged(int,int,int)), m_optGamB->widget(), SLOT(setValues(int,int,int)));
 
         m_splitGamChB = new LabeledCheckbox(m_colorOpts, i18n("Separate color intensity tables"));
         color_lay->addWidget(m_splitGamChB);
-        
-        connect (m_splitGamChB, SIGNAL(toggled(bool)), gamma_frm, SLOT(setVisible(bool)));
-        connect (m_splitGamChB, SIGNAL(toggled(bool)), m_commonGamma, SLOT(setHidden(bool)));
-        
+
+        connect(m_splitGamChB, SIGNAL(toggled(bool)), gamma_frm, SLOT(setVisible(bool)));
+        connect(m_splitGamChB, SIGNAL(toggled(bool)), m_commonGamma, SLOT(setHidden(bool)));
+
         gamma_frm->hide();
     }
-    
+
     if ((option = getOption(SANE_NAME_BLACK_LEVEL)) != 0) {
         option->createWidget(m_colorOpts);
         color_lay->addWidget(option->widget());
@@ -383,45 +381,43 @@ void KSaneWidgetPrivate::createOptInterface()
         option->createWidget(m_colorOpts);
         color_lay->addWidget(option->widget());
     }
-    
+
     m_invertColors = new LabeledCheckbox(m_colorOpts, i18n("Invert colors"));
     color_lay->addWidget(m_invertColors);
     m_invertColors->setChecked(false);
     connect(m_invertColors, SIGNAL(toggled(bool)), this, SLOT(invertPreview()));
-    
+
     // add a stretch to the end to keep the parameters at the top
     basic_layout->addStretch();
 
-    
     // Remaining (un known) options go to the "Other Options"
     m_otherOptsTab = new QWidget;
     m_otherScrollA->setWidget(m_otherOptsTab);
-    
+
     QVBoxLayout *other_layout = new QVBoxLayout(m_otherOptsTab);
-    
+
     // add the remaining parameters
-    for (int i=0; i<m_optList.size(); i++) {
+    for (int i = 0; i < m_optList.size(); i++) {
         if ((m_optList.at(i)->widget() == 0) &&
-            (m_optList.at(i)->name() != SANE_NAME_SCAN_TL_X) &&
-            (m_optList.at(i)->name() != SANE_NAME_SCAN_TL_Y) &&
-            (m_optList.at(i)->name() != SANE_NAME_SCAN_BR_X) &&
-            (m_optList.at(i)->name() != SANE_NAME_SCAN_BR_Y) &&
-            (m_optList.at(i)->name() != SANE_NAME_PREVIEW) &&
-            (m_optList.at(i)->hasGui()))
-        {
+                (m_optList.at(i)->name() != SANE_NAME_SCAN_TL_X) &&
+                (m_optList.at(i)->name() != SANE_NAME_SCAN_TL_Y) &&
+                (m_optList.at(i)->name() != SANE_NAME_SCAN_BR_X) &&
+                (m_optList.at(i)->name() != SANE_NAME_SCAN_BR_Y) &&
+                (m_optList.at(i)->name() != SANE_NAME_PREVIEW) &&
+                (m_optList.at(i)->hasGui())) {
             m_optList.at(i)->createWidget(m_otherOptsTab);
             other_layout->addWidget(m_optList.at(i)->widget());
         }
     }
-    
+
     // add a stretch to the end to keep the parameters at the top
     other_layout->addStretch();
-    
+
     // calculate label widths
     int labelWidth = 0;
     KSaneOptionWidget *tmpOption;
     // Basic Options
-    for (int i=0; i<basic_layout->count(); i++) {
+    for (int i = 0; i < basic_layout->count(); i++) {
         if (basic_layout->itemAt(i) && basic_layout->itemAt(i)->widget()) {
             tmpOption = qobject_cast<KSaneOptionWidget *>(basic_layout->itemAt(i)->widget());
             if (tmpOption) {
@@ -430,7 +426,7 @@ void KSaneWidgetPrivate::createOptInterface()
         }
     }
     // Color Options
-    for (int i=0; i<basic_layout->count(); i++) {
+    for (int i = 0; i < basic_layout->count(); i++) {
         if (basic_layout->itemAt(i) && basic_layout->itemAt(i)->widget()) {
             tmpOption = qobject_cast<KSaneOptionWidget *>(basic_layout->itemAt(i)->widget());
             if (tmpOption) {
@@ -439,7 +435,7 @@ void KSaneWidgetPrivate::createOptInterface()
         }
     }
     // Set label widths
-    for (int i=0; i<basic_layout->count(); i++) {
+    for (int i = 0; i < basic_layout->count(); i++) {
         if (basic_layout->itemAt(i) && basic_layout->itemAt(i)->widget()) {
             tmpOption = qobject_cast<KSaneOptionWidget *>(basic_layout->itemAt(i)->widget());
             if (tmpOption) {
@@ -447,7 +443,7 @@ void KSaneWidgetPrivate::createOptInterface()
             }
         }
     }
-    for (int i=0; i<color_lay->count(); i++) {
+    for (int i = 0; i < color_lay->count(); i++) {
         if (color_lay->itemAt(i) && color_lay->itemAt(i)->widget()) {
             tmpOption = qobject_cast<KSaneOptionWidget *>(color_lay->itemAt(i)->widget());
             if (tmpOption) {
@@ -456,8 +452,8 @@ void KSaneWidgetPrivate::createOptInterface()
         }
     }
     // Other Options
-    labelWidth=0;
-    for (int i=0; i<other_layout->count(); i++) {
+    labelWidth = 0;
+    for (int i = 0; i < other_layout->count(); i++) {
         if (other_layout->itemAt(i) && other_layout->itemAt(i)->widget()) {
             tmpOption = qobject_cast<KSaneOptionWidget *>(other_layout->itemAt(i)->widget());
             if (tmpOption) {
@@ -465,7 +461,7 @@ void KSaneWidgetPrivate::createOptInterface()
             }
         }
     }
-    for (int i=0; i<other_layout->count(); i++) {
+    for (int i = 0; i < other_layout->count(); i++) {
         if (other_layout->itemAt(i) && other_layout->itemAt(i)->widget()) {
             tmpOption = qobject_cast<KSaneOptionWidget *>(other_layout->itemAt(i)->widget());
             if (tmpOption) {
@@ -473,7 +469,7 @@ void KSaneWidgetPrivate::createOptInterface()
             }
         }
     }
-    
+
     // encsure that we do not get a scrollbar at the bottom of the option of the options
     int min_width = m_basicOptsTab->sizeHint().width();
     if (min_width < m_otherOptsTab->sizeHint().width()) {
@@ -512,7 +508,7 @@ void KSaneWidgetPrivate::optReload()
 {
     int i;
 
-    for (i=0; i<m_optList.size(); i++) {
+    for (i = 0; i < m_optList.size(); i++) {
         m_optList.at(i)->readOption();
         // Also read the values
         m_optList.at(i)->readValue();
@@ -527,15 +523,15 @@ void KSaneWidgetPrivate::optReload()
     // this is done so that you can select scan area without
     // having to scan a preview.
     updatePreviewSize();
-    
+
     // ensure that we do not get a scrollbar at the bottom of the option of the options
     int min_width = m_basicOptsTab->sizeHint().width();
     if (min_width < m_otherOptsTab->sizeHint().width()) {
         min_width = m_otherOptsTab->sizeHint().width();
     }
-    
+
     m_optsTabWidget->setMinimumWidth(min_width + m_basicScrollA->verticalScrollBar()->sizeHint().width() + 5);
-    
+
     m_previewViewer->zoom2Fit();
 }
 
@@ -543,15 +539,16 @@ void KSaneWidgetPrivate::valReload()
 {
     int i;
     QString tmp;
-    
-    for (i=0; i<m_optList.size(); i++) {
+
+    for (i = 0; i < m_optList.size(); i++) {
         m_optList.at(i)->readValue();
     }
-    
+
 }
 
-void KSaneWidgetPrivate::handleSelection(float tl_x, float tl_y, float br_x, float br_y) {
-    
+void KSaneWidgetPrivate::handleSelection(float tl_x, float tl_y, float br_x, float br_y)
+{
+
     if ((m_optTlX == 0) || (m_optTlY == 0) || (m_optBrX == 0) || (m_optBrY == 0)) {
         // clear the selection since we can not set one
         m_previewViewer->setTLX(0);
@@ -561,16 +558,18 @@ void KSaneWidgetPrivate::handleSelection(float tl_x, float tl_y, float br_x, flo
         return;
     }
     float max_x, max_y;
-    
-    if ((m_previewImg.width()==0) || (m_previewImg.height()==0)) return;
-    
+
+    if ((m_previewImg.width() == 0) || (m_previewImg.height() == 0)) {
+        return;
+    }
+
     m_optBrX->getMaxValue(max_x);
     m_optBrY->getMaxValue(max_y);
-    float ftl_x = tl_x*max_x;
-    float ftl_y = tl_y*max_y;
-    float fbr_x = br_x*max_x;
-    float fbr_y = br_y*max_y;
-    
+    float ftl_x = tl_x * max_x;
+    float ftl_y = tl_y * max_y;
+    float fbr_x = br_x * max_x;
+    float fbr_y = br_y * max_y;
+
     m_optTlX->setValue(ftl_x);
     m_optTlY->setValue(ftl_y);
     m_optBrX->setValue(fbr_x);
@@ -580,12 +579,18 @@ void KSaneWidgetPrivate::handleSelection(float tl_x, float tl_y, float br_x, flo
 void KSaneWidgetPrivate::setTLX(float ftlx)
 {
     // ignore this during an active scan
-    if (m_previewThread->isRunning()) return;
-    if (m_scanThread->isRunning()) return;
-    if (m_scanOngoing) return;
-    
+    if (m_previewThread->isRunning()) {
+        return;
+    }
+    if (m_scanThread->isRunning()) {
+        return;
+    }
+    if (m_scanOngoing) {
+        return;
+    }
+
     float max, ratio;
-    
+
     //qDebug() << "setTLX " << ftlx;
     m_optBrX->getMaxValue(max);
     ratio = ftlx / max;
@@ -596,12 +601,18 @@ void KSaneWidgetPrivate::setTLX(float ftlx)
 void KSaneWidgetPrivate::setTLY(float ftly)
 {
     // ignore this during an active scan
-    if (m_previewThread->isRunning()) return;
-    if (m_scanThread->isRunning()) return;
-    if (m_scanOngoing) return;
-    
+    if (m_previewThread->isRunning()) {
+        return;
+    }
+    if (m_scanThread->isRunning()) {
+        return;
+    }
+    if (m_scanOngoing) {
+        return;
+    }
+
     float max, ratio;
-    
+
     //qDebug() << "setTLY " << ftly;
     m_optBrY->getMaxValue(max);
     ratio = ftly / max;
@@ -612,12 +623,18 @@ void KSaneWidgetPrivate::setTLY(float ftly)
 void KSaneWidgetPrivate::setBRX(float fbrx)
 {
     // ignore this during an active scan
-    if (m_previewThread->isRunning()) return;
-    if (m_scanThread->isRunning()) return;
-    if (m_scanOngoing) return;
-    
+    if (m_previewThread->isRunning()) {
+        return;
+    }
+    if (m_scanThread->isRunning()) {
+        return;
+    }
+    if (m_scanOngoing) {
+        return;
+    }
+
     float max, ratio;
-    
+
     //qDebug() << "setBRX " << fbrx;
     m_optBrX->getMaxValue(max);
     ratio = fbrx / max;
@@ -628,12 +645,18 @@ void KSaneWidgetPrivate::setBRX(float fbrx)
 void KSaneWidgetPrivate::setBRY(float fbry)
 {
     // ignore this during an active scan
-    if (m_previewThread->isRunning()) return;
-    if (m_scanThread->isRunning()) return;
-    if (m_scanOngoing) return;
-    
+    if (m_previewThread->isRunning()) {
+        return;
+    }
+    if (m_scanThread->isRunning()) {
+        return;
+    }
+    if (m_scanOngoing) {
+        return;
+    }
+
     float max, ratio;
-    
+
     //qDebug() << "setBRY " << fbry;
     m_optBrY->getMaxValue(max);
     ratio = fbry / max;
@@ -643,10 +666,10 @@ void KSaneWidgetPrivate::setBRY(float fbry)
 
 void KSaneWidgetPrivate::updatePreviewSize()
 {
-    float max_x=0, max_y=0;
+    float max_x = 0, max_y = 0;
     float ratio;
-    int x,y;
-    
+    int x, y;
+
     // check if an update is necessary
     if (m_optBrX != 0) {
         m_optBrX->getMaxValue(max_x);
@@ -658,8 +681,8 @@ void KSaneWidgetPrivate::updatePreviewSize()
         //qDebug() << "no preview size change";
         return;
     }
-    
-    // The preview size has changed 
+
+    // The preview size has changed
     m_previewWidth  = max_x;
     m_previewHeight = max_y;
 
@@ -671,52 +694,62 @@ void KSaneWidgetPrivate::updatePreviewSize()
     if (m_optTlY != 0) {
         m_optTlY->setValue(0);
     }
-    
+
     if (m_optBrX != 0) {
         m_optBrX->setValue(max_x);
     }
     if (m_optBrY != 0) {
         m_optBrY->setValue(max_y);
     }
-    
+
     // create a "scaled" image of the preview
-    ratio = max_x/max_y;
+    ratio = max_x / max_y;
     if (ratio < 1) {
-        x=SCALED_PREVIEW_MAX_SIDE;
-        y=(int)(SCALED_PREVIEW_MAX_SIDE/ratio);
+        x = SCALED_PREVIEW_MAX_SIDE;
+        y = (int)(SCALED_PREVIEW_MAX_SIDE / ratio);
+    } else {
+        y = SCALED_PREVIEW_MAX_SIDE;
+        x = (int)(SCALED_PREVIEW_MAX_SIDE / ratio);
     }
-    else {
-        y=SCALED_PREVIEW_MAX_SIDE;
-        x=(int)(SCALED_PREVIEW_MAX_SIDE/ratio);
-    }
-    
+
     m_previewImg = QImage(x, y, QImage::Format_RGB32);
     m_previewImg.fill(0xFFFFFFFF);
-    
+
     // set the new image
     m_previewViewer->setQImage(&m_previewImg);
 }
 
 void KSaneWidgetPrivate::startPreviewScan()
 {
-    if (m_scanOngoing) return;
+    if (m_scanOngoing) {
+        return;
+    }
     m_scanOngoing = true;
-    
+
     SANE_Status status;
     float max_x, max_y;
     float dpi;
-        
+
     // store the current settings of parameters to be changed
-    if (m_optDepth != 0) m_optDepth->storeCurrentData();
-    if (m_optRes != 0) m_optRes->storeCurrentData();
-    if (m_optResX != 0) m_optResX->storeCurrentData();
-    if (m_optResY != 0) m_optResY->storeCurrentData();
-    if (m_optPreview != 0) m_optPreview->storeCurrentData();
-    
+    if (m_optDepth != 0) {
+        m_optDepth->storeCurrentData();
+    }
+    if (m_optRes != 0) {
+        m_optRes->storeCurrentData();
+    }
+    if (m_optResX != 0) {
+        m_optResX->storeCurrentData();
+    }
+    if (m_optResY != 0) {
+        m_optResY->storeCurrentData();
+    }
+    if (m_optPreview != 0) {
+        m_optPreview->storeCurrentData();
+    }
+
     // check if we can modify the selection
     if ((m_optTlX != 0) && (m_optTlY != 0) &&
-        (m_optBrX != 0) && (m_optBrY != 0))
-    {
+            (m_optBrX != 0) && (m_optBrY != 0)) {
         // get maximums
         m_optBrX->getMaxValue(max_x);
         m_optBrY->getMaxValue(max_y);
@@ -725,21 +758,19 @@ void KSaneWidgetPrivate::startPreviewScan()
         m_optTlY->setValue(0);
         m_optBrX->setValue(max_x);
         m_optBrY->setValue(max_y);
-        
-    }
-    else {
+
+    } else {
         // no use to try auto selections if you can not use them
         m_autoSelect = false;
     }
-    
+
     if (m_optRes != 0) {
         if (m_previewDPI >= 25.0) {
             m_optRes->setValue(m_previewDPI);
             if ((m_optResY != 0) && (m_optRes->name() == SANE_NAME_SCAN_X_RESOLUTION)) {
                 m_optResY->setValue(m_previewDPI);
             }
-        }
-        else {
+        } else {
             // set the resopution to getMinValue and increase if necessary
             SANE_Parameters params;
             m_optRes->getMinValue(dpi);
@@ -755,40 +786,43 @@ void KSaneWidgetPrivate::startPreviewScan()
                     previewScanDone();
                     return;
                 }
-                
-                if (dpi > 600) break;
-            
+
+                if (dpi > 600) {
+                    break;
+                }
+
                 // Increase the dpi value
                 dpi += 25.0;
-            }
-            while ((params.pixels_per_line < 300) || ((params.lines > 0) && (params.lines < 300)));
-            
+            } while ((params.pixels_per_line < 300) || ((params.lines > 0) && (params.lines < 300)));
+
             if (params.pixels_per_line == 0) {
                 // This is a security measure for broken backends
                 m_optRes->getMinValue(dpi);
                 m_optRes->setValue(dpi);
-                qDebug() << "Setting minimum DPI value for a broken back-end"; 
+                qDebug() << "Setting minimum DPI value for a broken back-end";
             }
         }
     }
-    
+
     // set preview option to true if possible
-    if (m_optPreview != 0) m_optPreview->setValue(SANE_TRUE);
-    
+    if (m_optPreview != 0) {
+        m_optPreview->setValue(SANE_TRUE);
+    }
+
     // execute valReload if there is a pending value reload
     while (m_readValsTmr.isActive()) {
         m_readValsTmr.stop();
         valReload();
     }
-    
+
     // clear the preview
     m_previewViewer->clearHighlight();
     m_previewViewer->clearSelections();
     m_previewImg.fill(0xFFFFFFFF);
     updatePreviewSize();
-    
+
     setBusy(true);
-    
+
     m_progressBar->setValue(0);
     m_isPreview = true;
     m_previewThread->setPreviewInverted(m_invertColors->isChecked());
@@ -800,63 +834,72 @@ void KSaneWidgetPrivate::previewScanDone()
 {
     // even if the scan is finished successfully we need to call sane_cancel()
     sane_cancel(m_saneHandle);
-    
+
     if (m_closeDevicePending) {
         setBusy(false);
         sane_close(m_saneHandle);
         m_saneHandle = 0;
         clearDeviceOptions();
-        emit (q->scanDone(KSaneWidget::NoError, ""));
+        emit(q->scanDone(KSaneWidget::NoError, ""));
         return;
     }
 
     // restore the original settings of the changed parameters
-    if (m_optDepth != 0) m_optDepth->restoreSavedData();
-    if (m_optRes != 0) m_optRes->restoreSavedData();
-    if (m_optResX != 0) m_optResX->restoreSavedData();
-    if (m_optResY != 0) m_optResY->restoreSavedData();
-    if (m_optPreview != 0) m_optPreview->restoreSavedData();
+    if (m_optDepth != 0) {
+        m_optDepth->restoreSavedData();
+    }
+    if (m_optRes != 0) {
+        m_optRes->restoreSavedData();
+    }
+    if (m_optResX != 0) {
+        m_optResX->restoreSavedData();
+    }
+    if (m_optResY != 0) {
+        m_optResY->restoreSavedData();
+    }
+    if (m_optPreview != 0) {
+        m_optPreview->restoreSavedData();
+    }
 
     m_previewViewer->setQImage(&m_previewImg);
     m_previewViewer->zoom2Fit();
 
     if ((m_previewThread->status != SANE_STATUS_GOOD) &&
-        (m_previewThread->status != SANE_STATUS_EOF))
-    {
+            (m_previewThread->status != SANE_STATUS_EOF)) {
         alertUser(KSaneWidget::ErrorGeneral, i18n(sane_strstatus(m_previewThread->status)));
-    }
-    else if (m_autoSelect) {
+    } else if (m_autoSelect) {
         m_previewViewer->findSelections();
     }
-    
+
     setBusy(false);
     m_scanOngoing = false;
     m_updProgressTmr.stop();
-    
-    emit (q->scanDone(KSaneWidget::NoError, ""));
-    
+
+    emit(q->scanDone(KSaneWidget::NoError, ""));
+
     return;
 }
 
-
 void KSaneWidgetPrivate::startFinalScan()
 {
-    if (m_scanOngoing) return;
+    if (m_scanOngoing) {
+        return;
+    }
     m_scanOngoing = true;
     m_isPreview = false;
-    
-    float x1=0,y1=0, x2=0,y2=0, max_x, max_y;
+
+    float x1 = 0, y1 = 0, x2 = 0, y2 = 0, max_x, max_y;
 
     m_selIndex = 0;
-    
-    if ((m_optTlX != 0) && (m_optTlY != 0) &&  (m_optBrX != 0) && (m_optBrY != 0)) {
+
+    if ((m_optTlX != 0) && (m_optTlY != 0) && (m_optBrX != 0) && (m_optBrY != 0)) {
         // get maximums
         m_optBrX->getMaxValue(max_x);
         m_optBrY->getMaxValue(max_y);
 
         // reead the selection from the viewer
-        m_previewViewer->selectionAt(m_selIndex, x1,y1,x2,y2);
-        m_previewViewer->setHighlightArea(x1,y1,x2,y2);
+        m_previewViewer->selectionAt(m_selIndex, x1, y1, x2, y2);
+        m_previewViewer->setHighlightArea(x1, y1, x2, y2);
         m_selIndex++;
 
         // calculate the option values
@@ -875,7 +918,7 @@ void KSaneWidgetPrivate::startFinalScan()
         m_readValsTmr.stop();
         valReload();
     }
-    
+
     setBusy(true);
     m_updProgressTmr.start();
     m_scanThread->setImageInverted(m_invertColors->isChecked());
@@ -886,7 +929,7 @@ void KSaneWidgetPrivate::oneFinalScanDone()
 {
     m_updProgressTmr.stop();
     updateProgress();
-    
+
     if (m_closeDevicePending) {
         setBusy(false);
         sane_close(m_saneHandle);
@@ -894,9 +937,8 @@ void KSaneWidgetPrivate::oneFinalScanDone()
         clearDeviceOptions();
         return;
     }
-    
-    if (m_scanThread->frameStatus() == KSaneScanThread::READ_READY) 
-    {
+
+    if (m_scanThread->frameStatus() == KSaneScanThread::READ_READY) {
         // scan finished OK
         SANE_Parameters params = m_scanThread->saneParameters();
         int lines = params.lines;
@@ -905,14 +947,14 @@ void KSaneWidgetPrivate::oneFinalScanDone()
             int bytesPerLine = qMax(getBytesPerLines(params), 1); // ensure no div by 0
             lines = m_scanData.size() / bytesPerLine;
         }
-        emit (q->imageReady(m_scanData,
-                         params.pixels_per_line,
-                         lines,
-                         getBytesPerLines(params),
-                         (int)getImgFormat(params)));
+        emit(q->imageReady(m_scanData,
+                           params.pixels_per_line,
+                           lines,
+                           getBytesPerLines(params),
+                           (int)getImgFormat(params)));
 
         // now check if we should have automatic ADF batch scaning
-        if (m_optSource){
+        if (m_optSource) {
             QString source;
             m_optSource->getValue(source);
 
@@ -946,32 +988,31 @@ void KSaneWidgetPrivate::oneFinalScanDone()
 
         //qDebug() << "index=" << m_selIndex << "size=" << m_previewViewer->selListSize();
         // check if we have multiple selections.
-        if (m_previewViewer->selListSize() > m_selIndex)
-        {
-            if ((m_optTlX != 0) && (m_optTlY != 0) &&  (m_optBrX != 0) && (m_optBrY != 0)) {
-                float x1=0,y1=0, x2=0,y2=0, max_x, max_y;
-                
+        if (m_previewViewer->selListSize() > m_selIndex) {
+            if ((m_optTlX != 0) && (m_optTlY != 0) && (m_optBrX != 0) && (m_optBrY != 0)) {
+                float x1 = 0, y1 = 0, x2 = 0, y2 = 0, max_x, max_y;
+
                 // get maximums
                 m_optBrX->getMaxValue(max_x);
                 m_optBrY->getMaxValue(max_y);
-                
+
                 // read the selection from the viewer
-                m_previewViewer->selectionAt(m_selIndex, x1,y1,x2,y2);
+                m_previewViewer->selectionAt(m_selIndex, x1, y1, x2, y2);
 
                 // set the highlight
-                m_previewViewer->setHighlightArea(x1,y1,x2,y2);
-                
+                m_previewViewer->setHighlightArea(x1, y1, x2, y2);
+
                 // calculate the option values
                 x1 *= max_x; y1 *= max_y;
                 x2 *= max_x; y2 *= max_y;
-                
+
                 // now set the selection
                 m_optTlX->setValue(x1);
                 m_optTlY->setValue(y1);
                 m_optBrX->setValue(x2);
                 m_optBrY->setValue(y2);
                 m_selIndex++;
-                
+
                 // execute a pending value reload
                 while (m_readValsTmr.isActive()) {
                     m_readValsTmr.stop();
@@ -982,37 +1023,35 @@ void KSaneWidgetPrivate::oneFinalScanDone()
                 return;
             }
         }
-        emit (q->scanDone(KSaneWidget::NoError, ""));
-    }
-    else {
-        switch(m_scanThread->saneStatus()) 
-        {
-            case SANE_STATUS_GOOD:
-            case SANE_STATUS_CANCELLED:
-            case SANE_STATUS_EOF:
-                break;
-            case SANE_STATUS_NO_DOCS:
-                emit (q->scanDone(KSaneWidget::Information, i18n(sane_strstatus(m_scanThread->saneStatus()))));
-                alertUser(KSaneWidget::Information, i18n(sane_strstatus(m_scanThread->saneStatus())));
-                break;
-            case SANE_STATUS_UNSUPPORTED:
-            case SANE_STATUS_IO_ERROR:
-            case SANE_STATUS_NO_MEM:
-            case SANE_STATUS_INVAL:
-            case SANE_STATUS_JAMMED:
-            case SANE_STATUS_COVER_OPEN:
-            case SANE_STATUS_DEVICE_BUSY:
-            case SANE_STATUS_ACCESS_DENIED:
-                emit (q->scanDone(KSaneWidget::ErrorGeneral, i18n(sane_strstatus(m_scanThread->saneStatus()))));
-                alertUser(KSaneWidget::ErrorGeneral, i18n(sane_strstatus(m_scanThread->saneStatus())));
-                break;
+        emit(q->scanDone(KSaneWidget::NoError, ""));
+    } else {
+        switch (m_scanThread->saneStatus()) {
+        case SANE_STATUS_GOOD:
+        case SANE_STATUS_CANCELLED:
+        case SANE_STATUS_EOF:
+            break;
+        case SANE_STATUS_NO_DOCS:
+            emit(q->scanDone(KSaneWidget::Information, i18n(sane_strstatus(m_scanThread->saneStatus()))));
+            alertUser(KSaneWidget::Information, i18n(sane_strstatus(m_scanThread->saneStatus())));
+            break;
+        case SANE_STATUS_UNSUPPORTED:
+        case SANE_STATUS_IO_ERROR:
+        case SANE_STATUS_NO_MEM:
+        case SANE_STATUS_INVAL:
+        case SANE_STATUS_JAMMED:
+        case SANE_STATUS_COVER_OPEN:
+        case SANE_STATUS_DEVICE_BUSY:
+        case SANE_STATUS_ACCESS_DENIED:
+            emit(q->scanDone(KSaneWidget::ErrorGeneral, i18n(sane_strstatus(m_scanThread->saneStatus()))));
+            alertUser(KSaneWidget::ErrorGeneral, i18n(sane_strstatus(m_scanThread->saneStatus())));
+            break;
         }
     }
 
     sane_cancel(m_saneHandle);
 
     // clear the highlight
-    m_previewViewer->setHighlightArea(0,0,1,1);
+    m_previewViewer->setHighlightArea(0, 0, 1, 1);
     setBusy(false);
     m_scanOngoing = false;
 }
@@ -1024,8 +1063,7 @@ void KSaneWidgetPrivate::setBusy(bool busy)
         m_activityFrame->hide();
         m_btnFrame->hide();
         m_optionPollTmr.stop();
-    }
-    else {
+    } else {
         m_warmingUp->hide();
         m_activityFrame->hide();
         m_btnFrame->show();
@@ -1033,32 +1071,36 @@ void KSaneWidgetPrivate::setBusy(bool busy)
             m_optionPollTmr.start();
         }
     }
-    
+
     m_optsTabWidget->setDisabled(busy);
     m_previewViewer->setDisabled(busy);
-    
+
     m_scanBtn->setFocus(Qt::OtherFocusReason);
 }
 
 void KSaneWidgetPrivate::checkInvert()
 {
-    if (!m_optSource) return;
-    if (!m_optFilmType) return;
-    if (m_scanOngoing) return;
-    
+    if (!m_optSource) {
+        return;
+    }
+    if (!m_optFilmType) {
+        return;
+    }
+    if (m_scanOngoing) {
+        return;
+    }
+
     QString source;
     QString filmtype;
     m_optSource->getValue(source);
     m_optFilmType->getValue(filmtype);
-    
-    if ((source.contains(i18nc("This is compared to the option string returned by sane", 
-        "Transparency"), Qt::CaseInsensitive)) &&
-        (filmtype.contains(i18nc("This is compared to the option string returned by sane", 
-        "Negative"), Qt::CaseInsensitive)))
-    {
+
+    if ((source.contains(i18nc("This is compared to the option string returned by sane",
+                               "Transparency"), Qt::CaseInsensitive)) &&
+            (filmtype.contains(i18nc("This is compared to the option string returned by sane",
+                                     "Negative"), Qt::CaseInsensitive))) {
         m_invertColors->setChecked(true);
-    }
-    else {
+    } else {
         m_invertColors->setChecked(false);
     }
 }
@@ -1083,15 +1125,13 @@ void KSaneWidgetPrivate::updateProgress()
                 m_previewViewer->setQImage(&m_previewImg);
                 m_previewViewer->zoom2Fit();
                 m_previewThread->imgMutex.unlock();
-            }
-            else {
+            } else {
                 m_previewThread->imgMutex.lock();
                 m_previewViewer->updateImage();
                 m_previewThread->imgMutex.unlock();
             }
         }
-    }
-    else {
+    } else {
         if (!m_progressBar->isVisible() && (m_scanThread->saneStartDone())) {
             m_warmingUp->hide();
             m_activityFrame->show();
@@ -1099,34 +1139,32 @@ void KSaneWidgetPrivate::updateProgress()
         progress = m_scanThread->scanProgress();
         m_previewViewer->setHighlightShown(progress);
     }
-    
+
     m_progressBar->setValue(progress);
-    emit (q->scanProgress(progress));
+    emit(q->scanProgress(progress));
 }
 
 void KSaneWidgetPrivate::alertUser(int type, const QString &strStatus)
 {
     if (q->receivers(SIGNAL(userMessage(int,QString))) == 0) {
         switch (type) {
-            case KSaneWidget::ErrorGeneral:
-                QMessageBox::critical(nullptr, "General Error", strStatus);
-                break;
-            default:
-                QMessageBox::information(nullptr, "Information", strStatus);
-                break;
+        case KSaneWidget::ErrorGeneral:
+            QMessageBox::critical(nullptr, "General Error", strStatus);
+            break;
+        default:
+            QMessageBox::information(nullptr, "Information", strStatus);
+            break;
         }
-    }
-    else {
-        emit (q->userMessage(type, strStatus));
+    } else {
+        emit(q->userMessage(type, strStatus));
     }
 }
 
 void KSaneWidgetPrivate::pollPollOptions()
 {
-    for (int i=1; i<m_pollList.size(); ++i) {
+    for (int i = 1; i < m_pollList.size(); ++i) {
         m_pollList.at(i)->readValue();
     }
 }
-
 
 }  // NameSpace KSaneIface

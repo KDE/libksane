@@ -42,14 +42,13 @@ class LabeledCombo : public KSaneOptionWidget
     Q_OBJECT
 
 public:
-   /**
-    * create a label and combobox combination.
-    * \param parent parent widget
-    * \param label is the lext for the label
-    * \param list a stringlist with values the list should contain.
-    */
-    LabeledCombo(QWidget *parent, const QString& label, const QStringList& list);
-
+    /**
+     * create a label and combobox combination.
+     * \param parent parent widget
+     * \param label is the lext for the label
+     * \param list a stringlist with values the list should contain.
+     */
+    LabeledCombo(QWidget *parent, const QString &label, const QStringList &list);
 
 public Q_SLOTS:
 
@@ -63,28 +62,28 @@ public Q_SLOTS:
      */
     void clear();
 
-   /**
-    * If the given string can be found in the comobox, activate that entry.
-    * If not, the entry is not changed.
-    */
-   void setCurrentText(const QString &);
-   
-   /** 
-    * This function is used to read the current string of the combobox
-    */
-   QString currentText() const;
-   
-   /**
-    * set the current item of the combobox.
-    */
+    /**
+     * If the given string can be found in the comobox, activate that entry.
+     * If not, the entry is not changed.
+     */
+    void setCurrentText(const QString &);
+
+    /**
+     * This function is used to read the current string of the combobox
+     */
+    QString currentText() const;
+
+    /**
+     * set the current item of the combobox.
+     */
     void setCurrentIndex(int);
 
-   /**
-    * add an icon for a string in the combobox
-    * @param icon the icon to set.
-    * @param str the string for which the pixmap should be set.
-    */
-    bool setIcon(const QIcon& icon, const QString& str);
+    /**
+     * add an icon for a string in the combobox
+     * @param icon the icon to set.
+     * @param str the string for which the pixmap should be set.
+     */
+    bool setIcon(const QIcon &icon, const QString &str);
 
 Q_SIGNALS:
 

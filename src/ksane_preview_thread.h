@@ -31,8 +31,8 @@
 // Sane includes
 extern "C"
 {
-    #include <sane/saneopts.h>
-    #include <sane/sane.h>
+#include <sane/saneopts.h>
+#include <sane/sane.h>
 }
 
 #include <QThread>
@@ -43,52 +43,50 @@ extern "C"
 
 namespace KSaneIface
 {
-    class KSanePreviewThread: public QThread
-    {
-        Q_OBJECT
-        public:
-            typedef enum
-            {
-                READ_ON_GOING,
-                READ_ERROR,
-                READ_CANCEL,
-                READ_READY
-            } ReadStatus;
-            
-            KSanePreviewThread(SANE_Handle handle, QImage *img);
-            void run();
-            void setPreviewInverted(bool);
-            void cancelScan();
-            int scanProgress();
-            bool saneStartDone();
-            bool imageResized();
+class KSanePreviewThread: public QThread
+{
+    Q_OBJECT
+public:
+    typedef enum {
+        READ_ON_GOING,
+        READ_ERROR,
+        READ_CANCEL,
+        READ_READY
+    } ReadStatus;
 
-            SANE_Status status;
-            QMutex imgMutex;
+    KSanePreviewThread(SANE_Handle handle, QImage *img);
+    void run();
+    void setPreviewInverted(bool);
+    void cancelScan();
+    int scanProgress();
+    bool saneStartDone();
+    bool imageResized();
 
-        private:
-            void readData();
-            void copyToPreviewImg(int readBytes);
-            
-            SANE_Byte       m_readData[PREVIEW_READ_CHUNK_SIZE];
-            int             m_frameSize;
-            int             m_frameRead;
-            int             m_dataSize;
-            int             m_frame_t_count;
-            int             m_pixel_x;
-            int             m_pixel_y;
-            int             m_px_colors[3];
-            int             m_px_c_index;
-            SANE_Parameters m_params;
-            QImage          *m_img;
-            SANE_Handle     m_saneHandle;
-            bool            m_invertColors;
-            ReadStatus      m_readStatus;
+    SANE_Status status;
+    QMutex imgMutex;
+
+private:
+    void readData();
+    void copyToPreviewImg(int readBytes);
+
+    SANE_Byte       m_readData[PREVIEW_READ_CHUNK_SIZE];
+    int             m_frameSize;
+    int             m_frameRead;
+    int             m_dataSize;
+    int             m_frame_t_count;
+    int             m_pixel_x;
+    int             m_pixel_y;
+    int             m_px_colors[3];
+    int             m_px_c_index;
+    SANE_Parameters m_params;
+    QImage          *m_img;
+    SANE_Handle     m_saneHandle;
+    bool            m_invertColors;
+    ReadStatus      m_readStatus;
 //            int             m_scanProgress;
-            bool            m_saneStartDone;
-            bool            m_imageResized;
-    };
+    bool            m_saneStartDone;
+    bool            m_imageResized;
+};
 }
-
 
 #endif

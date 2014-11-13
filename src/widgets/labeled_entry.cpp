@@ -29,7 +29,6 @@
 // Local includes
 #include "labeled_entry.h"
 
-
 // Qt includes
 #include <QHBoxLayout>
 #include <QLabel>
@@ -41,8 +40,8 @@
 namespace KSaneIface
 {
 
-LabeledEntry::LabeledEntry(QWidget *parent, const QString& ltext)
-: KSaneOptionWidget(parent, ltext)
+LabeledEntry::LabeledEntry(QWidget *parent, const QString &ltext)
+    : KSaneOptionWidget(parent, ltext)
 {
     m_entry = new QLineEdit(this);
     m_reset = new QPushButton(this);
@@ -54,7 +53,7 @@ LabeledEntry::LabeledEntry(QWidget *parent, const QString& ltext)
     m_layout->addWidget(m_reset, 1, 2);
     m_layout->addWidget(m_set, 1, 3);
     m_layout->setColumnStretch(1, 50);
-    
+
     connect(m_reset, &QPushButton::clicked, this, &LabeledEntry::resetClicked);
     connect(m_set, &QPushButton::clicked, this, &LabeledEntry::setClicked);
 }
@@ -63,7 +62,7 @@ LabeledEntry::~LabeledEntry()
 {
 }
 
-void LabeledEntry::setText(const QString& text)
+void LabeledEntry::setText(const QString &text)
 {
     m_eText = text;
     m_entry->setText(text);

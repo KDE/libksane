@@ -1,4 +1,3 @@
-// vim: set tabstop=4 shiftwidth=4 noexpandtab:
 /*
 Gwenview: an image viewer
 Copyright 2009 Aurélien Gâteau <agateau@kde.org>
@@ -30,39 +29,39 @@ License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class QSplitter;
 
-namespace KSaneIface {
-
+namespace KSaneIface
+{
 
 struct SplitterCollapserPrivate;
 /**
  * A button which appears on the side of a splitter handle and allows easy
  * collapsing of the widget on the opposite side
  */
-class SplitterCollapser : public QToolButton {
-	Q_OBJECT
+class SplitterCollapser : public QToolButton
+{
+    Q_OBJECT
 public:
-	SplitterCollapser(QSplitter*, QWidget* widget);
-	~SplitterCollapser();
+    SplitterCollapser(QSplitter *, QWidget *widget);
+    ~SplitterCollapser();
 
-	virtual QSize sizeHint() const;
+    virtual QSize sizeHint() const;
 
 public Q_SLOTS:
     void slotCollapse();
     void slotRestore();
     void slotSetCollapsed(bool collapsed);
-    
-protected:
-	virtual bool eventFilter(QObject*, QEvent*);
 
-	virtual void paintEvent(QPaintEvent*);
+protected:
+    virtual bool eventFilter(QObject *, QEvent *);
+
+    virtual void paintEvent(QPaintEvent *);
 
 private:
-	SplitterCollapserPrivate* const d;
+    SplitterCollapserPrivate *const d;
 
 private Q_SLOTS:
-	void slotClicked();
+    void slotClicked();
 };
-
 
 } // namespace
 

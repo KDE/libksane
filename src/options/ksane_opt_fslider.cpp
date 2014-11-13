@@ -28,7 +28,6 @@
 // Local includes
 #include "ksane_opt_fslider.h"
 
-
 #include "labeled_fslider.h"
 
 #include <QtCore/QVarLengthArray>
@@ -36,19 +35,21 @@
 #include <QDebug>
 
 static const float FIXED_MAX = 32767.0;
-static const float FIXED_MIN =-32768.0;
+static const float FIXED_MIN = -32768.0;
 static const float MIN_FIXED_STEP = 0.0001;
 namespace KSaneIface
 {
 
 KSaneOptFSlider::KSaneOptFSlider(const SANE_Handle handle, const int index)
-: KSaneOption(handle, index), m_slider(0), m_fVal(0), m_minChange(MIN_FIXED_STEP)
+    : KSaneOption(handle, index), m_slider(0), m_fVal(0), m_minChange(MIN_FIXED_STEP)
 {
 }
 
 void KSaneOptFSlider::createWidget(QWidget *parent)
 {
-    if (m_widget) return;
+    if (m_widget) {
+        return;
+    }
 
     m_widget = m_slider = new LabeledFSlider(parent, "", FIXED_MIN, FIXED_MAX, MIN_FIXED_STEP);
     readOption();
@@ -61,53 +62,56 @@ void KSaneOptFSlider::readOption()
 {
     KSaneOption::readOption();
 
-    if (!m_slider) return;
-    
+    if (!m_slider) {
+        return;
+    }
+
     if (m_optDesc->constraint_type == SANE_CONSTRAINT_RANGE) {
         m_slider->setRange(SANE_UNFIX(m_optDesc->constraint.range->min),
                            SANE_UNFIX(m_optDesc->constraint.range->max));
-        
+
         float tmpStep = SANE_UNFIX(m_optDesc->constraint.range->quant);
-        if (tmpStep < MIN_FIXED_STEP) tmpStep = MIN_FIXED_STEP;
+        if (tmpStep < MIN_FIXED_STEP) {
+            tmpStep = MIN_FIXED_STEP;
+        }
         m_slider->setStep(tmpStep);
-    }
-    else {
+    } else {
         m_slider->setRange(FIXED_MIN, FIXED_MAX);
         m_slider->setStep(MIN_FIXED_STEP);
     }
-    m_minChange = m_slider->step()/2;
+    m_minChange = m_slider->step() / 2;
     m_slider->setSuffix(unitDoubleString());
     m_slider->setLabelText(i18n(m_optDesc->title));
 }
 
 void KSaneOptFSlider::readValue()
 {
-    if (state() == STATE_HIDDEN) return;
-    
+    if (state() == STATE_HIDDEN) {
+        return;
+    }
+
     // read that current value
     QVarLengthArray<unsigned char> data(m_optDesc->size);
     SANE_Status status;
     SANE_Int res;
-    status = sane_control_option (m_handle, m_index, SANE_ACTION_GET_VALUE, data.data(), &res);
+    status = sane_control_option(m_handle, m_index, SANE_ACTION_GET_VALUE, data.data(), &res);
     if (status != SANE_STATUS_GOOD) {
         return;
     }
-    
+
     m_fVal = SANE_UNFIX(toSANE_Word(data.data()));
     if (m_slider != 0) {
         if (((m_slider->value() - m_fVal) >= m_minChange) ||
-            ((m_fVal- m_slider->value()) >= m_minChange))
-        {
+                ((m_fVal - m_slider->value()) >= m_minChange)) {
             m_slider->setValue(m_fVal);
         }
     }
     emit fValueRead(m_fVal);
 }
 
-
 void KSaneOptFSlider::sliderChanged(float val)
 {
-    if (((val-m_fVal) >= m_minChange) || ((m_fVal-val) >= m_minChange)) {
+    if (((val - m_fVal) >= m_minChange) || ((m_fVal - val) >= m_minChange)) {
         unsigned char data[4];
         SANE_Word fixed;
         //qDebug() <<m_optDesc->name << fVal << "!=" << val;
@@ -122,8 +126,7 @@ bool KSaneOptFSlider::getMinValue(float &val)
 {
     if (m_optDesc->constraint_type == SANE_CONSTRAINT_RANGE) {
         val = SANE_UNFIX(m_optDesc->constraint.range->min);
-    }
-    else {
+    } else {
         val = FIXED_MIN;
     }
     return true;
@@ -133,8 +136,7 @@ bool KSaneOptFSlider::getMaxValue(float &max)
 {
     if (m_optDesc->constraint_type == SANE_CONSTRAINT_RANGE) {
         max = SANE_UNFIX(m_optDesc->constraint.range->max);
-    }
-    else {
+    } else {
         max = FIXED_MAX;
     }
     return true;
@@ -142,14 +144,18 @@ bool KSaneOptFSlider::getMaxValue(float &max)
 
 bool KSaneOptFSlider::getValue(float &val)
 {
-    if (state() == STATE_HIDDEN) return false;
+    if (state() == STATE_HIDDEN) {
+        return false;
+    }
     val = m_fVal;
     return true;
 }
 
 bool KSaneOptFSlider::setValue(float val)
 {
-    if (state() == STATE_HIDDEN) return false;
+    if (state() == STATE_HIDDEN) {
+        return false;
+    }
     sliderChanged(val);
     readValue();
     return true;
@@ -157,14 +163,18 @@ bool KSaneOptFSlider::setValue(float val)
 
 bool KSaneOptFSlider::getValue(QString &val)
 {
-    if (state() == STATE_HIDDEN) return false;
+    if (state() == STATE_HIDDEN) {
+        return false;
+    }
     val = QString::number(m_fVal, 'F', 6);
     return true;
 }
 
 bool KSaneOptFSlider::setValue(const QString &val)
 {
-    if (state() == STATE_HIDDEN) return false;
+    if (state() == STATE_HIDDEN) {
+        return false;
+    }
     sliderChanged(val.toFloat());
     readValue();
     return true;
@@ -174,6 +184,5 @@ bool KSaneOptFSlider::hasGui()
 {
     return true;
 }
-
 
 }  // NameSpace KSaneIface

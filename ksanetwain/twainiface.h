@@ -40,7 +40,6 @@
 namespace KSaneIface
 {
 
-
 class KSaneWidgetPrivate : public QWidget
 {
     Q_OBJECT
@@ -55,17 +54,15 @@ public:
      * @result    One should return false to get the message being
      *            processed by the application (should return false by default!)
      */
-    bool winEvent(MSG* pMsg, long *result);
+    bool winEvent(MSG *pMsg, long *result);
 
     void CloseDSM();
     QString SelectSource();
     bool OpenSource(const QString &device);
 
-
 public Q_SLOTS:
     bool OpenDialog();
     bool ReOpenDialog();
-
 
 Q_SIGNALS:
     void ImageReady(QByteArray &data, int width, int height, int bytes_per_line, int format);
@@ -77,9 +74,8 @@ private:
 
     bool ProcessMessage(MSG msg);
 
-    bool SetImageCount(TW_INT16 nCount=1);
+    bool SetImageCount(TW_INT16 nCount = 1);
     bool DSOpen() const;
-
 
     bool CallTwainProc(pTW_IDENTITY pOrigin, pTW_IDENTITY pDest,
                        TW_UINT32 DG, TW_UINT16 DAT, TW_UINT16 MSG,
@@ -88,20 +84,20 @@ private:
     bool EnableSource(bool showUI);
     void CloseDS();
 
-    bool GetCapability(TW_CAPABILITY& twCap, TW_UINT16 cap, TW_UINT16 conType=TWON_DONTCARE16);
-    bool GetCapability(TW_UINT16 cap, TW_UINT32& value);
-    bool SetCapability(TW_UINT16 cap, TW_UINT16 value, bool sign=false);
-    bool SetCapability(TW_CAPABILITY& twCap);
+    bool GetCapability(TW_CAPABILITY &twCap, TW_UINT16 cap, TW_UINT16 conType = TWON_DONTCARE16);
+    bool GetCapability(TW_UINT16 cap, TW_UINT32 &value);
+    bool SetCapability(TW_UINT16 cap, TW_UINT16 value, bool sign = false);
+    bool SetCapability(TW_CAPABILITY &twCap);
 
-    bool GetImageInfo(TW_IMAGEINFO& info);
+    bool GetImageInfo(TW_IMAGEINFO &info);
 
-    void TranslateMessage(TW_EVENT& twEvent);
+    void TranslateMessage(TW_EVENT &twEvent);
     void TransferImage();
     bool EndTransfer();
     void CancelTransfer();
-    bool GetImage(TW_IMAGEINFO& info);
+    bool GetImage(TW_IMAGEINFO &info);
 
-    void ImageData(TW_MEMREF pdata, TW_IMAGEINFO& info);
+    void ImageData(TW_MEMREF pdata, TW_IMAGEINFO &info);
 
 protected:
 

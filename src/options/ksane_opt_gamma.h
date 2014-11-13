@@ -51,7 +51,7 @@ public:
     bool getValue(QString &val);
     bool setValue(const QString &val);
     bool hasGui();
-    
+
 private Q_SLOTS:
     void gammaTableChanged(const QVector<int> &gam_tbl);
 

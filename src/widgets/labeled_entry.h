@@ -50,15 +50,15 @@ class LabeledEntry : public KSaneOptionWidget
 
 public:
 
-   /**
-    * Create the entry.
-    *
-    * \param parent parent widget
-    * \param text is the text describing the entry.
-    */
-    LabeledEntry(QWidget *parent, const QString& text);
+    /**
+     * Create the entry.
+     *
+     * \param parent parent widget
+     * \param text is the text describing the entry.
+     */
+    LabeledEntry(QWidget *parent, const QString &text);
     ~LabeledEntry();
-    void setText(const QString& text);
+    void setText(const QString &text);
 
 private Q_SLOTS:
 
@@ -67,7 +67,7 @@ private Q_SLOTS:
 
 Q_SIGNALS:
 
-    void entryEdited(const QString& text);
+    void entryEdited(const QString &text);
 
 private:
 

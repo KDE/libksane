@@ -46,15 +46,14 @@ namespace KSaneIface
 {
 
 class KSaneOptionWidget;
-    
+
 class KSaneOption : public QObject
 {
     Q_OBJECT
 
 public:
-    
-    typedef enum
-    {
+
+    typedef enum {
         TYPE_DETECT_FAIL,
         TYPE_CHECKBOX,
         TYPE_SLIDER,
@@ -64,9 +63,8 @@ public:
         TYPE_GAMMA,
         TYPE_BUTTON
     } KSaneOptType;
-    
-    typedef enum
-    {
+
+    typedef enum {
         STATE_HIDDEN,
         STATE_DISABLED,
         STATE_SHOWN
@@ -75,18 +73,24 @@ public:
     KSaneOption(const SANE_Handle handle, const int index);
     ~KSaneOption();
     static KSaneOptType optionType(const SANE_Option_Descriptor *optDesc);
-    
-    KSaneOptionWidget *widget() {return m_widget;}
-    virtual bool hasGui() {return false;}
+
+    KSaneOptionWidget *widget()
+    {
+        return m_widget;
+    }
+    virtual bool hasGui()
+    {
+        return false;
+    }
     bool needsPolling() const;
     KSaneOptWState state() const;
     QString name() const;
-    
+
     virtual void createWidget(QWidget *parent);
 
     virtual void readOption();
     virtual void readValue();
-    
+
     virtual bool getMinValue(float &max);
     virtual bool getMaxValue(float &max);
     virtual bool getValue(float &val);
@@ -103,17 +107,17 @@ Q_SIGNALS:
     void valsNeedReload();
 
 protected:
-    
+
     SANE_Word toSANE_Word(unsigned char *data);
     void fromSANE_Word(unsigned char *data, SANE_Word from);
     bool writeData(void *data);
     QString unitString();
     QString unitDoubleString();
     void updateVisibility();
-    
-    SANE_Handle                   m_handle; 
+
+    SANE_Handle                   m_handle;
     int                           m_index;
-    const SANE_Option_Descriptor *m_optDesc; ///< This pointer is provided by sane 
+    const SANE_Option_Descriptor *m_optDesc; ///< This pointer is provided by sane
     unsigned char                *m_data;
     KSaneOptionWidget            *m_widget;
 };
@@ -121,5 +125,4 @@ protected:
 }  // NameSpace KSaneIface
 
 #endif // KSANE_OPTION_H
-
 

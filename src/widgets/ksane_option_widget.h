@@ -47,11 +47,11 @@ class KSaneOptionWidget : public QWidget
     Q_OBJECT
 
 public:
-   /**
-    * Create the Wodget.
-    * \param parent parent widget
-    * \param Label text.
-    */
+    /**
+     * Create the Wodget.
+     * \param parent parent widget
+     * \param Label text.
+     */
     KSaneOptionWidget(QWidget *parent, const QString &labelText);
     ~KSaneOptionWidget();
 

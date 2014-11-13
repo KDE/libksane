@@ -29,7 +29,6 @@
 // Local includes
 #include "gamma_disp.h"
 
-
 // Qt includes
 #include <QPainter>
 
@@ -37,10 +36,10 @@ namespace KSaneIface
 {
 
 GammaDisp::GammaDisp(QWidget *parent, QVector<int> *tbl)
-         : QWidget(parent)
+    : QWidget(parent)
 {
     gam_tbl = tbl;
-    gam_color.setRgb(0,0,0);
+    gam_color.setRgb(0, 0, 0);
 }
 
 QSize GammaDisp::minimumSizeHint() const
@@ -58,31 +57,31 @@ void GammaDisp::setColor(const QColor &color)
     gam_color = color;
 }
 
-void GammaDisp::resizeEvent (QResizeEvent*)
+void GammaDisp::resizeEvent(QResizeEvent *)
 {
     repaint();
 }
 
 void GammaDisp::paintEvent(QPaintEvent *)
 {
-/*    QMemArray<QRect> rects = event->region().rects();
-    for (int i = 0; i < (int)rects.size(); i++) {
-        bitBlt(this, rects[i].topLeft(), &pixmap, rects[i]);
-    }*/
+    /*    QMemArray<QRect> rects = event->region().rects();
+        for (int i = 0; i < (int)rects.size(); i++) {
+            bitBlt(this, rects[i].topLeft(), &pixmap, rects[i]);
+        }*/
     QPointF p1, p2;
     QPainter painter(this);
     painter.fillRect(rect(), QBrush(Qt::white));
 
-    double xscale = (double)(size().width()-1)  / (double)gam_tbl->size();
-    double yscale = (double)(size().height()-1) / (double)gam_tbl->size();
+    double xscale = (double)(size().width() - 1)  / (double)gam_tbl->size();
+    double yscale = (double)(size().height() - 1) / (double)gam_tbl->size();
 
     painter.setPen(gam_color);
-    for (int i=0; i<gam_tbl->size()-1; i++) {
-        p1.setX(i*xscale);
-        p1.setY(size().height()- 1 - (gam_tbl->at(i) * yscale));
+    for (int i = 0; i < gam_tbl->size() - 1; i++) {
+        p1.setX(i * xscale);
+        p1.setY(size().height() - 1 - (gam_tbl->at(i) * yscale));
 
-        p2.setX((i+1)*xscale);
-        p2.setY(size().height()- 1 - (gam_tbl->at(i+1) * yscale));
+        p2.setX((i + 1)*xscale);
+        p2.setY(size().height() - 1 - (gam_tbl->at(i + 1) * yscale));
 
         painter.drawLine(p1, p2);
     }

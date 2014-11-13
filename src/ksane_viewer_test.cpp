@@ -31,7 +31,7 @@
 #include <QDebug>
 #include <QApplication>
 
-int main (int argc, char *argv[])
+int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
@@ -48,6 +48,6 @@ int main (int argc, char *argv[])
     viewer.show();
 
     viewer.zoom2Fit();
-    
+
     return app.exec();
 }

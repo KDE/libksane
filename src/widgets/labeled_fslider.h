@@ -51,23 +51,23 @@ class LabeledFSlider : public KSaneOptionWidget
 
 public:
 
-   /**
-    * Create the slider.
-    *
-    * \param parent parent widget
-    * \param text is the text describing the slider value. If the text
-    *        contains a '&', a buddy for the slider will be created.
-    * \param min minimum slider value
-    * \param max maximum slider value
-    * \param quant is the step between values.
-    */
-    LabeledFSlider(QWidget *parent, const QString& text,
+    /**
+     * Create the slider.
+     *
+     * \param parent parent widget
+     * \param text is the text describing the slider value. If the text
+     *        contains a '&', a buddy for the slider will be created.
+     * \param min minimum slider value
+     * \param max maximum slider value
+     * \param quant is the step between values.
+     */
+    LabeledFSlider(QWidget *parent, const QString &text,
                    float min, float max, float st);
     ~LabeledFSlider();
 
-   /**
-    * \return the slider value.
-    */
+    /**
+     * \return the slider value.
+     */
     float value() const;
     float step() const;
 

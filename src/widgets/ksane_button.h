@@ -46,13 +46,13 @@ class KSaneButton : public KSaneOptionWidget
     Q_OBJECT
 
 public:
-   /**
-    * Create the checkbox.
-    *
-    * \param parent parent widget
-    * \param text is the text describing the checkbox.
-    */
-    KSaneButton(QWidget *parent, const QString& text);
+    /**
+     * Create the checkbox.
+     *
+     * \param parent parent widget
+     * \param text is the text describing the checkbox.
+     */
+    KSaneButton(QWidget *parent, const QString &text);
     ~KSaneButton();
 
 Q_SIGNALS:

@@ -28,7 +28,6 @@
 // Local includes
 #include "ksane_opt_entry.h"
 
-
 #include "labeled_entry.h"
 
 #include <QtCore/QVarLengthArray>
@@ -39,13 +38,15 @@ namespace KSaneIface
 {
 
 KSaneOptEntry::KSaneOptEntry(const SANE_Handle handle, const int index)
-: KSaneOption(handle, index), m_entry(0)
+    : KSaneOption(handle, index), m_entry(0)
 {
 }
 
 void KSaneOptEntry::createWidget(QWidget *parent)
 {
-    if (m_widget) return;
+    if (m_widget) {
+        return;
+    }
 
     readOption();
 
@@ -62,7 +63,7 @@ void KSaneOptEntry::createWidget(QWidget *parent)
     readValue();
 }
 
-void KSaneOptEntry::entryChanged(const QString& text)
+void KSaneOptEntry::entryChanged(const QString &text)
 {
     QString tmp;
     tmp += text.left(m_optDesc->size);
@@ -74,36 +75,48 @@ void KSaneOptEntry::entryChanged(const QString& text)
 
 void KSaneOptEntry::readValue()
 {
-    if (state() == STATE_HIDDEN) return;
+    if (state() == STATE_HIDDEN) {
+        return;
+    }
 
     // read that current value
     QVarLengthArray<unsigned char> data(m_optDesc->size);
     SANE_Status status;
     SANE_Int res;
-    status = sane_control_option (m_handle, m_index, SANE_ACTION_GET_VALUE, data.data(), &res);
+    status = sane_control_option(m_handle, m_index, SANE_ACTION_GET_VALUE, data.data(), &res);
     if (status != SANE_STATUS_GOOD) {
         return;
     }
 
-    m_string = QString(reinterpret_cast<char*>(data.data()));
+    m_string = QString(reinterpret_cast<char *>(data.data()));
     if (m_entry != 0) {
         m_entry->setText(m_string);
     }
 }
 
-bool KSaneOptEntry::getValue(float &) {return false;}
-bool KSaneOptEntry::setValue(float) {return false;}
+bool KSaneOptEntry::getValue(float &)
+{
+    return false;
+}
+bool KSaneOptEntry::setValue(float)
+{
+    return false;
+}
 
 bool KSaneOptEntry::getValue(QString &val)
 {
-    if (state() == STATE_HIDDEN) return false;
+    if (state() == STATE_HIDDEN) {
+        return false;
+    }
     val = m_string;
     return true;
 }
 
 bool KSaneOptEntry::setValue(const QString &val)
 {
-    if (state() == STATE_HIDDEN) return false;
+    if (state() == STATE_HIDDEN) {
+        return false;
+    }
     entryChanged(val);
     readValue();
     return true;

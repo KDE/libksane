@@ -34,14 +34,12 @@
 namespace KSaneIface
 {
 
-
 static const qreal selMargin = 4.0;
-static const QPointF boundMargin(selMargin,selMargin);
+static const QPointF boundMargin(selMargin, selMargin);
 static const qreal addRemMargin = 8.0;
 static const QPointF addRemMarginPoint(addRemMargin, addRemMargin);
 
-struct SelectionItem::Private
-{
+struct SelectionItem::Private {
     QPen       penDark;
     QPen       penLight;
     QPen       penAddRemFg;
@@ -57,7 +55,6 @@ struct SelectionItem::Private
     qreal      selMargin;
     QRectF     addRemRect;
 };
-
 
 SelectionItem::SelectionItem(QRectF rect) : QGraphicsItem(), d(new Private)
 {
@@ -80,8 +77,8 @@ SelectionItem::SelectionItem(QRectF rect) : QGraphicsItem(), d(new Private)
     d->showAddRem = false;
     d->invZoom = 1;
     d->selMargin = selMargin;
-    
-    d->addRemRect = QRectF(0,0,0,0);
+
+    d->addRemRect = QRectF(0, 0, 0, 0);
 }
 
 SelectionItem::~SelectionItem()
@@ -91,14 +88,16 @@ SelectionItem::~SelectionItem()
 
 void SelectionItem::saveZoom(qreal zoom)
 {
-    if (zoom < 0.00001) zoom = 0.00001;
-    d->invZoom = 1/zoom;
+    if (zoom < 0.00001) {
+        zoom = 0.00001;
+    }
+    d->invZoom = 1 / zoom;
 
     d->selMargin = selMargin * d->invZoom;
 
     qreal margin = addRemMargin * d->invZoom;
     QPointF pMargin = addRemMarginPoint * d->invZoom;
-    d->addRemRect = QRectF(d->rect.center()-pMargin, QSizeF(margin*2.0, margin*2.0));
+    d->addRemRect = QRectF(d->rect.center() - pMargin, QSizeF(margin * 2.0, margin * 2.0));
     d->penAddRemFg.setWidthF(3.0 * d->invZoom);
 }
 
@@ -109,8 +108,7 @@ void SelectionItem::setSaved(bool isSaved)
         d->penLight.setColor(Qt::red);
         d->penAddRemFg.setColor(Qt::darkRed);
         d->isSaved = true;
-    }
-    else {
+    } else {
         d->penDark.setColor(Qt::black);
         d->penLight.setColor(Qt::white);
         d->penAddRemFg.setColor(Qt::darkGreen);
@@ -122,61 +120,83 @@ void SelectionItem::setMaxRight(qreal maxX)
 {
     d->maxX = maxX;
     d->hasMaxX = true;
-    if (d->hasMaxY) d->hasMax = true;
+    if (d->hasMaxY) {
+        d->hasMax = true;
+    }
 }
 
 void SelectionItem::setMaxBottom(qreal maxY)
 {
     d->maxY = maxY;
     d->hasMaxY = true;
-    if (d->hasMaxX) d->hasMax = true;
+    if (d->hasMaxX) {
+        d->hasMax = true;
+    }
 }
 
 SelectionItem::Intersects SelectionItem::intersects(QPointF point)
 {
     bool oldState = d->showAddRem;
     d->showAddRem = false;
-    
-    if ((point.x() < (d->rect.left()-d->selMargin)) ||
-        (point.x() > (d->rect.right()+d->selMargin)) ||
-        (point.y() < (d->rect.top()-d->selMargin)) ||
-        (point.y() > (d->rect.bottom()+d->selMargin)))
-    {
-        if (oldState != d->showAddRem) update();
+
+    if ((point.x() < (d->rect.left() - d->selMargin)) ||
+            (point.x() > (d->rect.right() + d->selMargin)) ||
+            (point.y() < (d->rect.top() - d->selMargin)) ||
+            (point.y() > (d->rect.bottom() + d->selMargin))) {
+        if (oldState != d->showAddRem) {
+            update();
+        }
         return None;
     }
 
-    if (point.x() < (d->rect.left()+d->selMargin)) {
-        if (oldState != d->showAddRem) update();
-        if (point.y() < (d->rect.top()+d->selMargin))    return TopLeft;
-        if (point.y() > (d->rect.bottom()-d->selMargin)) return BottomLeft;
+    if (point.x() < (d->rect.left() + d->selMargin)) {
+        if (oldState != d->showAddRem) {
+            update();
+        }
+        if (point.y() < (d->rect.top() + d->selMargin)) {
+            return TopLeft;
+        }
+        if (point.y() > (d->rect.bottom() - d->selMargin)) {
+            return BottomLeft;
+        }
         return Left;
     }
 
-    if (point.x() > (d->rect.right()-d->selMargin)) {
-        if (oldState != d->showAddRem) update();
-        if (point.y() < (d->rect.top()+d->selMargin))    return TopRight;
-        if (point.y() > (d->rect.bottom()-d->selMargin)) return BottomRight;
+    if (point.x() > (d->rect.right() - d->selMargin)) {
+        if (oldState != d->showAddRem) {
+            update();
+        }
+        if (point.y() < (d->rect.top() + d->selMargin)) {
+            return TopRight;
+        }
+        if (point.y() > (d->rect.bottom() - d->selMargin)) {
+            return BottomRight;
+        }
         return Right;
     }
 
-    if (point.y() < (d->rect.top()+d->selMargin)) {
-        if (oldState != d->showAddRem) update();
+    if (point.y() < (d->rect.top() + d->selMargin)) {
+        if (oldState != d->showAddRem) {
+            update();
+        }
         return Top;
     }
-    if (point.y() > (d->rect.bottom()-d->selMargin)) {
-        if (oldState != d->showAddRem) update();
+    if (point.y() > (d->rect.bottom() - d->selMargin)) {
+        if (oldState != d->showAddRem) {
+            update();
+        }
         return Bottom;
     }
-    
+
     d->showAddRem = true;
-    if (oldState != d->showAddRem) update();
+    if (oldState != d->showAddRem) {
+        update();
+    }
 
     if ((point.x() > d->addRemRect.left()) &&
-        (point.x() < d->addRemRect.right()) &&
-        (point.y() > d->addRemRect.top()) &&
-        (point.y() < d->addRemRect.bottom()))
-    {
+            (point.x() < d->addRemRect.right()) &&
+            (point.y() > d->addRemRect.top()) &&
+            (point.y() < d->addRemRect.bottom())) {
         return AddRemove;
     }
     return Move;
@@ -188,24 +208,40 @@ void SelectionItem::setRect(QRectF rect)
     d->rect = rect;
     d->rect = d->rect.normalized();
     if (d->hasMax) {
-        if (d->rect.top() < 0) d->rect.setTop(0);
-        if (d->rect.left() < 0) d->rect.setLeft(0);
-        if (d->rect.right() > d->maxX) d->rect.setRight(d->maxX);
-        if (d->rect.bottom() > d->maxY) d->rect.setBottom(d->maxY);
+        if (d->rect.top() < 0) {
+            d->rect.setTop(0);
+        }
+        if (d->rect.left() < 0) {
+            d->rect.setLeft(0);
+        }
+        if (d->rect.right() > d->maxX) {
+            d->rect.setRight(d->maxX);
+        }
+        if (d->rect.bottom() > d->maxY) {
+            d->rect.setBottom(d->maxY);
+        }
     }
 
     // calculate the add/remove rectangle
     qreal margin = addRemMargin * d->invZoom;
     QPointF pMargin = addRemMarginPoint * d->invZoom;
-    d->addRemRect = QRectF(d->rect.center()-pMargin, QSizeF(margin*2, margin*2));
+    d->addRemRect = QRectF(d->rect.center() - pMargin, QSizeF(margin * 2, margin * 2));
 }
 
 QPointF SelectionItem::fixTranslation(QPointF dp)
 {
-    if ((d->rect.left()   + dp.x()) < 0) dp.setX(-d->rect.left());
-    if ((d->rect.top()    + dp.y()) < 0) dp.setY(-d->rect.top());
-    if ((d->rect.right()  + dp.x()) > d->maxX) dp.setX(d->maxX - d->rect.right());
-    if ((d->rect.bottom() + dp.y()) > d->maxY) dp.setY(d->maxY - d->rect.bottom());
+    if ((d->rect.left()   + dp.x()) < 0) {
+        dp.setX(-d->rect.left());
+    }
+    if ((d->rect.top()    + dp.y()) < 0) {
+        dp.setY(-d->rect.top());
+    }
+    if ((d->rect.right()  + dp.x()) > d->maxX) {
+        dp.setX(d->maxX - d->rect.right());
+    }
+    if ((d->rect.bottom() + dp.y()) > d->maxY) {
+        dp.setY(d->maxY - d->rect.bottom());
+    }
     return dp;
 }
 
@@ -216,22 +252,22 @@ QRectF SelectionItem::rect()
 
 QRectF SelectionItem::boundingRect() const
 {
-    QRectF tmp(d->rect.topLeft()-boundMargin, d->rect.bottomRight()+boundMargin);
+    QRectF tmp(d->rect.topLeft() - boundMargin, d->rect.bottomRight() + boundMargin);
     if (tmp.top() > d->addRemRect.top()) {
         tmp.setTop(d->addRemRect.top());
     }
     if (tmp.left() > d->addRemRect.left()) {
         tmp.setLeft(d->addRemRect.left());
     }
-    
+
     if (tmp.bottom() < d->addRemRect.bottom()) {
         tmp.setBottom(d->addRemRect.bottom());
     }
-    
+
     if (tmp.right() < d->addRemRect.right()) {
         tmp.setRight(d->addRemRect.right());
     }
-    
+
     return tmp;
 }
 
@@ -245,15 +281,15 @@ void SelectionItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, Q
 
     if (d->showAddRem) {
         painter->fillRect(d->addRemRect, QBrush(Qt::white));
-        QLineF minus(d->addRemRect.left()+3*d->invZoom, d->rect.center().y(),
-                      d->addRemRect.right()-3*d->invZoom, d->rect.center().y());
+        QLineF minus(d->addRemRect.left() + 3 * d->invZoom, d->rect.center().y(),
+                     d->addRemRect.right() - 3 * d->invZoom, d->rect.center().y());
         painter->setPen(d->penAddRemFg);
 
         painter->drawLine(minus);
 
         if (!d->isSaved) {
-            QLineF plus(d->rect.center().x(), d->addRemRect.top()+3*d->invZoom,
-                         d->rect.center().x(), d->addRemRect.bottom()-3*d->invZoom);
+            QLineF plus(d->rect.center().x(), d->addRemRect.top() + 3 * d->invZoom,
+                        d->rect.center().x(), d->addRemRect.bottom() - 3 * d->invZoom);
             painter->drawLine(plus);
         }
     }

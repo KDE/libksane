@@ -41,7 +41,7 @@ class KSaneOptCombo : public KSaneOption
 
 public:
     KSaneOptCombo(const SANE_Handle handle, const int index);
-    
+
     void createWidget(QWidget *parent);
 
     void readValue();
@@ -53,10 +53,10 @@ public:
     bool getValue(QString &val);
     bool setValue(const QString &val);
     bool hasGui();
-    
+
 private Q_SLOTS:
     void comboboxChangedIndex(int val);
-    
+
 Q_SIGNALS:
     void valueChanged();
 
@@ -65,7 +65,7 @@ private:
     QString getSaneComboString(int ival);
     QString getSaneComboString(float fval);
     QString getSaneComboString(unsigned char *data);
-    
+
     LabeledCombo *m_combo;
     QString       m_currentText;
     QStringList   m_strList;

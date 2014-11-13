@@ -64,7 +64,7 @@ static QMutex  s_objectMutex;
 
 static const QString InvetColorsOption = QString("KSane::InvertColors");
 
-KSaneWidget::KSaneWidget(QWidget* parent)
+KSaneWidget::KSaneWidget(QWidget *parent)
     : QWidget(parent), d(new KSaneWidgetPrivate(this))
 {
     SANE_Int    version;
@@ -92,9 +92,8 @@ KSaneWidget::KSaneWidget(QWidget* parent)
         status = sane_init(&version, &KSaneAuth::authorization);
         if (status != SANE_STATUS_GOOD) {
             qDebug() << "libksane: sane_init() failed("
-            << sane_strstatus(status) << ")";
-        }
-        else {
+                     << sane_strstatus(status) << ")";
+        } else {
             //qDebug() << "Sane Version = "
             //         << SANE_VERSION_MAJOR(version) << "."
             //         << SANE_VERSION_MINORparent(version) << "."
@@ -112,14 +111,13 @@ KSaneWidget::KSaneWidget(QWidget* parent)
     d->m_updProgressTmr.setSingleShot(false);
     d->m_updProgressTmr.setInterval(300);
     connect(&d->m_updProgressTmr, SIGNAL(timeout()), d, SLOT(updateProgress()));
-    
+
     // Create the static UI
     // create the preview
     d->m_previewViewer = new KSaneViewer(&(d->m_previewImg), this);
     connect(d->m_previewViewer, SIGNAL(newSelection(float,float,float,float)),
             d, SLOT(handleSelection(float,float,float,float)));
 
-    
     d->m_warmingUp = new QLabel;
     d->m_warmingUp->setText(i18n("Waiting for the scan to start."));
     d->m_warmingUp->setAlignment(Qt::AlignCenter);
@@ -135,32 +133,32 @@ KSaneWidget::KSaneWidget(QWidget* parent)
     d->m_cancelBtn->setIcon(QIcon::fromTheme("process-stop"));
     d->m_cancelBtn->setToolTip(i18n("Cancel current scan operation"));
     connect(d->m_cancelBtn, SIGNAL(clicked()), this, SLOT(scanCancel()));
-    
+
     d->m_activityFrame = new QWidget;
     QHBoxLayout *progress_lay = new QHBoxLayout(d->m_activityFrame);
-    progress_lay->setContentsMargins(0,0,0,0);
+    progress_lay->setContentsMargins(0, 0, 0, 0);
     progress_lay->addWidget(d->m_progressBar, 100);
     progress_lay->addWidget(d->m_cancelBtn, 0);
     d->m_activityFrame->hide();
-    
+
     d->m_zInBtn  = new QToolButton(this);
     d->m_zInBtn->setAutoRaise(true);
     d->m_zInBtn->setIcon(QIcon::fromTheme("zoom-in"));
     d->m_zInBtn->setToolTip(i18n("Zoom In"));
     connect(d->m_zInBtn, SIGNAL(clicked()), d->m_previewViewer, SLOT(zoomIn()));
-    
+
     d->m_zOutBtn = new QToolButton(this);
     d->m_zOutBtn->setAutoRaise(true);
     d->m_zOutBtn->setIcon(QIcon::fromTheme("zoom-out"));
     d->m_zOutBtn->setToolTip(i18n("Zoom Out"));
     connect(d->m_zOutBtn, SIGNAL(clicked()), d->m_previewViewer, SLOT(zoomOut()));
-    
+
     d->m_zSelBtn = new QToolButton(this);
     d->m_zSelBtn->setAutoRaise(true);
     d->m_zSelBtn->setIcon(QIcon::fromTheme("zoom-fit-best"));
     d->m_zSelBtn->setToolTip(i18n("Zoom to Selection"));
     connect(d->m_zSelBtn, SIGNAL(clicked()), d->m_previewViewer, SLOT(zoomSel()));
-    
+
     d->m_zFitBtn = new QToolButton(this);
     d->m_zFitBtn->setAutoRaise(true);
     d->m_zFitBtn->setIcon(QIcon::fromTheme("document-preview"));
@@ -178,17 +176,17 @@ KSaneWidget::KSaneWidget(QWidget* parent)
     d->m_prevBtn->setToolTip(i18n("Scan Preview Image"));
     d->m_prevBtn->setText(i18nc("Preview button text", "Preview"));
     connect(d->m_prevBtn,   SIGNAL(clicked()), d, SLOT(startPreviewScan()));
-    
+
     d->m_scanBtn = new QPushButton(this);
     d->m_scanBtn->setIcon(QIcon::fromTheme("document-save"));
     d->m_scanBtn->setToolTip(i18n("Scan Final Image"));
     d->m_scanBtn->setText(i18nc("Final scan button text", "Scan"));
     d->m_scanBtn->setFocus(Qt::OtherFocusReason);
     connect(d->m_scanBtn,   SIGNAL(clicked()), d, SLOT(startFinalScan()));
-    
+
     d->m_btnFrame = new QWidget;
     QHBoxLayout *btn_lay = new QHBoxLayout(d->m_btnFrame);
-    btn_lay->setContentsMargins(0,0,0,0);
+    btn_lay->setContentsMargins(0, 0, 0, 0);
     btn_lay->addWidget(d->m_zInBtn);
     btn_lay->addWidget(d->m_zOutBtn);
     btn_lay->addWidget(d->m_zSelBtn);
@@ -197,26 +195,30 @@ KSaneWidget::KSaneWidget(QWidget* parent)
     btn_lay->addStretch(100);
     btn_lay->addWidget(d->m_prevBtn);
     btn_lay->addWidget(d->m_scanBtn);
-    
+
     // calculate the height of the waiting/scanning/buttons frames to avoid jumpiness.
     int minHeight = d->m_btnFrame->sizeHint().height();
-    if (d->m_activityFrame->sizeHint().height() > minHeight) minHeight = d->m_activityFrame->sizeHint().height();
-    if (d->m_warmingUp->sizeHint().height() > minHeight)     minHeight = d->m_warmingUp->sizeHint().height();
+    if (d->m_activityFrame->sizeHint().height() > minHeight) {
+        minHeight = d->m_activityFrame->sizeHint().height();
+    }
+    if (d->m_warmingUp->sizeHint().height() > minHeight) {
+        minHeight = d->m_warmingUp->sizeHint().height();
+    }
     d->m_btnFrame->setMinimumHeight(minHeight);
     d->m_activityFrame->setMinimumHeight(minHeight);
     d->m_warmingUp->setMinimumHeight(minHeight);
-    
+
     d->m_previewFrame = new QWidget;
     QVBoxLayout *preview_layout = new QVBoxLayout(d->m_previewFrame);
-    preview_layout->setContentsMargins(0,0,0,0);
+    preview_layout->setContentsMargins(0, 0, 0, 0);
     preview_layout->addWidget(d->m_previewViewer, 100);
     preview_layout->addWidget(d->m_warmingUp, 0);
     preview_layout->addWidget(d->m_activityFrame, 0);
     preview_layout->addWidget(d->m_btnFrame, 0);
-    
+
     // Create Options Widget
     d->m_optsTabWidget = new QTabWidget();
-    
+
     // Add the basic options tab
     d->m_basicScrollA = new QScrollArea();
     d->m_basicScrollA->setWidgetResizable(true);
@@ -228,30 +230,31 @@ KSaneWidget::KSaneWidget(QWidget* parent)
     d->m_otherScrollA->setWidgetResizable(true);
     d->m_otherScrollA->setFrameShape(QFrame::NoFrame);
     d->m_optsTabWidget->addTab(d->m_otherScrollA, i18n("Scanner Specific Options"));
-    
-    
+
     d->m_splitter = new QSplitter(this);
     d->m_splitter->addWidget(d->m_optsTabWidget);
-    d->m_splitter->setStretchFactor(0,0);
+    d->m_splitter->setStretchFactor(0, 0);
     d->m_splitter->addWidget(d->m_previewFrame);
-    d->m_splitter->setStretchFactor(1,100);
-    
+    d->m_splitter->setStretchFactor(1, 100);
+
     d->m_optionsCollapser = new SplitterCollapser(d->m_splitter, d->m_optsTabWidget);
-    
+
     QHBoxLayout *base_layout = new QHBoxLayout(this);
     base_layout->addWidget(d->m_splitter);
-    base_layout->setContentsMargins(0,0,0,0);
+    base_layout->setContentsMargins(0, 0, 0, 0);
 
     // disable the interface in case no device is opened.
     d->m_optsTabWidget->setDisabled(true);
     d->m_previewViewer->setDisabled(true);
     d->m_btnFrame->setDisabled(true);
-    
+
 }
 
 KSaneWidget::~KSaneWidget()
 {
-    while (!closeDevice()) usleep(1000);
+    while (!closeDevice()) {
+        usleep(1000);
+    }
     // wait for any thread to exit
 
     s_objectMutex.lock();
@@ -267,7 +270,7 @@ KSaneWidget::~KSaneWidget()
     delete d;
 }
 
-QString KSaneWidget::vendor() const 
+QString KSaneWidget::vendor() const
 {
     d->m_findDevThread->wait();
     d->devListUpdated(); // this is just a wrapped if (m_vendor.isEmpty()) statement if the vendor is known
@@ -275,11 +278,11 @@ QString KSaneWidget::vendor() const
 
     return d->m_vendor;
 }
-QString KSaneWidget::make() const 
+QString KSaneWidget::make() const
 {
     return vendor();
 }
-QString KSaneWidget::model() const 
+QString KSaneWidget::model() const
 {
     d->m_findDevThread->wait();
     d->devListUpdated(); // this is just a wrapped if (m_vendor.isEmpty()) statement if the vendor is known
@@ -288,21 +291,21 @@ QString KSaneWidget::model() const
     return d->m_model;
 }
 
-QString KSaneWidget::selectDevice(QWidget* parent)
+QString KSaneWidget::selectDevice(QWidget *parent)
 {
-  QString selected_name;
-  QPointer<KSaneDeviceDialog> sel = new KSaneDeviceDialog(parent);
+    QString selected_name;
+    QPointer<KSaneDeviceDialog> sel = new KSaneDeviceDialog(parent);
 
-  // set default scanner - perhaps application using libksane should remember that
-  // 2014-01-21: gm: +1
-  // sel.setDefault(prev_backend);
-  
-  if(sel->exec() == QDialog::Accepted) {
-      selected_name = sel->getSelectedName();
-  }
-  
-  delete sel;
-  return selected_name;
+    // set default scanner - perhaps application using libksane should remember that
+    // 2014-01-21: gm: +1
+    // sel.setDefault(prev_backend);
+
+    if (sel->exec() == QDialog::Accepted) {
+        selected_name = sel->getSelectedName();
+    }
+
+    delete sel;
+    return selected_name;
 }
 
 void KSaneWidget::initGetDeviceList() const
@@ -311,8 +314,7 @@ void KSaneWidget::initGetDeviceList() const
     if (d->m_findDevThread->devicesList().size() == 0) {
         //qDebug() << "initGetDeviceList() starting thread...";
         d->m_findDevThread->start();
-    }
-    else {
+    } else {
         //qDebug() << "initGetDeviceList() have existing data...";
         d->signalDevListUpdate();
     }
@@ -320,7 +322,7 @@ void KSaneWidget::initGetDeviceList() const
 
 bool KSaneWidget::openDevice(const QString &deviceName)
 {
-    int                            i=0;
+    int                            i = 0;
     const SANE_Option_Descriptor  *optDesc;
     SANE_Status                    status;
     SANE_Word                      numSaneOptions;
@@ -348,25 +350,25 @@ bool KSaneWidget::openDevice(const QString &deviceName)
     bool password_dialog_ok = true;
 
     // prepare wallet for authentication and create password dialog
-    if(status == SANE_STATUS_ACCESS_DENIED) {
-        saneWallet = KWallet::Wallet::openWallet(KWallet::Wallet::LocalWallet(), winId() );
+    if (status == SANE_STATUS_ACCESS_DENIED) {
+        saneWallet = KWallet::Wallet::openWallet(KWallet::Wallet::LocalWallet(), winId());
 
-        if(saneWallet) {
+        if (saneWallet) {
             dlg = new KPasswordDialog(this, KPasswordDialog::ShowUsernameLine | KPasswordDialog::ShowKeepPassword);
-            if(!saneWallet->hasFolder(myFolderName)) {
+            if (!saneWallet->hasFolder(myFolderName)) {
                 saneWallet->createFolder(myFolderName);
             }
             saneWallet->setFolder(myFolderName);
             saneWallet->readMap(deviceName.toLatin1(), wallet_entry);
-            if(!wallet_entry.empty() || true) {
-                dlg->setUsername( wallet_entry["username"] );
-                dlg->setPassword( wallet_entry["password"] );
-                dlg->setKeepPassword( true );
+            if (!wallet_entry.empty() || true) {
+                dlg->setUsername(wallet_entry["username"]);
+                dlg->setPassword(wallet_entry["password"]);
+                dlg->setKeepPassword(true);
             }
         } else {
             dlg = new KPasswordDialog(this, KPasswordDialog::ShowUsernameLine);
         }
-        dlg->setPrompt(i18n("Authentication required for resource: %1", deviceName ) );
+        dlg->setPrompt(i18n("Authentication required for resource: %1", deviceName));
 
     }
 
@@ -375,7 +377,7 @@ bool KSaneWidget::openDevice(const QString &deviceName)
     while (status == SANE_STATUS_ACCESS_DENIED) {
 
         password_dialog_ok = dlg->exec();
-        if(!password_dialog_ok) {
+        if (!password_dialog_ok) {
             delete dlg;
             d->m_devName.clear();
             return false; //the user canceled
@@ -387,11 +389,11 @@ bool KSaneWidget::openDevice(const QString &deviceName)
         status = sane_open(deviceName.toLatin1(), &d->m_saneHandle);
 
         // store password in wallet on successful authentication
-        if(dlg->keepPassword() && status != SANE_STATUS_ACCESS_DENIED) {
+        if (dlg->keepPassword() && status != SANE_STATUS_ACCESS_DENIED) {
             QMap<QString, QString> entry;
             entry["username"] = dlg->username().toUtf8();
             entry["password"] = dlg->password().toUtf8();
-            if(saneWallet) {
+            if (saneWallet) {
                 saneWallet->writeMap(deviceName.toLatin1(), entry);
             }
         }
@@ -407,8 +409,7 @@ bool KSaneWidget::openDevice(const QString &deviceName)
     // update the device list if needed to get the vendor and model info
     if (d->m_findDevThread->devicesList().size() == 0) {
         d->m_findDevThread->start();
-    }
-    else {
+    } else {
         // use the "old" existing list
         d->devListUpdated();
         // if m_vendor is not updated it means that the list needs to be updated.
@@ -431,43 +432,43 @@ bool KSaneWidget::openDevice(const QString &deviceName)
         d->m_devName.clear();
         return false;
     }
-    numSaneOptions = *reinterpret_cast<SANE_Word*>(data.data());
+    numSaneOptions = *reinterpret_cast<SANE_Word *>(data.data());
 
     // read the rest of the options
-    for (i=1; i<numSaneOptions; ++i) {
+    for (i = 1; i < numSaneOptions; ++i) {
         switch (KSaneOption::optionType(sane_get_option_descriptor(d->m_saneHandle, i))) {
-            case KSaneOption::TYPE_DETECT_FAIL:
-                d->m_optList.append(new KSaneOption(d->m_saneHandle, i));
-                break;
-            case KSaneOption::TYPE_CHECKBOX:
-                d->m_optList.append(new KSaneOptCheckBox(d->m_saneHandle, i));
-                break;
-            case KSaneOption::TYPE_SLIDER:
-                d->m_optList.append(new KSaneOptSlider(d->m_saneHandle, i));
-                break;
-            case KSaneOption::TYPE_F_SLIDER:
-                d->m_optList.append(new KSaneOptFSlider(d->m_saneHandle, i));
-                break;
-            case KSaneOption::TYPE_COMBO:
-                d->m_optList.append(new KSaneOptCombo(d->m_saneHandle, i));
-                break;
-            case KSaneOption::TYPE_ENTRY:
-                d->m_optList.append(new KSaneOptEntry(d->m_saneHandle, i));
-                break;
-            case KSaneOption::TYPE_GAMMA:
-                d->m_optList.append(new KSaneOptGamma(d->m_saneHandle, i));
-                break;
-            case KSaneOption::TYPE_BUTTON:
-                d->m_optList.append(new KSaneOptButton(d->m_saneHandle, i));
-                break;
+        case KSaneOption::TYPE_DETECT_FAIL:
+            d->m_optList.append(new KSaneOption(d->m_saneHandle, i));
+            break;
+        case KSaneOption::TYPE_CHECKBOX:
+            d->m_optList.append(new KSaneOptCheckBox(d->m_saneHandle, i));
+            break;
+        case KSaneOption::TYPE_SLIDER:
+            d->m_optList.append(new KSaneOptSlider(d->m_saneHandle, i));
+            break;
+        case KSaneOption::TYPE_F_SLIDER:
+            d->m_optList.append(new KSaneOptFSlider(d->m_saneHandle, i));
+            break;
+        case KSaneOption::TYPE_COMBO:
+            d->m_optList.append(new KSaneOptCombo(d->m_saneHandle, i));
+            break;
+        case KSaneOption::TYPE_ENTRY:
+            d->m_optList.append(new KSaneOptEntry(d->m_saneHandle, i));
+            break;
+        case KSaneOption::TYPE_GAMMA:
+            d->m_optList.append(new KSaneOptGamma(d->m_saneHandle, i));
+            break;
+        case KSaneOption::TYPE_BUTTON:
+            d->m_optList.append(new KSaneOptButton(d->m_saneHandle, i));
+            break;
         }
     }
 
     // do the connections of the option parameters
-    for (i=1; i<d->m_optList.size(); ++i) {
+    for (i = 1; i < d->m_optList.size(); ++i) {
         //qDebug() << d->m_optList.at(i)->name();
-        connect (d->m_optList.at(i), SIGNAL(optsNeedReload()), d, SLOT(optReload()));
-        connect (d->m_optList.at(i), SIGNAL(valsNeedReload()), d, SLOT(scheduleValReload()));
+        connect(d->m_optList.at(i), SIGNAL(optsNeedReload()), d, SLOT(optReload()));
+        connect(d->m_optList.at(i), SIGNAL(valsNeedReload()), d, SLOT(scheduleValReload()));
 
         if (d->m_optList.at(i)->needsPolling()) {
             //qDebug() << d->m_optList.at(i)->name() << " needs polling";
@@ -484,21 +485,21 @@ bool KSaneWidget::openDevice(const QString &deviceName)
     if (d->m_pollList.size() > 0) {
         d->m_optionPollTmr.start();
     }
-    
+
     // Create the preview thread
     d->m_previewThread = new KSanePreviewThread(d->m_saneHandle, &d->m_previewImg);
     connect(d->m_previewThread, SIGNAL(finished()), d, SLOT(previewScanDone()));
-    
+
     // Create the read thread
     d->m_scanThread = new KSaneScanThread(d->m_saneHandle, &d->m_scanData);
     connect(d->m_scanThread, SIGNAL(finished()), d, SLOT(oneFinalScanDone()));
-    
+
     // Create the options interface
     d->createOptInterface();
-    
+
     // try to set KSaneWidget default values
     d->setDefaultValues();
-    
+
     // Enable the interface
     d->m_optsTabWidget->setDisabled(false);
     d->m_previewViewer->setDisabled(false);
@@ -512,19 +513,18 @@ bool KSaneWidget::openDevice(const QString &deviceName)
     return true;
 }
 
-
 bool KSaneWidget::closeDevice()
 {
     if (!d->m_saneHandle) {
         return true;
     }
-    
+
     if (d->m_scanThread->isRunning()) {
         d->m_scanThread->cancelScan();
         d->m_closeDevicePending = true;
         return false;
     }
-    
+
     if (d->m_previewThread->isRunning()) {
         d->m_previewThread->cancelScan();
         d->m_closeDevicePending = true;
@@ -532,7 +532,7 @@ bool KSaneWidget::closeDevice()
     }
 
     d->m_auth->clearDeviceAuth(d->m_devName);
-    // else 
+    // else
     sane_close(d->m_saneHandle);
     d->m_saneHandle = 0;
     d->clearDeviceOptions();
@@ -541,7 +541,7 @@ bool KSaneWidget::closeDevice()
     d->m_optsTabWidget->setDisabled(true);
     d->m_previewViewer->setDisabled(true);
     d->m_btnFrame->setDisabled(true);
-    
+
     return true;
 }
 
@@ -554,80 +554,75 @@ QImage KSaneWidget::toQImageSilent(const QByteArray &data,
                                    ImageFormat format)
 {
     QImage img;
-    int j=0;
+    int j = 0;
     QVector<QRgb> table;
     QRgb *imgLine;
 
-    switch (format)
-    {
-        case FormatBlackWhite:
-            img = QImage((uchar*)data.data(),
-                          width,
-                          height,
-                          bytes_per_line,
-                          QImage::Format_Mono);
-            // The color table must be set
-            table.append(0xFFFFFFFF);
-            table.append(0xFF000000);
-            img.setColorTable(table);
-            break;
+    switch (format) {
+    case FormatBlackWhite:
+        img = QImage((uchar *)data.data(),
+                     width,
+                     height,
+                     bytes_per_line,
+                     QImage::Format_Mono);
+        // The color table must be set
+        table.append(0xFFFFFFFF);
+        table.append(0xFF000000);
+        img.setColorTable(table);
+        break;
 
-        case FormatGrayScale8:
-        {
-            img = QImage(width, height, QImage::Format_RGB32);
-            int dI = 0;
-            for (int i=0; (i<img.height() && dI<data.size()); i++) {
-                imgLine = reinterpret_cast<QRgb*>(img.scanLine(i));
-                for (j=0; (j<img.width() && dI<data.size()); j++) {
-                    imgLine[j] = qRgb(data[dI], data[dI], data[dI]);
-                    dI++;
-                }
+    case FormatGrayScale8: {
+        img = QImage(width, height, QImage::Format_RGB32);
+        int dI = 0;
+        for (int i = 0; (i < img.height() && dI < data.size()); i++) {
+            imgLine = reinterpret_cast<QRgb *>(img.scanLine(i));
+            for (j = 0; (j < img.width() && dI < data.size()); j++) {
+                imgLine[j] = qRgb(data[dI], data[dI], data[dI]);
+                dI++;
             }
-            break;
         }
-        case FormatGrayScale16:
-        {
-            img = QImage(width, height, QImage::Format_RGB32);
-            int dI = 1;
-            for (int i=0; (i<img.height() && dI<data.size()); i++) {
-                imgLine = reinterpret_cast<QRgb*>(img.scanLine(i));
-                for (j=0; (j<img.width() && dI<data.size()); j++) {
-                    imgLine[j] = qRgb(data[dI], data[dI], data[dI]);
-                    dI+=2;
-                }
+        break;
+    }
+    case FormatGrayScale16: {
+        img = QImage(width, height, QImage::Format_RGB32);
+        int dI = 1;
+        for (int i = 0; (i < img.height() && dI < data.size()); i++) {
+            imgLine = reinterpret_cast<QRgb *>(img.scanLine(i));
+            for (j = 0; (j < img.width() && dI < data.size()); j++) {
+                imgLine[j] = qRgb(data[dI], data[dI], data[dI]);
+                dI += 2;
             }
-            break;
         }
-        case FormatRGB_8_C:
-        {
-            img = QImage(width, height, QImage::Format_RGB32);
-            int dI = 0;
-            for (int i=0; (i<img.height() && dI<data.size()); i++) {
-                imgLine = reinterpret_cast<QRgb*>(img.scanLine(i));
-                for (j=0; (j<img.width() && dI<data.size()); j++) {
-                    imgLine[j] = qRgb(data[dI], data[dI+1], data[dI+2]);
-                    dI+=3;
-                }
+        break;
+    }
+    case FormatRGB_8_C: {
+        img = QImage(width, height, QImage::Format_RGB32);
+        int dI = 0;
+        for (int i = 0; (i < img.height() && dI < data.size()); i++) {
+            imgLine = reinterpret_cast<QRgb *>(img.scanLine(i));
+            for (j = 0; (j < img.width() && dI < data.size()); j++) {
+                imgLine[j] = qRgb(data[dI], data[dI + 1], data[dI + 2]);
+                dI += 3;
             }
-            break;
         }
-        case FormatRGB_16_C:
-        {
-            img = QImage(width, height, QImage::Format_RGB32);
-            int dI = 1;
-            for (int i=0; (i<img.height() && dI<data.size()); i++) {
-                imgLine = reinterpret_cast<QRgb*>(img.scanLine(i));
-                for (j=0; (j<img.width() && dI<data.size()); j++) {
-                    imgLine[j] = qRgb(data[dI], data[dI+2], data[dI+4]);
-                    dI+=6;
-                }
+        break;
+    }
+    case FormatRGB_16_C: {
+        img = QImage(width, height, QImage::Format_RGB32);
+        int dI = 1;
+        for (int i = 0; (i < img.height() && dI < data.size()); i++) {
+            imgLine = reinterpret_cast<QRgb *>(img.scanLine(i));
+            for (j = 0; (j < img.width() && dI < data.size()); j++) {
+                imgLine[j] = qRgb(data[dI], data[dI + 2], data[dI + 4]);
+                dI += 6;
             }
-            break;
         }
-        case FormatNone:
-        default:
-            qDebug() << "Unsupported conversion";
-            break;
+        break;
+    }
+    case FormatNone:
+    default:
+        qDebug() << "Unsupported conversion";
+        break;
     }
     float dpm = currentDPI() * (1000.0 / 25.4);
     img.setDotsPerMeterX(dpm);
@@ -636,15 +631,15 @@ QImage KSaneWidget::toQImageSilent(const QByteArray &data,
 }
 
 QImage KSaneWidget::toQImage(const QByteArray &data,
-                              int width,
-                              int height,
-                              int bytes_per_line,
-                              ImageFormat format)
+                             int width,
+                             int height,
+                             int bytes_per_line,
+                             ImageFormat format)
 {
-    
+
     if ((format == FormatRGB_16_C) || (format == FormatGrayScale16)) {
         d->alertUser(KSaneWidget::ErrorGeneral, i18n("The image data contained 16 bits per color, "
-                    "but the color depth has been truncated to 8 bits per color."));
+                     "but the color depth has been truncated to 8 bits per color."));
     }
     return toQImageSilent(data, width, height, bytes_per_line, format);
 }
@@ -653,8 +648,7 @@ void KSaneWidget::scanFinal()
 {
     if (d->m_btnFrame->isEnabled()) {
         d->startFinalScan();
-    }
-    else {
+    } else {
         // if the button frame is disabled, there is no open device to scan from
         emit scanDone(KSaneWidget::ErrorGeneral, "");
     }
@@ -665,7 +659,7 @@ void KSaneWidget::scanCancel()
     if (d->m_scanThread->isRunning()) {
         d->m_scanThread->cancelScan();
     }
-    
+
     if (d->m_previewThread->isRunning()) {
         d->m_previewThread->cancelScan();
     }
@@ -682,7 +676,7 @@ void KSaneWidget::getOptVals(QMap <QString, QString> &opts)
     opts.clear();
     QString tmp;
 
-    for (int i=1; i<d->m_optList.size(); i++) {
+    for (int i = 1; i < d->m_optList.size(); i++) {
         option = d->m_optList.at(i);
         if (option->getValue(tmp)) {
             opts[option->name()] = tmp;
@@ -711,9 +705,9 @@ int KSaneWidget::setOptVals(const QMap <QString, QString> &opts)
 {
     QString tmp;
     int i;
-    int ret=0;
+    int ret = 0;
 
-    for (i=0; i<d->m_optList.size(); i++) {
+    for (i = 0; i < d->m_optList.size(); i++) {
         if (opts.contains(d->m_optList.at(i)->name())) {
             tmp = opts[d->m_optList.at(i)->name()];
             if (d->m_optList.at(i)->setValue(tmp) == false) {
@@ -722,10 +716,9 @@ int KSaneWidget::setOptVals(const QMap <QString, QString> &opts)
         }
     }
     if ((d->m_splitGamChB) &&
-        (d->m_optGamR) &&
-        (d->m_optGamG) &&
-        (d->m_optGamB))
-    {
+            (d->m_optGamR) &&
+            (d->m_optGamG) &&
+            (d->m_optGamB)) {
         // check if the current gamma values are identical. if they are identical,
         // uncheck the "Separate color intensity tables" checkbox
         QString redGamma;
@@ -738,8 +731,7 @@ int KSaneWidget::setOptVals(const QMap <QString, QString> &opts)
             d->m_splitGamChB->setChecked(false);
             // set the values to the common gamma widget
             d->m_commonGamma->setValues(redGamma);
-        }
-        else {
+        } else {
             d->m_splitGamChB->setChecked(true);
         }
     }
@@ -748,11 +740,9 @@ int KSaneWidget::setOptVals(const QMap <QString, QString> &opts)
     if (opts.contains(InvetColorsOption)) {
         tmp = opts[InvetColorsOption];
         if ((tmp.compare("true", Qt::CaseInsensitive) == 0) ||
-            (tmp.compare("1") == 0))
-        {
+                (tmp.compare("1") == 0)) {
             d->m_invertColors->setChecked(true);
-        }
-        else {
+        } else {
             d->m_invertColors->setChecked(false);
         }
     }
@@ -766,13 +756,12 @@ bool KSaneWidget::setOptVal(const QString &option, const QString &value)
     if ((opt = d->getOption(option)) != 0) {
         if (opt->setValue(value)) {
             if ((d->m_splitGamChB) &&
-                (d->m_optGamR) &&
-                (d->m_optGamG) &&
-                (d->m_optGamB) &&
-                ((opt == d->m_optGamR) ||
-                (opt == d->m_optGamG) ||
-                (opt == d->m_optGamB)))
-            {
+                    (d->m_optGamR) &&
+                    (d->m_optGamG) &&
+                    (d->m_optGamB) &&
+                    ((opt == d->m_optGamR) ||
+                     (opt == d->m_optGamG) ||
+                     (opt == d->m_optGamB))) {
                 // check if the current gamma values are identical. if they are identical,
                 // uncheck the "Separate color intensity tables" checkbox
                 QString redGamma;
@@ -785,8 +774,7 @@ bool KSaneWidget::setOptVal(const QString &option, const QString &value)
                     d->m_splitGamChB->setChecked(false);
                     // set the values to the common gamma widget
                     d->m_commonGamma->setValues(redGamma);
-                }
-                else {
+                } else {
                     d->m_splitGamChB->setChecked(true);
                 }
             }
@@ -797,16 +785,14 @@ bool KSaneWidget::setOptVal(const QString &option, const QString &value)
     // special handling for non-sane option
     if (option == InvetColorsOption) {
         if ((value.compare("true", Qt::CaseInsensitive) == 0) ||
-            (value.compare("1") == 0))
-        {
+                (value.compare("1") == 0)) {
             d->m_invertColors->setChecked(true);
-        }
-        else {
+        } else {
             d->m_invertColors->setChecked(false);
         }
         return true;
     }
-    
+
     return false;
 }
 
@@ -851,8 +837,7 @@ float KSaneWidget::scanAreaWidth()
         if (d->m_optBrX->getUnit() == SANE_UNIT_PIXEL) {
             d->m_optBrX->getMaxValue(result);
             result = result / currentDPI() / 25.4;
-        }
-        else if (d->m_optBrX->getUnit() == SANE_UNIT_MM) {
+        } else if (d->m_optBrX->getUnit() == SANE_UNIT_MM) {
             d->m_optBrX->getMaxValue(result);
         }
     }
@@ -866,8 +851,7 @@ float KSaneWidget::scanAreaHeight()
         if (d->m_optBrY->getUnit() == SANE_UNIT_PIXEL) {
             d->m_optBrY->getMaxValue(result);
             result = result / currentDPI() / 25.4;
-        }
-        else if (d->m_optBrY->getUnit() == SANE_UNIT_MM) {
+        } else if (d->m_optBrY->getUnit() == SANE_UNIT_MM) {
             d->m_optBrY->getMaxValue(result);
         }
     }
@@ -904,23 +888,22 @@ void KSaneWidget::setSelection(QPointF topLeft, QPointF bottomRight)
         d->m_optTlY->setValue(topLeft.y());
         d->m_optBrX->setValue(bottomRight.x());
         d->m_optBrY->setValue(bottomRight.y());
-    }
-    else if (d->m_optBrY->getUnit() == SANE_UNIT_PIXEL) {
+    } else if (d->m_optBrY->getUnit() == SANE_UNIT_PIXEL) {
         const float mmperinch = 25.4;
         const float dpi = currentDPI();
         const float m = dpi / mmperinch;
-        if (m*topLeft.x() > xmax || m*topLeft.y() > ymax || m*bottomRight.x() > xmax || m*bottomRight.y() > ymax) {
+        if (m * topLeft.x() > xmax || m * topLeft.y() > ymax || m * bottomRight.x() > xmax || m * bottomRight.y() > ymax) {
             d->m_previewViewer->clearActiveSelection();
             d->m_optTlX->setValue(0.0);
             d->m_optTlY->setValue(0.0);
             d->m_optBrX->setValue(xmax);
             d->m_optBrY->setValue(ymax);
         }
-        d->m_previewViewer->setSelection(m*topLeft.x(), m*topLeft.y(), m*bottomRight.x(), m*bottomRight.y());
-        d->m_optTlX->setValue(m*topLeft.x());
-        d->m_optTlY->setValue(m*topLeft.y());
-        d->m_optBrX->setValue(m*bottomRight.x());
-        d->m_optBrY->setValue(m*bottomRight.y());
+        d->m_previewViewer->setSelection(m * topLeft.x(), m * topLeft.y(), m * bottomRight.x(), m * bottomRight.y());
+        d->m_optTlX->setValue(m * topLeft.x());
+        d->m_optTlY->setValue(m * topLeft.y());
+        d->m_optBrX->setValue(m * bottomRight.x());
+        d->m_optBrY->setValue(m * bottomRight.y());
     }
 }
 
@@ -928,8 +911,7 @@ void KSaneWidget::setOptionsCollapsed(bool collapse)
 {
     if (collapse) {
         QTimer::singleShot(0, d->m_optionsCollapser, SLOT(slotCollapse()));
-    }
-    else {
+    } else {
         QTimer::singleShot(0, d->m_optionsCollapser, SLOT(slotRestore()));
     }
 }
