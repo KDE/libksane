@@ -145,11 +145,12 @@ void KSaneWidgetPrivate::devListUpdated()
         if (list.size() == 0) {
             return;
         }
-        for (int i = 0; i < list.size(); i++) {
-            qDebug() << list[i].name;
-            if (list[i].name == m_devName) {
-                m_vendor    = list[i].vendor;
-                m_model     = list[i].model;
+        for (int i = 0; i < list.size(); ++i) {
+            const KSaneWidget::DeviceInfo info = list.at(i);
+            qDebug() << info.name;
+            if (info.name == m_devName) {
+                m_vendor    = info.vendor;
+                m_model     = info.model;
                 break;
             }
         }
@@ -215,9 +216,10 @@ int KSaneWidgetPrivate::getBytesPerLines(SANE_Parameters &params)
 KSaneOption *KSaneWidgetPrivate::getOption(const QString &name)
 {
     int i;
-    for (i = 0; i < m_optList.size(); i++) {
-        if (m_optList.at(i)->name() == name) {
-            return m_optList.at(i);
+    for (i = 0; i < m_optList.size(); ++i) {
+        KSaneOption * option = m_optList.at(i);
+        if (option->name() == name) {
+            return option;
         }
     }
     return 0;
@@ -397,16 +399,17 @@ void KSaneWidgetPrivate::createOptInterface()
     QVBoxLayout *other_layout = new QVBoxLayout(m_otherOptsTab);
 
     // add the remaining parameters
-    for (int i = 0; i < m_optList.size(); i++) {
-        if ((m_optList.at(i)->widget() == 0) &&
-                (m_optList.at(i)->name() != SANE_NAME_SCAN_TL_X) &&
-                (m_optList.at(i)->name() != SANE_NAME_SCAN_TL_Y) &&
-                (m_optList.at(i)->name() != SANE_NAME_SCAN_BR_X) &&
-                (m_optList.at(i)->name() != SANE_NAME_SCAN_BR_Y) &&
-                (m_optList.at(i)->name() != SANE_NAME_PREVIEW) &&
-                (m_optList.at(i)->hasGui())) {
-            m_optList.at(i)->createWidget(m_otherOptsTab);
-            other_layout->addWidget(m_optList.at(i)->widget());
+    for (int i = 0; i < m_optList.size(); ++i) {
+        KSaneOption *option = m_optList.at(i);
+        if ((option->widget() == 0) &&
+                (option->name() != SANE_NAME_SCAN_TL_X) &&
+                (option->name() != SANE_NAME_SCAN_TL_Y) &&
+                (option->name() != SANE_NAME_SCAN_BR_X) &&
+                (option->name() != SANE_NAME_SCAN_BR_Y) &&
+                (option->name() != SANE_NAME_PREVIEW) &&
+                (option->hasGui())) {
+            option->createWidget(m_otherOptsTab);
+            other_layout->addWidget(option->widget());
         }
     }
 
@@ -417,7 +420,7 @@ void KSaneWidgetPrivate::createOptInterface()
     int labelWidth = 0;
     KSaneOptionWidget *tmpOption;
     // Basic Options
-    for (int i = 0; i < basic_layout->count(); i++) {
+    for (int i = 0; i < basic_layout->count(); ++i) {
         if (basic_layout->itemAt(i) && basic_layout->itemAt(i)->widget()) {
             tmpOption = qobject_cast<KSaneOptionWidget *>(basic_layout->itemAt(i)->widget());
             if (tmpOption) {
@@ -426,7 +429,7 @@ void KSaneWidgetPrivate::createOptInterface()
         }
     }
     // Color Options
-    for (int i = 0; i < basic_layout->count(); i++) {
+    for (int i = 0; i < basic_layout->count(); ++i) {
         if (basic_layout->itemAt(i) && basic_layout->itemAt(i)->widget()) {
             tmpOption = qobject_cast<KSaneOptionWidget *>(basic_layout->itemAt(i)->widget());
             if (tmpOption) {
@@ -435,7 +438,7 @@ void KSaneWidgetPrivate::createOptInterface()
         }
     }
     // Set label widths
-    for (int i = 0; i < basic_layout->count(); i++) {
+    for (int i = 0; i < basic_layout->count(); ++i) {
         if (basic_layout->itemAt(i) && basic_layout->itemAt(i)->widget()) {
             tmpOption = qobject_cast<KSaneOptionWidget *>(basic_layout->itemAt(i)->widget());
             if (tmpOption) {
@@ -443,7 +446,7 @@ void KSaneWidgetPrivate::createOptInterface()
             }
         }
     }
-    for (int i = 0; i < color_lay->count(); i++) {
+    for (int i = 0; i < color_lay->count(); ++i) {
         if (color_lay->itemAt(i) && color_lay->itemAt(i)->widget()) {
             tmpOption = qobject_cast<KSaneOptionWidget *>(color_lay->itemAt(i)->widget());
             if (tmpOption) {
@@ -453,7 +456,7 @@ void KSaneWidgetPrivate::createOptInterface()
     }
     // Other Options
     labelWidth = 0;
-    for (int i = 0; i < other_layout->count(); i++) {
+    for (int i = 0; i < other_layout->count(); ++i) {
         if (other_layout->itemAt(i) && other_layout->itemAt(i)->widget()) {
             tmpOption = qobject_cast<KSaneOptionWidget *>(other_layout->itemAt(i)->widget());
             if (tmpOption) {
@@ -461,7 +464,7 @@ void KSaneWidgetPrivate::createOptInterface()
             }
         }
     }
-    for (int i = 0; i < other_layout->count(); i++) {
+    for (int i = 0; i < other_layout->count(); ++i) {
         if (other_layout->itemAt(i) && other_layout->itemAt(i)->widget()) {
             tmpOption = qobject_cast<KSaneOptionWidget *>(other_layout->itemAt(i)->widget());
             if (tmpOption) {
@@ -508,7 +511,7 @@ void KSaneWidgetPrivate::optReload()
 {
     int i;
 
-    for (i = 0; i < m_optList.size(); i++) {
+    for (i = 0; i < m_optList.size(); ++i) {
         m_optList.at(i)->readOption();
         // Also read the values
         m_optList.at(i)->readValue();
@@ -540,7 +543,7 @@ void KSaneWidgetPrivate::valReload()
     int i;
     QString tmp;
 
-    for (i = 0; i < m_optList.size(); i++) {
+    for (i = 0; i < m_optList.size(); ++i) {
         m_optList.at(i)->readValue();
     }
 
