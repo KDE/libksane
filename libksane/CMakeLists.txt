@@ -52,10 +52,15 @@ ENDIF()
 
 INSTALL(TARGETS ksane ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
-INSTALL(FILES ksane.h
-              libksane_export.h
-              ${CMAKE_CURRENT_BINARY_DIR}/version.h
-        DESTINATION ${INCLUDE_INSTALL_DIR}/libksane COMPONENT Devel)
+# Check if compilation is done through digiKam SC or not. If yes, do not install header files.
+IF (NOT DIGIKAMSC_COMPILE_LIBKSANE)
+
+    INSTALL(FILES ksane.h
+                libksane_export.h
+                ${CMAKE_CURRENT_BINARY_DIR}/version.h
+            DESTINATION ${INCLUDE_INSTALL_DIR}/libksane COMPONENT Devel)
+
+ENDIF()
 
 KDE4_INSTALL_ICONS(${ICON_INSTALL_DIR})
 
