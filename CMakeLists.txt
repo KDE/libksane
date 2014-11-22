@@ -52,6 +52,9 @@ remove_definitions(-DQT_NO_CAST_FROM_BYTEARRAY)
 # Check if sane API is available.
 if (NOT WIN32)
     find_package(Sane)
+    message(STATUS "SANE_FOUND:       ${SANE_FOUND}")
+    message(STATUS "SANE_INCLUDE_DIR: ${SANE_INCLUDE_DIR}")
+    message(STATUS "SANE_LIBRARY:     ${SANE_LIBRARY}")
     # macro_log_feature(SANE_FOUND "SANE development toolkit" "Scanner Access Now Easy (SANE) development package" "http://www.sane-project.org" TRUE "" "Needed by libksane")
 endif (NOT WIN32)
 

@@ -45,15 +45,14 @@ target_include_directories(KF5Sane INTERFACE "$<INSTALL_INTERFACE:${INCLUDE_INST
 target_link_libraries(KF5Sane
   PUBLIC
     Qt5::Widgets
-  # PRIVATE
-  #  KF5::CoreAddons
-  #  Other private libs
     KF5::I18n
     KF5::Wallet
     KF5::WidgetsAddons
     KF5::TextWidgets
   PRIVATE
     ${SANE_LIBRARY}
+  #  KF5::CoreAddons
+  #  Other private libs
 )
 
 set_target_properties(KF5Sane
