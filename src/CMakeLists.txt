@@ -52,6 +52,7 @@ target_link_libraries(KF5Sane
     KF5::Wallet
     KF5::WidgetsAddons
     KF5::TextWidgets
+  PRIVATE
     ${SANE_LIBRARY}
 )
 
