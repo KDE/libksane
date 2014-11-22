@@ -8,7 +8,7 @@ project(KSane)
 # ECM setup (Extended Cmake Modules)
 find_package(ECM 1.1.0 REQUIRED NO_MODULE)
 # ECM setup2 and include find same cmake module (copied from /usr/share/kde4/apps/cmake/modules/FindSane.cmake)
-set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${ECM_KDE_MODULE_DIR} ${CMAKE_SOURCE_DIR}/cmake-modules)
+set(CMAKE_MODULE_PATH ${KSane_SOURCE_DIR}/cmake-modules ${ECM_MODULE_PATH} ${ECM_KDE_MODULE_DIR})
 
 include(FeatureSummary)
 include(ECMSetupVersion)
