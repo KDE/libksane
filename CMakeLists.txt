@@ -2,8 +2,8 @@ cmake_minimum_required(VERSION 2.8.12)
 
 project(KSane)
 
-#message(STATUS "-------------------------------------------")
-#message(STATUS "Starting CMake configuration for: libksane")
+message(STATUS "-------------------------------------------")
+message(STATUS "Starting CMake configuration for: libksane")
 
 # ECM setup (Extended Cmake Modules)
 find_package(ECM 1.1.0 REQUIRED NO_MODULE)
