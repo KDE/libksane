@@ -40,7 +40,7 @@ add_library(KF5Sane ${ksane_SRCS})
 generate_export_header(KF5Sane BASE_NAME KSane)
 add_library(KF5::Sane ALIAS KF5Sane)
 
-target_include_directories(KF5Sane INTERFACE "$<INSTALL_INTERFACE:${INCLUDE_INSTALL_DIR}/KSane>")
+target_include_directories(KF5Sane INTERFACE "$<INSTALL_INTERFACE:${KF5_INCLUDE_INSTALL_DIR}/KSane>")
 
 target_link_libraries(KF5Sane
   PUBLIC
@@ -96,6 +96,6 @@ install(TARGETS KF5Sane
 install(FILES
   ${CMAKE_CURRENT_BINARY_DIR}/ksane_export.h
   ${KSane_HEADERS}
-  DESTINATION ${INCLUDE_INSTALL_DIR}/KSane
+  DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/KSane
   COMPONENT Devel
 )
