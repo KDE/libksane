@@ -1,15 +1,17 @@
-find_package(Qt5 ${REQUIRED_QT_VERSION} CONFIG REQUIRED Test)
 
-include(ECMMarkAsTest)
-
-macro(ksane_executable_tests)
-  foreach(_testname ${ARGN})
-    add_executable(${_testname} ${_testname}.cpp)
-    target_link_libraries(${_testname} Qt5::Test KF5Sane)
-    ecm_mark_as_test(${_testname})
-  endforeach(_testname)
-endmacro()
-
-#ksane_executable_tests(
-#  anothertest
-#)
+option(COMPILE_VIEWER_TESTAPP "Compile a small test application for the viewer")
+if (COMPILE_VIEWER_TESTAPP)
+    message("Compile testapp")
+    add_executable(viewertest
+        ${CMAKE_SOURCE_DIR}/src/selectionitem.cpp
+        ${CMAKE_SOURCE_DIR}/src/ksaneviewer.cpp
+        ksaneviewertest.cpp
+    )
+    target_link_libraries(viewertest
+        PRIVATE
+            KF5Sane
+            KF5::I18n
+            KF5::Wallet
+            KF5::WidgetsAddons
+    )
+endif()

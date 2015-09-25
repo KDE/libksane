@@ -61,21 +61,8 @@ set_target_properties(KF5Sane
 )
 
 
-option(COMPILE_VIEWER_TESTAPP "Compile a small test application for the viewer")
-if (COMPILE_VIEWER_TESTAPP)
-    message("Compile testapp")
-    add_executable(viewertest ksaneviewer.cpp ksaneviewertest.cpp selectionitem.cpp)
-    target_link_libraries(viewertest
-      LINK_PRIVATE
-    KF5::I18n
-    KF5::Wallet
-    KF5::WidgetsAddons
-    ${SANE_LIBRARY})
-endif()
-
 ecm_generate_headers(KSane_HEADERS
     HEADER_NAMES
-        KSaneViewer
         KSaneWidget
     REQUIRED_HEADERS KSane_HEADERS
 )
