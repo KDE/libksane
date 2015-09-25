@@ -7,33 +7,33 @@ include_directories(${SANE_INCLUDE_DIR}
 )
 
 set(ksane_SRCS
-    widgets/gamma_disp.cpp
-    widgets/labeled_gamma.cpp
-    widgets/labeled_checkbox.cpp
-    widgets/labeled_entry.cpp
-    widgets/labeled_combo.cpp
-    widgets/labeled_fslider.cpp
-    widgets/labeled_slider.cpp
-    widgets/ksane_button.cpp
-    widgets/ksane_option_widget.cpp
-    ksane_viewer.cpp
+    widgets/gammadisp.cpp
+    widgets/labeledgamma.cpp
+    widgets/labeledcheckbox.cpp
+    widgets/labeledentry.cpp
+    widgets/labeledcombo.cpp
+    widgets/labeledfslider.cpp
+    widgets/labeledslider.cpp
+    widgets/ksanebutton.cpp
+    widgets/ksaneoptionwidget.cpp
+    ksaneviewer.cpp
     selectionitem.cpp
-    ksane_device_dialog.cpp
-    ksane_find_devices_thread.cpp
-    ksane.cpp
-    ksane_scan_thread.cpp
-    ksane_preview_thread.cpp
-    ksane_p.cpp
+    ksanedevicedialog.cpp
+    ksanefinddevicesthread.cpp
+    ksanewidget.cpp
+    ksanescanthread.cpp
+    ksanepreviewthread.cpp
+    ksanewidget_p.cpp
     splittercollapser.cpp
-    ksane_auth.cpp
-    options/ksane_option.cpp
-    options/ksane_opt_button.cpp
-    options/ksane_opt_checkbox.cpp
-    options/ksane_opt_entry.cpp
-    options/ksane_opt_gamma.cpp
-    options/ksane_opt_slider.cpp
-    options/ksane_opt_fslider.cpp
-    options/ksane_opt_combo.cpp
+    ksaneauth.cpp
+    options/ksaneoption.cpp
+    options/ksaneoptbutton.cpp
+    options/ksaneoptcheckbox.cpp
+    options/ksaneoptentry.cpp
+    options/ksaneoptgamma.cpp
+    options/ksaneoptslider.cpp
+    options/ksaneoptfslider.cpp
+    options/ksaneoptcombo.cpp
 )
 
 add_library(KF5Sane ${ksane_SRCS})
@@ -64,8 +64,8 @@ set_target_properties(KF5Sane
 option(COMPILE_VIEWER_TESTAPP "Compile a small test application for the viewer")
 if (COMPILE_VIEWER_TESTAPP)
     message("Compile testapp")
-    add_executable(viewer_test ksane_viewer.cpp ksane_viewer_test.cpp selectionitem.cpp)
-    target_link_libraries(viewer_test
+    add_executable(viewertest ksaneviewer.cpp ksaneviewertest.cpp selectionitem.cpp)
+    target_link_libraries(viewertest
       LINK_PRIVATE
     KF5::I18n
     KF5::Wallet
@@ -73,13 +73,11 @@ if (COMPILE_VIEWER_TESTAPP)
     ${SANE_LIBRARY})
 endif()
 
-# method to convert wrongly named _ class file names to proper KF5 headers (camel case)
-# FIXME: remove _ from filenames
 ecm_generate_headers(KSane_HEADERS
-  HEADER_NAMES
-    KSane_Viewer
-    KSane
-  REQUIRED_HEADERS KSane_HEADERS
+    HEADER_NAMES
+        KSaneViewer
+        KSaneWidget
+    REQUIRED_HEADERS KSane_HEADERS
 )
 
 # Install files
