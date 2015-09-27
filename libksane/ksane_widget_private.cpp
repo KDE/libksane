@@ -918,9 +918,9 @@ void KSaneWidgetPrivate::oneFinalScanDone()
             QString source;
             m_optSource->getValue(source);
 
-            if (source.contains("Automatic Document Feeder")) {
+            if (source.contains("Automatic Document Feeder") || source.contains("ADF")) {
                 // in batch mode only one area can be scanned per page
-                //kDebug() << "source == \"Automatic Document Feeder\"";
+                //kDebug() << "source == " << source;
                 m_updProgressTmr.start();
                 m_scanThread->start();
                 return;
