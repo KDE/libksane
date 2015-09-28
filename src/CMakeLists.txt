@@ -43,16 +43,15 @@ add_library(KF5::Sane ALIAS KF5Sane)
 target_include_directories(KF5Sane INTERFACE "$<INSTALL_INTERFACE:${KF5_INCLUDE_INSTALL_DIR}/KSane>")
 
 target_link_libraries(KF5Sane
-  PUBLIC
-    Qt5::Widgets
-    KF5::I18n
-    KF5::Wallet
-    KF5::WidgetsAddons
-    KF5::TextWidgets
-  PRIVATE
-    ${SANE_LIBRARY}
-  #  KF5::CoreAddons
-  #  Other private libs
+    PUBLIC
+        Qt5::Widgets
+    PRIVATE
+        ${SANE_LIBRARY}
+
+        KF5::I18n
+        KF5::Wallet
+        KF5::WidgetsAddons
+        KF5::TextWidgets
 )
 
 set_target_properties(KF5Sane
