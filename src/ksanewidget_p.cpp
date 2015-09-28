@@ -1152,10 +1152,10 @@ void KSaneWidgetPrivate::alertUser(int type, const QString &strStatus)
     if (q->receivers(SIGNAL(userMessage(int,QString))) == 0) {
         switch (type) {
         case KSaneWidget::ErrorGeneral:
-            QMessageBox::critical(nullptr, "General Error", strStatus);
+            QMessageBox::critical(nullptr, i18nc("@title:window", "General Error"), strStatus);
             break;
         default:
-            QMessageBox::information(nullptr, "Information", strStatus);
+            QMessageBox::information(nullptr, i18nc("@title:window", "Information"), strStatus);
             break;
         }
     } else {
