@@ -51,7 +51,7 @@ void KSaneOptFSlider::createWidget(QWidget *parent)
         return;
     }
 
-    m_widget = m_slider = new LabeledFSlider(parent, "", FIXED_MIN, FIXED_MAX, MIN_FIXED_STEP);
+    m_widget = m_slider = new LabeledFSlider(parent, QStringLiteral(""), FIXED_MIN, FIXED_MAX, MIN_FIXED_STEP);
     readOption();
     m_widget->setToolTip(i18n(m_optDesc->desc));
     connect(m_slider, &LabeledFSlider::valueChanged, this, &KSaneOptFSlider::sliderChanged);

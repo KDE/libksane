@@ -84,10 +84,10 @@ void FindSaneDevicesThread::run()
         KSaneWidget::DeviceInfo deviceInfo;
 
         while (devList[i] != 0) {
-            deviceInfo.name = devList[i]->name;
-            deviceInfo.vendor = devList[i]->vendor;
-            deviceInfo.model = devList[i]->model;
-            deviceInfo.type = devList[i]->type;
+            deviceInfo.name = QString::fromUtf8(devList[i]->name);
+            deviceInfo.vendor = QString::fromUtf8(devList[i]->vendor);
+            deviceInfo.model = QString::fromUtf8(devList[i]->model);
+            deviceInfo.type = QString::fromUtf8(devList[i]->type);
             m_deviceList << deviceInfo;
             i++;
         }

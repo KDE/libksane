@@ -46,12 +46,6 @@ find_package(KF5WidgetsAddons ${KF5_VERSION} REQUIRED)
 find_package(KF5TextWidgets ${KF5_VERSION} REQUIRED)
 # ...
 
-# be not so strict with the poor developer who just wants to use strings
-remove_definitions(-DQT_NO_CAST_TO_ASCII)
-remove_definitions(-DQT_NO_CAST_FROM_ASCII)
-remove_definitions(-DQT_NO_URL_CAST_FROM_STRING)
-remove_definitions(-DQT_NO_CAST_FROM_BYTEARRAY)
-
 # Check if sane API is available.
 if (NOT WIN32)
     find_package(Sane)

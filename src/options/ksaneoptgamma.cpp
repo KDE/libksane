@@ -52,7 +52,7 @@ void KSaneOptGamma::createWidget(QWidget *parent)
 
     if (!m_optDesc) {
         qDebug() << "This is a bug";
-        m_widget = new KSaneOptionWidget(parent, "");
+        m_widget = new KSaneOptionWidget(parent, QStringLiteral(""));
         return;
     }
 

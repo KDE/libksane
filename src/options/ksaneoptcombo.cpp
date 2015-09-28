@@ -50,7 +50,7 @@ void KSaneOptCombo::createWidget(QWidget *parent)
         return;
     }
 
-    m_widget = m_combo = new LabeledCombo(parent, "", QStringList());
+    m_widget = m_combo = new LabeledCombo(parent, QStringLiteral(""), QStringList());
     readOption();
     m_widget->setToolTip(i18n(m_optDesc->desc));
     connect(m_combo, static_cast<void (LabeledCombo::*)(int)>(&LabeledCombo::activated), this, &KSaneOptCombo::comboboxChangedIndex);
@@ -95,13 +95,14 @@ void KSaneOptCombo::readOption()
     m_combo->clear();
     m_combo->setLabelText(i18n(m_optDesc->title));
     m_combo->addItems(m_strList);
-    m_combo->setIcon(QIcon::fromTheme("color"), getSaneComboString((unsigned char *)SANE_VALUE_SCAN_MODE_COLOR));
-    m_combo->setIcon(QIcon::fromTheme("gray-scale"),
+    m_combo->setIcon(QIcon::fromTheme(QStringLiteral("color")),
+                     getSaneComboString((unsigned char *)SANE_VALUE_SCAN_MODE_COLOR));
+    m_combo->setIcon(QIcon::fromTheme(QStringLiteral("gray-scale")),
                      getSaneComboString((unsigned char *)SANE_VALUE_SCAN_MODE_GRAY));
-    m_combo->setIcon(QIcon::fromTheme("black-white"),
+    m_combo->setIcon(QIcon::fromTheme(QStringLiteral("black-white")),
                      getSaneComboString((unsigned char *)SANE_VALUE_SCAN_MODE_LINEART));
     // The epkowa/epson backend uses "Binary" which is the same as "Lineart"
-    m_combo->setIcon(QIcon::fromTheme("black-white"), i18n(tmp_binary));
+    m_combo->setIcon(QIcon::fromTheme(QStringLiteral("black-white")), i18n(tmp_binary));
 
     // set the previous value
     m_combo->setCurrentText(saved);
@@ -131,7 +132,7 @@ QStringList &KSaneOptCombo::genComboStringList()
         }
         break;
     default :
-        m_strList += "NOT HANDELED";
+        m_strList += QStringLiteral("NOT HANDELED");
         break;
     }
     return m_strList;
@@ -341,7 +342,7 @@ bool KSaneOptCombo::setValue(const QString &val)
 
     switch (m_optDesc->type) {
     case SANE_TYPE_INT:
-        tmp = val.left(val.indexOf(' ')); // strip the unit
+        tmp = val.left(val.indexOf(QLatin1Char(' '))); // strip the unit
         // accept float formating of the string
         i = (int)(tmp.toFloat(&ok));
         if (ok == false) {
@@ -351,7 +352,7 @@ bool KSaneOptCombo::setValue(const QString &val)
         data_ptr = data;
         break;
     case SANE_TYPE_FIXED:
-        tmp = val.left(val.indexOf(' ')); // strip the unit
+        tmp = val.left(val.indexOf(QLatin1Char(' '))); // strip the unit
         f = tmp.toFloat(&ok);
         if (ok == false) {
             return false;

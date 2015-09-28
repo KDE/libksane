@@ -110,8 +110,8 @@ void KSaneAuth::authorization(SANE_String_Const resource, SANE_Char *username, S
     // I have found that "resource contains the backend name + "$MD5$....."
     // it does not contain unique identifiers like ":libusb:001:004"
     // -> remove $MD5 and later before comparison...
-    QString res(resource);
-    int end = res.indexOf("$MD5$");
+    QString res = QString::fromUtf8(resource);
+    int end = res.indexOf(QStringLiteral("$MD5$"));
     res = res.left(end);
     qDebug() << res;
 
@@ -119,8 +119,8 @@ void KSaneAuth::authorization(SANE_String_Const resource, SANE_Char *username, S
     for (int i = 0; i < list.size(); i++) {
         qDebug() << res << list.at(i).resource;
         if (list.at(i).resource.contains(res)) {
-            qstrncpy(username, list.at(i).username.toLocal8Bit(), SANE_MAX_USERNAME_LEN);
-            qstrncpy(password, list.at(i).password.toLocal8Bit(), SANE_MAX_PASSWORD_LEN);
+            qstrncpy(username, list.at(i).username.toLocal8Bit().constData(), SANE_MAX_USERNAME_LEN);
+            qstrncpy(password, list.at(i).password.toLocal8Bit().constData(), SANE_MAX_PASSWORD_LEN);
             break;
         }
     }

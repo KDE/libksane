@@ -233,48 +233,48 @@ void KSaneWidgetPrivate::createOptInterface()
     QVBoxLayout *basic_layout = new QVBoxLayout(m_basicOptsTab);
     KSaneOption *option;
     // Scan Source
-    if ((option = getOption(SANE_NAME_SCAN_SOURCE)) != 0) {
+    if ((option = getOption(QStringLiteral(SANE_NAME_SCAN_SOURCE))) != 0) {
         m_optSource = option;
         option->createWidget(m_basicOptsTab);
         basic_layout->addWidget(option->widget());
         connect(m_optSource, SIGNAL(valueChanged()), this, SLOT(checkInvert()), Qt::QueuedConnection);
     }
     // film-type (note: No translation)
-    if ((option = getOption(QString("film-type"))) != 0) {
+    if ((option = getOption(QStringLiteral("film-type"))) != 0) {
         m_optFilmType = option;
         option->createWidget(m_basicOptsTab);
         basic_layout->addWidget(option->widget());
         connect(m_optFilmType, SIGNAL(valueChanged()), this, SLOT(checkInvert()), Qt::QueuedConnection);
-    } else if ((option = getOption(SANE_NAME_NEGATIVE)) != 0) {
+    } else if ((option = getOption(QStringLiteral(SANE_NAME_NEGATIVE))) != 0) {
         m_optNegative = option;
         option->createWidget(m_basicOptsTab);
         basic_layout->addWidget(option->widget());
     }
     // Scan mode
-    if ((option = getOption(SANE_NAME_SCAN_MODE)) != 0) {
+    if ((option = getOption(QStringLiteral(SANE_NAME_SCAN_MODE))) != 0) {
         m_optMode = option;
         option->createWidget(m_basicOptsTab);
         basic_layout->addWidget(option->widget());
     }
     // Bitdepth
-    if ((option = getOption(SANE_NAME_BIT_DEPTH)) != 0) {
+    if ((option = getOption(QStringLiteral(SANE_NAME_BIT_DEPTH))) != 0) {
         m_optDepth = option;
         option->createWidget(m_basicOptsTab);
         basic_layout->addWidget(option->widget());
     }
     // Threshold
-    if ((option = getOption(SANE_NAME_THRESHOLD)) != 0) {
+    if ((option = getOption(QStringLiteral(SANE_NAME_THRESHOLD))) != 0) {
         option->createWidget(m_basicOptsTab);
         basic_layout->addWidget(option->widget());
     }
     // Resolution
-    if ((option = getOption(SANE_NAME_SCAN_RESOLUTION)) != 0) {
+    if ((option = getOption(QStringLiteral(SANE_NAME_SCAN_RESOLUTION))) != 0) {
         m_optRes = option;
         option->createWidget(m_basicOptsTab);
         basic_layout->addWidget(option->widget());
     }
     // These two next resolution options are a bit tricky.
-    if ((option = getOption(SANE_NAME_SCAN_X_RESOLUTION)) != 0) {
+    if ((option = getOption(QStringLiteral(SANE_NAME_SCAN_X_RESOLUTION))) != 0) {
         m_optResX = option;
         if (!m_optRes) {
             m_optRes = m_optResX;
@@ -282,36 +282,36 @@ void KSaneWidgetPrivate::createOptInterface()
         option->createWidget(m_basicOptsTab);
         basic_layout->addWidget(option->widget());
     }
-    if ((option = getOption(SANE_NAME_SCAN_Y_RESOLUTION)) != 0) {
+    if ((option = getOption(QStringLiteral(SANE_NAME_SCAN_Y_RESOLUTION))) != 0) {
         m_optResY = option;
         option->createWidget(m_basicOptsTab);
         basic_layout->addWidget(option->widget());
     }
 
     // save a pointer to the preview option if possible
-    if ((option = getOption(SANE_NAME_PREVIEW)) != 0) {
+    if ((option = getOption(QStringLiteral(SANE_NAME_PREVIEW))) != 0) {
         m_optPreview = option;
     }
 
     // save a pointer to the "wait-for-button" option if possible (Note: No translation)
-    if ((option = getOption("wait-for-button")) != 0) {
+    if ((option = getOption(QStringLiteral("wait-for-button"))) != 0) {
         m_optWaitForBtn = option;
     }
 
     // scan area (Do not add the widgets)
-    if ((option = getOption(SANE_NAME_SCAN_TL_X)) != 0) {
+    if ((option = getOption(QStringLiteral(SANE_NAME_SCAN_TL_X))) != 0) {
         m_optTlX = option;
         connect(option, SIGNAL(fValueRead(float)), this, SLOT(setTLX(float)));
     }
-    if ((option = getOption(SANE_NAME_SCAN_TL_Y)) != 0) {
+    if ((option = getOption(QStringLiteral(SANE_NAME_SCAN_TL_Y))) != 0) {
         m_optTlY = option;
         connect(option, SIGNAL(fValueRead(float)), this, SLOT(setTLY(float)));
     }
-    if ((option = getOption(SANE_NAME_SCAN_BR_X)) != 0) {
+    if ((option = getOption(QStringLiteral(SANE_NAME_SCAN_BR_X))) != 0) {
         m_optBrX = option;
         connect(option, SIGNAL(fValueRead(float)), this, SLOT(setBRX(float)));
     }
-    if ((option = getOption(SANE_NAME_SCAN_BR_Y)) != 0) {
+    if ((option = getOption(QStringLiteral(SANE_NAME_SCAN_BR_Y))) != 0) {
         m_optBrY = option;
         connect(option, SIGNAL(fValueRead(float)), this, SLOT(setBRY(float)));
     }
@@ -323,11 +323,11 @@ void KSaneWidgetPrivate::createOptInterface()
     color_lay->setContentsMargins(0, 0, 0, 0);
 
     // Add Color correction to the color "frame"
-    if ((option = getOption(SANE_NAME_BRIGHTNESS)) != 0) {
+    if ((option = getOption(QStringLiteral(SANE_NAME_BRIGHTNESS))) != 0) {
         option->createWidget(m_colorOpts);
         color_lay->addWidget(option->widget());
     }
-    if ((option = getOption(SANE_NAME_CONTRAST)) != 0) {
+    if ((option = getOption(QStringLiteral(SANE_NAME_CONTRAST))) != 0) {
         option->createWidget(m_colorOpts);
         color_lay->addWidget(option->widget());
     }
@@ -338,17 +338,17 @@ void KSaneWidgetPrivate::createOptInterface()
     QVBoxLayout *gam_frm_l = new QVBoxLayout(gamma_frm);
     gam_frm_l->setContentsMargins(0, 0, 0, 0);
 
-    if ((option = getOption(SANE_NAME_GAMMA_VECTOR_R)) != 0) {
+    if ((option = getOption(QStringLiteral(SANE_NAME_GAMMA_VECTOR_R))) != 0) {
         m_optGamR = option;
         option->createWidget(gamma_frm);
         gam_frm_l->addWidget(option->widget());
     }
-    if ((option = getOption(SANE_NAME_GAMMA_VECTOR_G)) != 0) {
+    if ((option = getOption(QStringLiteral(SANE_NAME_GAMMA_VECTOR_G))) != 0) {
         m_optGamG = option;
         option->createWidget(gamma_frm);
         gam_frm_l->addWidget(option->widget());
     }
-    if ((option = getOption(SANE_NAME_GAMMA_VECTOR_B)) != 0) {
+    if ((option = getOption(QStringLiteral(SANE_NAME_GAMMA_VECTOR_B))) != 0) {
         m_optGamB = option;
         option->createWidget(gamma_frm);
         gam_frm_l->addWidget(option->widget());
@@ -375,11 +375,11 @@ void KSaneWidgetPrivate::createOptInterface()
         gamma_frm->hide();
     }
 
-    if ((option = getOption(SANE_NAME_BLACK_LEVEL)) != 0) {
+    if ((option = getOption(QStringLiteral(SANE_NAME_BLACK_LEVEL))) != 0) {
         option->createWidget(m_colorOpts);
         color_lay->addWidget(option->widget());
     }
-    if ((option = getOption(SANE_NAME_WHITE_LEVEL)) != 0) {
+    if ((option = getOption(QStringLiteral(SANE_NAME_WHITE_LEVEL))) != 0) {
         option->createWidget(m_colorOpts);
         color_lay->addWidget(option->widget());
     }
@@ -402,11 +402,11 @@ void KSaneWidgetPrivate::createOptInterface()
     for (int i = 0; i < m_optList.size(); ++i) {
         KSaneOption *option = m_optList.at(i);
         if ((option->widget() == 0) &&
-                (option->name() != SANE_NAME_SCAN_TL_X) &&
-                (option->name() != SANE_NAME_SCAN_TL_Y) &&
-                (option->name() != SANE_NAME_SCAN_BR_X) &&
-                (option->name() != SANE_NAME_SCAN_BR_Y) &&
-                (option->name() != SANE_NAME_PREVIEW) &&
+                (option->name() != QStringLiteral(SANE_NAME_SCAN_TL_X)) &&
+                (option->name() != QStringLiteral(SANE_NAME_SCAN_TL_Y)) &&
+                (option->name() != QStringLiteral(SANE_NAME_SCAN_BR_X)) &&
+                (option->name() != QStringLiteral(SANE_NAME_SCAN_BR_Y)) &&
+                (option->name() != QStringLiteral(SANE_NAME_PREVIEW)) &&
                 (option->hasGui())) {
             option->createWidget(m_otherOptsTab);
             other_layout->addWidget(option->widget());
@@ -487,12 +487,12 @@ void KSaneWidgetPrivate::setDefaultValues()
     KSaneOption *option;
 
     // Try to get Color mode by default
-    if ((option = getOption(SANE_NAME_SCAN_MODE)) != 0) {
+    if ((option = getOption(QStringLiteral(SANE_NAME_SCAN_MODE))) != 0) {
         option->setValue(i18n(SANE_VALUE_SCAN_MODE_COLOR));
     }
 
     // Try to set 8 bit color
-    if ((option = getOption(SANE_NAME_BIT_DEPTH)) != 0) {
+    if ((option = getOption(QStringLiteral(SANE_NAME_BIT_DEPTH))) != 0) {
         option->setValue(8);
     }
 
@@ -770,7 +770,7 @@ void KSaneWidgetPrivate::startPreviewScan()
     if (m_optRes != 0) {
         if (m_previewDPI >= 25.0) {
             m_optRes->setValue(m_previewDPI);
-            if ((m_optResY != 0) && (m_optRes->name() == SANE_NAME_SCAN_X_RESOLUTION)) {
+            if ((m_optResY != 0) && (m_optRes->name() == QStringLiteral(SANE_NAME_SCAN_X_RESOLUTION))) {
                 m_optResY->setValue(m_previewDPI);
             }
         } else {
@@ -779,7 +779,7 @@ void KSaneWidgetPrivate::startPreviewScan()
             m_optRes->getMinValue(dpi);
             do {
                 m_optRes->setValue(dpi);
-                if ((m_optResY != 0) && (m_optRes->name() == SANE_NAME_SCAN_X_RESOLUTION)) {
+                if ((m_optResY != 0) && (m_optRes->name() == QStringLiteral(SANE_NAME_SCAN_X_RESOLUTION))) {
                     m_optResY->setValue(dpi);
                 }
                 //check what image size we would get in a scan
@@ -843,7 +843,7 @@ void KSaneWidgetPrivate::previewScanDone()
         sane_close(m_saneHandle);
         m_saneHandle = 0;
         clearDeviceOptions();
-        emit(q->scanDone(KSaneWidget::NoError, ""));
+        emit(q->scanDone(KSaneWidget::NoError, QStringLiteral("")));
         return;
     }
 
@@ -878,7 +878,7 @@ void KSaneWidgetPrivate::previewScanDone()
     m_scanOngoing = false;
     m_updProgressTmr.stop();
 
-    emit(q->scanDone(KSaneWidget::NoError, ""));
+    emit(q->scanDone(KSaneWidget::NoError, QStringLiteral("")));
 
     return;
 }
@@ -961,7 +961,8 @@ void KSaneWidgetPrivate::oneFinalScanDone()
             QString source;
             m_optSource->getValue(source);
 
-            if (source.contains("Automatic Document Feeder") || source.contains("ADF")) {
+            if (source.contains(QStringLiteral("Automatic Document Feeder")) ||
+                source.contains(QStringLiteral("ADF"))) {
                 // in batch mode only one area can be scanned per page
                 //qDebug() << "source == " << source;
                 m_updProgressTmr.start();
@@ -977,7 +978,7 @@ void KSaneWidgetPrivate::oneFinalScanDone()
             m_optWaitForBtn->getValue(wait);
 
             qDebug() << "wait ==" << wait;
-            if (wait == "true") {
+            if (wait == QStringLiteral("true")) {
                 // in batch mode only one area can be scanned per page
                 //qDebug() << "source == \"Automatic Document Feeder\"";
                 m_updProgressTmr.start();
@@ -1026,7 +1027,7 @@ void KSaneWidgetPrivate::oneFinalScanDone()
                 return;
             }
         }
-        emit(q->scanDone(KSaneWidget::NoError, ""));
+        emit(q->scanDone(KSaneWidget::NoError, QStringLiteral("")));
     } else {
         switch (m_scanThread->saneStatus()) {
         case SANE_STATUS_GOOD:

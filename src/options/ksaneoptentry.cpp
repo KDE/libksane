@@ -52,7 +52,7 @@ void KSaneOptEntry::createWidget(QWidget *parent)
 
     if (!m_optDesc) {
         qDebug() << "This is a bug";
-        m_widget = new KSaneOptionWidget(parent, "");
+        m_widget = new KSaneOptionWidget(parent, QStringLiteral(""));
         return;
     }
 
@@ -88,7 +88,7 @@ void KSaneOptEntry::readValue()
         return;
     }
 
-    m_string = QString(reinterpret_cast<char *>(data.data()));
+    m_string = QString::fromUtf8(reinterpret_cast<char *>(data.data()));
     if (m_entry != 0) {
         m_entry->setText(m_string);
     }

@@ -62,7 +62,7 @@ namespace KSaneIface
 static int     s_objectCount = 0;
 static QMutex  s_objectMutex;
 
-static const QString InvetColorsOption = QString("KSane::InvertColors");
+static const QString InvetColorsOption = QStringLiteral("KSane::InvertColors");
 
 KSaneWidget::KSaneWidget(QWidget *parent)
     : QWidget(parent), d(new KSaneWidgetPrivate(this))
@@ -130,7 +130,7 @@ KSaneWidget::KSaneWidget(QWidget *parent)
     d->m_progressBar->setMaximum(100);
 
     d->m_cancelBtn   = new QPushButton;
-    d->m_cancelBtn->setIcon(QIcon::fromTheme("process-stop"));
+    d->m_cancelBtn->setIcon(QIcon::fromTheme(QStringLiteral("process-stop")));
     d->m_cancelBtn->setToolTip(i18n("Cancel current scan operation"));
     connect(d->m_cancelBtn, SIGNAL(clicked()), this, SLOT(scanCancel()));
 
@@ -143,42 +143,42 @@ KSaneWidget::KSaneWidget(QWidget *parent)
 
     d->m_zInBtn  = new QToolButton(this);
     d->m_zInBtn->setAutoRaise(true);
-    d->m_zInBtn->setIcon(QIcon::fromTheme("zoom-in"));
+    d->m_zInBtn->setIcon(QIcon::fromTheme(QStringLiteral("zoom-in")));
     d->m_zInBtn->setToolTip(i18n("Zoom In"));
     connect(d->m_zInBtn, SIGNAL(clicked()), d->m_previewViewer, SLOT(zoomIn()));
 
     d->m_zOutBtn = new QToolButton(this);
     d->m_zOutBtn->setAutoRaise(true);
-    d->m_zOutBtn->setIcon(QIcon::fromTheme("zoom-out"));
+    d->m_zOutBtn->setIcon(QIcon::fromTheme(QStringLiteral("zoom-out")));
     d->m_zOutBtn->setToolTip(i18n("Zoom Out"));
     connect(d->m_zOutBtn, SIGNAL(clicked()), d->m_previewViewer, SLOT(zoomOut()));
 
     d->m_zSelBtn = new QToolButton(this);
     d->m_zSelBtn->setAutoRaise(true);
-    d->m_zSelBtn->setIcon(QIcon::fromTheme("zoom-fit-best"));
+    d->m_zSelBtn->setIcon(QIcon::fromTheme(QStringLiteral("zoom-fit-best")));
     d->m_zSelBtn->setToolTip(i18n("Zoom to Selection"));
     connect(d->m_zSelBtn, SIGNAL(clicked()), d->m_previewViewer, SLOT(zoomSel()));
 
     d->m_zFitBtn = new QToolButton(this);
     d->m_zFitBtn->setAutoRaise(true);
-    d->m_zFitBtn->setIcon(QIcon::fromTheme("document-preview"));
+    d->m_zFitBtn->setIcon(QIcon::fromTheme(QStringLiteral("document-preview")));
     d->m_zFitBtn->setToolTip(i18n("Zoom to Fit"));
     connect(d->m_zFitBtn, SIGNAL(clicked()), d->m_previewViewer, SLOT(zoom2Fit()));
 
     d->m_clearSelBtn = new QToolButton(this);
     d->m_clearSelBtn->setAutoRaise(true);
-    d->m_clearSelBtn->setIcon(QIcon::fromTheme("edit-clear"));
+    d->m_clearSelBtn->setIcon(QIcon::fromTheme(QStringLiteral("edit-clear")));
     d->m_clearSelBtn->setToolTip(i18n("Clear Selections"));
     connect(d->m_clearSelBtn, SIGNAL(clicked()), d->m_previewViewer, SLOT(clearSelections()));
 
     d->m_prevBtn = new QPushButton(this);
-    d->m_prevBtn->setIcon(QIcon::fromTheme("document-import"));
+    d->m_prevBtn->setIcon(QIcon::fromTheme(QStringLiteral("document-import")));
     d->m_prevBtn->setToolTip(i18n("Scan Preview Image"));
     d->m_prevBtn->setText(i18nc("Preview button text", "Preview"));
     connect(d->m_prevBtn,   SIGNAL(clicked()), d, SLOT(startPreviewScan()));
 
     d->m_scanBtn = new QPushButton(this);
-    d->m_scanBtn->setIcon(QIcon::fromTheme("document-save"));
+    d->m_scanBtn->setIcon(QIcon::fromTheme(QStringLiteral("document-save")));
     d->m_scanBtn->setToolTip(i18n("Scan Final Image"));
     d->m_scanBtn->setText(i18nc("Final scan button text", "Scan"));
     d->m_scanBtn->setFocus(Qt::OtherFocusReason);
@@ -329,7 +329,7 @@ bool KSaneWidget::openDevice(const QString &deviceName)
     SANE_Int                       res;
     KPasswordDialog               *dlg;
     KWallet::Wallet               *saneWallet;
-    QString                        myFolderName("ksane");
+    QString                        myFolderName = QStringLiteral("ksane");
     QMap<QString, QString>         wallet_entry;
 
     if (d->m_saneHandle != 0) {
@@ -345,7 +345,7 @@ bool KSaneWidget::openDevice(const QString &deviceName)
     d->m_devName = deviceName;
 
     // Try to open the device
-    status = sane_open(deviceName.toLatin1(), &d->m_saneHandle);
+    status = sane_open(deviceName.toLatin1().constData(), &d->m_saneHandle);
 
     bool password_dialog_ok = true;
 
@@ -359,10 +359,10 @@ bool KSaneWidget::openDevice(const QString &deviceName)
                 saneWallet->createFolder(myFolderName);
             }
             saneWallet->setFolder(myFolderName);
-            saneWallet->readMap(deviceName.toLatin1(), wallet_entry);
+            saneWallet->readMap(deviceName, wallet_entry);
             if (!wallet_entry.empty() || true) {
-                dlg->setUsername(wallet_entry["username"]);
-                dlg->setPassword(wallet_entry["password"]);
+                dlg->setUsername(wallet_entry[QStringLiteral("username")]);
+                dlg->setPassword(wallet_entry[QStringLiteral("password")]);
                 dlg->setKeepPassword(true);
             }
         } else {
@@ -386,15 +386,15 @@ bool KSaneWidget::openDevice(const QString &deviceName)
         // add/update the device user-name and password for authentication
         d->m_auth->setDeviceAuth(d->m_devName, dlg->username(), dlg->password());
 
-        status = sane_open(deviceName.toLatin1(), &d->m_saneHandle);
+        status = sane_open(deviceName.toLatin1().constData(), &d->m_saneHandle);
 
         // store password in wallet on successful authentication
         if (dlg->keepPassword() && status != SANE_STATUS_ACCESS_DENIED) {
             QMap<QString, QString> entry;
-            entry["username"] = dlg->username().toUtf8();
-            entry["password"] = dlg->password().toUtf8();
+            entry[QStringLiteral("username")] = dlg->username();
+            entry[QStringLiteral("password")] = dlg->password();
             if (saneWallet) {
-                saneWallet->writeMap(deviceName.toLatin1(), entry);
+                saneWallet->writeMap(deviceName, entry);
             }
         }
     }
@@ -650,7 +650,7 @@ void KSaneWidget::scanFinal()
         d->startFinalScan();
     } else {
         // if the button frame is disabled, there is no open device to scan from
-        emit scanDone(KSaneWidget::ErrorGeneral, "");
+        emit scanDone(KSaneWidget::ErrorGeneral, QStringLiteral(""));
     }
 }
 
@@ -683,7 +683,7 @@ void KSaneWidget::getOptVals(QMap <QString, QString> &opts)
         }
     }
     // Special handling for non sane option
-    opts[InvetColorsOption] = d->m_invertColors->isChecked() ? "true" : "false";
+    opts[InvetColorsOption] = d->m_invertColors->isChecked() ? QStringLiteral("true") : QStringLiteral("false");
 }
 
 bool KSaneWidget::getOptVal(const QString &optname, QString &value)
@@ -695,7 +695,7 @@ bool KSaneWidget::getOptVal(const QString &optname, QString &value)
     }
     // Special handling for non sane option
     if (optname == InvetColorsOption) {
-        value = d->m_invertColors->isChecked() ? "true" : "false";
+        value = d->m_invertColors->isChecked() ? QStringLiteral("true") : QStringLiteral("false");
         return true;
     }
     return false;
@@ -739,8 +739,8 @@ int KSaneWidget::setOptVals(const QMap <QString, QString> &opts)
     // special handling for non-sane option
     if (opts.contains(InvetColorsOption)) {
         tmp = opts[InvetColorsOption];
-        if ((tmp.compare("true", Qt::CaseInsensitive) == 0) ||
-                (tmp.compare("1") == 0)) {
+        if ((tmp.compare(QStringLiteral("true"), Qt::CaseInsensitive) == 0) ||
+                (tmp.compare(QStringLiteral("1")) == 0)) {
             d->m_invertColors->setChecked(true);
         } else {
             d->m_invertColors->setChecked(false);
@@ -784,8 +784,8 @@ bool KSaneWidget::setOptVal(const QString &option, const QString &value)
 
     // special handling for non-sane option
     if (option == InvetColorsOption) {
-        if ((value.compare("true", Qt::CaseInsensitive) == 0) ||
-                (value.compare("1") == 0)) {
+        if ((value.compare(QStringLiteral("true"), Qt::CaseInsensitive) == 0) ||
+                (value.compare(QStringLiteral("1")) == 0)) {
             d->m_invertColors->setChecked(true);
         } else {
             d->m_invertColors->setChecked(false);

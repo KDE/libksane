@@ -52,7 +52,7 @@ void KSaneOptCheckBox::createWidget(QWidget *parent)
 
     if (!m_optDesc) {
         qDebug() << "This is a bug";
-        m_widget = new KSaneOptionWidget(parent, "");
+        m_widget = new KSaneOptionWidget(parent, QStringLiteral(""));
         return;
     }
 
@@ -122,7 +122,7 @@ bool KSaneOptCheckBox::getValue(QString &val)
     if (state() == STATE_HIDDEN) {
         return false;
     }
-    val = m_checked ? "true" : "false";
+    val = m_checked ? QStringLiteral("true") : QStringLiteral("false");
     return true;
 }
 
@@ -131,8 +131,8 @@ bool KSaneOptCheckBox::setValue(const QString &val)
     if (state() == STATE_HIDDEN) {
         return false;
     }
-    if ((val.compare("true", Qt::CaseInsensitive) == 0) ||
-            (val.compare("1") == 0)) {
+    if ((val.compare(QStringLiteral("true"), Qt::CaseInsensitive) == 0) ||
+            (val.compare(QStringLiteral("1")) == 0)) {
         checkboxChanged(true);
     } else {
         checkboxChanged(false);

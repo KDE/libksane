@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
         qDebug() << "An image filename is needed.";
         return 1;
     }
-    QImage img(argv[1]);
+    QImage img(QString::fromUtf8(argv[1]));
 
     KSaneIface::KSaneViewer viewer(&img);
 
