@@ -27,15 +27,19 @@
  * ============================================================ */
 
 // Local includes
+
 #include "labeledentry.h"
 
 // Qt includes
+
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QLineEdit>
 #include <QPushButton>
 
-#include <KLocalizedString>
+// KDE includes
+
+#include <klocalizedstring.h>
 
 namespace KSaneIface
 {

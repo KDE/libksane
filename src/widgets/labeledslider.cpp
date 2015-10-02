@@ -28,9 +28,14 @@
 
 #include "labeledslider.h"
 
-#include <KPluralHandlingSpinBox>
+// Qt includes
+
 #include <QLabel>
 #include <QSlider>
+
+// KDE includes
+
+#include <kpluralhandlingspinbox.h>
 
 namespace KSaneIface
 {

@@ -30,10 +30,12 @@
 #define KSANE_OPTION_H
 
 // Qt includes
+
 #include <QFrame>
 
 //KDE includes
-#include <KLocalizedString>
+
+#include <klocalizedstring.h>
 
 // Sane includes
 extern "C"

@@ -26,7 +26,9 @@
 
 #include "ksaneoptionwidget.h"
 
-#include <KLocalizedString>
+// KDE includes
+
+#include <klocalizedstring.h>
 
 namespace KSaneIface
 {
