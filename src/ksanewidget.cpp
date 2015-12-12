@@ -868,43 +868,15 @@ void KSaneWidget::setSelection(QPointF topLeft, QPointF bottomRight)
     d->m_optBrY->getMaxValue(ymax);
     if (topLeft.x() < 0.0 || topLeft.y() < 0.0 || bottomRight.x() < 0.0 || bottomRight.y() < 0.0) {
         d->m_previewViewer->clearActiveSelection();
-        d->m_optTlX->setValue(0.0);
-        d->m_optTlY->setValue(0.0);
-        d->m_optBrX->setValue(xmax);
-        d->m_optBrY->setValue(ymax);
+        return;
     }
 
-    if (d->m_optBrY->getUnit() == SANE_UNIT_MM) {
-        // clear selection if values are out of bounds
-        if (topLeft.x() > xmax || topLeft.y() > ymax || bottomRight.x() > xmax || bottomRight.y() > ymax) {
-            d->m_previewViewer->clearActiveSelection();
-            d->m_optTlX->setValue(0.0);
-            d->m_optTlY->setValue(0.0);
-            d->m_optBrX->setValue(xmax);
-            d->m_optBrY->setValue(ymax);
-        }
-        d->m_previewViewer->setSelection(topLeft.x(), topLeft.y(), bottomRight.x(), bottomRight.y());
-        d->m_optTlX->setValue(topLeft.x());
-        d->m_optTlY->setValue(topLeft.y());
-        d->m_optBrX->setValue(bottomRight.x());
-        d->m_optBrY->setValue(bottomRight.y());
-    } else if (d->m_optBrY->getUnit() == SANE_UNIT_PIXEL) {
-        const float mmperinch = 25.4;
-        const float dpi = currentDPI();
-        const float m = dpi / mmperinch;
-        if (m * topLeft.x() > xmax || m * topLeft.y() > ymax || m * bottomRight.x() > xmax || m * bottomRight.y() > ymax) {
-            d->m_previewViewer->clearActiveSelection();
-            d->m_optTlX->setValue(0.0);
-            d->m_optTlY->setValue(0.0);
-            d->m_optBrX->setValue(xmax);
-            d->m_optBrY->setValue(ymax);
-        }
-        d->m_previewViewer->setSelection(m * topLeft.x(), m * topLeft.y(), m * bottomRight.x(), m * bottomRight.y());
-        d->m_optTlX->setValue(m * topLeft.x());
-        d->m_optTlY->setValue(m * topLeft.y());
-        d->m_optBrX->setValue(m * bottomRight.x());
-        d->m_optBrY->setValue(m * bottomRight.y());
-    }
+    float tlxRatio = topLeft.x()/xmax;
+    float tlyRatio = topLeft.y()/ymax;
+    float brxRatio = bottomRight.x()/xmax;
+    float bryRatio = bottomRight.y()/ymax;
+
+    d->m_previewViewer->setSelection(tlxRatio, tlyRatio, brxRatio, bryRatio);
 }
 
 void KSaneWidget::setOptionsCollapsed(bool collapse)
