@@ -1067,6 +1067,7 @@ void KSaneWidgetPrivate::setBusy(bool busy)
         m_activityFrame->hide();
         m_btnFrame->hide();
         m_optionPollTmr.stop();
+        emit(q->scanProgress(0));
     } else {
         m_warmingUp->hide();
         m_activityFrame->hide();
@@ -1074,6 +1075,7 @@ void KSaneWidgetPrivate::setBusy(bool busy)
         if (m_pollList.size() > 0) {
             m_optionPollTmr.start();
         }
+        emit(q->scanProgress(100));
     }
 
     m_optsTabWidget->setDisabled(busy);
