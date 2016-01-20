@@ -39,7 +39,6 @@ set(REQUIRED_QT_VERSION "5.2.0")
 find_package(Qt5 ${REQUIRED_QT_VERSION} NO_MODULE REQUIRED Core Widgets)
 
 # Required KF5 frameworks
-find_package(KF5Config ${KF5_VERSION} REQUIRED)
 find_package(KF5I18n ${KF5_VERSION} REQUIRED)
 find_package(KF5Wallet ${KF5_VERSION} REQUIRED)
 find_package(KF5WidgetsAddons ${KF5_VERSION} REQUIRED)
