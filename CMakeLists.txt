@@ -19,7 +19,7 @@ include(ECMGenerateHeaders)
 include(CMakePackageConfigHelpers)
 include(CheckFunctionExists)
 include(KDEInstallDirs)
-include(KDEFrameworkCompilerSettings)
+include(KDEFrameworkCompilerSettings NO_POLICY_SCOPE)
 include(KDECMakeSettings)
 include(GenerateExportHeader)
 
