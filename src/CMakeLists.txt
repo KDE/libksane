@@ -69,8 +69,13 @@ ecm_generate_headers(KSane_HEADERS
 
 # Install files
 
-# FIXME KF5: KDE4_INSTALL_ICONS
-#KDE4_INSTALL_ICONS(${ICON_INSTALL_DIR})
+set(ksane_ICONS
+  16-actions-black-white.png
+  16-actions-color.png
+  16-actions-gray-scale.png
+)
+ecm_install_icons(ICONS ${ksane_ICONS}
+  DESTINATION ${ICON_INSTALL_DIR})
 
 install(TARGETS KF5Sane
   EXPORT KF5SaneTargets

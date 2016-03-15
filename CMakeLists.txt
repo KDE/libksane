@@ -16,6 +16,7 @@ set(CMAKE_MODULE_PATH ${KSane_SOURCE_DIR}/cmake-modules ${ECM_MODULE_PATH} ${ECM
 include(FeatureSummary)
 include(ECMSetupVersion)
 include(ECMGenerateHeaders)
+include(ECMInstallIcons)
 include(CMakePackageConfigHelpers)
 include(CheckFunctionExists)
 include(KDEInstallDirs)
