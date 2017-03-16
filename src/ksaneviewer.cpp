@@ -511,6 +511,7 @@ void KSaneViewer::clearSelections()
 {
     clearActiveSelection();
     clearSavedSelections();
+    updateSelVisibility();
 }
 
 // ------------------------------------------------------------------------
