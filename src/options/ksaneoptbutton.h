@@ -42,9 +42,9 @@ class KSaneOptButton : public KSaneOption
 public:
     KSaneOptButton(const SANE_Handle handle, const int index);
 
-    void createWidget(QWidget *parent);
+    void createWidget(QWidget *parent) Q_DECL_OVERRIDE;
 
-    bool hasGui();
+    bool hasGui() Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
     void buttonClicked();

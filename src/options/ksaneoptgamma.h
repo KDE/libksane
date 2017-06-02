@@ -42,15 +42,15 @@ class KSaneOptGamma : public KSaneOption
 public:
     KSaneOptGamma(const SANE_Handle handle, const int index);
 
-    void createWidget(QWidget *parent);
+    void createWidget(QWidget *parent) Q_DECL_OVERRIDE;
 
-    void readValue();
+    void readValue() Q_DECL_OVERRIDE;
 
-    bool getValue(float &val);
-    bool setValue(float val);
-    bool getValue(QString &val);
-    bool setValue(const QString &val);
-    bool hasGui();
+    bool getValue(float &val) Q_DECL_OVERRIDE;
+    bool setValue(float val) Q_DECL_OVERRIDE;
+    bool getValue(QString &val) Q_DECL_OVERRIDE;
+    bool setValue(const QString &val) Q_DECL_OVERRIDE;
+    bool hasGui() Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
     void gammaTableChanged(const QVector<int> &gam_tbl);

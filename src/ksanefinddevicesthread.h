@@ -44,7 +44,7 @@ class FindSaneDevicesThread : public QThread
 public:
     static FindSaneDevicesThread *getInstance();
     ~FindSaneDevicesThread();
-    void run();
+    void run() Q_DECL_OVERRIDE;
 
     const QList<KSaneWidget::DeviceInfo> devicesList() const;
 

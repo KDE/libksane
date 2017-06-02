@@ -54,15 +54,15 @@ public:
     GammaDisp(QWidget *parent, QVector<int> *tbl);
     ~GammaDisp() {}
 
-    QSize sizeHint() const;
-    QSize minimumSizeHint() const;
+    QSize sizeHint() const Q_DECL_OVERRIDE;
+    QSize minimumSizeHint() const Q_DECL_OVERRIDE;
 
     void setColor(const QColor &color);
 
 protected:
 
-    void paintEvent(QPaintEvent *);
-    void resizeEvent(QResizeEvent *);
+    void paintEvent(QPaintEvent *) Q_DECL_OVERRIDE;
+    void resizeEvent(QResizeEvent *) Q_DECL_OVERRIDE;
 
 private:
 

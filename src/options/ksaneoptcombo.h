@@ -42,17 +42,17 @@ class KSaneOptCombo : public KSaneOption
 public:
     KSaneOptCombo(const SANE_Handle handle, const int index);
 
-    void createWidget(QWidget *parent);
+    void createWidget(QWidget *parent) Q_DECL_OVERRIDE;
 
-    void readValue();
-    void readOption();
+    void readValue() Q_DECL_OVERRIDE;
+    void readOption() Q_DECL_OVERRIDE;
 
-    bool getMinValue(float &max);
-    bool getValue(float &val);
-    bool setValue(float val);
-    bool getValue(QString &val);
-    bool setValue(const QString &val);
-    bool hasGui();
+    bool getMinValue(float &max) Q_DECL_OVERRIDE;
+    bool getValue(float &val) Q_DECL_OVERRIDE;
+    bool setValue(float val) Q_DECL_OVERRIDE;
+    bool getValue(QString &val) Q_DECL_OVERRIDE;
+    bool setValue(const QString &val) Q_DECL_OVERRIDE;
+    bool hasGui() Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
     void comboboxChangedIndex(int val);
