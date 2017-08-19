@@ -4,8 +4,6 @@
 
 SANE Library interface for KDE
 
-This library is a part of Kipi-Plugins project (http://www.digikam.org)
-
 ## Authors
 
 See AUTHORS file for details.
@@ -13,8 +11,6 @@ See AUTHORS file for details.
 ## About
 
 Libksane is a KDE interface for SANE library to control flat scanners.
-
-This library is used by kipi-plugins, digiKam and others kipi host programs.
 
 The library documentation is available on header files.
 
