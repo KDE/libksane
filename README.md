@@ -47,26 +47,3 @@ More details can be found ata this url: http://techbase.kde.org/Development/Tuto
 Note: To know KDE install path on your computer, use 'kde-config --prefix' command line like this (with full debug object enabled):
 
 "cmake . -DCMAKE_BUILD_TYPE=debugfull -DCMAKE_INSTALL_PREFIX=`kde4-config --prefix`"
-
-## Contact
-
-If you have questions, comments, suggestions to make do email at:
-
-kde-imaging@kde.org
-
-IRC channel from freenode.net server:
-
-#kde-imaging
-
-## Bugs
-
-IMPORTANT : the bugreports and wishlist are hosted by the KDE bugs report 
-system who can be contacted by the standard Kde help menu of plugins dialog. 
-A mail will be automatically sent to the Kipi mailing list.
-There is no need to contact directly the Kipi mailing list for a bug report 
-or a devel wish.
-
-The current Kipi bugs and devel wish reported to the Kde bugs report can be see 
-at this url :
-
-http://bugs.kde.org/buglist.cgi?product=kipiplugins&component=libksane&bug_status=UNCONFIRMED&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED
