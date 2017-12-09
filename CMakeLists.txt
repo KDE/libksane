@@ -41,10 +41,16 @@ find_package(Qt5 ${REQUIRED_QT_VERSION} NO_MODULE REQUIRED Core Widgets)
 
 # Required KF5 frameworks
 find_package(KF5I18n ${KF5_VERSION} REQUIRED)
-find_package(KF5Wallet ${KF5_VERSION} REQUIRED)
 find_package(KF5WidgetsAddons ${KF5_VERSION} REQUIRED)
 find_package(KF5TextWidgets ${KF5_VERSION} REQUIRED)
 # ...
+
+# Optional KF5 frameworks
+find_package(KF5Wallet ${KF5_VERSION})
+set_package_properties(KF5Wallet PROPERTIES DESCRIPTION "Safe desktop-wide storage for passwords"
+                       TYPE OPTIONAL
+                       PURPOSE "Required to have permanent storage of passwords for scanners"
+                      )
 
 # Check if sane API is available.
 if (NOT WIN32)

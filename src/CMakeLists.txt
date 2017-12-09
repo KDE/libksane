@@ -1,5 +1,9 @@
 add_definitions(-DTRANSLATION_DOMAIN=\"libksane\")
 
+if (KF5Wallet_FOUND)
+    add_definitions(-DHAVE_KF5WALLET)
+    set(WALLET_LIB KF5::Wallet)
+endif()
 
 include_directories(${SANE_INCLUDE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/options
@@ -49,9 +53,9 @@ target_link_libraries(KF5Sane
         ${SANE_LIBRARY}
 
         KF5::I18n
-        KF5::Wallet
         KF5::WidgetsAddons
         KF5::TextWidgets
+        ${WALLET_LIB}
 )
 
 set_target_properties(KF5Sane

@@ -44,7 +44,9 @@
 #include <QIcon>
 
 #include <kpassworddialog.h>
+#ifdef HAVE_KF5WALLET
 #include <kwallet.h>
+#endif
 
 #include "ksaneoption.h"
 #include "ksaneoptbutton.h"
@@ -328,7 +330,9 @@ bool KSaneWidget::openDevice(const QString &deviceName)
     SANE_Word                      numSaneOptions;
     SANE_Int                       res;
     KPasswordDialog               *dlg;
+#ifdef HAVE_KF5WALLET
     KWallet::Wallet               *saneWallet;
+#endif
     QString                        myFolderName = QStringLiteral("ksane");
     QMap<QString, QString>         wallet_entry;
 
@@ -351,6 +355,7 @@ bool KSaneWidget::openDevice(const QString &deviceName)
 
     // prepare wallet for authentication and create password dialog
     if (status == SANE_STATUS_ACCESS_DENIED) {
+#ifdef HAVE_KF5WALLET
         saneWallet = KWallet::Wallet::openWallet(KWallet::Wallet::LocalWallet(), winId());
 
         if (saneWallet) {
@@ -365,7 +370,9 @@ bool KSaneWidget::openDevice(const QString &deviceName)
                 dlg->setPassword(wallet_entry[QStringLiteral("password")]);
                 dlg->setKeepPassword(true);
             }
-        } else {
+        } else
+#endif
+        {
             dlg = new KPasswordDialog(this, KPasswordDialog::ShowUsernameLine);
         }
         dlg->setPrompt(i18n("Authentication required for resource: %1", deviceName));
@@ -388,6 +395,7 @@ bool KSaneWidget::openDevice(const QString &deviceName)
 
         status = sane_open(deviceName.toLatin1().constData(), &d->m_saneHandle);
 
+#ifdef HAVE_KF5WALLET
         // store password in wallet on successful authentication
         if (dlg->keepPassword() && status != SANE_STATUS_ACCESS_DENIED) {
             QMap<QString, QString> entry;
@@ -397,6 +405,7 @@ bool KSaneWidget::openDevice(const QString &deviceName)
                 saneWallet->writeMap(deviceName, entry);
             }
         }
+#endif
     }
 
     if (status != SANE_STATUS_GOOD) {
