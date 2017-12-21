@@ -7,7 +7,7 @@
  *
  * Copyright (C) 2002-2003 Stephan Stapel <stephan dot stapel at web dot de>
  * Copyright (C) 2008-2009 by Gilles Caulier <caulier dot gilles at gmail dot com>
- * Copyright (C) 2009 by Kare Sars <kare dot sars at iki dot fi>
+ * Copyright (C) 2009,2017 by Kare Sars <kare dot sars at iki dot fi>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -32,17 +32,19 @@
 
 #include "twainiface.h"
 
-#include "ksane.h"
+#include "ksanewidget.h"
 
 #define TWCPP_ANYCOUNT   (-1)
 #define TWCPP_CANCELTHIS (1)
 #define TWCPP_CANCELALL  (2)
 #define TWCPP_DOTRANSFER (0)
 
-#include <QtGlobal>
+#include <QString>
 #include <QDebug>
 
 #include <cstring>
+
+#define saneDebug() if (0) qDebug()
 
 namespace KSaneIface
 {
@@ -69,10 +71,14 @@ KSaneWidgetPrivate::~KSaneWidgetPrivate()
     ReleaseTwain();
 }
 
-bool KSaneWidgetPrivate::winEvent(MSG *pMsg, long *result)
+bool KSaneWidgetPrivate::nativeEvent(const QByteArray &eventType, void *message, long *result)
 {
-    return ProcessMessage(*pMsg);
+    if (eventType == "windows_generic_MSG") {
+        return ProcessMessage(*(MSG*)message);
+    }
+    return true;
 }
+
 
 /** Initializes TWAIN interface . Is already called from the constructor.
     It should be called again if ReleaseTwain is called.
@@ -89,11 +95,11 @@ bool KSaneWidgetPrivate::InitTwain()
 
     memset(&m_AppId, 0, sizeof(m_AppId));
 
-    if (!IsWindow(this->winId()))    {
+    if (!IsWindow((HWND)this->winId()))    {
         return false;
     }
 
-    m_hMessageWnd = this->winId();
+    m_hMessageWnd = (HWND)this->winId();
     strcpy(libName, "TWAIN_32.DLL");
 
     m_hTwainDLL = LoadLibraryA(libName);
@@ -147,6 +153,7 @@ void KSaneWidgetPrivate::ReleaseTwain()
 bool KSaneWidgetPrivate::CallTwainProc(pTW_IDENTITY pOrigin, pTW_IDENTITY pDest,
                                        TW_UINT32 DG, TW_UINT16 DAT, TW_UINT16 MSG, TW_MEMREF pData)
 {
+    saneDebug() << "CallTwainProc" << pOrigin << pDest << DG << DAT << MSG << pData;
     if (!(m_hTwainDLL && m_pDSMProc)) {
         m_returnCode = TWRC_FAILURE;
         return false;
@@ -155,6 +162,7 @@ bool KSaneWidgetPrivate::CallTwainProc(pTW_IDENTITY pOrigin, pTW_IDENTITY pDest,
     m_returnCode = (*m_pDSMProc)(pOrigin, pDest, DG, DAT, MSG, pData);
 
     if (m_returnCode == TWRC_FAILURE) {
+        saneDebug() << "CallTwainProc m_returnCode == TWRC_FAILURE";
         (*m_pDSMProc)(pOrigin, pDest, DG_CONTROL, DAT_STATUS, MSG_GET, &m_Status);
     }
     return (m_returnCode == TWRC_SUCCESS);
@@ -171,10 +179,11 @@ QString KSaneWidgetPrivate::SelectSource()
     memset(&src, 0, sizeof(src));
 
     // debug printouts
-    bool ret_ok = CallTwainProc(&m_AppId, NULL, DG_CONTROL, DAT_IDENTITY, MSG_GETFIRST, &src);
-    while (ret_ok) {
-        ret_ok = CallTwainProc(&m_AppId, NULL, DG_CONTROL, DAT_IDENTITY, MSG_GETNEXT, &src);
-    }
+    //bool ret_ok = CallTwainProc(&m_AppId, NULL, DG_CONTROL, DAT_IDENTITY, MSG_GETFIRST, &src);
+    //while (ret_ok) {
+    //    saneDebug() << QLatin1String(src.ProductName);
+    //    ret_ok = CallTwainProc(&m_AppId, NULL, DG_CONTROL, DAT_IDENTITY, MSG_GETNEXT, &src);
+    //}
 
     // set the default entry selected
     CallTwainProc(&m_AppId, NULL, DG_CONTROL, DAT_IDENTITY, MSG_GETDEFAULT, &src);
@@ -185,12 +194,12 @@ QString KSaneWidgetPrivate::SelectSource()
     }
 
     QString source;
-    source += src.ProductName;
-    source += ';';
-    source += src.ProductFamily;
-    source += ';';
-    source += src.Manufacturer;
-    //qDebug()<< source;
+    source += QLatin1String(src.ProductName);
+    source += QLatin1Char(';');
+    source += QLatin1String(src.ProductFamily);
+    source += QLatin1Char(';');
+    source += QLatin1String(src.Manufacturer);
+    saneDebug()<< source;
     return source;
 }
 
@@ -198,7 +207,8 @@ QString KSaneWidgetPrivate::SelectSource()
  */
 void KSaneWidgetPrivate::CloseDS()
 {
-    if (DSOpen()) {
+    saneDebug() << "CloseDS";
+    if (DSIsOpen()) {
         if (m_bSourceEnabled) {
             TW_USERINTERFACE twUI;
             if (CallTwainProc(&m_AppId, &m_Source, DG_CONTROL,
@@ -215,6 +225,7 @@ void KSaneWidgetPrivate::CloseDS()
 /** Closes the Data Source Manager */
 void KSaneWidgetPrivate::CloseDSM()
 {
+    saneDebug() << "CloseDSM";
     if (m_hTwainDLL && m_pDSMProc && m_bDSMOpen) {
         CloseDS();
         CallTwainProc(&m_AppId, NULL, DG_CONTROL, DAT_PARENT, MSG_CLOSEDSM, (TW_MEMREF)&m_hMessageWnd);
@@ -223,20 +234,21 @@ void KSaneWidgetPrivate::CloseDSM()
 }
 
 /** Returns true if the Data Source is Open */
-bool KSaneWidgetPrivate::DSOpen() const
+bool KSaneWidgetPrivate::DSIsOpen() const
 {
-    //qDebug() << m_hTwainDLL << m_pDSMProc << m_bDSMOpen << m_bDSOpen;
+    saneDebug() << "DSOpen:" << m_hTwainDLL << m_pDSMProc << m_bDSMOpen << m_bDSOpen;
     return (m_hTwainDLL && m_pDSMProc) && m_bDSMOpen && m_bDSOpen;
 }
 
 /** Opens a Data Source */
 bool KSaneWidgetPrivate::OpenSource(const QString &source)
 {
+    saneDebug() << "OpenSource:" << source;
     if (source.isEmpty()) {
         return false;
     }
 
-    QStringList splited = source.split(';');
+    QStringList splited = source.split(QLatin1Char(';'));
     if (splited.size() != 3) {
         return false;
     }
@@ -244,15 +256,16 @@ bool KSaneWidgetPrivate::OpenSource(const QString &source)
     // go thorough the list and check if the source is available
     bool ret_ok = CallTwainProc(&m_AppId, NULL, DG_CONTROL, DAT_IDENTITY, MSG_GETFIRST, &m_Source);
     while (ret_ok) {
-        //qDebug() << m_Source.Id << m_Source.Version.MajorNum << m_Source.Version.MinorNum;
-        //qDebug() << m_Source.Manufacturer << m_Source.ProductFamily << m_Source.ProductName;
-        if (QString(m_Source.ProductName) == splited[0]) {
+        saneDebug() << m_Source.Id << m_Source.Version.MajorNum << m_Source.Version.MinorNum;
+        saneDebug() << m_Source.Manufacturer << m_Source.ProductFamily << m_Source.ProductName;
+        if (QLatin1String(m_Source.ProductName) == splited[0]) {
             break;
         }
         ret_ok = CallTwainProc(&m_AppId, NULL, DG_CONTROL, DAT_IDENTITY, MSG_GETNEXT, &m_Source);
     }
 
     if (!ret_ok) {
+        saneDebug() << "CallTwainProc failed when reading beyond the last source";
         // CallTwainProc failed when reading beyond the last source
         return false;
     }
@@ -260,32 +273,32 @@ bool KSaneWidgetPrivate::OpenSource(const QString &source)
     // open the source
     if (m_hTwainDLL && m_pDSMProc && m_bDSMOpen) {
         m_bDSOpen = CallTwainProc(&m_AppId, NULL, DG_CONTROL, DAT_IDENTITY, MSG_OPENDS, (TW_MEMREF)&m_Source);
-        //qDebug() << "OpenSource(qst..) m_bDSOpen" <<  m_bDSOpen;
+        saneDebug() << "OpenSource(qst..) m_bDSOpen" <<  m_bDSOpen;
     }
 
     SetImageCount(TWCPP_ANYCOUNT);
 
-    return DSOpen();
+    return DSIsOpen();
 }
 
 /** Re-Opens a Data Source */
 bool KSaneWidgetPrivate::ReOpenDialog()
 {
-    //qDebug() << "ReOpenSource:" << m_hTwainDLL << m_pDSMProc << m_bDSMOpen << m_bDSOpen;
+    saneDebug() << "ReOpenSource:" << m_hTwainDLL << m_pDSMProc << m_bDSMOpen << m_bDSOpen;
 
-    if (DSOpen()) {
+    if (DSIsOpen()) {
         // already open
         return true;
     }
     // open the source
     if (m_hTwainDLL && m_pDSMProc && m_bDSMOpen) {
         m_bDSOpen = CallTwainProc(&m_AppId, NULL, DG_CONTROL, DAT_IDENTITY, MSG_OPENDS, (TW_MEMREF)&m_Source);
-        //qDebug() << "ReOpenSource() m_bDSOpen" <<  m_bDSOpen;
+        //saneDebug() << "ReOpenSource() m_bDSOpen" <<  m_bDSOpen;
     }
 
     SetImageCount(TWCPP_ANYCOUNT);
 
-    if (DSOpen()) {
+    if (DSIsOpen()) {
         return EnableSource(true);
     }
     //else
@@ -300,10 +313,15 @@ bool KSaneWidgetPrivate::ProcessMessage(MSG msg)
     if (msg.message == 528) {
         return false;
     }
+    if (msg.message == 289) {
+        return false;
+    }
 
     if (m_hMessageWnd == 0) {
         return false;
     }
+
+    saneDebug() << "ProcessMessage:" << msg.message << m_bSourceEnabled;
 
     if (m_bSourceEnabled)  {
         TW_UINT16  twRC = TWRC_NOTDSEVENT;
@@ -316,6 +334,7 @@ bool KSaneWidgetPrivate::ProcessMessage(MSG msg)
         CallTwainProc(&m_AppId, &m_Source, DG_CONTROL,
                       DAT_EVENT, MSG_PROCESSEVENT, (TW_MEMREF)&twEvent);
 
+        saneDebug() << "ProcessMessage: retcode= " << m_returnCode;
         if (m_returnCode != TWRC_NOTDSEVENT) {
             TranslateMessage(twEvent);
         }
@@ -327,7 +346,8 @@ bool KSaneWidgetPrivate::ProcessMessage(MSG msg)
 /** Queries the capability of the Twain Data Source */
 bool KSaneWidgetPrivate::GetCapability(TW_CAPABILITY &twCap, TW_UINT16 cap, TW_UINT16 conType)
 {
-    if (DSOpen()) {
+    saneDebug() << "GetCapability";
+    if (DSIsOpen()) {
         twCap.Cap        = cap;
         twCap.ConType    = conType;
         twCap.hContainer = NULL;
@@ -343,6 +363,7 @@ bool KSaneWidgetPrivate::GetCapability(TW_CAPABILITY &twCap, TW_UINT16 cap, TW_U
 /** Queries the capability of the Twain Data Source */
 bool KSaneWidgetPrivate::GetCapability(TW_UINT16 cap, TW_UINT32 &value)
 {
+    saneDebug() << "GetCapability2";
     TW_CAPABILITY twCap;
     if (GetCapability(twCap, cap)) {
         pTW_ONEVALUE pVal;
@@ -361,7 +382,8 @@ bool KSaneWidgetPrivate::GetCapability(TW_UINT16 cap, TW_UINT32 &value)
 /** Sets the capability of the Twain Data Source */
 bool KSaneWidgetPrivate::SetCapability(TW_UINT16 cap, TW_UINT16 value, bool sign)
 {
-    if (DSOpen()) {
+    saneDebug() << "SetCapability";
+    if (DSIsOpen()) {
         TW_CAPABILITY twCap;
         pTW_ONEVALUE pVal;
         bool ret_value   = false;
@@ -385,7 +407,8 @@ bool KSaneWidgetPrivate::SetCapability(TW_UINT16 cap, TW_UINT16 value, bool sign
 /** Sets the capability of the Twain Data Source */
 bool KSaneWidgetPrivate::SetCapability(TW_CAPABILITY &cap)
 {
-    if (DSOpen()) {
+    saneDebug() << "SetCapability2";
+    if (DSIsOpen()) {
         return CallTwainProc(&m_AppId, &m_Source, DG_CONTROL,
                              DAT_CAPABILITY, MSG_SET, (TW_MEMREF)&cap);
     }
@@ -395,10 +418,13 @@ bool KSaneWidgetPrivate::SetCapability(TW_CAPABILITY &cap)
 /** Sets the number of images which can be accpeted by the application at one time */
 bool KSaneWidgetPrivate::SetImageCount(TW_INT16 nCount)
 {
+    saneDebug() << "SetImageCount" << nCount << (TW_UINT16)nCount;
     if (SetCapability(CAP_XFERCOUNT, (TW_UINT16)nCount, true)) {
+        saneDebug() << "SetImageCount: nCount" << nCount;
         m_nImageCount = nCount;
         return true;
     } else {
+        saneDebug() << "SetImageCount: failed:" << m_returnCode;
         if (m_returnCode == TWRC_CHECKSTATUS) {
             TW_UINT32 count;
 
@@ -419,6 +445,7 @@ bool KSaneWidgetPrivate::SetImageCount(TW_INT16 nCount)
  * overridden but is a helluva job. */
 bool KSaneWidgetPrivate::OpenDialog()
 {
+    saneDebug() << "OpenDialog";
     EnableSource(true);
     return true;
 }
@@ -427,8 +454,8 @@ bool KSaneWidgetPrivate::OpenDialog()
  * overridden but is a helluva job. */
 bool KSaneWidgetPrivate::EnableSource(bool showUI)
 {
-    //qDebug() << "DSOpen() =" << DSOpen();
-    if (DSOpen() && !m_bSourceEnabled) {
+    saneDebug() << "EnableSource: DSIsOpen() =" << DSIsOpen();
+    if (DSIsOpen() && !m_bSourceEnabled) {
         TW_USERINTERFACE twUI;
         twUI.ShowUI  = showUI;
         twUI.hParent = (TW_HANDLE)m_hMessageWnd;
@@ -441,7 +468,7 @@ bool KSaneWidgetPrivate::EnableSource(bool showUI)
             m_bSourceEnabled = false;
             m_bModalUI       = true;
         }
-        //qDebug() << "EnableSource:ModalUI=" << twUI.ModalUI;
+        saneDebug() << "EnableSource: ModalUI=" << twUI.ModalUI << m_returnCode;
         return m_bSourceEnabled;
     }
     return false;
@@ -450,14 +477,15 @@ bool KSaneWidgetPrivate::EnableSource(bool showUI)
 /** Called by ProcessMessage to Translate a TWAIN message */
 void KSaneWidgetPrivate::TranslateMessage(TW_EVENT &twEvent)
 {
+    saneDebug() << "TranslateMessage: twEvent.TWMessage =" << twEvent.TWMessage;
     switch (twEvent.TWMessage) {
     case MSG_XFERREADY:
-        //qDebug() << "MSG_XFERREADY";
+        saneDebug() << "MSG_XFERREADY";
         TransferImage();
         break;
 
     case MSG_CLOSEDSREQ:
-        //qDebug() << "MSG_CLOSEDSREQ";
+        saneDebug() << "MSG_CLOSEDSREQ";
         CloseDS();
         break;
     }
@@ -466,6 +494,7 @@ void KSaneWidgetPrivate::TranslateMessage(TW_EVENT &twEvent)
 /** Gets Imageinfo for an image which is about to be transferred. */
 bool KSaneWidgetPrivate::GetImageInfo(TW_IMAGEINFO &info)
 {
+    saneDebug() << "GetImageInfo";
     if (m_bSourceEnabled) {
         return CallTwainProc(&m_AppId, &m_Source, DG_IMAGE,
                              DAT_IMAGEINFO, MSG_GET, (TW_MEMREF)&info);
@@ -476,6 +505,7 @@ bool KSaneWidgetPrivate::GetImageInfo(TW_IMAGEINFO &info)
 /** Transfers the image or cancels the transfer depending on the state of the TWAIN system */
 void KSaneWidgetPrivate::TransferImage()
 {
+    saneDebug() << "TransferImage()";
     TW_IMAGEINFO info;
     bool bContinue = true;
 
@@ -505,6 +535,7 @@ void KSaneWidgetPrivate::TransferImage()
     Returns true if the more images are pending */
 bool KSaneWidgetPrivate::EndTransfer()
 {
+    saneDebug() << "EndTransfer";
     TW_PENDINGXFERS twPend;
     if (CallTwainProc(&m_AppId, &m_Source, DG_CONTROL,
                       DAT_PENDINGXFERS, MSG_ENDXFER, (TW_MEMREF)&twPend)) {
@@ -516,6 +547,7 @@ bool KSaneWidgetPrivate::EndTransfer()
 /** Aborts all transfers */
 void KSaneWidgetPrivate::CancelTransfer()
 {
+    saneDebug() << "CancelTransfer";
     TW_PENDINGXFERS twPend;
     CallTwainProc(&m_AppId, &m_Source, DG_CONTROL, DAT_PENDINGXFERS, MSG_RESET, (TW_MEMREF)&twPend);
 }
@@ -523,24 +555,28 @@ void KSaneWidgetPrivate::CancelTransfer()
 /** Calls TWAIN to actually get the image */
 bool KSaneWidgetPrivate::GetImage(TW_IMAGEINFO &info)
 {
+    saneDebug() << "GetImage";
     TW_MEMREF pdata;
     CallTwainProc(&m_AppId, &m_Source, DG_IMAGE, DAT_IMAGENATIVEXFER, MSG_GET, &pdata);
 
     switch (m_returnCode) {
     case TWRC_XFERDONE:
-        //qDebug()<< "GetImage:TWRC_XFERDONE";
+        saneDebug()<< "GetImage:TWRC_XFERDONE";
         ImageData(pdata, info);
         break;
 
     case TWRC_CANCEL:
-        //qDebug()<< "GetImage:TWRC_CANCEL";
+        saneDebug()<< "GetImage:TWRC_CANCEL";
         break;
 
     case TWRC_FAILURE:
-        //qDebug()<< "GetImage:TWRC_FAILURE";
+        saneDebug()<< "GetImage:TWRC_FAILURE";
         CancelTransfer();
         return false;
         break;
+
+    default:
+        saneDebug()<< "GetImage:" << m_returnCode;
     }
 
     GlobalFree(pdata);
@@ -549,6 +585,7 @@ bool KSaneWidgetPrivate::GetImage(TW_IMAGEINFO &info)
 
 void KSaneWidgetPrivate::ImageData(TW_MEMREF pdata, TW_IMAGEINFO &info)
 {
+    saneDebug() << "ImageData";
     if (pdata && (info.ImageWidth != -1) && (info.ImageLength != - 1)) {
         // Under Windows, Twain interface return a DIB data structure.
         // See http://en.wikipedia.org/wiki/Device-independent_bitmap#DIBs_in_memory for details.

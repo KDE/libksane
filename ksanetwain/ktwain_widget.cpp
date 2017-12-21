@@ -5,7 +5,7 @@
  * Date        : 2009-05-11
  * Description : Sane interface for KDE
  *
- * Copyright (C) 2009 by Kare Sars <kare dot sars at iki dot fi>
+ * Copyright (C) 2009,2017 by Kare Sars <kare dot sars at iki dot fi>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,7 +25,7 @@
  *
  * ============================================================ */
 
-#include "../libksane/ksane.h"
+#include "ksanewidget.h"
 
 // Qt includes
 #include <QMap>
@@ -34,8 +34,8 @@
 #include <QDebug>
 
 // KDE includes
-#include <klocalizedstring.h>
-#include <kpushbutton.h>
+#include <KLocalizedString>
+#include <QPushButton>
 
 // Local includes
 #include "twainiface.h"
@@ -46,7 +46,7 @@ namespace KSaneIface
 KSaneWidget::KSaneWidget(QWidget *parent)
     : QWidget(parent), d(new KSaneWidgetPrivate)
 {
-    KPushButton *openDialog = new KPushButton;
+    QPushButton *openDialog = new QPushButton;
     openDialog->setText(i18n("Open scan dialog"));
     QHBoxLayout *lay = new QHBoxLayout;
     lay->addWidget(openDialog);

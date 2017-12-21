@@ -69,6 +69,7 @@ ecm_generate_headers(KSane_HEADERS
     HEADER_NAMES
         KSaneWidget
     REQUIRED_HEADERS KSane_HEADERS
+    RELATIVE "../src/"
 )
 
 # Install files

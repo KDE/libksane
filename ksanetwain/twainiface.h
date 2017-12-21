@@ -7,7 +7,7 @@
  *
  * Copyright (C) 2002-2003 Stephan Stapel <stephan dot stapel at web dot de>
  * Copyright (C) 2008-2009 by Gilles Caulier <caulier dot gilles at gmail dot com>
- * Copyright (C) 2009 by Kare Sars <kare dot sars at iki dot fi>
+ * Copyright (C) 2009,2017 by Kare Sars <kare dot sars at iki dot fi>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -54,7 +54,7 @@ public:
      * @result    One should return false to get the message being
      *            processed by the application (should return false by default!)
      */
-    bool winEvent(MSG *pMsg, long *result);
+    bool nativeEvent(const QByteArray &eventType, void *message, long *result) override;
 
     void CloseDSM();
     QString SelectSource();
@@ -75,7 +75,7 @@ private:
     bool ProcessMessage(MSG msg);
 
     bool SetImageCount(TW_INT16 nCount = 1);
-    bool DSOpen() const;
+    bool DSIsOpen() const;
 
     bool CallTwainProc(pTW_IDENTITY pOrigin, pTW_IDENTITY pDest,
                        TW_UINT32 DG, TW_UINT16 DAT, TW_UINT16 MSG,

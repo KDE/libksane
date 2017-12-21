@@ -9,7 +9,9 @@ message(STATUS "-------------------------------------------")
 message(STATUS "Starting CMake configuration for: libksane")
 
 # ECM setup (Extended Cmake Modules)
-find_package(ECM 1.1.0 REQUIRED NO_MODULE)
+include(FeatureSummary)
+find_package(ECM 5.30.0 REQUIRED NO_MODULE)
+set_package_properties(ECM PROPERTIES TYPE REQUIRED DESCRIPTION "Extra CMake Modules." URL "https://projects.kde.org/projects/kdesupport/extra-cmake-modules")
 # ECM setup2 and include find same cmake module (copied from /usr/share/kde4/apps/cmake/modules/FindSane.cmake)
 set(CMAKE_MODULE_PATH ${KSane_SOURCE_DIR}/cmake-modules ${ECM_MODULE_PATH} ${ECM_KDE_MODULE_DIR})
 
@@ -41,19 +43,18 @@ find_package(Qt5 ${REQUIRED_QT_VERSION} NO_MODULE REQUIRED Core Widgets)
 
 # Required KF5 frameworks
 find_package(KF5I18n ${KF5_VERSION} REQUIRED)
-find_package(KF5WidgetsAddons ${KF5_VERSION} REQUIRED)
-find_package(KF5TextWidgets ${KF5_VERSION} REQUIRED)
-# ...
 
-# Optional KF5 frameworks
-find_package(KF5Wallet ${KF5_VERSION})
-set_package_properties(KF5Wallet PROPERTIES DESCRIPTION "Safe desktop-wide storage for passwords"
-                       TYPE OPTIONAL
-                       PURPOSE "Required to have permanent storage of passwords for scanners"
-                      )
-
-# Check if sane API is available.
 if (NOT WIN32)
+    find_package(KF5WidgetsAddons ${KF5_VERSION} REQUIRED)
+    find_package(KF5TextWidgets ${KF5_VERSION} REQUIRED)
+
+    # Optional KF5 frameworks
+    find_package(KF5Wallet ${KF5_VERSION})
+    set_package_properties(KF5Wallet PROPERTIES DESCRIPTION "Safe desktop-wide storage for passwords" TYPE OPTIONAL
+        PURPOSE "Required to have permanent storage of passwords for scanners"
+    )
+
+    # Check if sane API is available.
     find_package(Sane)
     message(STATUS "SANE_FOUND:       ${SANE_FOUND}")
     message(STATUS "SANE_INCLUDE_DIR: ${SANE_INCLUDE_DIR}")
@@ -62,9 +63,13 @@ if (NOT WIN32)
 endif (NOT WIN32)
 
 # Subdirectories
-add_subdirectory(src)
-add_subdirectory(autotests)
-add_subdirectory(tests)
+if (SANE_FOUND)
+    add_subdirectory(src)
+    add_subdirectory(autotests)
+    add_subdirectory(tests)
+else ()
+    add_subdirectory(ksanetwain)
+endif()
 
 # Create a Config.cmake and a ConfigVersion.cmake file and install them
 set(CMAKECONFIG_INSTALL_DIR "${CMAKECONFIG_INSTALL_PREFIX}/KF5Sane")
@@ -153,12 +158,6 @@ IF(WIN32 AND MSVC)
 ENDIF(WIN32 AND MSVC)
 
 # =======================================================
-
-#IF (SANE_FOUND)
-#    # ADD_SUBDIRECTORY(src)  # old: was already done above
-#ELSE (SANE_FOUND)
-#    ADD_SUBDIRECTORY(ksanetwain)
-#.ENDIF (SANE_FOUND)
 
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
 

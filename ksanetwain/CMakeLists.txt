@@ -1,8 +1,8 @@
-CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/../libksane/version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/version.h)
+CONFIGURE_FILE(${CMAKE_CURRENT_SOURCE_DIR}/../src/version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/version.h)
 
 
 INCLUDE_DIRECTORIES(
-    ${CMAKE_CURRENT_SOURCE_DIR}/../libksane
+    ${CMAKE_CURRENT_SOURCE_DIR}/../src
     ${CMAKE_CURRENT_BINARY_DIR}
 )
 
@@ -13,31 +13,44 @@ ENDIF( WIN32 )
 set(ktwain_src
     twainiface.cpp
     ktwain_widget.cpp
+    ../src/ksanewidget.h
 )
 
-KDE4_ADD_LIBRARY(ksane SHARED ${ktwain_src})
+add_library(KF5Sane ${ktwain_src})
+generate_export_header(KF5Sane BASE_NAME KSane)
+add_library(KF5::Sane ALIAS KF5Sane)
 
+target_include_directories(KF5Sane INTERFACE "$<INSTALL_INTERFACE:${KF5_INCLUDE_INSTALL_DIR}/KSane>")
 
-TARGET_LINK_LIBRARIES(ksane ${KDE4_KDEUI_LIBS})
-
-SET_TARGET_PROPERTIES(ksane PROPERTIES 
-        VERSION ${KSANE_LIB_SO_VERSION_STRING} 
-        SOVERSION ${KSANE_LIB_SO_CUR_VERSION}
-        LINK_FLAGS -Wl,-subsystem,console
+target_link_libraries(KF5Sane
+    PUBLIC
+        Qt5::Widgets
+    PRIVATE
+        KF5::I18n
 )
 
-install(TARGETS ksane ${INSTALL_TARGETS_DEFAULT_ARGS} )
-
-INSTALL(FILES ${CMAKE_CURRENT_SOURCE_DIR}/../libksane/ksane.h
-              ${CMAKE_CURRENT_SOURCE_DIR}/../libksane/libksane_export.h
-              ${CMAKE_CURRENT_BINARY_DIR}/version.h
-        DESTINATION ${INCLUDE_INSTALL_DIR}/libksane COMPONENT Devel)
-
-configure_file(
-    ../KSaneConfig.cmake.in ${CMAKE_CURRENT_BINARY_DIR}/KSaneConfig.cmake @ONLY
+set_target_properties(KF5Sane
+    PROPERTIES VERSION ${KSANE_VERSION_STRING}
+    SOVERSION ${KSANE_SOVERSION}
+    EXPORT_NAME "Sane"
 )
 
-install(
-    FILES ${CMAKE_CURRENT_BINARY_DIR}/KSaneConfig.cmake
-    DESTINATION ${LIB_INSTALL_DIR}/cmake/KSane
+
+ecm_generate_headers(KSane_HEADERS
+    HEADER_NAMES
+        KSaneWidget
+    RELATIVE "../src/"
+    REQUIRED_HEADERS KSane_HEADERS
+)
+
+install(TARGETS KF5Sane
+    EXPORT KF5SaneTargets
+    ${INSTALL_TARGETS_DEFAULT_ARGS}
+)
+
+install(FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/ksane_export.h
+    ${KSane_HEADERS}
+    DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/KSane
+    COMPONENT Devel
 )
