@@ -53,7 +53,7 @@ void KSaneOptSlider::createWidget(QWidget *parent)
 
     m_widget = m_slider = new LabeledSlider(parent, QStringLiteral(""), KSW_INT_MIN, KSW_INT_MAX, 1);
     readOption();
-    m_widget->setToolTip(i18n(m_optDesc->desc));
+    m_widget->setToolTip(sane_i18n(m_optDesc->desc));
     connect(m_slider, &LabeledSlider::valueChanged, this, &KSaneOptSlider::sliderChanged);
     readValue();
 }
@@ -96,7 +96,7 @@ void KSaneOptSlider::readOption()
         m_slider->setStep(1);
     }
     m_slider->setSuffix(unitString());
-    m_slider->setLabelText(i18n(m_optDesc->title));
+    m_slider->setLabelText(sane_i18n(m_optDesc->title));
 }
 
 void KSaneOptSlider::sliderChanged(int val)
