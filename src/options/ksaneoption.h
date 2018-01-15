@@ -44,8 +44,14 @@ extern "C"
 #include <sane/saneopts.h>
 }
 
+#define SANE_TRANSLATION_DOMAIN "sane-backends"
+
 namespace KSaneIface
 {
+
+inline QString sane_i18n(const char *text) {
+    return i18nd(SANE_TRANSLATION_DOMAIN, text);
+}
 
 class KSaneOptionWidget;
 

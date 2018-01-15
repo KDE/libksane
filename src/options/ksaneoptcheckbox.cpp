@@ -56,8 +56,8 @@ void KSaneOptCheckBox::createWidget(QWidget *parent)
         return;
     }
 
-    m_widget = m_checkbox = new LabeledCheckbox(parent, i18n(m_optDesc->title));
-    m_widget->setToolTip(i18n(m_optDesc->desc));
+    m_widget = m_checkbox = new LabeledCheckbox(parent, sane_i18n(m_optDesc->title));
+    m_widget->setToolTip(sane_i18n(m_optDesc->desc));
 
     connect(m_checkbox, &LabeledCheckbox::toggled, this, &KSaneOptCheckBox::checkboxChanged);
 
@@ -94,7 +94,7 @@ void KSaneOptCheckBox::readValue()
         m_checkbox->setChecked(m_checked);
     }
     if ((old != m_checked) && ((m_optDesc->cap & SANE_CAP_SOFT_SELECT) == 0)) {
-        emit buttonPressed(name(), i18n(m_optDesc->title), m_checked);
+        emit buttonPressed(name(), sane_i18n(m_optDesc->title), m_checked);
     }
 }
 

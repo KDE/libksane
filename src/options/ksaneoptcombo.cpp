@@ -52,7 +52,7 @@ void KSaneOptCombo::createWidget(QWidget *parent)
 
     m_widget = m_combo = new LabeledCombo(parent, QStringLiteral(""), QStringList());
     readOption();
-    m_widget->setToolTip(i18n(m_optDesc->desc));
+    m_widget->setToolTip(sane_i18n(m_optDesc->desc));
     connect(m_combo, static_cast<void (LabeledCombo::*)(int)>(&LabeledCombo::activated), this, &KSaneOptCombo::comboboxChangedIndex);
     readValue();
 }
@@ -93,7 +93,7 @@ void KSaneOptCombo::readOption()
 
     m_strList = genComboStringList();
     m_combo->clear();
-    m_combo->setLabelText(i18n(m_optDesc->title));
+    m_combo->setLabelText(sane_i18n(m_optDesc->title));
     m_combo->addItems(m_strList);
     m_combo->setIcon(QIcon::fromTheme(QStringLiteral("color")),
                      getSaneComboString((unsigned char *)SANE_VALUE_SCAN_MODE_COLOR));
