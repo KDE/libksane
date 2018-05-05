@@ -929,13 +929,13 @@ void KSaneViewer::findSelections(float area)
                             }
                             wSelStart = -1;
                             wSelEnd = -1;
+                            (void)hSelEnd;    // clang static analyzer report hSelEnd is never used.
                             wSelMargin = 0;
                         }
                     }
                 }
                 hSelStart = -1;
                 hSelEnd = -1;
-                (void)hSelEnd;    // clang static analyzer report hSelEnd is never used.
                 hSelMargin = 0;
                 colSums.fill(0);
             }
