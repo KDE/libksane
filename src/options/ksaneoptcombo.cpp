@@ -333,7 +333,7 @@ bool KSaneOptCombo::setValue(const QString &val)
     }
 
     unsigned char data[4];
-    void *data_ptr;
+    void* data_ptr = 0;
     SANE_Word fixed;
     int i;
     float f;
