@@ -935,6 +935,7 @@ void KSaneViewer::findSelections(float area)
                 }
                 hSelStart = -1;
                 hSelEnd = -1;
+                (void)hSelEnd;    // clang static analyzer report hSelEnd is never used.
                 hSelMargin = 0;
                 colSums.fill(0);
             }
