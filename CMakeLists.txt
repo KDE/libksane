@@ -55,7 +55,7 @@ if (NOT WIN32)
     )
 
     # Check if sane API is available.
-    find_package(Sane)
+    find_package(Sane REQUIRED)
     message(STATUS "SANE_FOUND:       ${SANE_FOUND}")
     message(STATUS "SANE_INCLUDE_DIR: ${SANE_INCLUDE_DIR}")
     message(STATUS "SANE_LIBRARY:     ${SANE_LIBRARY}")
