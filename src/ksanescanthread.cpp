@@ -159,6 +159,12 @@ void KSaneScanThread::readData()
                 qDebug() << "This is not a standard compliant backend";
                 copyToScanData(readBytes);
             }
+            // There are broken backends that return wrong number for bytes_per_line
+            if (m_params.depth == 1 && m_params.lines > 0 && m_params.lines * m_params.pixels_per_line <= m_frameRead * 8) {
+                qDebug() << "Warning!! This backend seems to return wrong bytes_per_line for line-art images!";
+                qDebug() << "Warning!! Trying to correct the value!";
+                m_params.bytes_per_line = m_frameRead / m_params.lines;
+            }
             m_readStatus = READ_READY; // It is better to return a broken image than nothing
             return;
         }
