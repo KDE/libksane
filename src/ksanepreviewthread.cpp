@@ -36,7 +36,6 @@ namespace KSaneIface
 {
 KSanePreviewThread::KSanePreviewThread(SANE_Handle handle, QImage *img):
     QThread(),
-    status(SANE_STATUS_GOOD),
     m_frameSize(0),
     m_frameRead(0),
     m_dataSize(0),
@@ -47,6 +46,7 @@ KSanePreviewThread::KSanePreviewThread(SANE_Handle handle, QImage *img):
     m_img(img),
     m_saneHandle(handle),
     m_invertColors(false),
+    m_saneStatus(SANE_STATUS_GOOD),
     m_readStatus(READ_READY),
 //    m_scanProgress(0),
     m_saneStartDone(false),
@@ -62,6 +62,11 @@ void KSanePreviewThread::setPreviewInverted(bool inverted)
     m_invertColors = inverted;
 }
 
+SANE_Status KSanePreviewThread::saneStatus()
+{
+    return m_saneStatus;
+}
+
 void KSanePreviewThread::cancelScan()
 {
     m_readStatus = READ_CANCEL;
@@ -74,19 +79,19 @@ void KSanePreviewThread::run()
     m_saneStartDone = false;
 
     // Start the scanning with sane_start
-    status = sane_start(m_saneHandle);
+    m_saneStatus = sane_start(m_saneHandle);
 
-    if (status != SANE_STATUS_GOOD) {
-        qDebug() << "sane_start=" << sane_strstatus(status);
+    if (m_saneStatus != SANE_STATUS_GOOD) {
+        qDebug() << "sane_start=" << sane_strstatus(m_saneStatus);
         sane_cancel(m_saneHandle);
         m_readStatus = READ_ERROR;
         return;
     }
 
     // Read image parameters
-    status = sane_get_parameters(m_saneHandle, &m_params);
-    if (status != SANE_STATUS_GOOD) {
-        qDebug() << "sane_get_parameters=" << sane_strstatus(status);
+    m_saneStatus = sane_get_parameters(m_saneHandle, &m_params);
+    if (m_saneStatus != SANE_STATUS_GOOD) {
+        qDebug() << "sane_get_parameters=" << sane_strstatus(m_saneStatus);
         sane_cancel(m_saneHandle);
         m_readStatus = READ_ERROR;
         return;
@@ -151,9 +156,9 @@ int KSanePreviewThread::scanProgress()
 void KSanePreviewThread::readData()
 {
     SANE_Int readBytes;
-    status = sane_read(m_saneHandle, m_readData, PREVIEW_READ_CHUNK_SIZE, &readBytes);
+    m_saneStatus = sane_read(m_saneHandle, m_readData, PREVIEW_READ_CHUNK_SIZE, &readBytes);
 
-    switch (status) {
+    switch (m_saneStatus) {
     case SANE_STATUS_GOOD:
         // continue to parsing the data
         break;
@@ -193,7 +198,7 @@ void KSanePreviewThread::readData()
             break;
         }
     default:
-        qDebug() << "sane_read=" << status << "=" << sane_strstatus(status);
+        qDebug() << "sane_read=" << m_saneStatus << "=" << sane_strstatus(m_saneStatus);
         m_readStatus = READ_ERROR;
         sane_cancel(m_saneHandle);
         return;

@@ -867,9 +867,9 @@ void KSaneWidgetPrivate::previewScanDone()
     m_previewViewer->setQImage(&m_previewImg);
     m_previewViewer->zoom2Fit();
 
-    if ((m_previewThread->status != SANE_STATUS_GOOD) &&
-            (m_previewThread->status != SANE_STATUS_EOF)) {
-        alertUser(KSaneWidget::ErrorGeneral, i18n(sane_strstatus(m_previewThread->status)));
+    if ((m_previewThread->saneStatus() != SANE_STATUS_GOOD) &&
+            (m_previewThread->saneStatus() != SANE_STATUS_EOF)) {
+        alertUser(KSaneWidget::ErrorGeneral, i18n(sane_strstatus(m_previewThread->saneStatus())));
     } else if (m_autoSelect) {
         m_previewViewer->findSelections();
     }

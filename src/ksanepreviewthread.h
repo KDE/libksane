@@ -62,7 +62,8 @@ public:
     bool saneStartDone();
     bool imageResized();
 
-    SANE_Status status;
+    SANE_Status saneStatus();
+
     QMutex imgMutex;
 
 private:
@@ -82,6 +83,7 @@ private:
     QImage          *m_img;
     SANE_Handle     m_saneHandle;
     bool            m_invertColors;
+    SANE_Status     m_saneStatus;
     ReadStatus      m_readStatus;
 //            int             m_scanProgress;
     bool            m_saneStartDone;
