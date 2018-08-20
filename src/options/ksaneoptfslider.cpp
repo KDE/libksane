@@ -41,7 +41,7 @@ namespace KSaneIface
 {
 
 KSaneOptFSlider::KSaneOptFSlider(const SANE_Handle handle, const int index)
-    : KSaneOption(handle, index), m_slider(0), m_fVal(0), m_minChange(MIN_FIXED_STEP)
+    : KSaneOption(handle, index), m_slider(nullptr), m_fVal(0), m_minChange(MIN_FIXED_STEP)
 {
 }
 
@@ -100,7 +100,7 @@ void KSaneOptFSlider::readValue()
     }
 
     m_fVal = SANE_UNFIX(toSANE_Word(data.data()));
-    if (m_slider != 0) {
+    if (m_slider != nullptr) {
         if (((m_slider->value() - m_fVal) >= m_minChange) ||
                 ((m_fVal - m_slider->value()) >= m_minChange)) {
             m_slider->setValue(m_fVal);

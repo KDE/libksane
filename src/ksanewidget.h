@@ -85,14 +85,14 @@ public:
 
     /** This constructor initializes the private class variables, but the widget is left empty.
      * The options and the preview are added with the call to openDevice(). */
-    KSaneWidget(QWidget *parent = 0);
+    KSaneWidget(QWidget *parent = nullptr);
 
     /** Standard destructor */
     ~KSaneWidget();
 
     /** This helper method displays a dialog for selecting a scanner. The libsane
      * device name of the selected scanner device is returned. */
-    QString selectDevice(QWidget *parent = 0);
+    QString selectDevice(QWidget *parent = nullptr);
 
     /**
      * Get the list of available scanning devices. Connect to availableDevices()

@@ -36,7 +36,7 @@ namespace KSaneIface
 {
 
 KSaneOptButton::KSaneOptButton(const SANE_Handle handle, const int index)
-    : KSaneOption(handle, index), m_button(0)
+    : KSaneOption(handle, index), m_button(nullptr)
 {
 }
 

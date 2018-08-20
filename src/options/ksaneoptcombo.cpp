@@ -40,7 +40,7 @@ namespace KSaneIface
 static const char tmp_binary[] = "Binary";
 
 KSaneOptCombo::KSaneOptCombo(const SANE_Handle handle, const int index)
-    : KSaneOption(handle, index), m_combo(0)
+    : KSaneOption(handle, index), m_combo(nullptr)
 {
 }
 
@@ -73,7 +73,7 @@ void KSaneOptCombo::readValue()
     }
 
     m_currentText = getSaneComboString(data.data());
-    if (m_combo != 0) {
+    if (m_combo != nullptr) {
         if (m_combo->currentText() != m_currentText) {
             m_combo->setCurrentText(m_currentText);
             emit valueChanged();
@@ -126,7 +126,7 @@ QStringList &KSaneOptCombo::genComboStringList()
         break;
     case SANE_TYPE_STRING:
         i = 0;
-        while (m_optDesc->constraint.string_list[i] != 0) {
+        while (m_optDesc->constraint.string_list[i] != nullptr) {
             m_strList += getSaneComboString((unsigned char *)m_optDesc->constraint.string_list[i]);
             i++;
         }
@@ -169,7 +169,7 @@ QString KSaneOptCombo::getSaneComboString(float fval)
 QString KSaneOptCombo::getSaneComboString(unsigned char *data)
 {
     QString tmp;
-    if (data == 0) {
+    if (data == nullptr) {
         return QString();
     }
 
@@ -333,7 +333,7 @@ bool KSaneOptCombo::setValue(const QString &val)
     }
 
     unsigned char data[4];
-    void* data_ptr = 0;
+    void* data_ptr = nullptr;
     SANE_Word fixed;
     int i;
     float f;
@@ -363,7 +363,7 @@ bool KSaneOptCombo::setValue(const QString &val)
         break;
     case SANE_TYPE_STRING:
         i = 0;
-        while (m_optDesc->constraint.string_list[i] != 0) {
+        while (m_optDesc->constraint.string_list[i] != nullptr) {
             tmp = getSaneComboString((unsigned char *)m_optDesc->constraint.string_list[i]);
             if (val == tmp) {
                 data_ptr = (void *)m_optDesc->constraint.string_list[i];
@@ -371,7 +371,7 @@ bool KSaneOptCombo::setValue(const QString &val)
             }
             i++;
         }
-        if (m_optDesc->constraint.string_list[i] == 0) {
+        if (m_optDesc->constraint.string_list[i] == nullptr) {
             return false;
         }
         break;

@@ -38,7 +38,7 @@ namespace KSaneIface
 {
 
 KSaneOptEntry::KSaneOptEntry(const SANE_Handle handle, const int index)
-    : KSaneOption(handle, index), m_entry(0)
+    : KSaneOption(handle, index), m_entry(nullptr)
 {
 }
 
@@ -89,7 +89,7 @@ void KSaneOptEntry::readValue()
     }
 
     m_string = QString::fromUtf8(reinterpret_cast<char *>(data.data()));
-    if (m_entry != 0) {
+    if (m_entry != nullptr) {
         m_entry->setText(m_string);
     }
 }

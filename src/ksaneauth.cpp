@@ -36,7 +36,7 @@
 namespace KSaneIface
 {
 
-static KSaneAuth *s_instance = 0;
+static KSaneAuth *s_instance = nullptr;
 static QMutex     s_mutex;
 
 struct KSaneAuth::Private {
@@ -53,7 +53,7 @@ KSaneAuth *KSaneAuth::getInstance()
 {
     s_mutex.lock();
 
-    if (s_instance == 0) {
+    if (s_instance == nullptr) {
         s_instance = new KSaneAuth();
     }
     s_mutex.unlock();

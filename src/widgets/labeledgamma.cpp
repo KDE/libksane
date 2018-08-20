@@ -89,7 +89,7 @@ LabeledGamma::~LabeledGamma()
 
 void LabeledGamma::setColor(const QColor &color)
 {
-    if (m_gamma_disp != 0) {
+    if (m_gamma_disp != nullptr) {
         m_gamma_disp->setColor(color);
     }
 }

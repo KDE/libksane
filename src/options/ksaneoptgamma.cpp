@@ -38,7 +38,7 @@ namespace KSaneIface
 {
 
 KSaneOptGamma::KSaneOptGamma(const SANE_Handle handle, const int index)
-    : KSaneOption(handle, index), m_gamma(0)
+    : KSaneOption(handle, index), m_gamma(nullptr)
 {
 }
 

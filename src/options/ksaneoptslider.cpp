@@ -41,7 +41,7 @@ namespace KSaneIface
 {
 
 KSaneOptSlider::KSaneOptSlider(const SANE_Handle handle, const int index)
-    : KSaneOption(handle, index), m_slider(0), m_iVal(0)
+    : KSaneOption(handle, index), m_slider(nullptr), m_iVal(0)
 {
 }
 
@@ -74,7 +74,7 @@ void KSaneOptSlider::readValue()
     }
 
     m_iVal = toSANE_Word(data.data());
-    if ((m_slider != 0) && (m_slider->value() != m_iVal)) {
+    if ((m_slider != nullptr) && (m_slider->value() != m_iVal)) {
         m_slider->setValue(m_iVal);
     }
     emit fValueRead((float)m_iVal);

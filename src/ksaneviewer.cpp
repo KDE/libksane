@@ -169,7 +169,7 @@ KSaneViewer::~KSaneViewer()
 // ------------------------------------------------------------------------
 void KSaneViewer::setQImage(QImage *img)
 {
-    if (img == 0) {
+    if (img == nullptr) {
         return;
     }
 

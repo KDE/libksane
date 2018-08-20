@@ -38,8 +38,8 @@ namespace KSaneIface
 KSaneOption::KSaneOption(const SANE_Handle handle, const int index)
     : QObject(), m_handle(handle), m_index(index)
 {
-    m_widget = 0;
-    m_data = 0;
+    m_widget = nullptr;
+    m_data = nullptr;
     readOption();
 }
 
@@ -47,11 +47,11 @@ KSaneOption::~KSaneOption()
 {
     if (m_data) {
         free(m_data);
-        m_data = 0;
+        m_data = nullptr;
     }
     // delete the frame, just in case if no parent is set
     delete m_widget;
-    m_widget = 0;
+    m_widget = nullptr;
 }
 
 void KSaneOption::createWidget(QWidget *parent)
@@ -120,7 +120,7 @@ bool KSaneOption::needsPolling() const
 
 QString KSaneOption::name() const
 {
-    if (m_optDesc == 0) {
+    if (m_optDesc == nullptr) {
         return QStringLiteral("");
     }
     return QString::fromUtf8(m_optDesc->name);
@@ -142,7 +142,7 @@ bool KSaneOption::writeData(void *data)
         readValue();
         return false;
     }
-    if ((res & SANE_INFO_INEXACT) && (m_widget != 0)) {
+    if ((res & SANE_INFO_INEXACT) && (m_widget != nullptr)) {
         //qDebug() << "write was inexact. Reload value just in case...";
         readValue();
     }
@@ -237,7 +237,7 @@ bool KSaneOption::storeCurrentData()
     }
 
     // read that current value
-    if (m_data != 0) {
+    if (m_data != nullptr) {
         free(m_data);
     }
     m_data = (unsigned char *)malloc(m_optDesc->size);
@@ -252,7 +252,7 @@ bool KSaneOption::storeCurrentData()
 bool KSaneOption::restoreSavedData()
 {
     // check if we have saved any data
-    if (m_data == 0) {
+    if (m_data == nullptr) {
         return false;
     }
 

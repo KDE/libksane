@@ -42,14 +42,14 @@ extern "C"
 
 namespace KSaneIface
 {
-static FindSaneDevicesThread *s_instancesane = 0;
+static FindSaneDevicesThread *s_instancesane = nullptr;
 static QMutex s_mutexsane;
 
 FindSaneDevicesThread *FindSaneDevicesThread::getInstance()
 {
     s_mutexsane.lock();
 
-    if (s_instancesane == 0) {
+    if (s_instancesane == nullptr) {
         s_instancesane = new FindSaneDevicesThread();
     }
     s_mutexsane.unlock();
@@ -57,7 +57,7 @@ FindSaneDevicesThread *FindSaneDevicesThread::getInstance()
     return s_instancesane;
 }
 
-FindSaneDevicesThread::FindSaneDevicesThread() : QThread(0)
+FindSaneDevicesThread::FindSaneDevicesThread() : QThread(nullptr)
 {
 }
 
@@ -83,7 +83,7 @@ void FindSaneDevicesThread::run()
         int i = 0;
         KSaneWidget::DeviceInfo deviceInfo;
 
-        while (devList[i] != 0) {
+        while (devList[i] != nullptr) {
             deviceInfo.name = QString::fromUtf8(devList[i]->name);
             deviceInfo.vendor = QString::fromUtf8(devList[i]->vendor);
             deviceInfo.model = QString::fromUtf8(devList[i]->model);

@@ -322,7 +322,7 @@ bool KSaneWidget::openDevice(const QString &deviceName)
     QString                        myFolderName = QStringLiteral("ksane");
     QMap<QString, QString>         wallet_entry;
 
-    if (d->m_saneHandle != 0) {
+    if (d->m_saneHandle != nullptr) {
         // this KSaneWidget already has an open device
         return false;
     }
@@ -415,7 +415,7 @@ bool KSaneWidget::openDevice(const QString &deviceName)
 
     // Read the options (start with option 0 the number of parameters)
     optDesc = sane_get_option_descriptor(d->m_saneHandle, 0);
-    if (optDesc == 0) {
+    if (optDesc == nullptr) {
         d->m_auth->clearDeviceAuth(d->m_devName);
         d->m_devName.clear();
         return false;
@@ -529,7 +529,7 @@ bool KSaneWidget::closeDevice()
     d->m_auth->clearDeviceAuth(d->m_devName);
     // else
     sane_close(d->m_saneHandle);
-    d->m_saneHandle = 0;
+    d->m_saneHandle = nullptr;
     d->clearDeviceOptions();
 
     // disable the interface until a new device is opened.
@@ -685,7 +685,7 @@ bool KSaneWidget::getOptVal(const QString &optname, QString &value)
 {
     KSaneOption *option;
 
-    if ((option = d->getOption(optname)) != 0) {
+    if ((option = d->getOption(optname)) != nullptr) {
         return option->getValue(value);
     }
     // Special handling for non sane option
@@ -748,7 +748,7 @@ bool KSaneWidget::setOptVal(const QString &option, const QString &value)
 {
     KSaneOption *opt;
 
-    if ((opt = d->getOption(option)) != 0) {
+    if ((opt = d->getOption(option)) != nullptr) {
         if (opt->setValue(value)) {
             if ((d->m_splitGamChB) &&
                     (d->m_optGamR) &&
@@ -793,7 +793,7 @@ bool KSaneWidget::setOptVal(const QString &option, const QString &value)
 
 void KSaneWidget::setScanButtonText(const QString &scanLabel)
 {
-    if (d->m_scanBtn == 0) {
+    if (d->m_scanBtn == nullptr) {
         qCritical() << "setScanButtonText was called before KSaneWidget was initialized";
         return;
     }
@@ -802,7 +802,7 @@ void KSaneWidget::setScanButtonText(const QString &scanLabel)
 
 void KSaneWidget::setPreviewButtonText(const QString &previewLabel)
 {
-    if (d->m_scanBtn == 0) {
+    if (d->m_scanBtn == nullptr) {
         qCritical() << "setPreviewButtonText was called before KSaneWidget was initialized";
         return;
     }
