@@ -55,7 +55,7 @@ public:
     } ReadStatus;
 
     KSaneScanThread(SANE_Handle handle, QByteArray *data);
-    void run() Q_DECL_OVERRIDE;
+    void run() override;
     void setImageInverted(bool);
     void cancelScan();
     int scanProgress();

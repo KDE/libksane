@@ -47,7 +47,7 @@ public:
     * \param area this parameter determine the area of the reduced sized image. */
     void findSelections(float area = 10000.0);
 
-    QSize sizeHint() const Q_DECL_OVERRIDE;
+    QSize sizeHint() const override;
 
 public Q_SLOTS:
 
@@ -96,11 +96,11 @@ Q_SIGNALS:
     void newSelection(float tl_x, float tl_y, float br_x, float br_y);
 
 protected:
-    void wheelEvent(QWheelEvent *e) Q_DECL_OVERRIDE;
-    void mousePressEvent(QMouseEvent *e) Q_DECL_OVERRIDE;
-    void mouseReleaseEvent(QMouseEvent *e) Q_DECL_OVERRIDE;
-    void mouseMoveEvent(QMouseEvent *e) Q_DECL_OVERRIDE;
-    void drawBackground(QPainter *painter, const QRectF &rect) Q_DECL_OVERRIDE;
+    void wheelEvent(QWheelEvent *e) override;
+    void mousePressEvent(QMouseEvent *e) override;
+    void mouseReleaseEvent(QMouseEvent *e) override;
+    void mouseMoveEvent(QMouseEvent *e) override;
+    void drawBackground(QPainter *painter, const QRectF &rect) override;
 
 private:
     void updateSelVisibility();

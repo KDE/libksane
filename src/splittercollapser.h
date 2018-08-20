@@ -44,7 +44,7 @@ public:
     SplitterCollapser(QSplitter *, QWidget *widget);
     ~SplitterCollapser();
 
-    QSize sizeHint() const Q_DECL_OVERRIDE;
+    QSize sizeHint() const override;
 
 public Q_SLOTS:
     void slotCollapse();
@@ -52,9 +52,9 @@ public Q_SLOTS:
     void slotSetCollapsed(bool collapsed);
 
 protected:
-    bool eventFilter(QObject *, QEvent *) Q_DECL_OVERRIDE;
+    bool eventFilter(QObject *, QEvent *) override;
 
-    void paintEvent(QPaintEvent *) Q_DECL_OVERRIDE;
+    void paintEvent(QPaintEvent *) override;
 
 private:
     SplitterCollapserPrivate *const d;

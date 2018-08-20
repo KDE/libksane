@@ -42,15 +42,15 @@ class KSaneOptCheckBox : public KSaneOption
 public:
     KSaneOptCheckBox(const SANE_Handle handle, const int index);
 
-    void createWidget(QWidget *parent) Q_DECL_OVERRIDE;
+    void createWidget(QWidget *parent) override;
 
-    void readValue() Q_DECL_OVERRIDE;
+    void readValue() override;
 
-    bool getValue(float &val) Q_DECL_OVERRIDE;
-    bool setValue(float val) Q_DECL_OVERRIDE;
-    bool getValue(QString &val) Q_DECL_OVERRIDE;
-    bool setValue(const QString &val) Q_DECL_OVERRIDE;
-    bool hasGui() Q_DECL_OVERRIDE;
+    bool getValue(float &val) override;
+    bool setValue(float val) override;
+    bool getValue(QString &val) override;
+    bool setValue(const QString &val) override;
+    bool hasGui() override;
 
 private Q_SLOTS:
     void checkboxChanged(bool toggled);
