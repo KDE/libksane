@@ -2,10 +2,10 @@
  *
  * This file is part of the KDE project
  *
- * Date        : 2009-11-13
  * Description : Sane interface for KDE
  *
  * Copyright (C) 2009 by Kare Sars <kare dot sars at iki dot fi>
+ * Copyright (C) 2018 by Alexander Volkov <a.volkov@rusbitech.ru>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,67 +25,40 @@
  *
  * ============================================================ */
 
-#ifndef KSANE_PREVIEW_THREAD_H
-#define KSANE_PREVIEW_THREAD_H
+#ifndef KSANE_PREVIEW_IMAGE_BUILDER_H
+#define KSANE_PREVIEW_IMAGE_BUILDER_H
 
-#include "ksanepreviewimagebuilder.h"
-
-// Sane includes
 extern "C"
 {
-#include <sane/saneopts.h>
 #include <sane/sane.h>
 }
 
-#include <QThread>
-#include <QMutex>
-#include <QImage>
-
-#define PREVIEW_READ_CHUNK_SIZE 100000
+class QImage;
 
 namespace KSaneIface
 {
-class KSanePreviewThread: public QThread
+class KSanePreviewImageBuilder
 {
-    Q_OBJECT
 public:
-    typedef enum {
-        READ_ON_GOING,
-        READ_ERROR,
-        READ_CANCEL,
-        READ_READY
-    } ReadStatus;
+    KSanePreviewImageBuilder(QImage *img);
 
-    KSanePreviewThread(SANE_Handle handle, QImage *img);
-    void run() override;
-    void setPreviewInverted(bool);
-    void cancelScan();
-    int scanProgress();
-    bool saneStartDone();
+    void start(const SANE_Parameters &params);
+    void beginFrame(const SANE_Parameters &params);
+    bool copyToImage(const SANE_Byte readData[], int read_bytes);
     bool imageResized();
 
-    SANE_Status saneStatus();
-
-    QMutex imgMutex;
-
 private:
-    void readData();
-    void copyToPreviewImg(int readBytes);
-
-    SANE_Byte       m_readData[PREVIEW_READ_CHUNK_SIZE];
-    int             m_frameSize;
-    int             m_frameRead;
-    int             m_dataSize;
-    int             m_frame_t_count;
     SANE_Parameters m_params;
-    SANE_Handle     m_saneHandle;
-    bool            m_invertColors;
-    SANE_Status     m_saneStatus;
-    ReadStatus      m_readStatus;
-//            int             m_scanProgress;
-    bool            m_saneStartDone;
-    KSanePreviewImageBuilder m_imageBuilder;
+    int m_frameRead;
+    int m_pixel_x;
+    int m_pixel_y;
+    int m_px_colors[3];
+    int m_px_c_index;
+
+    QImage *m_img;
+
+    bool m_imageResized;
 };
 }
 
-#endif
+#endif // KSANE_PREVIEW_IMAGE_BUILDER_H

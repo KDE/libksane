@@ -27,6 +27,7 @@ set(ksane_SRCS
     ksanewidget.cpp
     ksanescanthread.cpp
     ksanepreviewthread.cpp
+    ksanepreviewimagebuilder.cpp
     ksanewidget_p.cpp
     splittercollapser.cpp
     ksaneauth.cpp
