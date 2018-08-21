@@ -48,6 +48,8 @@ public:
     bool imageResized();
 
 private:
+    void renewImage();
+
     SANE_Parameters m_params;
     int m_frameRead;
     int m_pixel_x;

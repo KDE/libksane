@@ -95,9 +95,7 @@ bool KSanePreviewImageBuilder::copyToImage(const SANE_Byte readData[], int read_
             int i, j;
             for (i = 0; i < read_bytes; i++) {
                 if (m_pixel_y >= m_img->height()) {
-                    // resize the image
-                    *m_img = m_img->copy(0, 0, m_img->width(), m_img->height() + m_img->width());
-                    m_imageResized = true;
+                    renewImage();
                 }
                 for (j = 7; j >= 0; --j) {
                     if ((readData[i] & (1 << j)) == 0) {
@@ -126,10 +124,8 @@ bool KSanePreviewImageBuilder::copyToImage(const SANE_Byte readData[], int read_
             for (int i = 0; i < read_bytes; i++) {
                 index = m_frameRead * 4;
                 if ((index + 2) > m_img->byteCount()) {
-                    // resize the image
-                    *m_img = m_img->copy(0, 0, m_img->width(), m_img->height() + m_img->width());
+                    renewImage();
                     imgBits = m_img->bits();
-                    m_imageResized = true;
                 }
                 imgBits[index    ] = readData[i];
                 imgBits[index + 1] = readData[i];
@@ -142,10 +138,8 @@ bool KSanePreviewImageBuilder::copyToImage(const SANE_Byte readData[], int read_
                 if (m_frameRead % 2 == 0) {
                     index = m_frameRead * 2;
                     if ((index + 2) > m_img->byteCount()) {
-                        // resize the image
-                        *m_img = m_img->copy(0, 0, m_img->width(), m_img->height() + m_img->width());
+                        renewImage();
                         imgBits = m_img->bits();
-                        m_imageResized = true;
                     }
                     imgBits[index    ] = readData[i + 1];
                     imgBits[index + 1] = readData[i + 1];
@@ -165,9 +159,7 @@ bool KSanePreviewImageBuilder::copyToImage(const SANE_Byte readData[], int read_
                 m_frameRead++;
                 if (m_px_c_index == 0) {
                     if (m_pixel_y >= m_img->height()) {
-                        // resize the image
-                        *m_img = m_img->copy(0, 0, m_img->width(), m_img->height() + m_img->width());
-                        m_imageResized = true;
+                        renewImage();
                     }
                     m_img->setPixel(m_pixel_x,
                                     m_pixel_y,
@@ -186,9 +178,7 @@ bool KSanePreviewImageBuilder::copyToImage(const SANE_Byte readData[], int read_
                     inc_color_index(m_px_c_index);
                     if (m_px_c_index == 0) {
                         if (m_pixel_y >= m_img->height()) {
-                            // resize the image
-                            *m_img = m_img->copy(0, 0, m_img->width(), m_img->height() + m_img->width());
-                            m_imageResized = true;
+                            renewImage();
                         }
                         m_img->setPixel(m_pixel_x,
                                         m_pixel_y,
@@ -207,10 +197,8 @@ bool KSanePreviewImageBuilder::copyToImage(const SANE_Byte readData[], int read_
         if (m_params.depth == 8) {
             for (int i = 0; i < read_bytes; i++) {
                 if (index_red8_to_argb8(m_frameRead) > m_img->byteCount()) {
-                    // resize the image
-                    *m_img = m_img->copy(0, 0, m_img->width(), m_img->height() + m_img->width());
+                    renewImage();
                     imgBits = m_img->bits();
-                    m_imageResized = true;
                 }
                 imgBits[index_red8_to_argb8(m_frameRead)] = readData[i];
                 m_frameRead++;
@@ -220,10 +208,8 @@ bool KSanePreviewImageBuilder::copyToImage(const SANE_Byte readData[], int read_
             for (int i = 0; i < read_bytes; i++) {
                 if (m_frameRead % 2 == 0) {
                     if (index_red16_to_argb8(m_frameRead) > m_img->byteCount()) {
-                        // resize the image
-                        *m_img = m_img->copy(0, 0, m_img->width(), m_img->height() + m_img->width());
+                        renewImage();
                         imgBits = m_img->bits();
-                        m_imageResized = true;
                     }
                     imgBits[index_red16_to_argb8(m_frameRead)] = readData[i + 1];
                 }
@@ -237,10 +223,8 @@ bool KSanePreviewImageBuilder::copyToImage(const SANE_Byte readData[], int read_
         if (m_params.depth == 8) {
             for (int i = 0; i < read_bytes; i++) {
                 if (index_green8_to_argb8(m_frameRead) > m_img->byteCount()) {
-                    // resize the image
-                    *m_img = m_img->copy(0, 0, m_img->width(), m_img->height() + m_img->width());
+                    renewImage();
                     imgBits = m_img->bits();
-                    m_imageResized = true;
                 }
                 imgBits[index_green8_to_argb8(m_frameRead)] = readData[i];
                 m_frameRead++;
@@ -250,10 +234,8 @@ bool KSanePreviewImageBuilder::copyToImage(const SANE_Byte readData[], int read_
             for (int i = 0; i < read_bytes; i++) {
                 if (m_frameRead % 2 == 0) {
                     if (index_green16_to_argb8(m_frameRead) > m_img->byteCount()) {
-                        // resize the image
-                        *m_img = m_img->copy(0, 0, m_img->width(), m_img->height() + m_img->width());
+                        renewImage();
                         imgBits = m_img->bits();
-                        m_imageResized = true;
                     }
                     imgBits[index_green16_to_argb8(m_frameRead)] = readData[i + 1];
                 }
@@ -267,10 +249,8 @@ bool KSanePreviewImageBuilder::copyToImage(const SANE_Byte readData[], int read_
         if (m_params.depth == 8) {
             for (int i = 0; i < read_bytes; i++) {
                 if (index_blue8_to_argb8(m_frameRead) > m_img->byteCount()) {
-                    // resize the image
-                    *m_img = m_img->copy(0, 0, m_img->width(), m_img->height() + m_img->width());
+                    renewImage();
                     imgBits = m_img->bits();
-                    m_imageResized = true;
                 }
                 imgBits[index_blue8_to_argb8(m_frameRead)] = readData[i];
                 m_frameRead++;
@@ -280,10 +260,8 @@ bool KSanePreviewImageBuilder::copyToImage(const SANE_Byte readData[], int read_
             for (int i = 0; i < read_bytes; i++) {
                 if (m_frameRead % 2 == 0) {
                     if (index_blue16_to_argb8(m_frameRead) > m_img->byteCount()) {
-                        // resize the image
-                        *m_img = m_img->copy(0, 0, m_img->width(), m_img->height() + m_img->width());
+                        renewImage();
                         imgBits = m_img->bits();
-                        m_imageResized = true;
                     }
                     imgBits[index_blue16_to_argb8(m_frameRead)] = readData[i + 1];
                 }
@@ -307,5 +285,12 @@ bool KSanePreviewImageBuilder::imageResized()
         return true;
     }
     return false;
+}
+
+void KSanePreviewImageBuilder::renewImage()
+{
+    // resize the image
+    *m_img = m_img->copy(0, 0, m_img->width(), m_img->height() + m_img->width());
+    m_imageResized = true;
 }
 } // NameSpace KSaneIface
