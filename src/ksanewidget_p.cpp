@@ -356,7 +356,7 @@ void KSaneWidgetPrivate::createOptInterface()
 
     if ((m_optGamR != nullptr) && (m_optGamG != nullptr) && (m_optGamB != nullptr)) {
         LabeledGamma *gamma = reinterpret_cast<LabeledGamma *>(m_optGamR->widget());
-        m_commonGamma = new LabeledGamma(m_colorOpts, i18n(SANE_TITLE_GAMMA_VECTOR), gamma->size());
+        m_commonGamma = new LabeledGamma(m_colorOpts, i18n(SANE_TITLE_GAMMA_VECTOR), gamma->size(), gamma->maxValue());
 
         color_lay->addWidget(m_commonGamma);
 

@@ -53,14 +53,18 @@ public:
      *
      * \param parent parent widget
      * \param text is the text describing the checkbox.
+     * \param elements is the number of elements in the gamma table
+     * \param max is the maximum gamma-table-value
      */
-    LabeledGamma(QWidget *parent, const QString &text, int elements);
+    LabeledGamma(QWidget *parent, const QString &text, int elements, int max);
     ~LabeledGamma();
 
     void setColor(const QColor &color);
     void setSize(int size);
     const QVector<int> &gammaTablePtr();
     int size();
+
+    int maxValue();
 
     bool getValues(int &bri, int &con, int &gam);
 
@@ -74,18 +78,18 @@ private Q_SLOTS:
 Q_SIGNALS:
 
     void gammaChanged(int bri, int con, int gam);
-    void gammaTableChanged(const QVector<int> &gamma_tbl);
+    void gammaTableChanged(const QVector<int> &gammaTable);
 
 private:
 
-    LabeledSlider *m_bri_slider;
-    LabeledSlider *m_con_slider;
-    LabeledSlider *m_gam_slider;
+    LabeledSlider *m_brightSlider;
+    LabeledSlider *m_contrastSlider;
+    LabeledSlider *m_gammaSlider;
 
-    QVector<int>   m_gam_tbl;
-    double         m_max_val;
+    QVector<int>   m_gammaTable;
+    double         m_maxValue;
 
-    GammaDisp     *m_gamma_disp;
+    GammaDisp     *m_gammaDisplay;
 };
 
 }  // NameSpace KSaneIface

@@ -51,7 +51,7 @@ public:
     * Create a gamma display.
     * \param parent parent widget
     */
-    GammaDisp(QWidget *parent, QVector<int> *tbl);
+    GammaDisp(QWidget *parent, QVector<int> *tbl, int maxValue);
     ~GammaDisp() {}
 
     QSize sizeHint() const override;
@@ -66,8 +66,9 @@ protected:
 
 private:
 
-    QVector<int> *gam_tbl;
-    QColor gam_color;
+    QVector<int> *m_gammaTable;
+    QColor        m_gammaColor;
+    int           m_maxValue;
 };
 
 }  // NameSpace KSaneIface

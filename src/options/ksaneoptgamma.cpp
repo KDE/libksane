@@ -56,8 +56,10 @@ void KSaneOptGamma::createWidget(QWidget *parent)
         return;
     }
 
-    m_widget = m_gamma = new LabeledGamma(parent, sane_i18n(m_optDesc->title),
-                                          m_optDesc->size / sizeof(SANE_Word));
+    m_widget = m_gamma = new LabeledGamma(parent,
+                                          sane_i18n(m_optDesc->title),
+                                          m_optDesc->size / sizeof(SANE_Word),
+                                          m_optDesc->constraint.range->max);
     connect(m_gamma, &LabeledGamma::gammaTableChanged, this, &KSaneOptGamma::gammaTableChanged);
     if (strcmp(m_optDesc->name, SANE_NAME_GAMMA_VECTOR_R) == 0) {
         m_gamma->setColor(Qt::red);

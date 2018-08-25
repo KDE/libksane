@@ -38,49 +38,49 @@
 namespace KSaneIface
 {
 
-LabeledGamma::LabeledGamma(QWidget *parent, const QString &text, int size)
+LabeledGamma::LabeledGamma(QWidget *parent, const QString &text, int size, int max)
     : KSaneOptionWidget(parent, text)
 {
-    m_bri_slider = new LabeledSlider(this, i18n("Brightness"), -50, 50, 1);
-    m_bri_slider->setValue(0);
+    m_brightSlider = new LabeledSlider(this, i18n("Brightness"), -50, 50, 1);
+    m_brightSlider->setValue(0);
 
-    m_con_slider = new LabeledSlider(this, i18n("Contrast"), -50, 50, 1);
-    m_con_slider->setValue(0);
+    m_contrastSlider = new LabeledSlider(this, i18n("Contrast"), -50, 50, 1);
+    m_contrastSlider->setValue(0);
 
-    m_gam_slider = new LabeledSlider(this, i18n("Gamma"), 30, 300, 1);
-    m_gam_slider->setValue(100);
+    m_gammaSlider = new LabeledSlider(this, i18n("Gamma"), 30, 300, 1);
+    m_gammaSlider->setValue(100);
 
     // Calculate the size of the widgets in the sliders
-    int labelMax = m_bri_slider->labelWidthHint();
-    labelMax = qMax(labelMax, m_con_slider->labelWidthHint());
-    labelMax = qMax(labelMax, m_gam_slider->labelWidthHint());
+    int labelMax = m_brightSlider->labelWidthHint();
+    labelMax = qMax(labelMax, m_contrastSlider->labelWidthHint());
+    labelMax = qMax(labelMax, m_gammaSlider->labelWidthHint());
     // set the calculated widths
-    m_bri_slider->setLabelWidth(labelMax);
-    m_con_slider->setLabelWidth(labelMax);
-    m_gam_slider->setLabelWidth(labelMax);
+    m_brightSlider->setLabelWidth(labelMax);
+    m_contrastSlider->setLabelWidth(labelMax);
+    m_gammaSlider->setLabelWidth(labelMax);
 
-    m_gam_tbl.resize(size);
-    for (int i = 0; i < m_gam_tbl.size(); i++) {
-        m_gam_tbl[i] = i;
+    m_gammaTable.resize(size);
+    for (int i = 0; i < m_gammaTable.size(); i++) {
+        m_gammaTable[i] = i;
     }
-    m_max_val = size - 1; // assume a gamma table 0 -> max
+    m_maxValue = max;
 
-    m_gamma_disp = new GammaDisp(this, &m_gam_tbl);
+    m_gammaDisplay = new GammaDisp(this, &m_gammaTable, m_maxValue);
 
     QGroupBox *groupBox = new QGroupBox(text, this);
     QGridLayout *gr_lay = new QGridLayout(groupBox);
 
-    gr_lay->addWidget(m_bri_slider, 0, 0);
-    gr_lay->addWidget(m_con_slider, 1, 0);
-    gr_lay->addWidget(m_gam_slider, 2, 0);
-    gr_lay->addWidget(m_gamma_disp, 0, 1, 3, 1);
+    gr_lay->addWidget(m_brightSlider, 0, 0);
+    gr_lay->addWidget(m_contrastSlider, 1, 0);
+    gr_lay->addWidget(m_gammaSlider, 2, 0);
+    gr_lay->addWidget(m_gammaDisplay, 0, 1, 3, 1);
 
     m_label->hide();
     m_layout->addWidget(groupBox, 1, 0, 1, 3);
 
-    connect(m_bri_slider, &LabeledSlider::valueChanged, this, &LabeledGamma::calculateGT);
-    connect(m_con_slider, &LabeledSlider::valueChanged, this, &LabeledGamma::calculateGT);
-    connect(m_gam_slider, &LabeledSlider::valueChanged, this, &LabeledGamma::calculateGT);
+    connect(m_brightSlider, &LabeledSlider::valueChanged, this, &LabeledGamma::calculateGT);
+    connect(m_contrastSlider, &LabeledSlider::valueChanged, this, &LabeledGamma::calculateGT);
+    connect(m_gammaSlider, &LabeledSlider::valueChanged, this, &LabeledGamma::calculateGT);
 }
 
 LabeledGamma::~LabeledGamma()
@@ -89,33 +89,33 @@ LabeledGamma::~LabeledGamma()
 
 void LabeledGamma::setColor(const QColor &color)
 {
-    if (m_gamma_disp != nullptr) {
-        m_gamma_disp->setColor(color);
+    if (m_gammaDisplay != nullptr) {
+        m_gammaDisplay->setColor(color);
     }
 }
 
 void LabeledGamma::setValues(int bri, int con, int gam)
 {
-    m_bri_slider->blockSignals(true);
-    m_con_slider->blockSignals(true);
-    m_gam_slider->blockSignals(true);
+    m_brightSlider->blockSignals(true);
+    m_contrastSlider->blockSignals(true);
+    m_gammaSlider->blockSignals(true);
 
-    m_bri_slider->setValue(bri);
-    m_con_slider->setValue(con);
-    m_gam_slider->setValue(gam);
+    m_brightSlider->setValue(bri);
+    m_contrastSlider->setValue(con);
+    m_gammaSlider->setValue(gam);
 
     calculateGT();
 
-    m_bri_slider->blockSignals(false);
-    m_con_slider->blockSignals(false);
-    m_gam_slider->blockSignals(false);
+    m_brightSlider->blockSignals(false);
+    m_contrastSlider->blockSignals(false);
+    m_gammaSlider->blockSignals(false);
 }
 
 void LabeledGamma::setValues(const QString &values)
 {
-    m_bri_slider->blockSignals(true);
-    m_con_slider->blockSignals(true);
-    m_gam_slider->blockSignals(true);
+    m_brightSlider->blockSignals(true);
+    m_contrastSlider->blockSignals(true);
+    m_gammaSlider->blockSignals(true);
 
     QStringList gammaValues;
     int bri;
@@ -133,79 +133,85 @@ void LabeledGamma::setValues(const QString &values)
     }
 
     if (ok) {
-        m_bri_slider->setValue(bri);
-        m_con_slider->setValue(con);
-        m_gam_slider->setValue(gam);
+        m_brightSlider->setValue(bri);
+        m_contrastSlider->setValue(con);
+        m_gammaSlider->setValue(gam);
         calculateGT();
     }
 
-    m_bri_slider->blockSignals(false);
-    m_con_slider->blockSignals(false);
-    m_gam_slider->blockSignals(false);
+    m_brightSlider->blockSignals(false);
+    m_contrastSlider->blockSignals(false);
+    m_gammaSlider->blockSignals(false);
 }
 
 bool LabeledGamma::getValues(int &bri, int &con, int &gam)
 {
 
-    bri = m_bri_slider->value();
-    con = m_con_slider->value();
-    gam = m_gam_slider->value();
+    bri = m_brightSlider->value();
+    con = m_contrastSlider->value();
+    gam = m_gammaSlider->value();
     return true;
 }
 
 void LabeledGamma::setSize(int size)
 {
-    m_gam_tbl.resize(size);
-    for (int i = 0; i < m_gam_tbl.size(); i++) {
-        m_gam_tbl[i] = i;
+    m_gammaTable.resize(size);
+    for (int i = 0; i < m_gammaTable.size(); i++) {
+        m_gammaTable[i] = i;
     }
-    m_bri_slider->setValue(0);
-    m_con_slider->setValue(0);
-    m_gam_slider->setValue(0);
+    m_brightSlider->setValue(0);
+    m_contrastSlider->setValue(0);
+    m_gammaSlider->setValue(0);
 }
 
 const QVector<int> &LabeledGamma::gammaTablePtr()
 {
-    return m_gam_tbl;
+    return m_gammaTable;
 }
 
 int LabeledGamma::size()
 {
-    return (int)(m_max_val + 1);
+    return m_gammaTable.size();
 }
+
+int LabeledGamma::maxValue()
+{
+    return m_maxValue;
+}
+
 
 void LabeledGamma::calculateGT()
 {
-    double gam      = 100.0 / m_gam_slider->value();
-    double con      = (200.0 / (100.0 - m_con_slider->value())) - 1;
-    double half_max = m_max_val / 2.0;
-    double bri      = (m_bri_slider->value() / half_max) * m_max_val;
+    double gam      = 100.0 / m_gammaSlider->value();
+    double con      = (200.0 / (100.0 - m_contrastSlider->value())) - 1;
+    double halfMax  = m_maxValue / 2.0;
+    double bri      = (m_brightSlider->value() / halfMax) * m_maxValue;
     double x;
 
-    for (int i = 0; i < m_gam_tbl.size(); i++) {
+    for (int i = 0; i < m_gammaTable.size(); i++) {
         // apply gamma
-        x = std::pow(i / m_max_val, gam) * m_max_val;
+        x = std::pow((double)i / m_gammaTable.size(), gam) * m_maxValue;
 
         // apply contrast
-        x = (con * (x - half_max)) + half_max;
+        x = (con * (x - halfMax)) + halfMax;
 
         // apply brightness + rounding
         x += bri + 0.5;
 
         // ensure correct value
-        if (x > m_max_val) {
-            x = m_max_val;
+        if (x > m_maxValue) {
+            x = m_maxValue;
         }
         if (x < 0) {
             x = 0;
         }
 
-        m_gam_tbl[i] = (int)x;
+        m_gammaTable[i] = (int)x;
     }
 
-    m_gamma_disp->update();
-    emit gammaChanged(m_bri_slider->value(), m_con_slider->value(), m_gam_slider->value());
-    emit gammaTableChanged(m_gam_tbl);
+    m_gammaDisplay->update();
+    emit gammaChanged(m_brightSlider->value(), m_contrastSlider->value(), m_gammaSlider->value());
+    emit gammaTableChanged(m_gammaTable);
 }
 
 }  // NameSpace KSaneIface
