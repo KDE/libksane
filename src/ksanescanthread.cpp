@@ -293,7 +293,7 @@ void KSaneScanThread::copyToScanData(int readBytes)
     }
 
     qDebug() << "Format" << m_params.format
-             << "and depth" << m_params.format
+             << "and depth" << m_params.depth
              << "is not yet suppoeted by libksane!";
     m_readStatus = READ_ERROR;
     return;

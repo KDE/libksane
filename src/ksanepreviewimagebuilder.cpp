@@ -295,7 +295,7 @@ bool KSanePreviewImageBuilder::copyToImage(const SANE_Byte readData[], int read_
     }
 
     qWarning() << "Format" << m_params.format
-               << "and depth" << m_params.format
+               << "and depth" << m_params.depth
                << "is not yet supported by libksane!";
     return false;
 }
