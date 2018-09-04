@@ -36,16 +36,16 @@ namespace KSaneIface
 {
 KSanePreviewThread::KSanePreviewThread(SANE_Handle handle, QImage *img):
     QThread(),
+    m_saneHandle(handle),
     m_frameSize(0),
     m_frameRead(0),
-    m_dataSize(0),
     m_frame_t_count(0),
-    m_saneHandle(handle),
-    m_invertColors(false),
+    m_dataSize(0),
     m_saneStatus(SANE_STATUS_GOOD),
     m_readStatus(READ_READY),
 //    m_scanProgress(0),
     m_saneStartDone(false),
+    m_invertColors(false),
     m_imageBuilder(img)
 {
 }
@@ -183,24 +183,29 @@ void KSanePreviewThread::readData()
     copyToPreviewImg(readBytes);
 }
 
-void KSanePreviewThread::copyToPreviewImg(int read_bytes)
+void KSanePreviewThread::copyToPreviewImg(int readBytes)
 {
     QMutexLocker locker(&imgMutex);
     if (m_invertColors) {
-        if (m_params.depth >= 8) {
-            for (int i = 0; i < read_bytes; i++) {
-                m_readData[i] = 255 - m_readData[i];
+        if (m_params.depth == 16) {
+            //if (readBytes%2) qDebug() << "readBytes=" << readBytes;
+            quint16 *u16ptr = reinterpret_cast<quint16 *>(m_readData);
+            for (int i = 0; i < readBytes / 2; i++) {
+                u16ptr[i] = 0xFFFF - u16ptr[i];
             }
-        }
-        if (m_params.depth == 1) {
-            for (int i = 0; i < read_bytes; i++) {
+        } else if (m_params.depth == 8) {
+            for (int i = 0; i < readBytes; i++) {
+                m_readData[i] = 0xFF - m_readData[i];
+            }
+        } else if (m_params.depth == 1) {
+            for (int i = 0; i < readBytes; i++) {
                 m_readData[i] = ~m_readData[i];
             }
         }
     }
 
-    if (m_imageBuilder.copyToImage(m_readData, read_bytes)) {
-        m_frameRead += read_bytes;
+    if (m_imageBuilder.copyToImage(m_readData, readBytes)) {
+        m_frameRead += readBytes;
     } else {
         m_readStatus = READ_ERROR;
     }

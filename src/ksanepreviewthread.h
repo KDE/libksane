@@ -73,17 +73,17 @@ private:
     void copyToPreviewImg(int readBytes);
 
     SANE_Byte       m_readData[PREVIEW_READ_CHUNK_SIZE];
+    SANE_Handle     m_saneHandle;
     int             m_frameSize;
     int             m_frameRead;
-    int             m_dataSize;
     int             m_frame_t_count;
+    int             m_dataSize;
     SANE_Parameters m_params;
-    SANE_Handle     m_saneHandle;
-    bool            m_invertColors;
     SANE_Status     m_saneStatus;
     ReadStatus      m_readStatus;
 //            int             m_scanProgress;
     bool            m_saneStartDone;
+    bool            m_invertColors;
     KSanePreviewImageBuilder m_imageBuilder;
 };
 }

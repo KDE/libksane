@@ -43,8 +43,8 @@ KSaneScanThread::KSaneScanThread(SANE_Handle handle, QByteArray *data):
     m_dataSize(0),
     m_saneStatus(SANE_STATUS_GOOD),
     m_readStatus(READ_READY),
-    m_invertColors(false),
-    m_saneStartDone(false)
+    m_saneStartDone(false),
+    m_invertColors(false)
 {}
 
 void KSaneScanThread::setImageInverted(bool inverted)
@@ -65,22 +65,6 @@ KSaneScanThread::ReadStatus KSaneScanThread::frameStatus()
 void KSaneScanThread::cancelScan()
 {
     m_readStatus = READ_CANCEL;
-}
-
-int KSaneScanThread::scanProgress()
-{
-    if (m_dataSize == 0) {
-        return 0;
-    }
-
-    int bytesRead;
-
-    if (m_frameSize < m_dataSize) {
-        bytesRead = m_frameRead + (m_frameSize * m_frame_t_count);
-    } else {
-        bytesRead = m_frameRead;
-    }
-    return (int)(((float)bytesRead * 100.0) / m_dataSize);
 }
 
 SANE_Parameters KSaneScanThread::saneParameters()
@@ -140,6 +124,22 @@ void KSaneScanThread::run()
     while (m_readStatus == READ_ON_GOING) {
         readData();
     }
+}
+
+int KSaneScanThread::scanProgress()
+{
+    if (m_dataSize == 0) {
+        return 0;
+    }
+
+    int bytesRead;
+
+    if (m_frameSize < m_dataSize) {
+        bytesRead = m_frameRead + (m_frameSize * m_frame_t_count);
+    } else {
+        bytesRead = m_frameRead;
+    }
+    return (int)(((float)bytesRead * 100.0) / m_dataSize);
 }
 
 void KSaneScanThread::readData()

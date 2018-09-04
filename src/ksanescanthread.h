@@ -72,15 +72,15 @@ private:
     SANE_Byte       m_readData[SCAN_READ_CHUNK_SIZE];
     QByteArray     *m_data;
     SANE_Handle     m_saneHandle;
-    SANE_Parameters m_params;
     int             m_frameSize;
     int             m_frameRead;
     int             m_frame_t_count;
     int             m_dataSize;
+    SANE_Parameters m_params;
     SANE_Status     m_saneStatus;
     ReadStatus      m_readStatus;
-    bool            m_invertColors;
     bool            m_saneStartDone;
+    bool            m_invertColors;
 };
 }
 
