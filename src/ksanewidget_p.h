@@ -79,6 +79,7 @@ public Q_SLOTS:
     void devListUpdated();
     void signalDevListUpdate();
     void startFinalScan();
+    void startPreviewScan();
     void previewScanDone();
     void oneFinalScanDone();
     void updateProgress();
@@ -92,8 +93,6 @@ private Q_SLOTS:
     void setTLY(float y);
     void setBRX(float x);
     void setBRY(float y);
-
-    void startPreviewScan();
 
     void checkInvert();
     void invertPreview();

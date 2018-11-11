@@ -649,6 +649,16 @@ void KSaneWidget::scanFinal()
     }
 }
 
+void KSaneWidget::startPreviewScan()
+{
+    if (d->m_btnFrame->isEnabled()) {
+        d->startPreviewScan();
+    } else {
+        // if the button frame is disabled, there is no open device to scan from
+        emit scanDone(KSaneWidget::ErrorGeneral, QStringLiteral(""));
+    }
+}
+
 void KSaneWidget::scanCancel()
 {
     if (d->m_scanThread->isRunning()) {

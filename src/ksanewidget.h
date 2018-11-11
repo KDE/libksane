@@ -237,6 +237,9 @@ public Q_SLOTS:
     * imageReady signal. */
     void scanFinal();
 
+    /** This method can be used to start a preview scan. */
+    void startPreviewScan();
+
 Q_SIGNALS:
     /**
      * This Signal is emitted when a final scan is ready.
