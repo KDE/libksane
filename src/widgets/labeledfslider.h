@@ -59,7 +59,7 @@ public:
      *        contains a '&', a buddy for the slider will be created.
      * \param min minimum slider value
      * \param max maximum slider value
-     * \param quant is the step between values.
+     * \param st is the step between values.
      */
     LabeledFSlider(QWidget *parent, const QString &text,
                    float min, float max, float st);

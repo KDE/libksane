@@ -343,7 +343,7 @@ bool KSaneOptCombo::setValue(const QString &val)
     switch (m_optDesc->type) {
     case SANE_TYPE_INT:
         tmp = val.left(val.indexOf(QLatin1Char(' '))); // strip the unit
-        // accept float formating of the string
+        // accept float formatting of the string
         i = (int)(tmp.toFloat(&ok));
         if (ok == false) {
             return false;

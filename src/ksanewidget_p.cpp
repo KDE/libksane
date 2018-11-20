@@ -473,7 +473,7 @@ void KSaneWidgetPrivate::createOptInterface()
         }
     }
 
-    // encsure that we do not get a scrollbar at the bottom of the option of the options
+    // ensure that we do not get a scrollbar at the bottom of the option of the options
     int min_width = m_basicOptsTab->sizeHint().width();
     if (min_width < m_otherOptsTab->sizeHint().width()) {
         min_width = m_otherOptsTab->sizeHint().width();
@@ -774,7 +774,7 @@ void KSaneWidgetPrivate::startPreviewScan()
                 m_optResY->setValue(m_previewDPI);
             }
         } else {
-            // set the resopution to getMinValue and increase if necessary
+            // set the resolution to getMinValue and increase if necessary
             SANE_Parameters params;
             m_optRes->getMinValue(dpi);
             do {
@@ -900,7 +900,7 @@ void KSaneWidgetPrivate::startFinalScan()
         m_optBrX->getMaxValue(max_x);
         m_optBrY->getMaxValue(max_y);
 
-        // reead the selection from the viewer
+        // read the selection from the viewer
         m_previewViewer->selectionAt(m_selIndex, x1, y1, x2, y2);
         m_previewViewer->setHighlightArea(x1, y1, x2, y2);
         m_selIndex++;
@@ -956,7 +956,7 @@ void KSaneWidgetPrivate::oneFinalScanDone()
                            getBytesPerLines(params),
                            (int)getImgFormat(params)));
 
-        // now check if we should have automatic ADF batch scaning
+        // now check if we should have automatic ADF batch scanning
         if (m_optSource) {
             QString source;
             m_optSource->getValue(source);

@@ -50,6 +50,8 @@ public:
     /**
     * Create a gamma display.
     * \param parent parent widget
+    * \param tbl the gamma table
+    * \param maxValue the maximum value
     */
     GammaDisp(QWidget *parent, QVector<int> *tbl, int maxValue);
     ~GammaDisp() {}

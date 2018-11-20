@@ -37,7 +37,7 @@
     version 1.7, July 1997       Added Capabilities and data structure for
                                  document imaging and digital cameras.
                                  KHL.
-    version 1.7, July 1997       Inserted Borland compatibile structure packing
+    version 1.7, July 1997       Inserted Borland compatible structure packing
                                  directives provided by Mentor.  JMH
     version 1.7, Aug 1997        Expanded file tabs to spaces.
                                  NOTE: future authors should be sure to have
@@ -63,7 +63,7 @@
                                  * CAP_PAGEMULTIPLEACQUIRE - is CAP_REACQUIREALLOWED,
                                  requires spec change.  JMH
                                  Added Mac structure packing modifications JMH
-    version 1.9  March 2000      Added new types and definations required
+    version 1.9  March 2000      Added new types and definitions required
                                  for 1.9 Specification MLM
     version 1.9  March 2000      Added ICAP_JPEGQUALITY, TWJQ_ values,
                                  updated TWON_PROTOCOLMINOR for Release v1.9 MN
@@ -545,7 +545,7 @@ typedef struct {
     char       Reserved[508]; /**/
 } TW_FILESYSTEM, FAR *pTW_FILESYSTEM;
 
-/* DAT_PASSTHRU, device dependant data to pass through Data Source */
+/* DAT_PASSTHRU, device dependent data to pass through Data Source */
 typedef struct {
     TW_MEMREF  pCommand;        /* Pointer to Command buffer */
     TW_UINT32  CommandBytes;    /* Number of bytes in Command buffer */
@@ -1410,7 +1410,7 @@ typedef struct {
 /*  This has a couple implications:                                         */
 /*  1) Any additional DAT_ features require modifications to the thunk code */
 /*     for thunker support.                                                 */
-/*  2) Any applications which use the custom capabailites are not supported */
+/*  2) Any applications which use the custom capabilities are not supported */
 /*     under thunking since we have no way of knowing what size data (if    */
 /*     any) is being passed.                                                */
 
@@ -1788,7 +1788,7 @@ typedef struct {
 #define TWCC_BADDEST            12 /* Unknown destination Application/Source in DSM_Entry */
 #define TWCC_CAPUNSUPPORTED     13 /* Capability not supported by source            */
 #define TWCC_CAPBADOPERATION    14 /* Operation not supported by capability         */
-#define TWCC_CAPSEQERROR        15 /* Capability has dependancy on other capability */
+#define TWCC_CAPSEQERROR        15 /* Capability has dependency on other capability */
 /* Added 1.8 */
 #define TWCC_DENIED             16 /* File System operation is denied (file is protected) */
 #define TWCC_FILEEXISTS         17 /* Operation failed because file already exists. */

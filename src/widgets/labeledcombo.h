@@ -63,7 +63,7 @@ public Q_SLOTS:
     void clear();
 
     /**
-     * If the given string can be found in the comobox, activate that entry.
+     * If the given string can be found in the combobox, activate that entry.
      * If not, the entry is not changed.
      */
     void setCurrentText(const QString &);

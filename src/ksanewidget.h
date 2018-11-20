@@ -154,7 +154,7 @@ public:
     QString vendor() const;
     /** This method returns the make name of the scanner. */
     QString make() const;
-    /** This methos returns the model of the scanner. */
+    /** This method returns the model of the scanner. */
     QString model() const;
 
     /** This method returns the current resolution of the acquired image,
@@ -263,7 +263,7 @@ Q_SIGNALS:
      * This signal is emitted when the user is to be notified about something.
      * @note If no slot is connected to this signal the message will be displayed in a KMessageBox.
      * @param type contains a ScanStatus code to identify the type of message (error/info/...).
-     * @param msg is the message to the user.
+     * @param strStatus If an error has occurred this string will contain an error message.
      * otherwise the string is empty. */
     void userMessage(int type, const QString &strStatus);
 

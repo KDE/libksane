@@ -84,7 +84,7 @@ void KSaneOptGamma::gammaTableChanged(const QVector<int> &gam_tbl)
 
 void KSaneOptGamma::readValue()
 {
-    // Unfortunately gamma table to brigthness, contrast and gamma is
+    // Unfortunately gamma table to brightness, contrast and gamma is
     // not easy nor fast.. ergo not done
 }
 

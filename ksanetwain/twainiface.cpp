@@ -51,7 +51,7 @@ namespace KSaneIface
 
 KSaneWidgetPrivate::KSaneWidgetPrivate(): QWidget(0)
 {
-    // This is a dumy widget not visible. We use Qwidget to dispatch Windows event to
+    // This is a dummy widget not visible. We use Qwidget to dispatch Windows event to
     // Twain interface. This is not possible to do it using QObject as well.
 
     m_hMessageWnd     = 0;
@@ -171,7 +171,7 @@ bool KSaneWidgetPrivate::CallTwainProc(pTW_IDENTITY pOrigin, pTW_IDENTITY pDest,
 /** Called to display a dialog box to select the Twain source to use.
     This can be overridden if a list of all sources is available
     to the application. These sources can be enumerated by Twain.
-    it is not yet supportted by KSaneWidgetPrivate.
+    it is not yet supported by KSaneWidgetPrivate.
  */
 QString KSaneWidgetPrivate::SelectSource()
 {
@@ -415,7 +415,7 @@ bool KSaneWidgetPrivate::SetCapability(TW_CAPABILITY &cap)
     return false;
 }
 
-/** Sets the number of images which can be accpeted by the application at one time */
+/** Sets the number of images which can be accepted by the application at one time */
 bool KSaneWidgetPrivate::SetImageCount(TW_INT16 nCount)
 {
     saneDebug() << "SetImageCount" << nCount << (TW_UINT16)nCount;
