@@ -118,6 +118,10 @@ void KSaneWidget::scanFinal()
 {
 }
 
+void KSaneWidget::startPreviewScan()
+{
+}
+
 void KSaneWidget::scanCancel()
 {
     emit scanProgress(0);
