@@ -81,7 +81,7 @@ KSaneViewer::KSaneViewer(QImage *img, QWidget *parent) : QGraphicsView(parent), 
     setMouseTracking(true);
 
     // Init the scene
-    d->scene = new QGraphicsScene;
+    d->scene = new QGraphicsScene(this);
     d->scene->setSceneRect(0, 0, img->width(), img->height());
     setScene(d->scene);
 
