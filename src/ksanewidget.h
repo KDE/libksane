@@ -150,6 +150,26 @@ public:
                           int bytes_per_line,
                           ImageFormat format);
 
+    /**
+     * This is a static version of toQImageSilent() method that requires dpi as additional
+     * argument. Non-static version uses currentDPI() for it.
+     *
+     * @param data is the byte data containing the image.
+     * @param width is the width of the image in pixels.
+     * @param height is the height of the image in pixels.
+     * @param bytes_per_line is the number of bytes used per line. This might include padding
+     * and is probably only relevant for 'FormatBlackWhite'.
+     * @param format is the KSane image format of the data.
+     * @param dpi is the dpi value of the image.
+     * @return This function returns the provided image data as a QImage. */
+    static
+    QImage toQImageSilent(const QByteArray &data,
+                          int width,
+                          int height,
+                          int bytes_per_line,
+                          int dpi,
+                          ImageFormat format);
+
     /** This method returns the vendor name of the scanner (Same as make). */
     QString vendor() const;
     /** This method returns the make name of the scanner. */

@@ -97,8 +97,11 @@ QImage KSaneWidget::toQImage(const QByteArray &data,
                              int bytes_per_line,
                              ImageFormat format)
 {
-    QImage img = QImage::fromData(data, "BMP");
-    return img;
+    return toQImageSilent(data,
+                          width,
+                          height,
+                          bytes_per_line,
+                          format);
 }
 
 QImage KSaneWidget::toQImageSilent(const QByteArray &data,
@@ -107,11 +110,23 @@ QImage KSaneWidget::toQImageSilent(const QByteArray &data,
                                    int bytes_per_line,
                                    ImageFormat format)
 {
-    return KSaneWidget::toQImage(data,
-                                 width,
-                                 height,
-                                 bytes_per_line,
-                                 format);
+    return KSaneWidget::toQImageSilent(data,
+                                       width,
+                                       height,
+                                       bytes_per_line,
+                                       (int) currentDPI(),
+                                       format);
+}
+
+QImage KSaneWidget::toQImageSilent(const QByteArray &data,
+                                   int width,
+                                   int height,
+                                   int bytes_per_line,
+                                   int dpi,
+                                   ImageFormat format)
+{
+    QImage img = QImage::fromData(data, "BMP");
+    return img;
 }
 
 void KSaneWidget::scanFinal()

@@ -548,6 +548,16 @@ QImage KSaneWidget::toQImageSilent(const QByteArray &data,
                                    int bytes_per_line,
                                    ImageFormat format)
 {
+    return KSaneWidget::toQImageSilent(data, width, height, bytes_per_line, currentDPI(), format);
+}
+
+QImage KSaneWidget::toQImageSilent(const QByteArray &data,
+                                   int width,
+                                   int height,
+                                   int bytes_per_line,
+                                   int dpi,
+                                   ImageFormat format)
+{
     QImage img;
     int j = 0;
     QVector<QRgb> table;
@@ -619,7 +629,7 @@ QImage KSaneWidget::toQImageSilent(const QByteArray &data,
         qDebug() << "Unsupported conversion";
         break;
     }
-    float dpm = currentDPI() * (1000.0 / 25.4);
+    float dpm = dpi * (1000.0 / 25.4);
     img.setDotsPerMeterX(dpm);
     img.setDotsPerMeterY(dpm);
     return img;
