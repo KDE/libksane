@@ -718,6 +718,11 @@ bool KSaneWidget::getOptVal(const QString &optname, QString &value)
 
 int KSaneWidget::setOptVals(const QMap <QString, QString> &opts)
 {
+    if (d->m_scanThread->isRunning() ||
+            d->m_previewThread->isRunning()) {
+        return -1;
+    }
+
     QString tmp;
     int i;
     int ret = 0;
@@ -766,6 +771,11 @@ int KSaneWidget::setOptVals(const QMap <QString, QString> &opts)
 
 bool KSaneWidget::setOptVal(const QString &option, const QString &value)
 {
+    if (d->m_scanThread->isRunning() ||
+            d->m_previewThread->isRunning()) {
+        return false;
+    }
+
     KSaneOption *opt;
 
     if ((opt = d->getOption(option)) != nullptr) {

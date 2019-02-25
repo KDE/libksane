@@ -211,7 +211,8 @@ public:
 
     /** This method can be used to write many parameter values at once.
      * @param opts is a QMap with the parameter names and values.
-     * @return This function returns the number of successful writes. */
+     * @return This function returns the number of successful writes
+     * or -1 if scanning is in progress. */
     int setOptVals(const QMap <QString, QString> &opts);
 
     /** This function reads one parameter value into a string.
@@ -223,7 +224,8 @@ public:
     /** This function writes one parameter value into a string.
      * @param optname is the name of the parameter to write.
      * @param value is the string representation of the value.
-     * @return this function returns true if the write was successful. */
+     * @return this function returns true if the write was successful and
+     * false if it was unsuccessful or scanning is in progress. */
     bool setOptVal(const QString &optname, const QString &value);
 
     /** This function sets the label on the final scan button
