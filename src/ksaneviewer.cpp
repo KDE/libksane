@@ -70,6 +70,8 @@ struct KSaneViewer::Private {
     QGraphicsRectItem *hideTop;
     QGraphicsRectItem *hideBottom;
     QGraphicsRectItem *hideArea;
+
+    int wheelDelta = 0;
 };
 
 KSaneViewer::KSaneViewer(QImage *img, QWidget *parent) : QGraphicsView(parent), d(new Private)
@@ -196,7 +198,7 @@ void KSaneViewer::updateImage()
 // ------------------------------------------------------------------------
 void KSaneViewer::zoomIn()
 {
-    scale(1.5, 1.5);
+    scale(1.3, 1.3);
     d->selection->saveZoom(transform().m11());
     for (int i = 0; i < d->selectionList.size(); ++i) {
         d->selectionList[i]->saveZoom(transform().m11());
@@ -206,7 +208,7 @@ void KSaneViewer::zoomIn()
 // ------------------------------------------------------------------------
 void KSaneViewer::zoomOut()
 {
-    scale(1.0 / 1.5, 1.0 / 1.5);
+    scale(1.0 / 1.3, 1.0 / 1.3);
     d->selection->saveZoom(transform().m11());
     for (int i = 0; i < d->selectionList.size(); ++i) {
         d->selectionList[i]->saveZoom(transform().m11());
@@ -518,10 +520,16 @@ void KSaneViewer::clearSelections()
 void KSaneViewer::wheelEvent(QWheelEvent *e)
 {
     if (e->modifiers() == Qt::ControlModifier) {
-        if (e->delta() > 0) {
+        d->wheelDelta +=  e->angleDelta().y();
+
+        while (d->wheelDelta >= QWheelEvent::DefaultDeltasPerStep) {
             zoomIn();
-        } else {
+            d->wheelDelta -= QWheelEvent::DefaultDeltasPerStep;
+        }
+
+        while (d->wheelDelta <= -QWheelEvent::DefaultDeltasPerStep) {
             zoomOut();
+            d->wheelDelta += QWheelEvent::DefaultDeltasPerStep;
         }
     } else {
         QGraphicsView::wheelEvent(e);
