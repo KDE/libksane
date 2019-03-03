@@ -26,7 +26,7 @@ include(KDEFrameworkCompilerSettings NO_POLICY_SCOPE)
 include(KDECMakeSettings)
 include(GenerateExportHeader)
 
-set(KF5_VERSION "5.37.0")
+set(KF5_VERSION "5.55.0")
 
 ecm_setup_version(
   ${KF5_VERSION}
@@ -119,7 +119,7 @@ install(FILES
 # Library API version
 SET(KSANE_LIB_MAJOR_VERSION "0")
 SET(KSANE_LIB_MINOR_VERSION "3")
-SET(KSANE_LIB_PATCH_VERSION "0")
+SET(KSANE_LIB_PATCH_VERSION "1")
 
 # Suffix to add at end of version string. Usual values are:
 # "-git"   : alpha code unstable from git. Do not use in production
@@ -134,7 +134,7 @@ SET(KSANE_LIB_SUFFIX_VERSION "")
 # For details : http://www.gnu.org/software/libtool/manual/libtool.html#Updating-version-info
 SET(KSANE_LIB_SO_CUR_VERSION "0")
 SET(KSANE_LIB_SO_REV_VERSION "2")
-SET(KSANE_LIB_SO_AGE_VERSION "0")
+SET(KSANE_LIB_SO_AGE_VERSION "1")
 
 # =======================================================
 # Set env. variables accordinly.
