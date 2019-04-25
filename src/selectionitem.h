@@ -65,6 +65,9 @@ public:
     QPointF fixTranslation( QPointF dp);
     QRectF rect();
 
+    qreal devicePixelRatio() const;
+    void setDevicePixelRatio(qreal dpr);
+
 public:
     // Graphics Item methods
     QRectF boundingRect() const override;

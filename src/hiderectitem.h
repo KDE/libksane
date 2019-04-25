@@ -36,6 +36,15 @@ class HideRectItem : public QGraphicsRectItem
 {
 public:
     HideRectItem();
+
+    QRectF rect() const;
+    void setRect(const QRectF &rect);
+
+    qreal devicePixelRatio() const;
+    void setDevicePixelRatio(qreal dpr);
+
+private:
+    qreal m_devicePixelRatio;
 };
 
 }  // NameSpace KSaneIface

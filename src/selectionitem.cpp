@@ -54,6 +54,7 @@ struct SelectionItem::Private {
     qreal      invZoom;
     qreal      selMargin;
     QRectF     addRemRect;
+    qreal      devicePixelRatio;
 };
 
 SelectionItem::SelectionItem(const QRectF &rect) : QGraphicsItem(), d(new Private)
@@ -65,8 +66,10 @@ SelectionItem::SelectionItem(const QRectF &rect) : QGraphicsItem(), d(new Privat
 
     d->penDark.setColor(Qt::black);
     d->penDark.setStyle(Qt::SolidLine);
+    d->penDark.setWidth(0);
     d->penLight.setColor(Qt::white);
     d->penLight.setStyle(Qt::DashLine);
+    d->penLight.setWidth(0);
 
     // FIXME We should probably use some standard KDE color here and not hard code it
     d->penAddRemFg.setColor(Qt::darkGreen);
@@ -79,6 +82,8 @@ SelectionItem::SelectionItem(const QRectF &rect) : QGraphicsItem(), d(new Privat
     d->selMargin = selMargin;
 
     d->addRemRect = QRectF(0, 0, 0, 0);
+
+    d->devicePixelRatio = 1.0;
 }
 
 SelectionItem::~SelectionItem()
@@ -97,7 +102,7 @@ void SelectionItem::saveZoom(qreal zoom)
 
     qreal margin = addRemMargin * d->invZoom;
     QPointF pMargin = addRemMarginPoint * d->invZoom;
-    d->addRemRect = QRectF(d->rect.center() - pMargin, QSizeF(margin * 2.0, margin * 2.0));
+    d->addRemRect = QRectF(d->rect.center() / d->devicePixelRatio - pMargin, QSizeF(margin * 2.0, margin * 2.0));
     d->penAddRemFg.setWidthF(3.0 * d->invZoom);
 }
 
@@ -193,10 +198,7 @@ SelectionItem::Intersects SelectionItem::intersects(const QPointF &point)
         update();
     }
 
-    if ((point.x() > d->addRemRect.left()) &&
-            (point.x() < d->addRemRect.right()) &&
-            (point.y() > d->addRemRect.top()) &&
-            (point.y() < d->addRemRect.bottom())) {
+    if (d->addRemRect.contains(point / d->devicePixelRatio)) {
         return AddRemove;
     }
     return Move;
@@ -225,7 +227,7 @@ void SelectionItem::setRect(const QRectF &rect)
     // calculate the add/remove rectangle
     qreal margin = addRemMargin * d->invZoom;
     QPointF pMargin = addRemMarginPoint * d->invZoom;
-    d->addRemRect = QRectF(d->rect.center() - pMargin, QSizeF(margin * 2, margin * 2));
+    d->addRemRect = QRectF(d->rect.center() / d->devicePixelRatio - pMargin, QSizeF(margin * 2, margin * 2));
 }
 
 QPointF SelectionItem::fixTranslation(QPointF dp)
@@ -250,46 +252,45 @@ QRectF SelectionItem::rect()
     return d->rect;
 }
 
+qreal SelectionItem::devicePixelRatio() const
+{
+    return d->devicePixelRatio;
+}
+
+void SelectionItem::setDevicePixelRatio(qreal dpr)
+{
+    d->devicePixelRatio = dpr;
+}
+
 QRectF SelectionItem::boundingRect() const
 {
-    QRectF tmp(d->rect.topLeft() - boundMargin, d->rect.bottomRight() + boundMargin);
-    if (tmp.top() > d->addRemRect.top()) {
-        tmp.setTop(d->addRemRect.top());
-    }
-    if (tmp.left() > d->addRemRect.left()) {
-        tmp.setLeft(d->addRemRect.left());
-    }
-
-    if (tmp.bottom() < d->addRemRect.bottom()) {
-        tmp.setBottom(d->addRemRect.bottom());
-    }
-
-    if (tmp.right() < d->addRemRect.right()) {
-        tmp.setRight(d->addRemRect.right());
-    }
-
-    return tmp;
+    const auto dpr = d->devicePixelRatio;
+    QRectF tmp(d->rect.topLeft() / dpr - boundMargin, d->rect.bottomRight() / dpr + boundMargin);
+    return tmp.united(d->addRemRect);
 }
 
 void SelectionItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *)
 {
+    const auto dpr = d->devicePixelRatio;
+    QRectF rect(d->rect.topLeft() / dpr, d->rect.size() / dpr);
+
     painter->setPen(d->penDark);
-    painter->drawRect(d->rect);
+    painter->drawRect(rect);
 
     painter->setPen(d->penLight);
-    painter->drawRect(d->rect);
+    painter->drawRect(rect);
 
     if (d->showAddRem) {
         painter->fillRect(d->addRemRect, QBrush(Qt::white));
-        QLineF minus(d->addRemRect.left() + 3 * d->invZoom, d->rect.center().y(),
-                     d->addRemRect.right() - 3 * d->invZoom, d->rect.center().y());
+        QLineF minus(d->addRemRect.left() + 3 * d->invZoom, d->addRemRect.center().y(),
+                     d->addRemRect.right() - 3 * d->invZoom, d->addRemRect.center().y());
         painter->setPen(d->penAddRemFg);
 
         painter->drawLine(minus);
 
         if (!d->isSaved) {
-            QLineF plus(d->rect.center().x(), d->addRemRect.top() + 3 * d->invZoom,
-                        d->rect.center().x(), d->addRemRect.bottom() - 3 * d->invZoom);
+            QLineF plus(d->addRemRect.center().x(), d->addRemRect.top() + 3 * d->invZoom,
+                        d->addRemRect.center().x(), d->addRemRect.bottom() - 3 * d->invZoom);
             painter->drawLine(plus);
         }
     }

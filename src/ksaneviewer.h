@@ -115,6 +115,8 @@ private:
     int  refineRow(int fromRow, int toRow, int rowStart, int rowEnd);
     int  refineColumn(int fromCol, int toCol, int colStart, int colEnd);
 
+    QPointF scenePos(QMouseEvent *e) const;
+
     struct Private;
     Private *const d;
 

@@ -715,7 +715,9 @@ void KSaneWidgetPrivate::updatePreviewSize()
         x = (int)(SCALED_PREVIEW_MAX_SIDE / ratio);
     }
 
-    m_previewImg = QImage(x, y, QImage::Format_RGB32);
+    const qreal dpr = q->devicePixelRatioF();
+    m_previewImg = QImage(QSize(x, y) * dpr, QImage::Format_RGB32);
+    m_previewImg.setDevicePixelRatio(dpr);
     m_previewImg.fill(0xFFFFFFFF);
 
     // set the new image

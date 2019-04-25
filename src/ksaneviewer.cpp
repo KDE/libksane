@@ -85,7 +85,8 @@ KSaneViewer::KSaneViewer(QImage *img, QWidget *parent) : QGraphicsView(parent), 
 
     // Init the scene
     d->scene = new QGraphicsScene(this);
-    d->scene->setSceneRect(0, 0, img->width(), img->height());
+    const auto dpr = img->devicePixelRatio();
+    d->scene->setSceneRect(0, 0, img->width() / dpr, img->height() / dpr);
     setScene(d->scene);
 
     d->selection = new SelectionItem(QRectF());
@@ -141,7 +142,10 @@ KSaneViewer::KSaneViewer(QImage *img, QWidget *parent) : QGraphicsView(parent), 
 void KSaneViewer::drawBackground(QPainter *painter, const QRectF &rect)
 {
     painter->fillRect(rect, QColor(0x70, 0x70, 0x70));
-    painter->drawImage(rect, *d->img, rect);
+    QRectF r = rect & sceneRect();
+    const qreal dpr = d->img->devicePixelRatio();
+    QRectF srcRect = QRectF(r.topLeft() * dpr, r.size() * dpr);
+    painter->drawImage(r, *d->img, srcRect);
 }
 
 // ------------------------------------------------------------------------
@@ -166,9 +170,18 @@ void KSaneViewer::setQImage(QImage *img)
     // clear zoom
     setMatrix(QMatrix());
 
-    d->scene->setSceneRect(0, 0, img->width(), img->height());
+    const auto dpr = img->devicePixelRatio();
+    d->scene->setSceneRect(0, 0, img->width() / dpr, img->height() / dpr);
     d->selection->setMaxRight(img->width());
     d->selection->setMaxBottom(img->height());
+
+    d->selection->setDevicePixelRatio(dpr);
+    d->hideTop->setDevicePixelRatio(dpr);
+    d->hideBottom->setDevicePixelRatio(dpr);
+    d->hideRight->setDevicePixelRatio(dpr);
+    d->hideLeft->setDevicePixelRatio(dpr);
+    d->hideArea->setDevicePixelRatio(dpr);
+
     d->img = img;
 }
 
@@ -527,7 +540,7 @@ void KSaneViewer::mousePressEvent(QMouseEvent *e)
     if (e->button() == Qt::LeftButton) {
         d->m_left_last_x = e->x();
         d->m_left_last_y = e->y();
-        QPointF scenePoint = mapToScene(e->pos());
+        QPointF scenePoint = scenePos(e) * d->selection->devicePixelRatio();
         d->lastSPoint = scenePoint;
         if (e->modifiers() != Qt::ControlModifier) {
             if (!d->selection->isVisible()) {
@@ -556,7 +569,7 @@ void KSaneViewer::mouseReleaseEvent(QMouseEvent *e)
             clearActiveSelection();
         }
 
-        QPointF scenePoint = mapToScene(e->pos());
+        QPointF scenePoint = scenePos(e) * d->selection->devicePixelRatio();
         for (int i = 0; i < d->selectionList.size(); i++) {
             if (d->selectionList[i]->intersects(scenePoint) == SelectionItem::AddRemove) {
                 d->scene->removeItem(d->selectionList[i]);
@@ -573,6 +586,7 @@ void KSaneViewer::mouseReleaseEvent(QMouseEvent *e)
         if (!removed && (d->selection->intersects(scenePoint) == SelectionItem::AddRemove)) {
             // add the current selection
             SelectionItem *tmp = new SelectionItem(d->selection->rect());
+            tmp->setDevicePixelRatio(d->img->devicePixelRatio());
             d->selectionList.push_back(tmp);
             d->selectionList.back()->setSaved(true);
             d->selectionList.back()->saveZoom(transform().m11());
@@ -604,7 +618,7 @@ void KSaneViewer::mouseReleaseEvent(QMouseEvent *e)
 // ------------------------------------------------------------------------
 void KSaneViewer::mouseMoveEvent(QMouseEvent *e)
 {
-    QPointF scenePoint = mapToScene(e->pos());
+    QPointF scenePoint = scenePos(e) * d->selection->devicePixelRatio();
 
     if (e->buttons()&Qt::LeftButton) {
         if (e->modifiers() == Qt::ControlModifier) {
@@ -913,6 +927,7 @@ void KSaneViewer::findSelections(float area)
                                 float selArea = (float)(wSelEnd - wSelStart) * (float)(hSelEnd - hSelStart);
                                 if (selArea > (area * MIN_AREA_SIZE)) {
                                     SelectionItem *tmp = new SelectionItem(QRect(QPoint(x1, y1), QPoint(x2, y2)));
+                                    tmp->setDevicePixelRatio(d->img->devicePixelRatio());
                                     d->selectionList.push_back(tmp);
                                     d->selectionList.back()->setSaved(true);
                                     d->selectionList.back()->saveZoom(transform().m11());
@@ -1140,6 +1155,18 @@ int KSaneViewer::refineColumn(int fromCol, int toCol, int rowStart, int rowEnd)
         col += addSub;
     }
     return col;
+}
+
+QPointF KSaneViewer::scenePos(QMouseEvent *e) const
+{
+    // QGraphicsView::mapToScene() maps only QPoints, but in highdpi mode we want
+    // to deal with non-rounded coordinates, that's why QPainterPath wrapper is used.
+    // QMouseEvent::localPos() currently returns a rounded QPointF
+    // (https://codereview.qt-project.org/259785), so we have to extract a fractional
+    // part from QMouseEvent::screenPos().
+    const QPointF screenPos = e->screenPos();
+    QPointF delta = screenPos - screenPos.toPoint();
+    return mapToScene(QPainterPath(e->pos() + delta)).currentPosition();
 }
 
 }  // NameSpace KSaneIface
