@@ -22,6 +22,7 @@ set(ksane_SRCS
     widgets/ksaneoptionwidget.cpp
     ksaneviewer.cpp
     selectionitem.cpp
+    hiderectitem.cpp
     ksanedevicedialog.cpp
     ksanefinddevicesthread.cpp
     ksanewidget.cpp

@@ -29,6 +29,7 @@
 #include "ksaneviewer.h"
 
 #include "selectionitem.h"
+#include "hiderectitem.h"
 
 #include <QGraphicsPixmapItem>
 #include <QGraphicsScene>
@@ -65,11 +66,11 @@ struct KSaneViewer::Private {
     QAction *zoom2FitAction;
     QAction *clrSelAction;
 
-    QGraphicsRectItem *hideLeft;
-    QGraphicsRectItem *hideRight;
-    QGraphicsRectItem *hideTop;
-    QGraphicsRectItem *hideBottom;
-    QGraphicsRectItem *hideArea;
+    HideRectItem *hideLeft;
+    HideRectItem *hideRight;
+    HideRectItem *hideTop;
+    HideRectItem *hideBottom;
+    HideRectItem *hideArea;
 
     int wheelDelta = 0;
 };
@@ -95,28 +96,12 @@ KSaneViewer::KSaneViewer(QImage *img, QWidget *parent) : QGraphicsView(parent), 
     d->selection->setRect(d->scene->sceneRect());
     d->selection->setVisible(false);
 
-    d->hideTop = new QGraphicsRectItem;
-    d->hideBottom = new QGraphicsRectItem;
-    d->hideRight = new QGraphicsRectItem;
-    d->hideLeft = new QGraphicsRectItem;
-    d->hideArea = new QGraphicsRectItem;
-
-    d->hideTop->setOpacity(0.4);
-    d->hideBottom->setOpacity(0.4);
-    d->hideRight->setOpacity(0.4);
-    d->hideLeft->setOpacity(0.4);
+    d->hideTop = new HideRectItem;
+    d->hideBottom = new HideRectItem;
+    d->hideRight = new HideRectItem;
+    d->hideLeft = new HideRectItem;
+    d->hideArea = new HideRectItem;
     d->hideArea->setOpacity(0.6);
-
-    d->hideTop->setPen(Qt::NoPen);
-    d->hideBottom->setPen(Qt::NoPen);
-    d->hideRight->setPen(Qt::NoPen);
-    d->hideLeft->setPen(Qt::NoPen);
-    d->hideArea->setPen(Qt::NoPen);
-
-    d->hideTop->setBrush(QBrush(Qt::black));
-    d->hideBottom->setBrush(QBrush(Qt::black));
-    d->hideRight->setBrush(QBrush(Qt::black));
-    d->hideLeft->setBrush(QBrush(Qt::black));
 
     d->scene->addItem(d->selection);
     d->scene->addItem(d->hideLeft);
