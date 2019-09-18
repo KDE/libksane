@@ -37,7 +37,9 @@ ecm_setup_version(
 
 # Dependencies
 set(REQUIRED_QT_VERSION "5.7.0")
-
+if (EXISTS "${CMAKE_SOURCE_DIR}/.git")
+   add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0x060000)
+endif()
 # Required Qt5 components to build this framework
 find_package(Qt5 ${REQUIRED_QT_VERSION} NO_MODULE REQUIRED Core Widgets)
 

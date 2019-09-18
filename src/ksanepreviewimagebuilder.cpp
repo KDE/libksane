@@ -123,7 +123,7 @@ bool KSanePreviewImageBuilder::copyToImage(const SANE_Byte readData[], int read_
         } else if (m_params.depth == 8) {
             for (int i = 0; i < read_bytes; i++) {
                 index = m_frameRead * 4;
-                if ((index + 2) > m_img->byteCount()) {
+                if ((index + 2) > m_img->sizeInBytes()) {
                     renewImage();
                     imgBits = m_img->bits();
                 }
@@ -137,7 +137,7 @@ bool KSanePreviewImageBuilder::copyToImage(const SANE_Byte readData[], int read_
             for (int i = 0; i < read_bytes; i++) {
                 if (m_frameRead % 2 == 0) {
                     index = m_frameRead * 2;
-                    if ((index + 2) > m_img->byteCount()) {
+                    if ((index + 2) > m_img->sizeInBytes()) {
                         renewImage();
                         imgBits = m_img->bits();
                     }
@@ -196,7 +196,7 @@ bool KSanePreviewImageBuilder::copyToImage(const SANE_Byte readData[], int read_
     case SANE_FRAME_RED:
         if (m_params.depth == 8) {
             for (int i = 0; i < read_bytes; i++) {
-                if (index_red8_to_argb8(m_frameRead) > m_img->byteCount()) {
+                if (index_red8_to_argb8(m_frameRead) > m_img->sizeInBytes()) {
                     renewImage();
                     imgBits = m_img->bits();
                 }
@@ -207,7 +207,7 @@ bool KSanePreviewImageBuilder::copyToImage(const SANE_Byte readData[], int read_
         } else if (m_params.depth == 16) {
             for (int i = 0; i < read_bytes; i++) {
                 if (m_frameRead % 2 == 0) {
-                    if (index_red16_to_argb8(m_frameRead) > m_img->byteCount()) {
+                    if (index_red16_to_argb8(m_frameRead) > m_img->sizeInBytes()) {
                         renewImage();
                         imgBits = m_img->bits();
                     }
@@ -222,7 +222,7 @@ bool KSanePreviewImageBuilder::copyToImage(const SANE_Byte readData[], int read_
     case SANE_FRAME_GREEN:
         if (m_params.depth == 8) {
             for (int i = 0; i < read_bytes; i++) {
-                if (index_green8_to_argb8(m_frameRead) > m_img->byteCount()) {
+                if (index_green8_to_argb8(m_frameRead) > m_img->sizeInBytes()) {
                     renewImage();
                     imgBits = m_img->bits();
                 }
@@ -233,7 +233,7 @@ bool KSanePreviewImageBuilder::copyToImage(const SANE_Byte readData[], int read_
         } else if (m_params.depth == 16) {
             for (int i = 0; i < read_bytes; i++) {
                 if (m_frameRead % 2 == 0) {
-                    if (index_green16_to_argb8(m_frameRead) > m_img->byteCount()) {
+                    if (index_green16_to_argb8(m_frameRead) > m_img->sizeInBytes()) {
                         renewImage();
                         imgBits = m_img->bits();
                     }
@@ -248,7 +248,7 @@ bool KSanePreviewImageBuilder::copyToImage(const SANE_Byte readData[], int read_
     case SANE_FRAME_BLUE:
         if (m_params.depth == 8) {
             for (int i = 0; i < read_bytes; i++) {
-                if (index_blue8_to_argb8(m_frameRead) > m_img->byteCount()) {
+                if (index_blue8_to_argb8(m_frameRead) > m_img->sizeInBytes()) {
                     renewImage();
                     imgBits = m_img->bits();
                 }
@@ -259,7 +259,7 @@ bool KSanePreviewImageBuilder::copyToImage(const SANE_Byte readData[], int read_
         } else if (m_params.depth == 16) {
             for (int i = 0; i < read_bytes; i++) {
                 if (m_frameRead % 2 == 0) {
-                    if (index_blue16_to_argb8(m_frameRead) > m_img->byteCount()) {
+                    if (index_blue16_to_argb8(m_frameRead) > m_img->sizeInBytes()) {
                         renewImage();
                         imgBits = m_img->bits();
                     }

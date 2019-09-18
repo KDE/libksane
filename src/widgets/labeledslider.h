@@ -32,7 +32,6 @@
 #include "ksaneoptionwidget.h"
 
 class QSlider;
-class QSpinBox;
 
 /**
   *@author Kåre Särs

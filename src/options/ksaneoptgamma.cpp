@@ -109,7 +109,7 @@ bool KSaneOptGamma::getValue(QString &val)
     int con;
     int gam;
     m_gamma->getValues(bri, con, gam);
-    val = QString().sprintf("%d:%d:%d", bri, con, gam);
+    val = QString::asprintf("%d:%d:%d", bri, con, gam);
     return true;
 }
 
