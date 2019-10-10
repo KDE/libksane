@@ -10,7 +10,8 @@ message(STATUS "Starting CMake configuration for: libksane")
 
 # ECM setup (Extended Cmake Modules)
 include(FeatureSummary)
-find_package(ECM 5.30.0 REQUIRED NO_MODULE)
+set(KF5_VERSION "5.55.0")
+find_package(ECM ${KF5_VERSION} REQUIRED NO_MODULE)
 set_package_properties(ECM PROPERTIES TYPE REQUIRED DESCRIPTION "Extra CMake Modules." URL "https://projects.kde.org/projects/kdesupport/extra-cmake-modules")
 # ECM setup2 and include find same cmake module (copied from /usr/share/kde4/apps/cmake/modules/FindSane.cmake)
 set(CMAKE_MODULE_PATH ${KSane_SOURCE_DIR}/cmake-modules ${ECM_MODULE_PATH})
@@ -25,8 +26,6 @@ include(KDEInstallDirs)
 include(KDEFrameworkCompilerSettings NO_POLICY_SCOPE)
 include(KDECMakeSettings)
 include(GenerateExportHeader)
-
-set(KF5_VERSION "5.55.0")
 
 ecm_setup_version(
   ${KF5_VERSION}
