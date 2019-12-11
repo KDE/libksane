@@ -328,9 +328,6 @@ bool KSaneOptCombo::setValue(const QString &val)
     if (state() == STATE_HIDDEN) {
         return false;
     }
-    if (val == m_currentText) {
-        return true;
-    }
 
     unsigned char data[4];
     void* data_ptr = nullptr;

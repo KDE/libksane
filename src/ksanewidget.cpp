@@ -460,7 +460,7 @@ bool KSaneWidget::openDevice(const QString &deviceName)
     }
 
     // do the connections of the option parameters
-    for (i = 1; i < d->m_optList.size(); ++i) {
+    for (i = 0; i < d->m_optList.size(); ++i) {
         //qDebug() << d->m_optList.at(i)->name();
         connect(d->m_optList.at(i), SIGNAL(optsNeedReload()), d, SLOT(optReload()));
         connect(d->m_optList.at(i), SIGNAL(valsNeedReload()), d, SLOT(scheduleValReload()));
@@ -691,7 +691,7 @@ void KSaneWidget::getOptVals(QMap <QString, QString> &opts)
     opts.clear();
     QString tmp;
 
-    for (int i = 1; i < d->m_optList.size(); i++) {
+    for (int i = 0; i < d->m_optList.size(); i++) {
         option = d->m_optList.at(i);
         if (option->getValue(tmp)) {
             opts[option->name()] = tmp;
@@ -723,14 +723,42 @@ int KSaneWidget::setOptVals(const QMap <QString, QString> &opts)
         return -1;
     }
 
+    QMap <QString, QString> optionMapCopy = opts;
+
     QString tmp;
     int i;
     int ret = 0;
 
+    const QString sourceOptionSaneName = QStringLiteral(SANE_NAME_SCAN_SOURCE);
+    const QString modeOptionSaneName   = QStringLiteral(SANE_NAME_SCAN_MODE);
+
+    KSaneOption *opt;
+
+    // Priorize source option
+    if (optionMapCopy.contains(sourceOptionSaneName)) {
+        if ((opt = d->getOption(sourceOptionSaneName)) != nullptr) {
+            if (opt->setValue(optionMapCopy[sourceOptionSaneName])) {
+                ret++;
+            }
+        }
+        optionMapCopy.remove(sourceOptionSaneName);
+    }
+
+    // Priorize mode option
+    if (optionMapCopy.contains(modeOptionSaneName)) {
+        if ((opt = d->getOption(modeOptionSaneName)) != nullptr) {
+            if (opt->setValue(optionMapCopy[modeOptionSaneName])) {
+                ret++;
+            }
+        }
+        optionMapCopy.remove(modeOptionSaneName);
+    }
+
+    // Update remaining options
     for (i = 0; i < d->m_optList.size(); i++) {
-        if (opts.contains(d->m_optList.at(i)->name())) {
-            tmp = opts[d->m_optList.at(i)->name()];
-            if (d->m_optList.at(i)->setValue(tmp) == false) {
+        if (optionMapCopy.contains(d->m_optList.at(i)->name())) {
+            tmp = optionMapCopy[d->m_optList.at(i)->name()];
+            if (d->m_optList.at(i)->setValue(tmp)) {
                 ret++;
             }
         }
@@ -757,8 +785,8 @@ int KSaneWidget::setOptVals(const QMap <QString, QString> &opts)
     }
 
     // special handling for non-sane option
-    if (opts.contains(InvetColorsOption)) {
-        tmp = opts[InvetColorsOption];
+    if (optionMapCopy.contains(InvetColorsOption)) {
+        tmp = optionMapCopy[InvetColorsOption];
         if ((tmp.compare(QStringLiteral("true"), Qt::CaseInsensitive) == 0) ||
                 (tmp.compare(QStringLiteral("1")) == 0)) {
             d->m_invertColors->setChecked(true);
