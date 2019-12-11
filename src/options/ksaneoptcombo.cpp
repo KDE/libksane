@@ -34,6 +34,7 @@
 
 #include <QDebug>
 #include <QIcon>
+#include <QLocale>
 
 namespace KSaneIface
 {
@@ -341,7 +342,7 @@ bool KSaneOptCombo::setValue(const QString &val)
     case SANE_TYPE_INT:
         tmp = val.left(val.indexOf(QLatin1Char(' '))); // strip the unit
         // accept float formatting of the string
-        i = (int)(tmp.toFloat(&ok));
+        i = (int)(QLocale::system().toFloat(tmp,&ok));
         if (ok == false) {
             return false;
         }
@@ -350,7 +351,7 @@ bool KSaneOptCombo::setValue(const QString &val)
         break;
     case SANE_TYPE_FIXED:
         tmp = val.left(val.indexOf(QLatin1Char(' '))); // strip the unit
-        f = tmp.toFloat(&ok);
+        f = QLocale::system().toFloat(tmp,&ok);
         if (ok == false) {
             return false;
         }
