@@ -429,9 +429,9 @@ void KSaneWidgetPrivate::createOptInterface()
         }
     }
     // Color Options
-    for (int i = 0; i < basic_layout->count(); ++i) {
-        if (basic_layout->itemAt(i) && basic_layout->itemAt(i)->widget()) {
-            tmpOption = qobject_cast<KSaneOptionWidget *>(basic_layout->itemAt(i)->widget());
+    for (int i = 0; i < color_lay->count(); ++i) {
+        if (color_lay->itemAt(i) && color_lay->itemAt(i)->widget()) {
+            tmpOption = qobject_cast<KSaneOptionWidget *>(color_lay->itemAt(i)->widget());
             if (tmpOption) {
                 labelWidth = qMax(labelWidth, tmpOption->labelWidthHint());
             }
