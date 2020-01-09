@@ -62,7 +62,7 @@ public:
      * \param st is the step between values.
      */
     LabeledFSlider(QWidget *parent, const QString &text,
-                   float min, float max, float st);
+                   float min, float max, float step);
     ~LabeledFSlider();
 
     /**
@@ -74,9 +74,9 @@ public:
 public Q_SLOTS:
 
     /** Set the slider/spinbox value */
-    void setValue(float);
-    void setRange(float, float);
-    void setStep(float);
+    void setValue(float value);
+    void setRange(float min, float max);
+    void setStep(float step);
     /** Set the unit */
     void setSuffix(const QString &text);
 

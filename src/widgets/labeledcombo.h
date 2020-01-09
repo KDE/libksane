@@ -29,6 +29,8 @@
 
 #include "ksaneoptionwidget.h"
 
+#include <QVariant>
+
 class QComboBox;
 
 namespace KSaneIface
@@ -48,7 +50,19 @@ public:
      * \param label is the lext for the label
      * \param list a stringlist with values the list should contain.
      */
-    LabeledCombo(QWidget *parent, const QString &label, const QStringList &list);
+    LabeledCombo(QWidget *parent, const QString &label, const QStringList &list = QStringList());
+
+    /** This function forwards the request to the QComboBox equivalent */
+    QVariant currentData(int role = Qt::UserRole) const;
+
+    /** This function forwards the request to the QComboBox equivalent */
+    void addItem(const QString &text, const QVariant &userData = QVariant());
+
+    /** This function forwards the request to the QComboBox equivalent */
+    int count() const;
+
+    /** This function forwards the request to the QComboBox equivalent */
+    int currentIndex() const;
 
 public Q_SLOTS:
 

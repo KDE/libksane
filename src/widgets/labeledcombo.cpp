@@ -95,4 +95,25 @@ void LabeledCombo::clear()
     m_combo->clear();
 }
 
+QVariant LabeledCombo::currentData(int role) const
+{
+    return m_combo->currentData(role);
+}
+
+void LabeledCombo::addItem(const QString &text, const QVariant &userData)
+{
+    m_combo->addItem(text, userData);
+}
+
+int LabeledCombo::count() const
+{
+    return m_combo->count();
+}
+
+int LabeledCombo::currentIndex() const
+{
+    return m_combo->currentIndex();
+}
+
+
 }  // NameSpace KSaneIface

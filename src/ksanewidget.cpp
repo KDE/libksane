@@ -880,7 +880,7 @@ float KSaneWidget::currentDPI()
             return value;
         }
     }
-    return 0.0;
+    return 0.0; // Failure to read DPI
 }
 
 float KSaneWidget::scanAreaWidth()
@@ -889,7 +889,12 @@ float KSaneWidget::scanAreaWidth()
     if (d->m_optBrX) {
         if (d->m_optBrX->getUnit() == SANE_UNIT_PIXEL) {
             d->m_optBrX->getMaxValue(result);
-            result = result / currentDPI() / 25.4;
+            float dpi = currentDPI();
+            if (dpi < 1) {
+                qDebug() << "Broken DPI value";
+                dpi = 1.0;
+            }
+            result = result / dpi / 25.4;
         } else if (d->m_optBrX->getUnit() == SANE_UNIT_MM) {
             d->m_optBrX->getMaxValue(result);
         }
@@ -903,7 +908,12 @@ float KSaneWidget::scanAreaHeight()
     if (d->m_optBrY) {
         if (d->m_optBrY->getUnit() == SANE_UNIT_PIXEL) {
             d->m_optBrY->getMaxValue(result);
-            result = result / currentDPI() / 25.4;
+            float dpi = currentDPI();
+            if (dpi < 1) {
+                qDebug() << "Broken DPI value";
+                dpi = 1.0;
+            }
+            result = result / dpi / 25.4;
         } else if (d->m_optBrY->getUnit() == SANE_UNIT_MM) {
             d->m_optBrY->getMaxValue(result);
         }
@@ -916,18 +926,15 @@ void KSaneWidget::setSelection(QPointF topLeft, QPointF bottomRight)
     if (!d->m_optBrX || !d->m_optBrY || !d->m_optTlX || !d->m_optTlY) {
         return;
     }
-    float xmax, ymax;
-    d->m_optBrX->getMaxValue(xmax);
-    d->m_optBrY->getMaxValue(ymax);
     if (topLeft.x() < 0.0 || topLeft.y() < 0.0 || bottomRight.x() < 0.0 || bottomRight.y() < 0.0) {
         d->m_previewViewer->clearActiveSelection();
         return;
     }
 
-    float tlxRatio = topLeft.x()/xmax;
-    float tlyRatio = topLeft.y()/ymax;
-    float brxRatio = bottomRight.x()/xmax;
-    float bryRatio = bottomRight.y()/ymax;
+    float tlxRatio = d->scanAreaToRatioX(topLeft.x());
+    float tlyRatio = d->scanAreaToRatioY(topLeft.y());
+    float brxRatio = d->scanAreaToRatioX(bottomRight.x());
+    float bryRatio = d->scanAreaToRatioX(bottomRight.y());
 
     d->m_previewViewer->setSelection(tlxRatio, tlyRatio, brxRatio, bryRatio);
 }

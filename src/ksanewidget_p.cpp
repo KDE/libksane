@@ -37,6 +37,7 @@
 #include <QPushButton>
 #include <QMessageBox>
 #include <QDebug>
+#include <QPageSize>
 
 #define SCALED_PREVIEW_MAX_SIDE 400
 
@@ -80,6 +81,30 @@ KSaneWidgetPrivate::KSaneWidgetPrivate(KSaneWidget *parent):
 
     m_previewWidth  = 0;
     m_previewHeight = 0;
+
+    m_sizeCodes = {
+        QPageSize::A3,
+        QPageSize::A4,
+        QPageSize::A5,
+        QPageSize::A6,
+        QPageSize::B3,
+        QPageSize::B4,
+        QPageSize::B5,
+        QPageSize::B6,
+        QPageSize::C5E,
+        QPageSize::Comm10E,
+        QPageSize::DLE,
+        QPageSize::Executive,
+        QPageSize::Folio,
+        QPageSize::Ledger,
+        QPageSize::Legal,
+        QPageSize::Letter,
+        QPageSize::Tabloid,
+        QPageSize::JisB3,
+        QPageSize::JisB4,
+        QPageSize::JisB5,
+        QPageSize::JisB6,
+    };
 
     clearDeviceOptions();
 
@@ -211,6 +236,142 @@ int KSaneWidgetPrivate::getBytesPerLines(SANE_Parameters &params)
         return 0;
     }
     return 0;
+}
+
+float KSaneWidgetPrivate::ratioToScanAreaX(float ratio)
+{
+    if (!m_optBrX) {
+        return 0.0;
+    }
+    float max;
+    m_optBrX->getMaxValue(max);
+
+    return max * ratio;
+}
+
+float KSaneWidgetPrivate::ratioToScanAreaY(float ratio)
+{
+    if (!m_optBrY) {
+        return 0.0;
+    }
+    float max;
+    m_optBrY->getMaxValue(max);
+
+    return max * ratio;
+}
+
+float KSaneWidgetPrivate::scanAreaToRatioX(float scanArea)
+{
+    if (!m_optBrX) {
+        return 0.0;
+    }
+    float max;
+    m_optBrX->getMaxValue(max);
+
+    if (scanArea > max) {
+        return 1.0;
+    }
+
+    if (max < 0.0001) {
+        return 0.0;
+    }
+
+    return scanArea / max;
+}
+
+float KSaneWidgetPrivate::scanAreaToRatioY(float scanArea)
+{
+    if (!m_optBrY) {
+        return 0.0;
+    }
+    float max;
+    m_optBrY->getMaxValue(max);
+
+    if (scanArea > max) {
+        return 1.0;
+    }
+
+    if (max < 0.0001) {
+        return 0.0;
+    }
+
+    return scanArea / max;
+}
+
+static float mmToDispUnit(float mm) {
+    static QLocale locale;
+
+    if (locale.measurementSystem() == QLocale::MetricSystem) {
+        return mm;
+    }
+    // else
+    return mm / 25.4;
+}
+
+float KSaneWidgetPrivate::ratioToDispUnitX(float ratio)
+{
+    if (!m_optBrX) {
+        return 0.0;
+    }
+
+    float result = ratioToScanAreaX(ratio);
+
+    if (m_optBrX->getUnit() == SANE_UNIT_MM) {
+        return mmToDispUnit(result);
+    }
+    else if (m_optBrX->getUnit() == SANE_UNIT_PIXEL && m_optRes) {
+        // get current DPI
+        float dpi;
+        m_optRes->getValue(dpi);
+        if (dpi > 1) {
+            result = result / (dpi / 25.4);
+            return mmToDispUnit(result);
+        }
+    }
+    qDebug() << "Failed to convert scan area to mm";
+    return ratio;
+}
+
+float KSaneWidgetPrivate::ratioToDispUnitY(float ratio)
+{
+    if (!m_optBrY) {
+        return 0.0;
+    }
+
+    float result = ratioToScanAreaY(ratio);
+
+    if (m_optBrY->getUnit() == SANE_UNIT_MM) {
+        return mmToDispUnit(result);
+    }
+    else if (m_optBrY->getUnit() == SANE_UNIT_PIXEL && m_optRes) {
+        // get current DPI
+        float dpi;
+        m_optRes->getValue(dpi);
+        if (dpi > 1) {
+            result = result / (dpi / 25.4);
+            return mmToDispUnit(result);
+        }
+    }
+    qDebug() << "Failed to convert scan area to display unit";
+    return ratio;
+}
+
+float KSaneWidgetPrivate::dispUnitToRatioX(float value)
+{
+    float valueMax = ratioToDispUnitX(1);
+    if (valueMax < 1) {
+        return 0.0;
+    }
+    return value / valueMax;
+}
+
+float KSaneWidgetPrivate::dispUnitToRatioY(float value)
+{
+    float valueMax = ratioToDispUnitY(1);
+    if (valueMax < 1) {
+        return 0.0;
+    }
+    return value / valueMax;
 }
 
 KSaneOption *KSaneWidgetPrivate::getOption(const QString &name)
@@ -389,6 +550,34 @@ void KSaneWidgetPrivate::createOptInterface()
     m_invertColors->setChecked(false);
     connect(m_invertColors, SIGNAL(toggled(bool)), this, SLOT(invertPreview()));
 
+    // Add our own size options
+    m_scanareaPapersize = new LabeledCombo(m_basicOptsTab, i18n("Scan Area Size"));
+    connect(m_scanareaPapersize, &LabeledCombo::activated, this, &KSaneWidgetPrivate::setPageSize);
+    basic_layout->addWidget(m_scanareaPapersize);
+
+    static QLocale locale;
+    QString unitSuffix = locale.measurementSystem() == QLocale::MetricSystem ? i18n(" mm") : i18n(" inch");
+
+    m_scanareaWidth = new LabeledFSlider(m_basicOptsTab, i18n("Width"), 0.0f, 500.0f, 0.1f);
+    m_scanareaWidth->setSuffix(unitSuffix);
+    connect(m_scanareaWidth, &LabeledFSlider::valueChanged, this, &KSaneWidgetPrivate::updateScanSelection);
+    basic_layout->addWidget(m_scanareaWidth);
+
+    m_scanareaHeight = new LabeledFSlider(m_basicOptsTab, i18n("Height"), 0.0f, 500.0f, 0.1f);
+    m_scanareaHeight->setSuffix(unitSuffix);
+    connect(m_scanareaHeight, &LabeledFSlider::valueChanged, this, &KSaneWidgetPrivate::updateScanSelection);
+    basic_layout->addWidget(m_scanareaHeight);
+
+    m_scanareaX = new LabeledFSlider(m_basicOptsTab, i18n("X Offset"), 0.0f, 500.0f, 0.1f);
+    m_scanareaX->setSuffix(unitSuffix);
+    connect(m_scanareaX, &LabeledFSlider::valueChanged, this, &KSaneWidgetPrivate::updateScanSelection);
+    basic_layout->addWidget(m_scanareaX);
+
+    m_scanareaY = new LabeledFSlider(m_basicOptsTab, i18n("Y Offset"), 0.0f, 500.0f, 0.1f);
+    m_scanareaY->setSuffix(unitSuffix);
+    connect(m_scanareaY, &LabeledFSlider::valueChanged, this, &KSaneWidgetPrivate::updateScanSelection);
+    basic_layout->addWidget(m_scanareaY);
+
     // add a stretch to the end to keep the parameters at the top
     basic_layout->addStretch();
 
@@ -551,7 +740,6 @@ void KSaneWidgetPrivate::valReload()
 
 void KSaneWidgetPrivate::handleSelection(float tl_x, float tl_y, float br_x, float br_y)
 {
-
     if ((m_optTlX == nullptr) || (m_optTlY == nullptr) || (m_optBrX == nullptr) || (m_optBrY == nullptr)) {
         // clear the selection since we can not set one
         m_previewViewer->setTLX(0);
@@ -560,23 +748,31 @@ void KSaneWidgetPrivate::handleSelection(float tl_x, float tl_y, float br_x, flo
         m_previewViewer->setBRY(0);
         return;
     }
-    float max_x, max_y;
 
     if ((m_previewImg.width() == 0) || (m_previewImg.height() == 0)) {
-        return;
+        m_scanareaX->setValue(0);
+        m_scanareaY->setValue(0);
+
+        m_scanareaWidth->setValue(ratioToDispUnitX(1));
+        m_scanareaHeight->setValue(ratioToDispUnitY(1));
+       return;
     }
 
-    m_optBrX->getMaxValue(max_x);
-    m_optBrY->getMaxValue(max_y);
-    float ftl_x = tl_x * max_x;
-    float ftl_y = tl_y * max_y;
-    float fbr_x = br_x * max_x;
-    float fbr_y = br_y * max_y;
+    if (br_x < 0.0001) {
+        m_scanareaWidth->setValue(ratioToDispUnitX(1));
+        m_scanareaHeight->setValue(ratioToDispUnitY(1));
+    }
+    else {
+        m_scanareaWidth->setValue(ratioToDispUnitX(br_x - tl_x));
+        m_scanareaHeight->setValue(ratioToDispUnitY(br_y - tl_y));
+    }
+    m_scanareaX->setValue(ratioToDispUnitX(tl_x));
+    m_scanareaY->setValue(ratioToDispUnitY(tl_y));
 
-    m_optTlX->setValue(ftl_x);
-    m_optTlY->setValue(ftl_y);
-    m_optBrX->setValue(fbr_x);
-    m_optBrY->setValue(fbr_y);
+    m_optTlX->setValue(ratioToScanAreaX(tl_x));
+    m_optTlY->setValue(ratioToScanAreaY(tl_y));
+    m_optBrX->setValue(ratioToScanAreaX(br_x));
+    m_optBrY->setValue(ratioToScanAreaY(br_y));
 }
 
 void KSaneWidgetPrivate::setTLX(float ftlx)
@@ -592,13 +788,9 @@ void KSaneWidgetPrivate::setTLX(float ftlx)
         return;
     }
 
-    float max, ratio;
-
-    //qDebug() << "setTLX " << ftlx;
-    m_optBrX->getMaxValue(max);
-    ratio = ftlx / max;
-    //qDebug() << " -> " << ratio;
+    float ratio = scanAreaToRatioX(ftlx);
     m_previewViewer->setTLX(ratio);
+    m_scanareaX->setValue(ratioToDispUnitX(ratio));
 }
 
 void KSaneWidgetPrivate::setTLY(float ftly)
@@ -614,13 +806,9 @@ void KSaneWidgetPrivate::setTLY(float ftly)
         return;
     }
 
-    float max, ratio;
-
-    //qDebug() << "setTLY " << ftly;
-    m_optBrY->getMaxValue(max);
-    ratio = ftly / max;
-    //qDebug() << " -> " << ratio;
+    float ratio = scanAreaToRatioY(ftly);
     m_previewViewer->setTLY(ratio);
+    m_scanareaY->setValue(ratioToDispUnitY(ratio));
 }
 
 void KSaneWidgetPrivate::setBRX(float fbrx)
@@ -636,13 +824,14 @@ void KSaneWidgetPrivate::setBRX(float fbrx)
         return;
     }
 
-    float max, ratio;
-
-    //qDebug() << "setBRX " << fbrx;
-    m_optBrX->getMaxValue(max);
-    ratio = fbrx / max;
-    //qDebug() << " -> " << ratio;
+    float ratio = scanAreaToRatioX(fbrx);
     m_previewViewer->setBRX(ratio);
+
+    float tlx = 0;
+    if (m_optTlX && m_optTlX->getValue(tlx)) {
+        float tlxRatio = scanAreaToRatioX(tlx);
+        m_scanareaWidth->setValue(ratioToDispUnitX(ratio) - ratioToDispUnitX(tlxRatio));
+    }
 }
 
 void KSaneWidgetPrivate::setBRY(float fbry)
@@ -658,18 +847,20 @@ void KSaneWidgetPrivate::setBRY(float fbry)
         return;
     }
 
-    float max, ratio;
-
-    //qDebug() << "setBRY " << fbry;
-    m_optBrY->getMaxValue(max);
-    ratio = fbry / max;
-    //qDebug() << " -> " << ratio;
+    float ratio = scanAreaToRatioY(fbry);
     m_previewViewer->setBRY(ratio);
+
+    float tly = 0;
+    if (m_optTlY && m_optTlY->getValue(tly)) {
+        float tlyRatio = scanAreaToRatioY(tly);
+        m_scanareaHeight->setValue(ratioToDispUnitY(ratio) - ratioToDispUnitY(tlyRatio));
+    }
 }
 
 void KSaneWidgetPrivate::updatePreviewSize()
 {
-    float max_x = 0, max_y = 0;
+    float max_x = 0;
+    float max_y = 0;
     float ratio;
     int x, y;
 
@@ -705,6 +896,12 @@ void KSaneWidgetPrivate::updatePreviewSize()
         m_optBrY->setValue(max_y);
     }
 
+    // Avoid crash if max_y or max_x == 0
+    if (max_x < 0.0001 || max_y < 0.0001) {
+        qWarning() << "Risk for division by 0" << max_x << max_y;
+        return;
+    }
+
     // create a "scaled" image of the preview
     ratio = max_x / max_y;
     if (ratio < 1) {
@@ -722,6 +919,18 @@ void KSaneWidgetPrivate::updatePreviewSize()
 
     // set the new image
     m_previewViewer->setQImage(&m_previewImg);
+
+    // update the scan-area-options
+    m_scanareaWidth->setRange(0.1, ratioToDispUnitX(1));
+    m_scanareaWidth->setValue(ratioToDispUnitX(1));
+
+    m_scanareaHeight->setRange(0.1, ratioToDispUnitY(1));
+    m_scanareaHeight->setValue(ratioToDispUnitY(1));
+
+    m_scanareaX->setRange(0.0, ratioToDispUnitX(1));
+    m_scanareaY->setRange(0.0, ratioToDispUnitY(1));
+
+    setPossibleScanSizes();
 }
 
 void KSaneWidgetPrivate::startPreviewScan()
@@ -893,29 +1102,21 @@ void KSaneWidgetPrivate::startFinalScan()
     m_scanOngoing = true;
     m_isPreview = false;
 
-    float x1 = 0, y1 = 0, x2 = 0, y2 = 0, max_x, max_y;
+    float x1 = 0, y1 = 0, x2 = 0, y2 = 0;
 
     m_selIndex = 0;
 
     if ((m_optTlX != nullptr) && (m_optTlY != nullptr) && (m_optBrX != nullptr) && (m_optBrY != nullptr)) {
-        // get maximums
-        m_optBrX->getMaxValue(max_x);
-        m_optBrY->getMaxValue(max_y);
-
         // read the selection from the viewer
         m_previewViewer->selectionAt(m_selIndex, x1, y1, x2, y2);
         m_previewViewer->setHighlightArea(x1, y1, x2, y2);
         m_selIndex++;
 
-        // calculate the option values
-        x1 *= max_x; y1 *= max_y;
-        x2 *= max_x; y2 *= max_y;
-
         // now set the selection
-        m_optTlX->setValue(x1);
-        m_optTlY->setValue(y1);
-        m_optBrX->setValue(x2);
-        m_optBrY->setValue(y2);
+        m_optTlX->setValue(ratioToScanAreaX(x1));
+        m_optTlY->setValue(ratioToScanAreaY(y1));
+        m_optBrX->setValue(ratioToScanAreaX(x2));
+        m_optBrY->setValue(ratioToScanAreaY(y2));
     }
 
     // execute a pending value reload
@@ -997,11 +1198,10 @@ void KSaneWidgetPrivate::oneFinalScanDone()
         // check if we have multiple selections.
         if (m_previewViewer->selListSize() > m_selIndex) {
             if ((m_optTlX != nullptr) && (m_optTlY != nullptr) && (m_optBrX != nullptr) && (m_optBrY != nullptr)) {
-                float x1 = 0, y1 = 0, x2 = 0, y2 = 0, max_x, max_y;
-
-                // get maximums
-                m_optBrX->getMaxValue(max_x);
-                m_optBrY->getMaxValue(max_y);
+                float x1 = 0;
+                float y1 = 0;
+                float x2 = 0;
+                float y2 = 0;
 
                 // read the selection from the viewer
                 m_previewViewer->selectionAt(m_selIndex, x1, y1, x2, y2);
@@ -1009,15 +1209,11 @@ void KSaneWidgetPrivate::oneFinalScanDone()
                 // set the highlight
                 m_previewViewer->setHighlightArea(x1, y1, x2, y2);
 
-                // calculate the option values
-                x1 *= max_x; y1 *= max_y;
-                x2 *= max_x; y2 *= max_y;
-
                 // now set the selection
-                m_optTlX->setValue(x1);
-                m_optTlY->setValue(y1);
-                m_optBrX->setValue(x2);
-                m_optBrY->setValue(y2);
+                m_optTlX->setValue(ratioToScanAreaX(x1));
+                m_optTlY->setValue(ratioToScanAreaY(y1));
+                m_optBrX->setValue(ratioToScanAreaX(x2));
+                m_optBrY->setValue(ratioToScanAreaY(y2));
                 m_selIndex++;
 
                 // execute a pending value reload
@@ -1175,5 +1371,115 @@ void KSaneWidgetPrivate::pollPollOptions()
         m_pollList.at(i)->readValue();
     }
 }
+
+void KSaneWidgetPrivate::updateScanSelection()
+{
+    float maxX = 0;
+    if (m_optBrX) m_optBrX->getMaxValue(maxX);
+
+    float maxY = 0;
+    if (m_optBrY) m_optBrY->getMaxValue(maxY);
+
+    float x1 = m_scanareaX->value();
+    float y1 = m_scanareaY->value();
+    float w = m_scanareaWidth->value();
+    float h = m_scanareaHeight->value();
+
+    float x1Max = maxX - w;
+    m_scanareaX->setRange(0.0, x1Max);
+    if (x1 > x1Max) {
+        m_scanareaX->setValue(x1Max);
+    }
+
+    float y1Max = maxY - h;
+    m_scanareaY->setRange(0.0, y1Max);
+    if (y1 > y1Max) {
+        m_scanareaY->setValue(y1Max);
+    }
+
+    float wR = dispUnitToRatioX(w);
+    float hR = dispUnitToRatioY(h);
+
+    float x1R = dispUnitToRatioX(m_scanareaX->value());
+    float y1R = dispUnitToRatioY(m_scanareaY->value());
+
+    m_previewViewer->setSelection(x1R, y1R, x1R+wR, y1R+hR);
+
+    // Update the page size combo, but not while updating or
+    // if we already have custom page size.
+    if (m_settingPageSize ||
+        m_scanareaPapersize->currentIndex() == m_scanareaPapersize->count() - 1) {
+        return;
+    }
+    QSizeF size = m_scanareaPapersize->currentData().toSizeF();
+    float pageWidth = mmToDispUnit(size.width());
+    float pageHeight = mmToDispUnit(size.height());
+    if (std::abs(pageWidth - w) > (w * 0.001) ||
+        std::abs(pageHeight - h) > (h * 0.001))
+    {
+        // The difference is bigger than 1% -> we have a custom size
+        m_scanareaPapersize->blockSignals(true);
+        m_scanareaPapersize->setCurrentIndex(0); // Custom is always first
+        m_scanareaPapersize->blockSignals(false);
+    }
+}
+
+void KSaneWidgetPrivate::setPossibleScanSizes()
+{
+    m_scanareaPapersize->clear();
+    float widthInDispUnit = ratioToDispUnitX(1);
+    float heightInDispUnit = ratioToDispUnitY(1);
+
+    // Add the custom size first
+    QSizeF customSize(widthInDispUnit, heightInDispUnit);
+    m_scanareaPapersize->addItem(i18n("Custom"), customSize);
+
+    // Add portrait page sizes
+    for (int sizeCode: m_sizeCodes) {
+        QSizeF size = QPageSize::size((QPageSize::PageSizeId)sizeCode, QPageSize::Millimeter);
+        if (mmToDispUnit(size.width()) > widthInDispUnit) {
+            continue;
+        }
+        if (mmToDispUnit(size.height()) > heightInDispUnit) {
+            continue;
+        }
+        m_scanareaPapersize->addItem(QPageSize::name((QPageSize::PageSizeId)sizeCode), size);
+    }
+
+    // Add landscape page sizes
+    for (int sizeCode: m_sizeCodes) {
+        QSizeF size = QPageSize::size((QPageSize::PageSizeId)sizeCode, QPageSize::Millimeter);
+        size.transpose();
+        if (mmToDispUnit(size.width()) > widthInDispUnit) {
+            continue;
+        }
+        if (mmToDispUnit(size.height()) > heightInDispUnit) {
+            continue;
+        }
+        QString name = QPageSize::name((QPageSize::PageSizeId)sizeCode) +
+        i18nc("Page size landscape", " Landscape");
+        m_scanareaPapersize->addItem(name , size);
+    }
+
+    // Set custom as current
+    m_scanareaPapersize->blockSignals(true);
+    m_scanareaPapersize->setCurrentIndex(0);
+    m_scanareaPapersize->blockSignals(false);
+}
+
+void KSaneWidgetPrivate::setPageSize(int)
+{
+    QSizeF size = m_scanareaPapersize->currentData().toSizeF();
+    float pageWidth = mmToDispUnit(size.width());
+    float pageHeight = mmToDispUnit(size.height());
+
+    m_settingPageSize = true;
+    m_scanareaX->setValue(0);
+    m_scanareaY->setValue(0);
+    m_scanareaWidth->setValue(pageWidth);
+    m_scanareaHeight->setValue(pageHeight);
+    m_settingPageSize = false;
+}
+
 
 }  // NameSpace KSaneIface

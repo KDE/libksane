@@ -43,10 +43,13 @@ extern "C"
 #include <QProgressBar>
 #include <QTabWidget>
 #include <QPushButton>
+#include <QVector>
 
 #include "ksanewidget.h"
 #include "ksaneoption.h"
 #include "ksaneviewer.h"
+#include "labeledcombo.h"
+#include "labeledfslider.h"
 #include "labeledgamma.h"
 #include "labeledcheckbox.h"
 #include "splittercollapser.h"
@@ -75,6 +78,16 @@ public:
     KSaneWidget::ImageFormat getImgFormat(SANE_Parameters &params);
     int getBytesPerLines(SANE_Parameters &params);
 
+    float ratioToScanAreaX(float ratio);
+    float ratioToScanAreaY(float ratio);
+    float scanAreaToRatioX(float scanArea);
+    float scanAreaToRatioY(float scanArea);
+
+    float ratioToDispUnitX(float ratio);
+    float ratioToDispUnitY(float ratio);
+    float dispUnitToRatioX(float mm);
+    float dispUnitToRatioY(float mm);
+
 public Q_SLOTS:
     void devListUpdated();
     void signalDevListUpdate();
@@ -98,6 +111,10 @@ private Q_SLOTS:
     void invertPreview();
     void pollPollOptions();
 
+    void updateScanSelection();
+    void setPossibleScanSizes();
+    void setPageSize(int index);
+
 public:
     void alertUser(int type, const QString &strStatus);
 
@@ -110,6 +127,14 @@ public:
     QScrollArea        *m_otherScrollA;
     QWidget            *m_otherOptsTab;
     LabeledCheckbox    *m_invertColors;
+
+    QVector<int>        m_sizeCodes;
+    LabeledCombo       *m_scanareaPapersize;
+    bool                m_settingPageSize = false;
+    LabeledFSlider     *m_scanareaWidth;
+    LabeledFSlider     *m_scanareaHeight;
+    LabeledFSlider     *m_scanareaX;
+    LabeledFSlider     *m_scanareaY;
 
     QSplitter          *m_splitter;
     SplitterCollapser  *m_optionsCollapser;

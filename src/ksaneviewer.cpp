@@ -410,8 +410,7 @@ void KSaneViewer::updateHighlight()
 // ------------------------------------------------------------------------
 void KSaneViewer::clearHighlight()
 {
-    d->hideLeft
-    ->hide();
+    d->hideLeft->hide();
     d->hideRight->hide();
     d->hideTop->hide();
     d->hideBottom->hide();
@@ -565,7 +564,7 @@ void KSaneViewer::mouseReleaseEvent(QMouseEvent *e)
     if (e->button() == Qt::LeftButton) {
         if ((d->selection->rect().width() < 0.001) ||
                 (d->selection->rect().height() < 0.001)) {
-            emit newSelection(0.0, 0.0, 0.0, 0.0);
+            emit newSelection(0.0, 0.0, 1.0, 1.0);
             clearActiveSelection();
         }
 
@@ -595,7 +594,7 @@ void KSaneViewer::mouseReleaseEvent(QMouseEvent *e)
             d->selectionList.back()->intersects(scenePoint);
 
             // clear the old one
-            emit newSelection(0.0, 0.0, 0.0, 0.0);
+            emit newSelection(0.0, 0.0, 1.0, 1.0);
             clearActiveSelection();
         }
     }
