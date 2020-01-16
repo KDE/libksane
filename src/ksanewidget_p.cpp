@@ -1414,8 +1414,8 @@ void KSaneWidgetPrivate::updateScanSelection()
     QSizeF size = m_scanareaPapersize->currentData().toSizeF();
     float pageWidth = mmToDispUnit(size.width());
     float pageHeight = mmToDispUnit(size.height());
-    if (std::abs(pageWidth - w) > (w * 0.001) ||
-        std::abs(pageHeight - h) > (h * 0.001))
+    if (qAbs(pageWidth - w) > (w * 0.001) ||
+        qAbs(pageHeight - h) > (h * 0.001))
     {
         // The difference is bigger than 1% -> we have a custom size
         m_scanareaPapersize->blockSignals(true);
