@@ -168,7 +168,7 @@ void KSaneViewer::setQImage(QImage *img)
     clearSelections();
 
     // clear zoom
-    setMatrix(QMatrix());
+    resetTransform();
 
     const auto dpr = img->devicePixelRatio();
     d->scene->setSceneRect(0, 0, img->width() / dpr, img->height() / dpr);
