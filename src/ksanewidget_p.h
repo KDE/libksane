@@ -44,6 +44,8 @@ extern "C"
 #include <QTabWidget>
 #include <QPushButton>
 #include <QVector>
+#include <QSplitter>
+#include <QToolButton>
 
 #include "ksanewidget.h"
 #include "ksaneoption.h"
@@ -196,6 +198,7 @@ public:
 
     bool                m_scanOngoing;
     bool                m_closeDevicePending;
+    bool                m_cancelMultiScan = false;
 
     // final image data
     QByteArray          m_scanData;

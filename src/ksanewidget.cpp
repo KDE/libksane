@@ -678,6 +678,7 @@ void KSaneWidget::scanCancel()
     if (d->m_previewThread->isRunning()) {
         d->m_previewThread->cancelScan();
     }
+    d->m_cancelMultiScan = true;
 }
 
 void KSaneWidget::setPreviewResolution(float dpi)

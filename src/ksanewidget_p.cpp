@@ -1101,6 +1101,7 @@ void KSaneWidgetPrivate::startFinalScan()
     }
     m_scanOngoing = true;
     m_isPreview = false;
+    m_cancelMultiScan = false;
 
     float x1 = 0, y1 = 0, x2 = 0, y2 = 0;
 
@@ -1169,9 +1170,13 @@ void KSaneWidgetPrivate::oneFinalScanDone()
                 source.contains(QStringLiteral("Duplex"))) {
                 // in batch mode only one area can be scanned per page
                 //qDebug() << "source == " << source;
-                m_updProgressTmr.start();
-                m_scanThread->start();
-                return;
+                if (!m_cancelMultiScan) {
+                    m_updProgressTmr.start();
+                    m_scanThread->start();
+                    m_cancelMultiScan = false;
+                    return;
+                }
+
             }
         }
 
@@ -1221,9 +1226,13 @@ void KSaneWidgetPrivate::oneFinalScanDone()
                     m_readValsTmr.stop();
                     valReload();
                 }
-                m_updProgressTmr.start();
-                m_scanThread->start();
-                return;
+
+                if (!m_cancelMultiScan) {
+                    m_updProgressTmr.start();
+                    m_scanThread->start();
+                    m_cancelMultiScan = false;
+                    return;
+                }
             }
         }
         emit(q->scanDone(KSaneWidget::NoError, QStringLiteral("")));
