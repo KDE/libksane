@@ -42,6 +42,7 @@
 #include <QPointer>
 #include <QDebug>
 #include <QIcon>
+#include <QShortcut>
 
 #include <kpassworddialog.h>
 #ifdef HAVE_KF5WALLET
@@ -159,15 +160,21 @@ KSaneWidget::KSaneWidget(QWidget *parent)
     d->m_clearSelBtn->setToolTip(i18n("Clear Selections"));
     connect(d->m_clearSelBtn, SIGNAL(clicked()), d->m_previewViewer, SLOT(clearSelections()));
 
+    QShortcut *prevShortcut = new QShortcut(QKeySequence(QStringLiteral("Ctrl+P")), this);
+    connect(prevShortcut,   SIGNAL(activated()), d, SLOT(startPreviewScan()));
+
+    QShortcut *scanShortcut = new QShortcut(QKeySequence(QStringLiteral("Ctrl+S")), this);
+    connect(scanShortcut,   SIGNAL(activated()), d, SLOT(startFinalScan()));
+
     d->m_prevBtn = new QPushButton(this);
     d->m_prevBtn->setIcon(QIcon::fromTheme(QStringLiteral("document-import")));
-    d->m_prevBtn->setToolTip(i18n("Scan Preview Image"));
+    d->m_prevBtn->setToolTip(i18n("Scan Preview Image (%1)", prevShortcut->key().toString()));
     d->m_prevBtn->setText(i18nc("Preview button text", "Preview"));
     connect(d->m_prevBtn,   SIGNAL(clicked()), d, SLOT(startPreviewScan()));
 
     d->m_scanBtn = new QPushButton(this);
     d->m_scanBtn->setIcon(QIcon::fromTheme(QStringLiteral("document-save")));
-    d->m_scanBtn->setToolTip(i18n("Scan Final Image"));
+    d->m_scanBtn->setToolTip(i18n("Scan Final Image (%1)", scanShortcut->key().toString()));
     d->m_scanBtn->setText(i18nc("Final scan button text", "Scan"));
     d->m_scanBtn->setFocus(Qt::OtherFocusReason);
     connect(d->m_scanBtn,   SIGNAL(clicked()), d, SLOT(startFinalScan()));
