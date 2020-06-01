@@ -1,0 +1,14 @@
+maintainer: sars
+description: SANE Library Qt-based interface
+type: functional
+public_lib: true
+platforms:
+    - name: Linux
+    - name: FreeBSD
+    #- name: Windows
+    #- name: MacOSX
+    #- name: Android
+release: true
+libraries:
+    - cmake: "KF5::Sane"
+cmakename: KF5Sane
