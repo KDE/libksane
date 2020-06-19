@@ -63,9 +63,9 @@
 namespace KSaneIface
 {
 static int     s_objectCount = 0;
-static QMutex  s_objectMutex;
+Q_GLOBAL_STATIC(QMutex, s_objectMutex)
 
-static const QString InvetColorsOption = QStringLiteral("KSane::InvertColors");
+static const QLatin1String InvetColorsOption("KSane::InvertColors");
 
 KSaneWidget::KSaneWidget(QWidget *parent)
     : QWidget(parent), d(new KSaneWidgetPrivate(this))
@@ -73,7 +73,7 @@ KSaneWidget::KSaneWidget(QWidget *parent)
     SANE_Int    version;
     SANE_Status status;
 
-    s_objectMutex.lock();
+    s_objectMutex->lock();
     s_objectCount++;
 
     if (s_objectCount == 1) {
@@ -89,7 +89,7 @@ KSaneWidget::KSaneWidget(QWidget *parent)
             //         << SANE_VERSION_BUILD(version);
         }
     }
-    s_objectMutex.unlock();
+    s_objectMutex->unlock();
 
     // read the device list to get a list of vendor and model info
     d->m_findDevThread->start();
@@ -248,11 +248,11 @@ KSaneWidget::KSaneWidget(QWidget *parent)
 KSaneWidget::~KSaneWidget()
 {
     while (!closeDevice()) {
-        usleep(1000);
+        usleep(100);
     }
     // wait for any thread to exit
 
-    s_objectMutex.lock();
+    s_objectMutex->lock();
     s_objectCount--;
     if (s_objectCount <= 0) {
         // only delete the find-devices and authorization singletons and call sane_exit
@@ -261,7 +261,7 @@ KSaneWidget::~KSaneWidget()
         delete d->m_auth;
         sane_exit();
     }
-    s_objectMutex.unlock();
+    s_objectMutex->unlock();
     delete d;
 }
 
@@ -662,7 +662,7 @@ void KSaneWidget::scanFinal()
         d->startFinalScan();
     } else {
         // if the button frame is disabled, there is no open device to scan from
-        emit scanDone(KSaneWidget::ErrorGeneral, QStringLiteral(""));
+        emit scanDone(KSaneWidget::ErrorGeneral, QString());
     }
 }
 
@@ -672,7 +672,7 @@ void KSaneWidget::startPreviewScan()
         d->startPreviewScan();
     } else {
         // if the button frame is disabled, there is no open device to scan from
-        emit scanDone(KSaneWidget::ErrorGeneral, QStringLiteral(""));
+        emit scanDone(KSaneWidget::ErrorGeneral, QString());
     }
 }
 

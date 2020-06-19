@@ -39,20 +39,20 @@ extern "C"
 }
 
 #include <QMutex>
+#include <QMutexLocker>
 
 namespace KSaneIface
 {
 static FindSaneDevicesThread *s_instancesane = nullptr;
-static QMutex s_mutexsane;
+Q_GLOBAL_STATIC(QMutex, s_mutexsane)
 
 FindSaneDevicesThread *FindSaneDevicesThread::getInstance()
 {
-    s_mutexsane.lock();
+    QMutexLocker locker(s_mutexsane);
 
     if (s_instancesane == nullptr) {
         s_instancesane = new FindSaneDevicesThread();
     }
-    s_mutexsane.unlock();
 
     return s_instancesane;
 }
@@ -63,9 +63,8 @@ FindSaneDevicesThread::FindSaneDevicesThread() : QThread(nullptr)
 
 FindSaneDevicesThread::~FindSaneDevicesThread()
 {
-    s_mutexsane.lock();
+    QMutexLocker locker(s_mutexsane);
     wait();
-    s_mutexsane.unlock();
 }
 
 void FindSaneDevicesThread::run()

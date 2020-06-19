@@ -51,7 +51,7 @@ void KSaneOptCombo::createWidget(QWidget *parent)
         return;
     }
 
-    m_widget = m_combo = new LabeledCombo(parent, QStringLiteral(""), QStringList());
+    m_widget = m_combo = new LabeledCombo(parent, QString(), QStringList());
     readOption();
     m_widget->setToolTip(sane_i18n(m_optDesc->desc));
     connect(m_combo, QOverload<int>::of(&LabeledCombo::activated), this, &KSaneOptCombo::comboboxChangedIndex);

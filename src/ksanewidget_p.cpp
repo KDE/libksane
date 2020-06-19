@@ -184,7 +184,7 @@ void KSaneWidgetPrivate::devListUpdated()
 
 void KSaneWidgetPrivate::signalDevListUpdate()
 {
-    emit(q->availableDevices(m_findDevThread->devicesList()));
+    emit q->availableDevices(m_findDevThread->devicesList());
 }
 
 KSaneWidget::ImageFormat KSaneWidgetPrivate::getImgFormat(SANE_Parameters &params)
@@ -729,10 +729,7 @@ void KSaneWidgetPrivate::optReload()
 
 void KSaneWidgetPrivate::valReload()
 {
-    int i;
-    QString tmp;
-
-    for (i = 0; i < m_optList.size(); ++i) {
+    for (int i = 0; i < m_optList.size(); ++i) {
         m_optList.at(i)->readValue();
     }
 
@@ -1054,7 +1051,7 @@ void KSaneWidgetPrivate::previewScanDone()
         sane_close(m_saneHandle);
         m_saneHandle = nullptr;
         clearDeviceOptions();
-        emit(q->scanDone(KSaneWidget::NoError, QStringLiteral("")));
+        emit q->scanDone(KSaneWidget::NoError, QString());
         return;
     }
 
@@ -1089,7 +1086,7 @@ void KSaneWidgetPrivate::previewScanDone()
     m_scanOngoing = false;
     m_updProgressTmr.stop();
 
-    emit(q->scanDone(KSaneWidget::NoError, QStringLiteral("")));
+    emit q->scanDone(KSaneWidget::NoError, QString());
 
     return;
 }
@@ -1154,11 +1151,11 @@ void KSaneWidgetPrivate::oneFinalScanDone()
             int bytesPerLine = qMax(getBytesPerLines(params), 1); // ensure no div by 0
             lines = m_scanData.size() / bytesPerLine;
         }
-        emit(q->imageReady(m_scanData,
+        emit q->imageReady(m_scanData,
                            params.pixels_per_line,
                            lines,
                            getBytesPerLines(params),
-                           (int)getImgFormat(params)));
+                           (int)getImgFormat(params));
 
         // now check if we should have automatic ADF batch scanning
         if (m_optSource) {
@@ -1235,7 +1232,7 @@ void KSaneWidgetPrivate::oneFinalScanDone()
                 }
             }
         }
-        emit(q->scanDone(KSaneWidget::NoError, QStringLiteral("")));
+        emit q->scanDone(KSaneWidget::NoError, QString());
     } else {
         switch (m_scanThread->saneStatus()) {
         case SANE_STATUS_GOOD:
@@ -1243,7 +1240,7 @@ void KSaneWidgetPrivate::oneFinalScanDone()
         case SANE_STATUS_EOF:
             break;
         case SANE_STATUS_NO_DOCS:
-            emit(q->scanDone(KSaneWidget::Information, i18n(sane_strstatus(m_scanThread->saneStatus()))));
+            emit q->scanDone(KSaneWidget::Information, i18n(sane_strstatus(m_scanThread->saneStatus())));
             alertUser(KSaneWidget::Information, i18n(sane_strstatus(m_scanThread->saneStatus())));
             break;
         case SANE_STATUS_UNSUPPORTED:
@@ -1254,7 +1251,7 @@ void KSaneWidgetPrivate::oneFinalScanDone()
         case SANE_STATUS_COVER_OPEN:
         case SANE_STATUS_DEVICE_BUSY:
         case SANE_STATUS_ACCESS_DENIED:
-            emit(q->scanDone(KSaneWidget::ErrorGeneral, i18n(sane_strstatus(m_scanThread->saneStatus()))));
+            emit q->scanDone(KSaneWidget::ErrorGeneral, i18n(sane_strstatus(m_scanThread->saneStatus())));
             alertUser(KSaneWidget::ErrorGeneral, i18n(sane_strstatus(m_scanThread->saneStatus())));
             break;
         }
@@ -1275,7 +1272,7 @@ void KSaneWidgetPrivate::setBusy(bool busy)
         m_activityFrame->hide();
         m_btnFrame->hide();
         m_optionPollTmr.stop();
-        emit(q->scanProgress(0));
+        emit q->scanProgress(0);
     } else {
         m_warmingUp->hide();
         m_activityFrame->hide();
@@ -1283,7 +1280,7 @@ void KSaneWidgetPrivate::setBusy(bool busy)
         if (m_pollList.size() > 0) {
             m_optionPollTmr.start();
         }
-        emit(q->scanProgress(100));
+        emit q->scanProgress(100);
     }
 
     m_optsTabWidget->setDisabled(busy);
@@ -1355,7 +1352,7 @@ void KSaneWidgetPrivate::updateProgress()
     }
 
     m_progressBar->setValue(progress);
-    emit(q->scanProgress(progress));
+    emit q->scanProgress(progress);
 }
 
 void KSaneWidgetPrivate::alertUser(int type, const QString &strStatus)
@@ -1370,7 +1367,7 @@ void KSaneWidgetPrivate::alertUser(int type, const QString &strStatus)
             break;
         }
     } else {
-        emit(q->userMessage(type, strStatus));
+        emit q->userMessage(type, strStatus);
     }
 }
 
@@ -1444,7 +1441,7 @@ void KSaneWidgetPrivate::setPossibleScanSizes()
     m_scanareaPapersize->addItem(i18n("Custom"), customSize);
 
     // Add portrait page sizes
-    for (int sizeCode: m_sizeCodes) {
+    for (int sizeCode: qAsConst(m_sizeCodes)) {
         QSizeF size = QPageSize::size((QPageSize::PageSizeId)sizeCode, QPageSize::Millimeter);
         if (mmToDispUnit(size.width()) > widthInDispUnit) {
             continue;
@@ -1456,7 +1453,7 @@ void KSaneWidgetPrivate::setPossibleScanSizes()
     }
 
     // Add landscape page sizes
-    for (int sizeCode: m_sizeCodes) {
+    for (int sizeCode: qAsConst(m_sizeCodes)) {
         QSizeF size = QPageSize::size((QPageSize::PageSizeId)sizeCode, QPageSize::Millimeter);
         size.transpose();
         if (mmToDispUnit(size.width()) > widthInDispUnit) {

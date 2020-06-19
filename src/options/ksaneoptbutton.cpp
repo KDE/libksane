@@ -50,7 +50,7 @@ void KSaneOptButton::createWidget(QWidget *parent)
 
     if (!m_optDesc) {
         qDebug() << "This is a bug";
-        m_widget = new KSaneOptionWidget(parent, QStringLiteral(""));
+        m_widget = new KSaneOptionWidget(parent, QString());
         return;
     }
 

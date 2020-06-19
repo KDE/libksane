@@ -30,6 +30,7 @@
 
 // Qt includes
 #include <QMutex>
+#include <QMutexLocker>
 #include <QList>
 #include <QDebug>
 
@@ -37,7 +38,7 @@ namespace KSaneIface
 {
 
 static KSaneAuth *s_instance = nullptr;
-static QMutex     s_mutex;
+Q_GLOBAL_STATIC(QMutex, s_mutex)
 
 struct KSaneAuth::Private {
     struct AuthStruct {
@@ -51,13 +52,11 @@ struct KSaneAuth::Private {
 
 KSaneAuth *KSaneAuth::getInstance()
 {
-    s_mutex.lock();
+    QMutexLocker locker(s_mutex);
 
     if (s_instance == nullptr) {
         s_instance = new KSaneAuth();
     }
-    s_mutex.unlock();
-
     return s_instance;
 }
 
@@ -65,6 +64,7 @@ KSaneAuth::KSaneAuth() : d(new Private) {}
 
 KSaneAuth::~KSaneAuth()
 {
+    QMutexLocker locker(s_mutex);
     d->authList.clear();
     delete d;
 }

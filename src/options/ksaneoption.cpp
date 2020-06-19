@@ -57,7 +57,7 @@ KSaneOption::~KSaneOption()
 void KSaneOption::createWidget(QWidget *parent)
 {
     if (!m_widget) {
-        m_widget = new KSaneOptionWidget(parent, QStringLiteral(""));
+        m_widget = new KSaneOptionWidget(parent, QString());
     }
 
     if (m_optDesc) {
@@ -121,7 +121,7 @@ bool KSaneOption::needsPolling() const
 QString KSaneOption::name() const
 {
     if (m_optDesc == nullptr) {
-        return QStringLiteral("");
+        return QString();
     }
     return QString::fromUtf8(m_optDesc->name);
 }
@@ -379,7 +379,7 @@ KLocalizedString KSaneOption::unitString()
 QString KSaneOption::unitDoubleString()
 {
     switch (m_optDesc->unit) {
-    case SANE_UNIT_NONE:        return QStringLiteral("");
+    case SANE_UNIT_NONE:        return QString();
     case SANE_UNIT_PIXEL:       return i18nc("Double numbers. SpinBox parameter unit", " Pixels");
     case SANE_UNIT_BIT:         return i18nc("Double numbers. SpinBox parameter unit", " Bits");
     case SANE_UNIT_MM:          return i18nc("Double numbers. SpinBox parameter unit (Millimeter)", " mm");
@@ -387,7 +387,7 @@ QString KSaneOption::unitDoubleString()
     case SANE_UNIT_PERCENT:     return i18nc("Double numbers. SpinBox parameter unit (Percentage)", " %");
     case SANE_UNIT_MICROSECOND: return i18nc("Double numbers. SpinBox parameter unit (Microseconds)", " µs");
     }
-    return QStringLiteral("");
+    return QString();
 }
 
 }  // NameSpace KSaneIface

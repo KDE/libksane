@@ -110,9 +110,7 @@ KSaneDeviceDialog::~KSaneDeviceDialog()
 void KSaneDeviceDialog::reloadDevicesList()
 {
     setAvailable(false);
-    while (!m_btnGroupDevices->buttons().isEmpty()) {
-        delete m_btnGroupDevices->buttons().takeFirst();
-    }
+    qDeleteAll(m_btnGroupDevices->buttons());
     m_gbDevices->setTitle(i18n("Looking for devices. Please wait."));
     m_gbDevices->layout()->itemAt(0)->widget()->hide();  // explanation
     m_btnReloadDevices->setEnabled(false);
@@ -147,9 +145,7 @@ QString KSaneDeviceDialog::getSelectedName() const
 
 void KSaneDeviceDialog::updateDevicesList()
 {
-    while (!m_btnGroupDevices->buttons().isEmpty()) {
-        delete m_btnGroupDevices->buttons().takeFirst();
-    }
+    qDeleteAll(m_btnGroupDevices->buttons());
 
     const QList<KSaneWidget::DeviceInfo> list = m_findDevThread->devicesList();
     if (list.isEmpty()) {

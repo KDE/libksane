@@ -52,7 +52,7 @@ void KSaneOptEntry::createWidget(QWidget *parent)
 
     if (!m_optDesc) {
         qDebug() << "This is a bug";
-        m_widget = new KSaneOptionWidget(parent, QStringLiteral(""));
+        m_widget = new KSaneOptionWidget(parent, QString());
         return;
     }
 
@@ -66,7 +66,7 @@ void KSaneOptEntry::createWidget(QWidget *parent)
 void KSaneOptEntry::entryChanged(const QString &text)
 {
     QString tmp;
-    tmp += text.left(m_optDesc->size);
+    tmp += text.leftRef(m_optDesc->size);
     if (tmp != text) {
         m_entry->setText(tmp);
         writeData(tmp.toLatin1().data());

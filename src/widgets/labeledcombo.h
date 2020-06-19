@@ -64,6 +64,11 @@ public:
     /** This function forwards the request to the QComboBox equivalent */
     int currentIndex() const;
 
+    /**
+     * This function is used to read the current string of the combobox
+     */
+    QString currentText() const;
+
 public Q_SLOTS:
 
     /**
@@ -81,11 +86,6 @@ public Q_SLOTS:
      * If not, the entry is not changed.
      */
     void setCurrentText(const QString &);
-
-    /**
-     * This function is used to read the current string of the combobox
-     */
-    QString currentText() const;
 
     /**
      * set the current item of the combobox.
