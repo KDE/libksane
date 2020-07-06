@@ -36,8 +36,9 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QMessageBox>
-#include <QDebug>
 #include <QPageSize>
+
+#include <ksane_debug.h>
 
 #define SCALED_PREVIEW_MAX_SIDE 400
 
@@ -172,7 +173,7 @@ void KSaneWidgetPrivate::devListUpdated()
         }
         for (int i = 0; i < list.size(); ++i) {
             const KSaneWidget::DeviceInfo info = list.at(i);
-            qDebug() << info.name;
+            qCDebug(KSANE_LOG) << info.name;
             if (info.name == m_devName) {
                 m_vendor    = info.vendor;
                 m_model     = info.model;
@@ -328,7 +329,7 @@ float KSaneWidgetPrivate::ratioToDispUnitX(float ratio)
             return mmToDispUnit(result);
         }
     }
-    qDebug() << "Failed to convert scan area to mm";
+    qCDebug(KSANE_LOG) << "Failed to convert scan area to mm";
     return ratio;
 }
 
@@ -352,7 +353,7 @@ float KSaneWidgetPrivate::ratioToDispUnitY(float ratio)
             return mmToDispUnit(result);
         }
     }
-    qDebug() << "Failed to convert scan area to display unit";
+    qCDebug(KSANE_LOG) << "Failed to convert scan area to display unit";
     return ratio;
 }
 
@@ -869,7 +870,7 @@ void KSaneWidgetPrivate::updatePreviewSize()
         m_optBrY->getMaxValue(max_y);
     }
     if ((max_x == m_previewWidth) && (max_y == m_previewHeight)) {
-        //qDebug() << "no preview size change";
+        //qCDebug(KSANE_LOG) << "no preview size change";
         return;
     }
 
@@ -895,7 +896,7 @@ void KSaneWidgetPrivate::updatePreviewSize()
 
     // Avoid crash if max_y or max_x == 0
     if (max_x < 0.0001 || max_y < 0.0001) {
-        qWarning() << "Risk for division by 0" << max_x << max_y;
+        qCWarning(KSANE_LOG) << "Risk for division by 0" << max_x << max_y;
         return;
     }
 
@@ -993,7 +994,7 @@ void KSaneWidgetPrivate::startPreviewScan()
                 //check what image size we would get in a scan
                 status = sane_get_parameters(m_saneHandle, &params);
                 if (status != SANE_STATUS_GOOD) {
-                    qDebug() << "sane_get_parameters=" << sane_strstatus(status);
+                    qCDebug(KSANE_LOG) << "sane_get_parameters=" << sane_strstatus(status);
                     previewScanDone();
                     return;
                 }
@@ -1010,7 +1011,7 @@ void KSaneWidgetPrivate::startPreviewScan()
                 // This is a security measure for broken backends
                 m_optRes->getMinValue(dpi);
                 m_optRes->setValue(dpi);
-                qDebug() << "Setting minimum DPI value for a broken back-end";
+                qCDebug(KSANE_LOG) << "Setting minimum DPI value for a broken back-end";
             }
         }
     }
@@ -1166,7 +1167,7 @@ void KSaneWidgetPrivate::oneFinalScanDone()
                 source.contains(QStringLiteral("ADF")) ||
                 source.contains(QStringLiteral("Duplex"))) {
                 // in batch mode only one area can be scanned per page
-                //qDebug() << "source == " << source;
+                //qCDebug(KSANE_LOG) << "source == " << source;
                 if (!m_cancelMultiScan) {
                     m_updProgressTmr.start();
                     m_scanThread->start();
@@ -1179,14 +1180,14 @@ void KSaneWidgetPrivate::oneFinalScanDone()
 
         // Check if we have a "wait for button" batch scanning
         if (m_optWaitForBtn) {
-            qDebug() << m_optWaitForBtn->name();
+            qCDebug(KSANE_LOG) << m_optWaitForBtn->name();
             QString wait;
             m_optWaitForBtn->getValue(wait);
 
-            qDebug() << "wait ==" << wait;
+            qCDebug(KSANE_LOG) << "wait ==" << wait;
             if (wait == QStringLiteral("true")) {
                 // in batch mode only one area can be scanned per page
-                //qDebug() << "source == \"Automatic Document Feeder\"";
+                //qCDebug(KSANE_LOG) << "source == \"Automatic Document Feeder\"";
                 m_updProgressTmr.start();
                 m_scanThread->start();
                 return;
@@ -1196,7 +1197,7 @@ void KSaneWidgetPrivate::oneFinalScanDone()
         // not batch scan, call sane_cancel to be able to change parameters.
         sane_cancel(m_saneHandle);
 
-        //qDebug() << "index=" << m_selIndex << "size=" << m_previewViewer->selListSize();
+        //qCDebug(KSANE_LOG) << "index=" << m_selIndex << "size=" << m_previewViewer->selListSize();
         // check if we have multiple selections.
         if (m_previewViewer->selListSize() > m_selIndex) {
             if ((m_optTlX != nullptr) && (m_optTlY != nullptr) && (m_optBrX != nullptr) && (m_optBrY != nullptr)) {

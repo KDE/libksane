@@ -27,8 +27,9 @@
 
 #include "ksanepreviewimagebuilder.h"
 
-#include <QDebug>
 #include <QImage>
+
+#include <ksane_debug.h>
 
 namespace KSaneIface
 {
@@ -272,7 +273,7 @@ bool KSanePreviewImageBuilder::copyToImage(const SANE_Byte readData[], int read_
         break;
     }
 
-    qWarning() << "Format" << m_params.format
+    qCWarning(KSANE_LOG) << "Format" << m_params.format
                << "and depth" << m_params.depth
                << "is not yet supported by libksane!";
     return false;

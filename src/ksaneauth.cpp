@@ -32,7 +32,8 @@
 #include <QMutex>
 #include <QMutexLocker>
 #include <QList>
-#include <QDebug>
+
+#include <ksane_debug.h>
 
 namespace KSaneIface
 {
@@ -105,7 +106,7 @@ void KSaneAuth::clearDeviceAuth(const QString &resource)
 /** static function called by sane_open to get authorization from user */
 void KSaneAuth::authorization(SANE_String_Const resource, SANE_Char *username, SANE_Char *password)
 {
-    qDebug() << resource;
+    qCDebug(KSANE_LOG) << resource;
     // This is vague in the standard... what can I find in the resource string?
     // I have found that "resource contains the backend name + "$MD5$....."
     // it does not contain unique identifiers like ":libusb:001:004"
@@ -113,11 +114,11 @@ void KSaneAuth::authorization(SANE_String_Const resource, SANE_Char *username, S
     QString res = QString::fromUtf8(resource);
     int end = res.indexOf(QStringLiteral("$MD5$"));
     res = res.left(end);
-    qDebug() << res;
+    qCDebug(KSANE_LOG) << res;
 
     QList<Private::AuthStruct> list = getInstance()->d->authList;
     for (int i = 0; i < list.size(); i++) {
-        qDebug() << res << list.at(i).resource;
+        qCDebug(KSANE_LOG) << res << list.at(i).resource;
         if (list.at(i).resource.contains(res)) {
             qstrncpy(username, list.at(i).username.toLocal8Bit().constData(), SANE_MAX_USERNAME_LEN);
             qstrncpy(password, list.at(i).password.toLocal8Bit().constData(), SANE_MAX_PASSWORD_LEN);

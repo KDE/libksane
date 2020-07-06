@@ -32,7 +32,7 @@
 
 #include <QtCore/QVarLengthArray>
 
-#include <QDebug>
+#include <ksane_debug.h>
 
 static const float FIXED_MAX = 32767.0;
 static const float FIXED_MIN = -32768.0;
@@ -114,7 +114,7 @@ void KSaneOptFSlider::sliderChanged(float val)
     if (((val - m_fVal) >= m_minChange) || ((m_fVal - val) >= m_minChange)) {
         unsigned char data[4];
         SANE_Word fixed;
-        //qDebug() <<m_optDesc->name << fVal << "!=" << val;
+        //qCDebug(KSANE_LOG) <<m_optDesc->name << fVal << "!=" << val;
         m_fVal = val;
         fixed = SANE_FIX(val);
         fromSANE_Word(data, fixed);

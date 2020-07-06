@@ -32,9 +32,10 @@
 
 #include <QtCore/QVarLengthArray>
 
-#include <QDebug>
 #include <QIcon>
 #include <QLocale>
+
+#include <ksane_debug.h>
 
 namespace KSaneIface
 {
@@ -205,7 +206,7 @@ void KSaneOptCombo::comboboxChangedIndex(int i)
         dataPtr = (void *)m_optDesc->constraint.string_list[i];
         break;
     default:
-        qDebug() << "can not handle type:" << m_optDesc->type;
+        qCDebug(KSANE_LOG) << "can not handle type:" << m_optDesc->type;
         return;
     }
     writeData(dataPtr);
@@ -232,7 +233,7 @@ bool KSaneOptCombo::getMinValue(float &val)
         }
         break;
     default:
-        qDebug() << "can not handle type:" << m_optDesc->type;
+        qCDebug(KSANE_LOG) << "can not handle type:" << m_optDesc->type;
         return false;
     }
     return true;
@@ -250,7 +251,7 @@ bool KSaneOptCombo::getValue(float &val)
     SANE_Int res;
     status = sane_control_option(m_handle, m_index, SANE_ACTION_GET_VALUE, data.data(), &res);
     if (status != SANE_STATUS_GOOD) {
-        qDebug() << m_optDesc->name << "sane_control_option returned" << status;
+        qCDebug(KSANE_LOG) << m_optDesc->name << "sane_control_option returned" << status;
         return false;
     }
 
@@ -262,7 +263,7 @@ bool KSaneOptCombo::getValue(float &val)
         val = SANE_UNFIX(toSANE_Word(data.data()));
         return true;
     default:
-        qDebug() << "Type" << m_optDesc->type << "not supported!";
+        qCDebug(KSANE_LOG) << "Type" << m_optDesc->type << "not supported!";
         break;
     }
     return false;
@@ -306,7 +307,7 @@ bool KSaneOptCombo::setValue(float value)
         readValue();
         return (minDiff < 1.0);
     default:
-        qDebug() << "can not handle type:" << m_optDesc->type;
+        qCDebug(KSANE_LOG) << "can not handle type:" << m_optDesc->type;
         break;
     }
     return false;
@@ -371,7 +372,7 @@ bool KSaneOptCombo::setValue(const QString &val)
         }
         break;
     default:
-        qDebug() << "can only handle SANE_TYPE: INT, FIXED and STRING";
+        qCDebug(KSANE_LOG) << "can only handle SANE_TYPE: INT, FIXED and STRING";
         return false;
     }
     writeData(data_ptr);

@@ -40,7 +40,6 @@
 #include <QSplitter>
 #include <QMutex>
 #include <QPointer>
-#include <QDebug>
 #include <QIcon>
 #include <QShortcut>
 
@@ -59,6 +58,8 @@
 #include "ksaneoptslider.h"
 #include "ksanedevicedialog.h"
 #include "labeledgamma.h"
+
+#include <ksane_debug.h>
 
 namespace KSaneIface
 {
@@ -80,10 +81,10 @@ KSaneWidget::KSaneWidget(QWidget *parent)
         // only call sane init for the first instance
         status = sane_init(&version, &KSaneAuth::authorization);
         if (status != SANE_STATUS_GOOD) {
-            qDebug() << "libksane: sane_init() failed("
+            qCDebug(KSANE_LOG) << "libksane: sane_init() failed("
                      << sane_strstatus(status) << ")";
         } else {
-            //qDebug() << "Sane Version = "
+            //qCDebug(KSANE_LOG) << "Sane Version = "
             //         << SANE_VERSION_MAJOR(version) << "."
             //         << SANE_VERSION_MINORparent(version) << "."
             //         << SANE_VERSION_BUILD(version);
@@ -307,10 +308,10 @@ void KSaneWidget::initGetDeviceList() const
 {
     // update the device list if needed to get the vendor and model info
     if (d->m_findDevThread->devicesList().size() == 0) {
-        //qDebug() << "initGetDeviceList() starting thread...";
+        //qCDebug(KSANE_LOG) << "initGetDeviceList() starting thread...";
         d->m_findDevThread->start();
     } else {
-        //qDebug() << "initGetDeviceList() have existing data...";
+        //qCDebug(KSANE_LOG) << "initGetDeviceList() have existing data...";
         d->signalDevListUpdate();
     }
 }
@@ -402,7 +403,7 @@ bool KSaneWidget::openDevice(const QString &deviceName)
     }
 
     if (status != SANE_STATUS_GOOD) {
-        qDebug() << "sane_open(\"" << deviceName << "\", &handle) failed! status = " << sane_strstatus(status);
+        qCDebug(KSANE_LOG) << "sane_open(\"" << deviceName << "\", &handle) failed! status = " << sane_strstatus(status);
         d->m_auth->clearDeviceAuth(d->m_devName);
         d->m_devName.clear();
         return false;
@@ -468,12 +469,12 @@ bool KSaneWidget::openDevice(const QString &deviceName)
 
     // do the connections of the option parameters
     for (i = 0; i < d->m_optList.size(); ++i) {
-        //qDebug() << d->m_optList.at(i)->name();
+        //qCDebug(KSANE_LOG) << d->m_optList.at(i)->name();
         connect(d->m_optList.at(i), SIGNAL(optsNeedReload()), d, SLOT(optReload()));
         connect(d->m_optList.at(i), SIGNAL(valsNeedReload()), d, SLOT(scheduleValReload()));
 
         if (d->m_optList.at(i)->needsPolling()) {
-            //qDebug() << d->m_optList.at(i)->name() << " needs polling";
+            //qCDebug(KSANE_LOG) << d->m_optList.at(i)->name() << " needs polling";
             d->m_pollList.append(d->m_optList.at(i));
             KSaneOptCheckBox *buttonOption = qobject_cast<KSaneOptCheckBox *>(d->m_optList.at(i));
             if (buttonOption) {
@@ -633,7 +634,7 @@ QImage KSaneWidget::toQImageSilent(const QByteArray &data,
     }
     case FormatNone:
     default:
-        qDebug() << "Unsupported conversion";
+        qCDebug(KSANE_LOG) << "Unsupported conversion";
         break;
     }
     float dpm = dpi * (1000.0 / 25.4);
@@ -899,7 +900,7 @@ float KSaneWidget::scanAreaWidth()
             d->m_optBrX->getMaxValue(result);
             float dpi = currentDPI();
             if (dpi < 1) {
-                qDebug() << "Broken DPI value";
+                qCDebug(KSANE_LOG) << "Broken DPI value";
                 dpi = 1.0;
             }
             result = result / dpi / 25.4;
@@ -918,7 +919,7 @@ float KSaneWidget::scanAreaHeight()
             d->m_optBrY->getMaxValue(result);
             float dpi = currentDPI();
             if (dpi < 1) {
-                qDebug() << "Broken DPI value";
+                qCDebug(KSANE_LOG) << "Broken DPI value";
                 dpi = 1.0;
             }
             result = result / dpi / 25.4;

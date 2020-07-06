@@ -32,7 +32,7 @@
 
 #include <QtCore/QVarLengthArray>
 
-#include <QDebug>
+#include <ksane_debug.h>
 
 namespace KSaneIface
 {
@@ -51,7 +51,7 @@ void KSaneOptGamma::createWidget(QWidget *parent)
     readOption();
 
     if (!m_optDesc) {
-        qDebug() << "This is a bug";
+        qCDebug(KSANE_LOG) << "This is a bug";
         m_widget = new KSaneOptionWidget(parent, QString());
         return;
     }

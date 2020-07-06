@@ -29,8 +29,9 @@
 #include "ksanepreviewthread.h"
 
 #include <QMutexLocker>
-#include <QDebug>
 #include <QImage>
+
+#include <ksane_debug.h>
 
 namespace KSaneIface
 {
@@ -75,7 +76,7 @@ void KSanePreviewThread::run()
     m_saneStatus = sane_start(m_saneHandle);
 
     if (m_saneStatus != SANE_STATUS_GOOD) {
-        qDebug() << "sane_start=" << sane_strstatus(m_saneStatus);
+        qCDebug(KSANE_LOG) << "sane_start=" << sane_strstatus(m_saneStatus);
         sane_cancel(m_saneHandle);
         m_readStatus = READ_ERROR;
         return;
@@ -84,7 +85,7 @@ void KSanePreviewThread::run()
     // Read image parameters
     m_saneStatus = sane_get_parameters(m_saneHandle, &m_params);
     if (m_saneStatus != SANE_STATUS_GOOD) {
-        qDebug() << "sane_get_parameters=" << sane_strstatus(m_saneStatus);
+        qCDebug(KSANE_LOG) << "sane_get_parameters=" << sane_strstatus(m_saneStatus);
         sane_cancel(m_saneHandle);
         m_readStatus = READ_ERROR;
         return;
@@ -144,7 +145,7 @@ void KSanePreviewThread::readData()
     case SANE_STATUS_EOF:
         // (handscanners have negative frame size)
         if (m_frameRead < m_frameSize) {
-            qDebug() << "frameRead =" << m_frameRead  << ", frameSize =" << m_frameSize;
+            qCDebug(KSANE_LOG) << "frameRead =" << m_frameRead  << ", frameSize =" << m_frameSize;
             m_readStatus = READ_ERROR;
             return;
         }
@@ -156,25 +157,25 @@ void KSanePreviewThread::readData()
             // start reading next frame
             SANE_Status status = sane_start(m_saneHandle);
             if (status != SANE_STATUS_GOOD) {
-                qDebug() << "sane_start =" << sane_strstatus(status);
+                qCDebug(KSANE_LOG) << "sane_start =" << sane_strstatus(status);
                 m_readStatus = READ_ERROR;
                 return;
             }
             status = sane_get_parameters(m_saneHandle, &m_params);
             if (status != SANE_STATUS_GOOD) {
-                qDebug() << "sane_get_parameters =" << sane_strstatus(status);
+                qCDebug(KSANE_LOG) << "sane_get_parameters =" << sane_strstatus(status);
                 m_readStatus = READ_ERROR;
                 sane_cancel(m_saneHandle);
                 return;
             }
-            //qDebug() << "New Frame";
+            //qCDebug(KSANE_LOG) << "New Frame";
             m_imageBuilder.beginFrame(m_params);
             m_frameRead = 0;
             m_frame_t_count++;
             break;
         }
     default:
-        qDebug() << "sane_read=" << m_saneStatus << "=" << sane_strstatus(m_saneStatus);
+        qCDebug(KSANE_LOG) << "sane_read=" << m_saneStatus << "=" << sane_strstatus(m_saneStatus);
         m_readStatus = READ_ERROR;
         sane_cancel(m_saneHandle);
         return;
@@ -188,7 +189,7 @@ void KSanePreviewThread::copyToPreviewImg(int readBytes)
     QMutexLocker locker(&imgMutex);
     if (m_invertColors) {
         if (m_params.depth == 16) {
-            //if (readBytes%2) qDebug() << "readBytes=" << readBytes;
+            //if (readBytes%2) qCDebug(KSANE_LOG) << "readBytes=" << readBytes;
             quint16 *u16ptr = reinterpret_cast<quint16 *>(m_readData);
             for (int i = 0; i < readBytes / 2; i++) {
                 u16ptr[i] = 0xFFFF - u16ptr[i];

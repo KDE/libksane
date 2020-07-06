@@ -42,6 +42,12 @@ set(ksane_SRCS
     options/ksaneoptcombo.cpp
 )
 
+ecm_qt_declare_logging_category(ksane_SRCS
+  HEADER ksane_debug.h
+  IDENTIFIER KSANE_LOG
+  CATEGORY_NAME org.kde.ksane
+)
+
 add_library(KF5Sane ${ksane_SRCS})
 generate_export_header(KF5Sane BASE_NAME KSane)
 add_library(KF5::Sane ALIAS KF5Sane)

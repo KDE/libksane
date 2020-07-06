@@ -32,8 +32,6 @@
 
 #include <QtCore/QVarLengthArray>
 
-#include <QDebug>
-
 static const int KSW_INT_MAX = 2147483647;
 static const int KSW_INT_MIN = -2147483647 - 1; // prevent warning
 

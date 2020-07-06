@@ -30,7 +30,7 @@
 
 #include "ksanebutton.h"
 
-#include <QDebug>
+#include <ksane_debug.h>
 
 namespace KSaneIface
 {
@@ -49,7 +49,7 @@ void KSaneOptButton::createWidget(QWidget *parent)
     readOption();
 
     if (!m_optDesc) {
-        qDebug() << "This is a bug";
+        qCDebug(KSANE_LOG) << "This is a bug";
         m_widget = new KSaneOptionWidget(parent, QString());
         return;
     }

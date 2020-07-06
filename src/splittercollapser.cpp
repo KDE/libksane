@@ -31,8 +31,6 @@ License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <QStylePainter>
 #include <QTimeLine>
 
-#include <QDebug>
-
 namespace KSaneIface
 {
 

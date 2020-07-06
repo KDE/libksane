@@ -28,7 +28,7 @@
 
 #include "ksanescanthread.h"
 
-#include <QDebug>
+#include <ksane_debug.h>
 
 namespace KSaneIface
 {
@@ -88,7 +88,7 @@ void KSaneScanThread::run()
     }
 
     if (m_saneStatus != SANE_STATUS_GOOD) {
-        qDebug() << "sane_start=" << sane_strstatus(m_saneStatus);
+        qCDebug(KSANE_LOG) << "sane_start=" << sane_strstatus(m_saneStatus);
         m_readStatus = READ_ERROR;
         // oneFinalScanDone() does the sane_cancel()
         return;
@@ -97,7 +97,7 @@ void KSaneScanThread::run()
     // Read image parameters
     m_saneStatus = sane_get_parameters(m_saneHandle, &m_params);
     if (m_saneStatus != SANE_STATUS_GOOD) {
-        qDebug() << "sane_get_parameters=" << sane_strstatus(m_saneStatus);
+        qCDebug(KSANE_LOG) << "sane_get_parameters=" << sane_strstatus(m_saneStatus);
         m_readStatus = READ_ERROR;
         // oneFinalScanDone() does the sane_cancel()
         return;
@@ -154,15 +154,15 @@ void KSaneScanThread::readData()
 
     case SANE_STATUS_EOF:
         if (m_frameRead < m_frameSize) {
-            qDebug() << "frameRead =" << m_frameRead  << ", frameSize =" << m_frameSize << "readBytes =" << readBytes;
+            qCDebug(KSANE_LOG) << "frameRead =" << m_frameRead  << ", frameSize =" << m_frameSize << "readBytes =" << readBytes;
             if ((readBytes > 0) && ((m_frameRead + readBytes) <= m_frameSize)) {
-                qDebug() << "This is not a standard compliant backend";
+                qCDebug(KSANE_LOG) << "This is not a standard compliant backend";
                 copyToScanData(readBytes);
             }
             // There are broken backends that return wrong number for bytes_per_line
             if (m_params.depth == 1 && m_params.lines > 0 && m_params.lines * m_params.pixels_per_line <= m_frameRead * 8) {
-                qDebug() << "Warning!! This backend seems to return wrong bytes_per_line for line-art images!";
-                qDebug() << "Warning!! Trying to correct the value!";
+                qCDebug(KSANE_LOG) << "Warning!! This backend seems to return wrong bytes_per_line for line-art images!";
+                qCDebug(KSANE_LOG) << "Warning!! Trying to correct the value!";
                 m_params.bytes_per_line = m_frameRead / m_params.lines;
             }
             m_readStatus = READ_READY; // It is better to return a broken image than nothing
@@ -176,24 +176,24 @@ void KSaneScanThread::readData()
             // start reading next frame
             m_saneStatus = sane_start(m_saneHandle);
             if (m_saneStatus != SANE_STATUS_GOOD) {
-                qDebug() << "sane_start =" << sane_strstatus(m_saneStatus);
+                qCDebug(KSANE_LOG) << "sane_start =" << sane_strstatus(m_saneStatus);
                 m_readStatus = READ_ERROR;
                 return;
             }
             m_saneStatus = sane_get_parameters(m_saneHandle, &m_params);
             if (m_saneStatus != SANE_STATUS_GOOD) {
-                qDebug() << "sane_get_parameters =" << sane_strstatus(m_saneStatus);
+                qCDebug(KSANE_LOG) << "sane_get_parameters =" << sane_strstatus(m_saneStatus);
                 m_readStatus = READ_ERROR;
                 sane_cancel(m_saneHandle);
                 return;
             }
-            //qDebug() << "New Frame";
+            //qCDebug(KSANE_LOG) << "New Frame";
             m_frameRead = 0;
             m_frame_t_count++;
             break;
         }
     default:
-        qDebug() << "sane_read=" << m_saneStatus << "=" << sane_strstatus(m_saneStatus);
+        qCDebug(KSANE_LOG) << "sane_read=" << m_saneStatus << "=" << sane_strstatus(m_saneStatus);
         m_readStatus = READ_ERROR;
         sane_cancel(m_saneHandle);
         return;
@@ -215,7 +215,7 @@ void KSaneScanThread::copyToScanData(int readBytes)
 {
     if (m_invertColors) {
         if (m_params.depth == 16) {
-            //if (readBytes%2) qDebug() << "readBytes=" << readBytes;
+            //if (readBytes%2) qCDebug(KSANE_LOG) << "readBytes=" << readBytes;
             quint16 *u16ptr = reinterpret_cast<quint16 *>(m_readData);
             for (int i = 0; i < readBytes / 2; i++) {
                 u16ptr[i] = 0xFFFF - u16ptr[i];
@@ -292,7 +292,7 @@ void KSaneScanThread::copyToScanData(int readBytes)
         break;
     }
 
-    qDebug() << "Format" << m_params.format
+    qCDebug(KSANE_LOG) << "Format" << m_params.format
              << "and depth" << m_params.depth
              << "is not yet supported by libksane!";
     m_readStatus = READ_ERROR;
