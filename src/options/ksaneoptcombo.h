@@ -30,6 +30,8 @@
 
 #include "ksaneoption.h"
 
+#include <utility>
+
 namespace KSaneIface
 {
 
@@ -61,14 +63,13 @@ Q_SIGNALS:
     void valueChanged();
 
 private:
-    QStringList &genComboStringList();
-    QString getSaneComboString(int ival);
-    QString getSaneComboString(float fval);
-    QString getSaneComboString(unsigned char *data);
+    QList<std::pair<QString, QString>> genComboStringList() const;
+    QString getSaneComboString(int ival) const;
+    QString getSaneComboString(float fval) const;
+    std::pair<QString, QString> getSaneComboString(unsigned char *data) const;
 
     LabeledCombo *m_combo;
     QString       m_currentText;
-    QStringList   m_strList;
 };
 
 }  // NameSpace KSaneIface

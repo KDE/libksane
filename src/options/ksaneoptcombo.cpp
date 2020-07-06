@@ -74,9 +74,10 @@ void KSaneOptCombo::readValue()
         return;
     }
 
-    m_currentText = getSaneComboString(data.data());
+    const std::pair<QString, QString> current = getSaneComboString(data.data());
+    m_currentText = current.second;
     if (m_combo != nullptr) {
-        if (m_combo->currentText() != m_currentText) {
+        if (m_combo->currentData() != current.first) {
             m_combo->setCurrentText(m_currentText);
             emit valueChanged();
         }
@@ -93,16 +94,18 @@ void KSaneOptCombo::readOption()
 
     QString saved = m_combo->currentText();
 
-    m_strList = genComboStringList();
+    QList<std::pair<QString, QString>> list = genComboStringList();
     m_combo->clear();
     m_combo->setLabelText(sane_i18n(m_optDesc->title));
-    m_combo->addItems(m_strList);
+    for (int i = 0; i < list.count(); ++i) {
+        m_combo->addItem(list[i].second, list[i].first);
+    }
     m_combo->setIcon(QIcon::fromTheme(QStringLiteral("color")),
-                     getSaneComboString((unsigned char *)SANE_VALUE_SCAN_MODE_COLOR));
+                     getSaneComboString((unsigned char *)SANE_VALUE_SCAN_MODE_COLOR).second);
     m_combo->setIcon(QIcon::fromTheme(QStringLiteral("gray-scale")),
-                     getSaneComboString((unsigned char *)SANE_VALUE_SCAN_MODE_GRAY));
+                     getSaneComboString((unsigned char *)SANE_VALUE_SCAN_MODE_GRAY).second);
     m_combo->setIcon(QIcon::fromTheme(QStringLiteral("black-white")),
-                     getSaneComboString((unsigned char *)SANE_VALUE_SCAN_MODE_LINEART));
+                     getSaneComboString((unsigned char *)SANE_VALUE_SCAN_MODE_LINEART).second);
     // The epkowa/epson backend uses "Binary" which is the same as "Lineart"
     m_combo->setIcon(QIcon::fromTheme(QStringLiteral("black-white")), i18n(tmp_binary));
 
@@ -110,37 +113,39 @@ void KSaneOptCombo::readOption()
     m_combo->setCurrentText(saved);
 }
 
-QStringList &KSaneOptCombo::genComboStringList()
+QList<std::pair<QString, QString>> KSaneOptCombo::genComboStringList() const
 {
     int i;
-    m_strList.clear();
+    QList<std::pair<QString, QString>> list;
 
     switch (m_optDesc->type) {
     case SANE_TYPE_INT:
         for (i = 1; i <= m_optDesc->constraint.word_list[0]; ++i) {
-            m_strList += getSaneComboString((int)m_optDesc->constraint.word_list[i]);
+            const QString tmp = getSaneComboString((int)m_optDesc->constraint.word_list[i]);
+            list += std::make_pair(tmp, tmp);
         }
         break;
     case SANE_TYPE_FIXED:
         for (i = 1; i <= m_optDesc->constraint.word_list[0]; ++i) {
-            m_strList += getSaneComboString((float)SANE_UNFIX(m_optDesc->constraint.word_list[i]));
+            const QString tmp = getSaneComboString((float)SANE_UNFIX(m_optDesc->constraint.word_list[i]));
+            list += std::make_pair(tmp, tmp);
         }
         break;
     case SANE_TYPE_STRING:
         i = 0;
         while (m_optDesc->constraint.string_list[i] != nullptr) {
-            m_strList += getSaneComboString((unsigned char *)m_optDesc->constraint.string_list[i]);
+            list += getSaneComboString((unsigned char *)m_optDesc->constraint.string_list[i]);
             i++;
         }
         break;
     default :
-        m_strList += QStringLiteral("NOT HANDELED");
+        list += std::make_pair(QStringLiteral("NOT HANDELED"), QStringLiteral("NOT HANDELED"));
         break;
     }
-    return m_strList;
+    return list;
 }
 
-QString KSaneOptCombo::getSaneComboString(int ival)
+QString KSaneOptCombo::getSaneComboString(int ival) const
 {
     switch (m_optDesc->unit) {
     case SANE_UNIT_NONE:        break;
@@ -154,7 +159,7 @@ QString KSaneOptCombo::getSaneComboString(int ival)
     return QString::number(ival);
 }
 
-QString KSaneOptCombo::getSaneComboString(float fval)
+QString KSaneOptCombo::getSaneComboString(float fval) const
 {
     switch (m_optDesc->unit) {
     case SANE_UNIT_NONE:        break;
@@ -168,23 +173,26 @@ QString KSaneOptCombo::getSaneComboString(float fval)
     return QString::number(fval, 'F', 4);
 }
 
-QString KSaneOptCombo::getSaneComboString(unsigned char *data)
+std::pair<QString, QString> KSaneOptCombo::getSaneComboString(unsigned char *data) const
 {
+    QString tmp;
     if (data == nullptr) {
-        return QString();
+        return std::pair<QString, QString>();
     }
 
     switch (m_optDesc->type) {
     case SANE_TYPE_INT:
-        return getSaneComboString((int)toSANE_Word(data));
+        tmp = getSaneComboString((int)toSANE_Word(data));
+        return std::make_pair(tmp, tmp);
     case SANE_TYPE_FIXED:
-        return getSaneComboString((float)SANE_UNFIX(toSANE_Word(data)));
+        tmp = getSaneComboString((float)SANE_UNFIX(toSANE_Word(data)));
+        return std::make_pair(tmp, tmp);
     case SANE_TYPE_STRING:
-        return sane_i18n(reinterpret_cast<char *>(data));
+        return std::make_pair(QString::fromUtf8(reinterpret_cast<char *>(data)), sane_i18n(reinterpret_cast<char *>(data)));
     default :
         break;
     }
-    return QString();
+    return std::pair<QString, QString>();
 }
 
 void KSaneOptCombo::comboboxChangedIndex(int i)
@@ -318,7 +326,7 @@ bool KSaneOptCombo::getValue(QString &val)
     if (state() == STATE_HIDDEN) {
         return false;
     }
-    val = m_currentText;
+    val = m_combo->currentData().toString();
     return true;
 }
 
@@ -360,7 +368,7 @@ bool KSaneOptCombo::setValue(const QString &val)
     case SANE_TYPE_STRING:
         i = 0;
         while (m_optDesc->constraint.string_list[i] != nullptr) {
-            tmp = getSaneComboString((unsigned char *)m_optDesc->constraint.string_list[i]);
+            tmp = getSaneComboString((unsigned char *)m_optDesc->constraint.string_list[i]).first;
             if (val == tmp) {
                 data_ptr = (void *)m_optDesc->constraint.string_list[i];
                 break;
