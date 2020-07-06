@@ -366,12 +366,12 @@ KLocalizedString KSaneOption::unitString()
 {
     switch (m_optDesc->unit) {
     case SANE_UNIT_NONE:        return KLocalizedString();
-    case SANE_UNIT_PIXEL:       return ki18ncp("SpinBox parameter unit", " Pixel", " Pixels");
-    case SANE_UNIT_BIT:         return ki18ncp("SpinBox parameter unit", " Bit", " Bits");
-    case SANE_UNIT_MM:          return ki18nc("SpinBox parameter unit (Millimeter)", " mm");
-    case SANE_UNIT_DPI:         return ki18nc("SpinBox parameter unit (Dots Per Inch)", " DPI");
-    case SANE_UNIT_PERCENT:     return ki18nc("SpinBox parameter unit (Percentage)", " %");
-    case SANE_UNIT_MICROSECOND: return ki18nc("SpinBox parameter unit (Microseconds)", " µs");
+    case SANE_UNIT_PIXEL:       return ki18ncp("SpinBox parameter unit", "%1 Pixel", "%1 Pixels");
+    case SANE_UNIT_BIT:         return ki18ncp("SpinBox parameter unit", "%1 Bit", "%1 Bits");
+    case SANE_UNIT_MM:          return ki18nc("SpinBox parameter unit (Millimeter)", "%1 mm");
+    case SANE_UNIT_DPI:         return ki18nc("SpinBox parameter unit (Dots Per Inch)", "%1 DPI");
+    case SANE_UNIT_PERCENT:     return ki18nc("SpinBox parameter unit (Percentage)", "%1 %");
+    case SANE_UNIT_MICROSECOND: return ki18nc("SpinBox parameter unit (Microseconds)", "%1 µs");
     }
     return KLocalizedString();
 }
