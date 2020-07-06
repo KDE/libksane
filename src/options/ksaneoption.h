@@ -110,8 +110,8 @@ Q_SIGNALS:
 
 protected:
 
-    SANE_Word toSANE_Word(unsigned char *data);
-    void fromSANE_Word(unsigned char *data, SANE_Word from);
+    static SANE_Word toSANE_Word(unsigned char *data);
+    static void fromSANE_Word(unsigned char *data, SANE_Word from);
     bool writeData(void *data);
     KLocalizedString unitString();
     QString unitDoubleString();
