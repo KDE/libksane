@@ -1078,7 +1078,7 @@ void KSaneWidgetPrivate::previewScanDone()
 
     if ((m_previewThread->saneStatus() != SANE_STATUS_GOOD) &&
             (m_previewThread->saneStatus() != SANE_STATUS_EOF)) {
-        alertUser(KSaneWidget::ErrorGeneral, i18n(sane_strstatus(m_previewThread->saneStatus())));
+        alertUser(KSaneWidget::ErrorGeneral, sane_i18n(sane_strstatus(m_previewThread->saneStatus())));
     } else if (m_autoSelect) {
         m_previewViewer->findSelections();
     }
@@ -1241,8 +1241,8 @@ void KSaneWidgetPrivate::oneFinalScanDone()
         case SANE_STATUS_EOF:
             break;
         case SANE_STATUS_NO_DOCS:
-            emit q->scanDone(KSaneWidget::Information, i18n(sane_strstatus(m_scanThread->saneStatus())));
-            alertUser(KSaneWidget::Information, i18n(sane_strstatus(m_scanThread->saneStatus())));
+            emit q->scanDone(KSaneWidget::Information, sane_i18n(sane_strstatus(m_scanThread->saneStatus())));
+            alertUser(KSaneWidget::Information, sane_i18n(sane_strstatus(m_scanThread->saneStatus())));
             break;
         case SANE_STATUS_UNSUPPORTED:
         case SANE_STATUS_IO_ERROR:
@@ -1252,8 +1252,8 @@ void KSaneWidgetPrivate::oneFinalScanDone()
         case SANE_STATUS_COVER_OPEN:
         case SANE_STATUS_DEVICE_BUSY:
         case SANE_STATUS_ACCESS_DENIED:
-            emit q->scanDone(KSaneWidget::ErrorGeneral, i18n(sane_strstatus(m_scanThread->saneStatus())));
-            alertUser(KSaneWidget::ErrorGeneral, i18n(sane_strstatus(m_scanThread->saneStatus())));
+            emit q->scanDone(KSaneWidget::ErrorGeneral, sane_i18n(sane_strstatus(m_scanThread->saneStatus())));
+            alertUser(KSaneWidget::ErrorGeneral, sane_i18n(sane_strstatus(m_scanThread->saneStatus())));
             break;
         }
     }
