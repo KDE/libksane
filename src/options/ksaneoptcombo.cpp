@@ -169,7 +169,6 @@ QString KSaneOptCombo::getSaneComboString(float fval)
 
 QString KSaneOptCombo::getSaneComboString(unsigned char *data)
 {
-    QString tmp;
     if (data == nullptr) {
         return QString();
     }
@@ -180,9 +179,7 @@ QString KSaneOptCombo::getSaneComboString(unsigned char *data)
     case SANE_TYPE_FIXED:
         return getSaneComboString((float)SANE_UNFIX(toSANE_Word(data)));
     case SANE_TYPE_STRING:
-        tmp = i18n(reinterpret_cast<char *>(data));
-        tmp = tmp.simplified();
-        return tmp;
+        return sane_i18n(reinterpret_cast<char *>(data));
     default :
         break;
     }
