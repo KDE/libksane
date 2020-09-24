@@ -42,7 +42,8 @@
 
 #define SCALED_PREVIEW_MAX_SIDE 400
 
-static const int ActiveSelection = 100000;
+static constexpr int ActiveSelection = 100000;
+static constexpr int PageSizeWiggleRoom = 2; // in mm
 
 namespace KSaneIface
 {
@@ -84,10 +85,13 @@ KSaneWidgetPrivate::KSaneWidgetPrivate(KSaneWidget *parent):
     m_previewHeight = 0;
 
     m_sizeCodes = {
-        QPageSize::A3,
         QPageSize::A4,
         QPageSize::A5,
         QPageSize::A6,
+        QPageSize::Letter,
+        QPageSize::Legal,
+        QPageSize::Tabloid,
+        QPageSize::A3,
         QPageSize::B3,
         QPageSize::B4,
         QPageSize::B5,
@@ -98,9 +102,6 @@ KSaneWidgetPrivate::KSaneWidgetPrivate(KSaneWidget *parent):
         QPageSize::Executive,
         QPageSize::Folio,
         QPageSize::Ledger,
-        QPageSize::Legal,
-        QPageSize::Letter,
-        QPageSize::Tabloid,
         QPageSize::JisB3,
         QPageSize::JisB4,
         QPageSize::JisB5,
@@ -1444,10 +1445,10 @@ void KSaneWidgetPrivate::setPossibleScanSizes()
     // Add portrait page sizes
     for (int sizeCode: qAsConst(m_sizeCodes)) {
         QSizeF size = QPageSize::size((QPageSize::PageSizeId)sizeCode, QPageSize::Millimeter);
-        if (mmToDispUnit(size.width()) > widthInDispUnit) {
+        if (mmToDispUnit(size.width() - PageSizeWiggleRoom) > widthInDispUnit) {
             continue;
         }
-        if (mmToDispUnit(size.height()) > heightInDispUnit) {
+        if (mmToDispUnit(size.height() - PageSizeWiggleRoom) > heightInDispUnit) {
             continue;
         }
         m_scanareaPapersize->addItem(QPageSize::name((QPageSize::PageSizeId)sizeCode), size);
@@ -1457,10 +1458,10 @@ void KSaneWidgetPrivate::setPossibleScanSizes()
     for (int sizeCode: qAsConst(m_sizeCodes)) {
         QSizeF size = QPageSize::size((QPageSize::PageSizeId)sizeCode, QPageSize::Millimeter);
         size.transpose();
-        if (mmToDispUnit(size.width()) > widthInDispUnit) {
+        if (mmToDispUnit(size.width() - PageSizeWiggleRoom) > widthInDispUnit) {
             continue;
         }
-        if (mmToDispUnit(size.height()) > heightInDispUnit) {
+        if (mmToDispUnit(size.height() - PageSizeWiggleRoom) > heightInDispUnit) {
             continue;
         }
         QString name = QPageSize::name((QPageSize::PageSizeId)sizeCode) +
