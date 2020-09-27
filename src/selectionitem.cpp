@@ -55,6 +55,8 @@ struct SelectionItem::Private {
     qreal      selMargin;
     QRectF     addRemRect;
     qreal      devicePixelRatio;
+
+    bool       addButtonEnabled = true;
 };
 
 SelectionItem::SelectionItem(const QRectF &rect) : QGraphicsItem(), d(new Private)
@@ -193,12 +195,12 @@ SelectionItem::Intersects SelectionItem::intersects(const QPointF &point)
         return Bottom;
     }
 
-    d->showAddRem = true;
+    d->showAddRem = d->addButtonEnabled;
     if (oldState != d->showAddRem) {
         update();
     }
 
-    if (d->addRemRect.contains(point / d->devicePixelRatio)) {
+    if (d->addButtonEnabled && d->addRemRect.contains(point / d->devicePixelRatio)) {
         return AddRemove;
     }
     return Move;
@@ -295,5 +297,11 @@ void SelectionItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *, Q
         }
     }
 }
+
+void SelectionItem::setAddButtonEnabled(bool enabled)
+{
+    d->addButtonEnabled = enabled;
+}
+
 
 }  // NameSpace KSaneIface

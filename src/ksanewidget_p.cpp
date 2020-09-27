@@ -394,14 +394,18 @@ void KSaneWidgetPrivate::createOptInterface()
     m_basicScrollA->setWidget(m_basicOptsTab);
 
     QVBoxLayout *basic_layout = new QVBoxLayout(m_basicOptsTab);
-    KSaneOption *option;
+    KSaneOption *option = getOption(QStringLiteral(SANE_NAME_SCAN_SOURCE));
     // Scan Source
-    if ((option = getOption(QStringLiteral(SANE_NAME_SCAN_SOURCE))) != nullptr) {
+    if (option != nullptr) {
         m_optSource = option;
         option->createWidget(m_basicOptsTab);
         basic_layout->addWidget(option->widget());
         connect(m_optSource, SIGNAL(valueChanged()), this, SLOT(checkInvert()), Qt::QueuedConnection);
+        connect(m_optSource, &KSaneOption::valueChanged, this, [this]() {
+            m_previewViewer->setMultiselectionEnabled(!scanSourceADF());
+        });
     }
+
     // film-type (note: No translation)
     if ((option = getOption(QStringLiteral("film-type"))) != nullptr) {
         m_optFilmType = option;
@@ -1131,6 +1135,20 @@ void KSaneWidgetPrivate::startFinalScan()
     m_scanThread->start();
 }
 
+bool KSaneWidgetPrivate::scanSourceADF()
+{
+    if (!m_optSource) {
+        return false;
+    }
+
+    QString source;
+    m_optSource->getValue(source);
+
+    return source.contains(QStringLiteral("Automatic Document Feeder")) ||
+    source.contains(QStringLiteral("ADF")) ||
+    source.contains(QStringLiteral("Duplex"));
+}
+
 void KSaneWidgetPrivate::oneFinalScanDone()
 {
     m_updProgressTmr.stop();
@@ -1160,23 +1178,12 @@ void KSaneWidgetPrivate::oneFinalScanDone()
                            (int)getImgFormat(params));
 
         // now check if we should have automatic ADF batch scanning
-        if (m_optSource) {
-            QString source;
-            m_optSource->getValue(source);
-
-            if (source.contains(QStringLiteral("Automatic Document Feeder")) ||
-                source.contains(QStringLiteral("ADF")) ||
-                source.contains(QStringLiteral("Duplex"))) {
-                // in batch mode only one area can be scanned per page
-                //qCDebug(KSANE_LOG) << "source == " << source;
-                if (!m_cancelMultiScan) {
-                    m_updProgressTmr.start();
-                    m_scanThread->start();
-                    m_cancelMultiScan = false;
-                    return;
-                }
-
-            }
+        if (scanSourceADF() && !m_cancelMultiScan) {
+            // in batch mode only one area can be scanned per page
+            m_updProgressTmr.start();
+            m_scanThread->start();
+            m_cancelMultiScan = false;
+            return;
         }
 
         // Check if we have a "wait for button" batch scanning

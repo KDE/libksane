@@ -59,9 +59,6 @@ public:
 private Q_SLOTS:
     void comboboxChangedIndex(int val);
 
-Q_SIGNALS:
-    void valueChanged();
-
 private:
     QList<std::pair<QString, QString>> genComboStringList() const;
     QString getSaneComboString(int ival) const;

@@ -90,6 +90,8 @@ public:
     float dispUnitToRatioX(float mm);
     float dispUnitToRatioY(float mm);
 
+    bool scanSourceADF();
+
 public Q_SLOTS:
     void devListUpdated();
     void signalDevListUpdate();

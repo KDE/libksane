@@ -92,6 +92,8 @@ public Q_SLOTS:
     /* This function returns the active visible selection in index 0 and after that the "saved" ones */
     bool selectionAt(int index, float &tl_x, float &tl_y, float &br_x, float &br_y);
 
+    void setMultiselectionEnabled(bool enabled);
+
 Q_SIGNALS:
     void newSelection(float tl_x, float tl_y, float br_x, float br_y);
 

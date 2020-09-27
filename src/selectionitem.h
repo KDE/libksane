@@ -68,6 +68,8 @@ public:
     qreal devicePixelRatio() const;
     void setDevicePixelRatio(qreal dpr);
 
+    void setAddButtonEnabled(bool enabled);
+
 public:
     // Graphics Item methods
     QRectF boundingRect() const override;

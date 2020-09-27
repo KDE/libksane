@@ -72,6 +72,8 @@ struct KSaneViewer::Private {
     HideRectItem *hideBottom;
     HideRectItem *hideArea;
 
+    bool multiSelectionEnabled = true;
+
     int wheelDelta = 0;
 };
 
@@ -512,6 +514,15 @@ void KSaneViewer::clearSelections()
     clearSavedSelections();
     updateSelVisibility();
 }
+
+// ------------------------------------------------------------------------
+void KSaneViewer::setMultiselectionEnabled(bool enabled)
+{
+    d->multiSelectionEnabled = enabled;
+    clearSelections();
+    d->selection->setAddButtonEnabled(enabled);
+}
+
 
 // ------------------------------------------------------------------------
 void KSaneViewer::wheelEvent(QWheelEvent *e)

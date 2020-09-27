@@ -107,6 +107,7 @@ public:
 Q_SIGNALS:
     void optsNeedReload();
     void valsNeedReload();
+    void valueChanged();
 
 protected:
 
