@@ -4,10 +4,9 @@
 #  SANE_INCLUDE_DIR - the SANE include directory
 #  SANE_LIBRARIES - The libraries needed to use SANE
 
-# Copyright (c) 2006, Marcus Hufgard <hufgardm@hufgard.de> 2006
+# SPDX-FileCopyrightText: 2006 Marcus Hufgard <hufgardm@hufgard.de>
 #
-# Redistribution and use is allowed according to the terms of the BSD license.
-# For details see the accompanying COPYING-CMAKE-SCRIPTS file.
+# SPDX-License-Identifier: BSD-3-Clause
 
 FIND_PATH(SANE_INCLUDE_DIR sane/sane.h)
 
