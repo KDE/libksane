@@ -16,15 +16,16 @@ set_package_properties(ECM PROPERTIES TYPE REQUIRED DESCRIPTION "Extra CMake Mod
 # ECM setup2 and include find same cmake module (copied from /usr/share/kde4/apps/cmake/modules/FindSane.cmake)
 set(CMAKE_MODULE_PATH ${KSane_SOURCE_DIR}/cmake-modules ${ECM_MODULE_PATH})
 
+include(KDEInstallDirs)
+include(KDECMakeSettings)
+include(KDEFrameworkCompilerSettings NO_POLICY_SCOPE)
+
 include(FeatureSummary)
 include(ECMSetupVersion)
 include(ECMGenerateHeaders)
 include(ECMInstallIcons)
 include(CMakePackageConfigHelpers)
 include(CheckFunctionExists)
-include(KDEInstallDirs)
-include(KDEFrameworkCompilerSettings NO_POLICY_SCOPE)
-include(KDECMakeSettings)
 include(GenerateExportHeader)
 include(ECMQtDeclareLoggingCategory)
 
