@@ -145,10 +145,6 @@ SET(KSANE_LIB_SO_VERSION_STRING "${KSANE_LIB_SO_CUR_VERSION}.${KSANE_LIB_SO_REV_
 
 # =======================================================
 
-ADD_DEFINITIONS(-DKDE_DEFAULT_DEBUG_AREA=51004) 
-
-# =======================================================
-
 # To prevent warnings from M$ compiler
 IF(WIN32 AND MSVC)
     ADD_DEFINITIONS(-D_CRT_SECURE_NO_WARNINGS)
@@ -159,4 +155,3 @@ ENDIF(WIN32 AND MSVC)
 # =======================================================
 
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
-
