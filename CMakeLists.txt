@@ -1,9 +1,6 @@
-project(KSane)
-cmake_minimum_required(VERSION 3.0.0)
+cmake_minimum_required(VERSION 3.5.0)
 
-if(POLICY CMP0063)
-    cmake_policy(SET CMP0063 NEW)
-endif()
+project(KSane)
 
 message(STATUS "-------------------------------------------")
 message(STATUS "Starting CMake configuration for: libksane")
