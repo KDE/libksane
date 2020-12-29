@@ -147,8 +147,6 @@ SET(KSANE_LIB_SO_VERSION_STRING "${KSANE_LIB_SO_CUR_VERSION}.${KSANE_LIB_SO_REV_
 
 ADD_DEFINITIONS(-DKDE_DEFAULT_DEBUG_AREA=51004) 
 
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/src/version.h)
-
 # =======================================================
 
 # To prevent warnings from M$ compiler
