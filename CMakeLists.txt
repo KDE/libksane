@@ -1,5 +1,11 @@
 cmake_minimum_required(VERSION 3.5.0)
 
+# KDE Applications version, managed by release script.
+set(RELEASE_SERVICE_VERSION_MAJOR "21")
+set(RELEASE_SERVICE_VERSION_MINOR "03")
+set(RELEASE_SERVICE_VERSION_MICRO "70")
+set(RELEASE_SERVICE_VERSION "${RELEASE_SERVICE_VERSION_MAJOR}.${RELEASE_SERVICE_VERSION_MINOR}.${RELEASE_SERVICE_VERSION_MICRO}")
+
 project(KSane)
 
 message(STATUS "-------------------------------------------")
@@ -27,7 +33,7 @@ include(GenerateExportHeader)
 include(ECMQtDeclareLoggingCategory)
 
 ecm_setup_version(
-  ${KF5_VERSION}
+  ${RELEASE_SERVICE_VERSION}
   VARIABLE_PREFIX KSANE
   VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/ksane_version.h"
   PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5SaneConfigVersion.cmake"
