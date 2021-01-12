@@ -16,28 +16,34 @@ The library documentation is available on header files.
 
 ## Dependencies
 
-CMake          >= 3.0.0                 https://cmake.org
-Qt             >= 5.7.0                 https://qt.io
-KDE Frameworks >= 5.55.0                https://www.kde.org
-libsane        >= 1.0.18                http://www.sane-project.org
+ - CMake          >= 3.0.0                 https://cmake.org
+ - Qt             >= 5.7.0                 https://qt.io
+ - KDE Frameworks >= 5.55.0                https://www.kde.org
+ - libsane        >= 1.0.18                http://www.sane-project.org
 
 ## Install
 
 In order to compile just use something like that:
 
-# export VERBOSE=1
-# export QTDIR=/usr/lib/qt5/
-# export PATH=$QTDIR/bin:$PATH 
-# cmake .
-# make
+```bash
+export VERBOSE=1
+export QTDIR=/usr/lib/qt5/
+export PATH=$QTDIR/bin:$PATH 
+cmake .
+make
+```
 
 Usual CMake options:
 
--DCMAKE_INSTALL_PREFIX : decide where the program will be install on your computer.
--DCMAKE_BUILD_TYPE     : decide which type of build you want. You can chose between "Debug", "Release", "RelWithDebInfo" and "MinSizeRel". The default is "RelWithDebInfo" (-O2 -g).
+| Option                | Description |
+| -------               | ----------- |
+| DCMAKE_INSTALL_PREFIX | decide where the program will be install on your computer.le |
+| DCMAKE_BUILD_TYPE     | decide which type of build you want. You can chose between Debug, Release, RelWithDebInfo and MinSizeRel. The default is RelWithDebInfo (-O2 -g). |
 
 More details can be found at this url: https://community.kde.org/Guidelines_and_HOWTOs/CMake
 
-Note: To know the KDE Frameworks install path on your computer, use 'kf5-config --prefix' command line like this (with full debug object enabled):
+Note: To know the KDE Frameworks install path on your computer, use `kf5-config --prefix` command line like this (with full debug object enabled):
 
-"cmake . -DCMAKE_BUILD_TYPE=debugfull -DCMAKE_INSTALL_PREFIX=`kf5-config --prefix`"
+```bash
+cmake . -DCMAKE_BUILD_TYPE=debugfull -DCMAKE_INSTALL_PREFIX=`kf5-config --prefix`
+```
