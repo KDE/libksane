@@ -52,7 +52,7 @@ add_library(KF5Sane ${ksane_SRCS})
 generate_export_header(KF5Sane BASE_NAME KSane)
 add_library(KF5::Sane ALIAS KF5Sane)
 
-target_include_directories(KF5Sane INTERFACE "$<INSTALL_INTERFACE:${KF5_INCLUDE_INSTALL_DIR}/KSane>")
+target_include_directories(KF5Sane INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR_KF5}/KSane>")
 
 target_link_libraries(KF5Sane
     PUBLIC
@@ -88,16 +88,16 @@ set(ksane_ICONS
   16-actions-gray-scale.png
 )
 ecm_install_icons(ICONS ${ksane_ICONS}
-  DESTINATION ${ICON_INSTALL_DIR})
+  DESTINATION ${KDE_INSTALL_ICONDIR})
 
 install(TARGETS KF5Sane
   EXPORT KF5SaneTargets
-  ${INSTALL_TARGETS_DEFAULT_ARGS}
+  ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}
 )
 
 install(FILES
   ${CMAKE_CURRENT_BINARY_DIR}/ksane_export.h
   ${KSane_HEADERS}
-  DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/KSane
+  DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/KSane
   COMPONENT Devel
 )
