@@ -306,14 +306,7 @@ QString KSaneWidget::selectDevice(QWidget *parent)
 
 void KSaneWidget::initGetDeviceList() const
 {
-    // update the device list if needed to get the vendor and model info
-    if (d->m_findDevThread->devicesList().size() == 0) {
-        //qCDebug(KSANE_LOG) << "initGetDeviceList() starting thread...";
-        d->m_findDevThread->start();
-    } else {
-        //qCDebug(KSANE_LOG) << "initGetDeviceList() have existing data...";
-        d->signalDevListUpdate();
-    }
+    d->m_findDevThread->start();
 }
 
 bool KSaneWidget::openDevice(const QString &deviceName)
