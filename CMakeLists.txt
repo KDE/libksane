@@ -15,7 +15,7 @@ set(CMAKE_MODULE_PATH ${KSane_SOURCE_DIR}/cmake-modules ${ECM_MODULE_PATH})
 
 include(KDEInstallDirs)
 include(KDECMakeSettings)
-include(KDEFrameworkCompilerSettings NO_POLICY_SCOPE)
+include(KDECompilerSettings NO_POLICY_SCOPE)
 
 include(FeatureSummary)
 include(ECMSetupVersion)
@@ -58,6 +58,17 @@ if (NOT WIN32)
     message(STATUS "SANE_LIBRARY:     ${SANE_LIBRARY}")
     # macro_log_feature(SANE_FOUND "SANE development toolkit" "Scanner Access Now Easy (SANE) development package" "http://www.sane-project.org" TRUE "" "Needed by libksane")
 endif (NOT WIN32)
+
+add_definitions(
+    -DQT_NO_CAST_TO_ASCII
+    -DQT_NO_CAST_FROM_ASCII
+    -DQT_NO_URL_CAST_FROM_STRING
+    -DQT_NO_CAST_FROM_BYTEARRAY
+    -DQT_NO_SIGNALS_SLOTS_KEYWORDS
+    -DQT_USE_QSTRINGBUILDER
+    -DQT_NO_NARROWING_CONVERSIONS_IN_CONNECT
+    -DQT_STRICT_ITERATORS
+)
 
 # Subdirectories
 if (SANE_FOUND)
