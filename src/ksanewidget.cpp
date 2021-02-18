@@ -656,7 +656,7 @@ void KSaneWidget::scanFinal()
         d->startFinalScan();
     } else {
         // if the button frame is disabled, there is no open device to scan from
-        emit scanDone(KSaneWidget::ErrorGeneral, QString());
+        Q_EMIT scanDone(KSaneWidget::ErrorGeneral, QString());
     }
 }
 
@@ -666,7 +666,7 @@ void KSaneWidget::startPreviewScan()
         d->startPreviewScan();
     } else {
         // if the button frame is disabled, there is no open device to scan from
-        emit scanDone(KSaneWidget::ErrorGeneral, QString());
+        Q_EMIT scanDone(KSaneWidget::ErrorGeneral, QString());
     }
 }
 

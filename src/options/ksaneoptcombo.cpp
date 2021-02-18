@@ -79,7 +79,7 @@ void KSaneOptCombo::readValue()
     if (m_combo != nullptr) {
         if (m_combo->currentData() != current.first) {
             m_combo->setCurrentText(m_currentText);
-            emit valueChanged();
+            Q_EMIT valueChanged();
         }
     }
 }
@@ -219,7 +219,7 @@ void KSaneOptCombo::comboboxChangedIndex(int i)
     }
     writeData(dataPtr);
     readValue();
-    emit valueChanged();
+    Q_EMIT valueChanged();
 }
 
 bool KSaneOptCombo::getMinValue(float &val)

@@ -148,11 +148,11 @@ bool KSaneOption::writeData(void *data)
     }
 
     if (res & SANE_INFO_RELOAD_OPTIONS) {
-        emit optsNeedReload();
+        Q_EMIT optsNeedReload();
         // optReload reloads also the values
     } else if (res & SANE_INFO_RELOAD_PARAMS) {
         // 'else if' because with optReload we force also valReload :)
-        emit valsNeedReload();
+        Q_EMIT valsNeedReload();
     }
 
     return true;

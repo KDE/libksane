@@ -80,7 +80,7 @@ void LabeledEntry::resetClicked()
 void LabeledEntry::setClicked()
 {
     m_eText = m_entry->text();
-    emit entryEdited(m_eText);
+    Q_EMIT entryEdited(m_eText);
 }
 
 }  // NameSpace KSaneIface

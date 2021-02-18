@@ -611,7 +611,7 @@ void KSaneWidgetPrivate::ImageData(TW_MEMREF pdata, TW_IMAGEINFO &info)
 
         ds.writeRawData(bits, size);
 
-        emit ImageReady(baBmp, 0, 0, 0, (int)KSaneWidget::FormatBMP);
+        Q_EMIT ImageReady(baBmp, 0, 0, 0, (int)KSaneWidget::FormatBMP);
 
         GlobalUnlock(hDIB);
 

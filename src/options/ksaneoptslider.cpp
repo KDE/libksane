@@ -75,7 +75,7 @@ void KSaneOptSlider::readValue()
     if ((m_slider != nullptr) && (m_slider->value() != m_iVal)) {
         m_slider->setValue(m_iVal);
     }
-    emit fValueRead((float)m_iVal);
+    Q_EMIT fValueRead((float)m_iVal);
 }
 
 void KSaneOptSlider::readOption()

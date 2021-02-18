@@ -106,7 +106,7 @@ void KSaneOptFSlider::readValue()
             m_slider->setValue(m_fVal);
         }
     }
-    emit fValueRead(m_fVal);
+    Q_EMIT fValueRead(m_fVal);
 }
 
 void KSaneOptFSlider::sliderChanged(float val)

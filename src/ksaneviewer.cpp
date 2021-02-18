@@ -575,7 +575,7 @@ void KSaneViewer::mouseReleaseEvent(QMouseEvent *e)
     if (e->button() == Qt::LeftButton) {
         if ((d->selection->rect().width() < 0.001) ||
                 (d->selection->rect().height() < 0.001)) {
-            emit newSelection(0.0, 0.0, 1.0, 1.0);
+            Q_EMIT newSelection(0.0, 0.0, 1.0, 1.0);
             clearActiveSelection();
         }
 
@@ -605,7 +605,7 @@ void KSaneViewer::mouseReleaseEvent(QMouseEvent *e)
             d->selectionList.back()->intersects(scenePoint);
 
             // clear the old one
-            emit newSelection(0.0, 0.0, 1.0, 1.0);
+            Q_EMIT newSelection(0.0, 0.0, 1.0, 1.0);
             clearActiveSelection();
         }
     }
@@ -619,7 +619,7 @@ void KSaneViewer::mouseReleaseEvent(QMouseEvent *e)
         float brx = d->selection->rect().right()  / d->img->width();
         float bry = d->selection->rect().bottom() / d->img->height();
 
-        emit newSelection(tlx, tly, brx, bry);
+        Q_EMIT newSelection(tlx, tly, brx, bry);
     }
     updateHighlight();
     QGraphicsView::mouseReleaseEvent(e);

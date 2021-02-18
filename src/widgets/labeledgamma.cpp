@@ -210,8 +210,8 @@ void LabeledGamma::calculateGT()
     }
 
     m_gammaDisplay->update();
-    emit gammaChanged(m_brightSlider->value(), m_contrastSlider->value(), m_gammaSlider->value());
-    emit gammaTableChanged(m_gammaTable);
+    Q_EMIT gammaChanged(m_brightSlider->value(), m_contrastSlider->value(), m_gammaSlider->value());
+    Q_EMIT gammaTableChanged(m_gammaTable);
 }
 
 }  // NameSpace KSaneIface

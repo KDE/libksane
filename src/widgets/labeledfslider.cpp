@@ -163,7 +163,7 @@ void LabeledFSlider::syncValues(int ivalue)
     } else if (ivalue != m_slider->value()) {
         m_slider->setValue(ivalue);
     } else {
-        emit valueChanged(value);
+        Q_EMIT valueChanged(value);
     }
 }
 
@@ -175,7 +175,7 @@ void LabeledFSlider::syncValues(double value)
     } else if (ivalue != m_slider->value()) {
         m_slider->setValue(ivalue);
     } else {
-        emit valueChanged((float)value);
+        Q_EMIT valueChanged((float)value);
     }
 }
 

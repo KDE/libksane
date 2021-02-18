@@ -130,7 +130,7 @@ void LabeledSlider::syncValues(int value)
             m_slider->setValue(value);
         }
     } else {
-        emit valueChanged(value);
+        Q_EMIT valueChanged(value);
     }
 }
 

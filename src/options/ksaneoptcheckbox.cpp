@@ -94,7 +94,7 @@ void KSaneOptCheckBox::readValue()
         m_checkbox->setChecked(m_checked);
     }
     if ((old != m_checked) && ((m_optDesc->cap & SANE_CAP_SOFT_SELECT) == 0)) {
-        emit buttonPressed(name(), sane_i18n(m_optDesc->title), m_checked);
+        Q_EMIT buttonPressed(name(), sane_i18n(m_optDesc->title), m_checked);
     }
 }
 
