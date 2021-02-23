@@ -139,7 +139,7 @@ void KSaneWidget::startPreviewScan()
 
 void KSaneWidget::scanCancel()
 {
-    emit scanProgress(0);
+    Q_EMIT scanProgress(0);
 }
 
 // stubbed functions that will not get an implementation any time soon.
