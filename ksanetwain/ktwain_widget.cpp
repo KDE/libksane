@@ -143,6 +143,18 @@ void KSaneWidget::scanCancel()
 }
 
 // stubbed functions that will not get an implementation any time soon.
+QString KSaneWidget::deviceName() const
+{
+    return QString();
+}
+QString KSaneWidget::deviceVendor() const
+{
+    return QString();
+}
+QString KSaneWidget::deviceModel() const
+{
+    return QString();
+}
 QString KSaneWidget::vendor() const
 {
     return QString();

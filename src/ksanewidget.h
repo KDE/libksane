@@ -170,12 +170,24 @@ public:
                           int dpi,
                           ImageFormat format);
 
-    /** This method returns the vendor name of the scanner (Same as make). */
-    QString vendor() const;
-    /** This method returns the make name of the scanner. */
-    QString make() const;
-    /** This method returns the model of the scanner. */
-    QString model() const;
+    /** This method returns the internal device name of the currently opened scanner. */
+    QString deviceName() const;
+    
+    /** This method returns the vendor name of the currently opened scanner. */
+    QString deviceVendor() const;  
+    
+    /** This method returns the model of the currently opened scanner. */
+    QString deviceModel() const;
+    
+    /** This method returns the vendor name of the currently opened scanner
+     * and blocks until the vendor name is available. */
+    KSANE_DEPRECATED QString vendor() const;
+    
+    /** same as vendor() */
+    KSANE_DEPRECATED QString make() const;
+    /** This method returns the model of the currently opened scanner 
+     * and blocks until the model name is available. */
+    KSANE_DEPRECATED QString model() const;
 
     /** This method returns the current resolution of the acquired image,
     * in dots per inch.
@@ -317,6 +329,12 @@ Q_SIGNALS:
      * buttons also differ from backend to backend.
      */
     void buttonPressed(const QString &optionName, const QString &optionLabel, bool pressed);
+    
+    /**
+     * This Signal is emitted when the device info of the already opened scanner device
+     * is updated and vendor() and model() return the corresponding names.
+     */
+    void openedDeviceInfoUpdated(const QString &deviceName, const QString &deivceVendor, const QString &deviceModel);
 
 private:
     KSaneWidgetPrivate *const d;

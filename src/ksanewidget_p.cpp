@@ -163,21 +163,20 @@ void KSaneWidgetPrivate::clearDeviceOptions()
     m_scanThread = nullptr;
 
     m_devName.clear();
+    m_model.clear();
+    m_vendor.clear();
+    Q_EMIT q->openedDeviceInfoUpdated(m_devName, m_vendor, m_model);
 }
 
 void KSaneWidgetPrivate::devListUpdated()
 {
     if (m_vendor.isEmpty()) {
-        const QList<KSaneWidget::DeviceInfo> list = m_findDevThread->devicesList();
-        if (list.size() == 0) {
-            return;
-        }
-        for (int i = 0; i < list.size(); ++i) {
-            const KSaneWidget::DeviceInfo info = list.at(i);
-            qCDebug(KSANE_LOG) << info.name;
-            if (info.name == m_devName) {
-                m_vendor    = info.vendor;
-                m_model     = info.model;
+        const QList<KSaneWidget::DeviceInfo> deviceList = m_findDevThread->devicesList();
+        for (const auto &device : deviceList) {
+            if (device.name == m_devName) {
+                m_vendor    = device.vendor;
+                m_model     = device.model;
+                Q_EMIT q->openedDeviceInfoUpdated(m_devName, m_vendor, m_model);
                 break;
             }
         }

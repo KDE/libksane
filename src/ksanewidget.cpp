@@ -266,24 +266,39 @@ KSaneWidget::~KSaneWidget()
     delete d;
 }
 
+QString KSaneWidget::deviceName() const
+{
+    return d->m_devName;
+}
+
+QString KSaneWidget::deviceVendor() const
+{
+    return d->m_vendor;
+}
+
+QString KSaneWidget::deviceModel() const
+{
+    return d->m_model;
+}
+
 QString KSaneWidget::vendor() const
 {
     d->m_findDevThread->wait();
     d->devListUpdated(); // this is just a wrapped if (m_vendor.isEmpty()) statement if the vendor is known
     // devListUpdated here is to ensure that we do not come in between finished and the devListUpdated slot
-
     return d->m_vendor;
 }
+
 QString KSaneWidget::make() const
 {
     return vendor();
 }
+
 QString KSaneWidget::model() const
 {
     d->m_findDevThread->wait();
     d->devListUpdated(); // this is just a wrapped if (m_vendor.isEmpty()) statement if the vendor is known
     // devListUpdated here is to ensure that we do not come in between finished and the devListUpdated slot
-
     return d->m_model;
 }
 
