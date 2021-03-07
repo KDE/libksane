@@ -464,18 +464,15 @@ bool KSaneWidget::openDevice(const QString &deviceName)
     }
 
     // do the connections of the option parameters
-    for (i = 0; i < d->m_optList.size(); ++i) {
-        //qCDebug(KSANE_LOG) << d->m_optList.at(i)->name();
-        connect(d->m_optList.at(i), &KSaneOption::optionsNeedReload, d, &KSaneWidgetPrivate::reloadOptions);
-        connect(d->m_optList.at(i), &KSaneOption::valuesNeedReload, d, &KSaneWidgetPrivate::scheduleValuesReload);
+    for (const auto &option : qAsConst(d->m_optList)) {
+        connect(option, &KSaneOption::optionsNeedReload, d, &KSaneWidgetPrivate::reloadOptions);
+        connect(option, &KSaneOption::valuesNeedReload, d, &KSaneWidgetPrivate::scheduleValuesReload);
 
-        if (d->m_optList.at(i)->needsPolling()) {
-            //qCDebug(KSANE_LOG) << d->m_optList.at(i)->name() << " needs polling";
-            d->m_pollList.append(d->m_optList.at(i));
-            KSaneOptCheckBox *buttonOption = qobject_cast<KSaneOptCheckBox *>(d->m_optList.at(i));
-            if (buttonOption) {
-                connect(buttonOption, &KSaneOptCheckBox::buttonPressed,
-                        this, &KSaneWidget::buttonPressed);
+        if (option->needsPolling()) {
+            d->m_pollList.append(option);
+            if (option->type() == KSaneOption::TypeBool) {
+                connect( option, &KSaneOption::valueChanged,
+                        [=]( const QVariant &newValue ) { Q_EMIT buttonPressed(option->name(), option->title(), newValue.toBool()); } );
             }
         }
     }

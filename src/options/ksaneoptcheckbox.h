@@ -34,9 +34,6 @@ public:
 public Q_SLOTS:
     bool setValue(const QVariant &value) override;
 
-Q_SIGNALS:
-    void buttonPressed(const QString &optionName, const QString &optionLabel, bool pressed);
-
 private:
     bool             m_checked;
 };

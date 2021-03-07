@@ -64,7 +64,6 @@ void KSaneOptCheckBox::readValue()
     m_checked = (toSANE_Word(data.data()) != 0) ? true : false;
 
     if ((old != m_checked) && ((m_optDesc->cap & SANE_CAP_SOFT_SELECT) == 0)) {
-        Q_EMIT buttonPressed(name(), sane_i18n(m_optDesc->title), m_checked);
         Q_EMIT valueChanged(m_checked);
     }
 }
