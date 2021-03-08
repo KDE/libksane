@@ -16,7 +16,7 @@
 #ifndef KSANE_DEVICE_DIALOG_H
 #define KSANE_DEVICE_DIALOG_H
 
-#include "ksanefinddevicesthread.h"
+#include "ksanewidget.h"
 
 #include <QGroupBox>
 #include <QStringList>
@@ -43,11 +43,15 @@ public:
     void setDefault(const QString &);
 
 public Q_SLOTS:
+    void updateDevicesList(const QList<KSaneWidget::DeviceInfo> &list);
     void reloadDevicesList();
+    
+Q_SIGNALS:
+    void requestReloadList();
 
 private Q_SLOTS:
     void setAvailable(bool avail);
-    void updateDevicesList();
+
 
 private:
     QString                 m_defaultBackend;
@@ -56,7 +60,6 @@ private:
     QGroupBox              *m_gbDevices;
     QButtonGroup           *m_btnGroupDevices;
     QVBoxLayout            *m_btnLayout;
-    FindSaneDevicesThread  *m_findDevThread;
     QPushButton            *m_btnReloadDevices;
     QPushButton            *m_btnOk;
 };

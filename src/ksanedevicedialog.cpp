@@ -81,9 +81,6 @@ KSaneDeviceDialog::KSaneDeviceDialog(QWidget *parent)
     topLayout->addWidget(bottomButtonBox);
 
     setMinimumHeight(200);
-    m_findDevThread = FindSaneDevicesThread::getInstance();
-
-    connect(m_findDevThread, &FindSaneDevicesThread::finished, this, &KSaneDeviceDialog::updateDevicesList);
 
     reloadDevicesList();
 }
@@ -101,9 +98,7 @@ void KSaneDeviceDialog::reloadDevicesList()
     m_gbDevices->layout()->itemAt(0)->widget()->hide();  // explanation
     m_btnReloadDevices->setEnabled(false);
 
-    if (!m_findDevThread->isRunning()) {
-        m_findDevThread->start();
-    }
+    Q_EMIT requestReloadList();
 }
 
 void KSaneDeviceDialog::setAvailable(bool isAvailable)
@@ -129,11 +124,10 @@ QString KSaneDeviceDialog::getSelectedName() const
     return QString();
 }
 
-void KSaneDeviceDialog::updateDevicesList()
+void KSaneDeviceDialog::updateDevicesList(const QList<KSaneWidget::DeviceInfo> &list)
 {
     qDeleteAll(m_btnGroupDevices->buttons());
 
-    const QList<KSaneWidget::DeviceInfo> list = m_findDevThread->devicesList();
     if (list.isEmpty()) {
         m_gbDevices->setTitle(i18n("Sorry. No devices found."));
         m_gbDevices->layout()->itemAt(0)->widget()->show();  // explanation

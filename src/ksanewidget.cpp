@@ -292,7 +292,9 @@ QString KSaneWidget::selectDevice(QWidget *parent)
 {
     QString selected_name;
     QPointer<KSaneDeviceDialog> sel = new KSaneDeviceDialog(parent);
-
+    connect(this, &KSaneWidget::availableDevices, sel, &KSaneDeviceDialog::updateDevicesList);
+    connect(sel, &KSaneDeviceDialog::requestReloadList, this, &KSaneWidget::initGetDeviceList);
+    
     // set default scanner - perhaps application using libksane should remember that
     // 2014-01-21: gm: +1
     // sel.setDefault(prev_backend);
