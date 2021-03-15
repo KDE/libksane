@@ -32,12 +32,16 @@ extern "C"
 #include <QVector>
 #include <QSplitter>
 #include <QToolButton>
+#include <QSet>
 
 #include "ksanewidget.h"
 #include "ksaneoption.h"
+#include "ksaneoptionwidget.h"
 #include "ksaneviewer.h"
 #include "labeledcombo.h"
 #include "labeledfslider.h"
+#include "labeledentry.h"
+#include "ksanebutton.h"
 #include "labeledgamma.h"
 #include "labeledcheckbox.h"
 #include "splittercollapser.h"
@@ -63,6 +67,7 @@ public:
     void setDefaultValues();
     void setBusy(bool busy);
     KSaneOption *getOption(const QString &name);
+    KSaneOptionWidget *createOptionWidget(QWidget *parent, KSaneOption *option);
     KSaneWidget::ImageFormat getImgFormat(SANE_Parameters &params);
     int getBytesPerLines(SANE_Parameters &params);
 
@@ -92,10 +97,10 @@ private Q_SLOTS:
     void optReload();
     void valReload();
     void handleSelection(float tl_x, float tl_y, float br_x, float br_y);
-    void setTLX(float x);
-    void setTLY(float y);
-    void setBRX(float x);
-    void setBRY(float y);
+    void setTLX(const QVariant &x);
+    void setTLY(const QVariant &y);
+    void setBRX(const QVariant &x);
+    void setBRY(const QVariant &y);
 
     void checkInvert();
     void invertPreview();
@@ -154,6 +159,7 @@ public:
     // Option variables
     QList<KSaneOption *> m_optList;
     QList<KSaneOption *> m_pollList;
+    QSet<QString>        m_optWithWidget;
     KSaneOption        *m_optSource;
     KSaneOption        *m_optNegative;
     KSaneOption        *m_optFilmType;

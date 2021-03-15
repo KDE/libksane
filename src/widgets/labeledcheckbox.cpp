@@ -16,19 +16,32 @@
 
 namespace KSaneIface
 {
-
 LabeledCheckbox::LabeledCheckbox(QWidget *parent, const QString &ltext)
     : KSaneOptionWidget(parent, QString())
 {
-    chbx = new QCheckBox(ltext, this);
-    m_layout->addWidget(chbx, 0, 1);
-    m_layout->setColumnStretch(1, 50);
+    initCheckBox(ltext);
+}
 
-    connect(chbx, &QCheckBox::toggled, this, &LabeledCheckbox::toggled);
+LabeledCheckbox::LabeledCheckbox(QWidget *parent, KSaneOption *option)
+    : KSaneOptionWidget(parent, option)
+{
+    initCheckBox(option->title());
+    setToolTip(option->description());
+    connect(this, &LabeledCheckbox::toggled, option, &KSaneOption::setValue);
+    connect(option, &KSaneOption::valueChanged, this, &LabeledCheckbox::setValue);
 }
 
 LabeledCheckbox::~LabeledCheckbox()
 {
+}
+
+void LabeledCheckbox::initCheckBox(const QString &name)
+{
+    chbx = new QCheckBox(name, this);
+    m_layout->addWidget(chbx, 0, 1);
+    m_layout->setColumnStretch(1, 50);
+
+    connect(chbx, &QCheckBox::toggled, this, &LabeledCheckbox::toggled);   
 }
 
 void LabeledCheckbox::setChecked(bool is_checked)
@@ -36,6 +49,11 @@ void LabeledCheckbox::setChecked(bool is_checked)
     if (is_checked != chbx->isChecked()) {
         chbx->setChecked(is_checked);
     }
+}
+
+void LabeledCheckbox::setValue(const QVariant &value)
+{
+    setChecked(value.toBool());
 }
 
 bool LabeledCheckbox::isChecked()

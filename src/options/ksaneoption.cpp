@@ -14,8 +14,6 @@
 
 #include "ksaneoption.h"
 
-#include "ksaneoptionwidget.h"
-
 #include <ksane_debug.h>
 
 namespace KSaneIface
@@ -24,9 +22,9 @@ namespace KSaneIface
 KSaneOption::KSaneOption(const SANE_Handle handle, const int index)
     : QObject(), m_handle(handle), m_index(index)
 {
-    m_widget = nullptr;
     m_data = nullptr;
     readOption();
+    readValue();
 }
 
 KSaneOption::~KSaneOption()
@@ -35,59 +33,28 @@ KSaneOption::~KSaneOption()
         free(m_data);
         m_data = nullptr;
     }
-    // delete the frame, just in case if no parent is set
-    delete m_widget;
-    m_widget = nullptr;
-}
-
-void KSaneOption::createWidget(QWidget *parent)
-{
-    if (!m_widget) {
-        m_widget = new KSaneOptionWidget(parent, QString());
-    }
-
-    if (m_optDesc) {
-        m_widget->setToolTip(sane_i18n(m_optDesc->desc));
-    }
-
-    readOption();
-    readValue();
 }
 
 void KSaneOption::readOption()
 {
     m_optDesc = sane_get_option_descriptor(m_handle, m_index);
-    updateVisibility();
+    Q_EMIT optionReloaded();
 }
 
-void KSaneOption::updateVisibility()
-{
-    if (!m_widget) {
-        return;
-    }
-
-    if (state() == STATE_HIDDEN) {
-        m_widget->hide();
-    } else {
-        m_widget->show();
-        m_widget->setEnabled(state() == STATE_SHOWN);
-    }
-}
-
-KSaneOption::KSaneOptWState KSaneOption::state() const
+KSaneOption::KSaneOptionState KSaneOption::state() const
 {
     if (!m_optDesc) {
-        return STATE_HIDDEN;
+        return StateHidden;
     }
 
     if (((m_optDesc->cap & SANE_CAP_SOFT_DETECT) == 0) ||
             (m_optDesc->cap & SANE_CAP_INACTIVE) ||
-            ((m_optDesc->size == 0) && (optionType(m_optDesc) != TYPE_BUTTON))) {
-        return STATE_HIDDEN;
+            ((m_optDesc->size == 0) && (type() != TypeAction))) {
+        return StateHidden;
     } else if ((m_optDesc->cap & SANE_CAP_SOFT_SELECT) == 0) {
-        return STATE_DISABLED;
+        return StateDisabled;
     }
-    return STATE_SHOWN;
+    return StateActive;
 }
 
 bool KSaneOption::needsPolling() const
@@ -112,12 +79,33 @@ QString KSaneOption::name() const
     return QString::fromUtf8(m_optDesc->name);
 }
 
+QString KSaneOption::title() const
+{
+    if (m_optDesc == nullptr) {
+        return QString();
+    }
+    return sane_i18n(m_optDesc->title);
+}
+
+QString KSaneOption::description() const
+{
+    if (m_optDesc == nullptr) {
+        return QString();
+    }
+    return sane_i18n(m_optDesc->desc);
+}
+
+KSaneOption::KSaneOptionType KSaneOption::type() const
+{
+    return m_optionType;
+}
+
 bool KSaneOption::writeData(void *data)
 {
     SANE_Status status;
     SANE_Int res;
 
-    if (state() == STATE_DISABLED) {
+    if (state() == StateDisabled) {
         return false;
     }
 
@@ -128,17 +116,17 @@ bool KSaneOption::writeData(void *data)
         readValue();
         return false;
     }
-    if ((res & SANE_INFO_INEXACT) && (m_widget != nullptr)) {
+    if (res & SANE_INFO_INEXACT) {
         //qCDebug(KSANE_LOG) << "write was inexact. Reload value just in case...";
         readValue();
     }
 
     if (res & SANE_INFO_RELOAD_OPTIONS) {
-        Q_EMIT optsNeedReload();
+        Q_EMIT optionsNeedReload();
         // optReload reloads also the values
     } else if (res & SANE_INFO_RELOAD_PARAMS) {
         // 'else if' because with optReload we force also valReload :)
-        Q_EMIT valsNeedReload();
+        Q_EMIT valuesNeedReload();
     }
 
     return true;
@@ -184,29 +172,48 @@ bool KSaneOption::getMinValue(float &)
 {
     return false;
 }
+
 bool KSaneOption::getMaxValue(float &)
 {
     return false;
 }
+
+bool KSaneOption::getStepValue(float &)
+{
+    return false;
+}
+
+QVariantList KSaneOption::getEntryList() const
+{
+    return QVariantList();
+}
+
 bool KSaneOption::getValue(float &)
 {
     return false;
 }
-bool KSaneOption::setValue(float)
-{
-    return false;
-}
+
 bool KSaneOption::getValue(QString &)
 {
     return false;
 }
-bool KSaneOption::setValue(const QString &)
+
+bool KSaneOption::setValue(const QVariant &)
 {
     return false;
 }
-int  KSaneOption::getUnit()
+ 
+KSaneOption::KSaneOptionUnit KSaneOption::getUnit()
 {
-    return m_optDesc->unit;
+    switch (m_optDesc->unit) {
+    case SANE_UNIT_PIXEL:       return UnitPixel;
+    case SANE_UNIT_BIT:         return UnitBit;
+    case SANE_UNIT_MM:          return UnitMilliMeter;
+    case SANE_UNIT_DPI:         return UnitDPI;
+    case SANE_UNIT_PERCENT:     return UnitPercent;
+    case SANE_UNIT_MICROSECOND: return UnitMicroSecond;
+    default: return UnitNone;
+    }
 }
 
 bool KSaneOption::storeCurrentData()
@@ -215,10 +222,7 @@ bool KSaneOption::storeCurrentData()
     SANE_Int res;
 
     // check if we can read the value
-    if (!hasGui()) {
-        return false;
-    }
-    if (state() == STATE_HIDDEN) {
+    if (state() == StateHidden) {
         return false;
     }
 
@@ -243,13 +247,10 @@ bool KSaneOption::restoreSavedData()
     }
 
     // check if we can write the value
-    if (!hasGui()) {
+    if (state() == StateHidden) {
         return false;
     }
-    if (state() == STATE_HIDDEN) {
-        return false;
-    }
-    if (state() == STATE_DISABLED) {
+    if (state() == StateDisabled) {
         return false;
     }
 
@@ -258,20 +259,20 @@ bool KSaneOption::restoreSavedData()
     return true;
 }
 
-KSaneOption::KSaneOptType KSaneOption::optionType(const SANE_Option_Descriptor *optDesc)
+KSaneOption::KSaneOptionType KSaneOption::optionType(const SANE_Option_Descriptor *optDesc)
 {
     if (!optDesc) {
-        return TYPE_DETECT_FAIL;
+        return TypeDetectFail;
     }
 
     switch (optDesc->constraint_type) {
     case SANE_CONSTRAINT_NONE:
         switch (optDesc->type) {
         case SANE_TYPE_BOOL:
-            return TYPE_CHECKBOX;
+            return TypeBool;
         case SANE_TYPE_INT:
             if (optDesc->size == sizeof(SANE_Word)) {
-                return TYPE_SLIDER;
+                return TypeInteger;
             }
             qCDebug(KSANE_LOG) << "Can not handle:" << optDesc->title;
             qCDebug(KSANE_LOG) << "SANE_CONSTRAINT_NONE && SANE_TYPE_INT";
@@ -279,34 +280,34 @@ KSaneOption::KSaneOptType KSaneOption::optionType(const SANE_Option_Descriptor *
             break;
         case SANE_TYPE_FIXED:
             if (optDesc->size == sizeof(SANE_Word)) {
-                return TYPE_F_SLIDER;
+                return TypeFloat;
             }
             qCDebug(KSANE_LOG) << "Can not handle:" << optDesc->title;
             qCDebug(KSANE_LOG) << "SANE_CONSTRAINT_NONE && SANE_TYPE_FIXED";
             qCDebug(KSANE_LOG) << "size" << optDesc->size << "!= sizeof(SANE_Word)";
             break;
         case SANE_TYPE_BUTTON:
-            return TYPE_BUTTON;
+            return TypeAction;
         case SANE_TYPE_STRING:
-            return TYPE_ENTRY;
+            return TypeString;
         case SANE_TYPE_GROUP:
-            return TYPE_DETECT_FAIL;
+            return TypeDetectFail;
         }
         break;
     case SANE_CONSTRAINT_RANGE:
         switch (optDesc->type) {
         case SANE_TYPE_BOOL:
-            return TYPE_CHECKBOX;
+            return TypeBool;
         case SANE_TYPE_INT:
             if (optDesc->size == sizeof(SANE_Word)) {
-                return TYPE_SLIDER;
+                return TypeInteger;
             }
 
             if ((strcmp(optDesc->name, SANE_NAME_GAMMA_VECTOR) == 0) ||
                     (strcmp(optDesc->name, SANE_NAME_GAMMA_VECTOR_R) == 0) ||
                     (strcmp(optDesc->name, SANE_NAME_GAMMA_VECTOR_G) == 0) ||
                     (strcmp(optDesc->name, SANE_NAME_GAMMA_VECTOR_B) == 0)) {
-                return TYPE_GAMMA;
+                return TypeGamma;
             }
             qCDebug(KSANE_LOG) << "Can not handle:" << optDesc->title;
             qCDebug(KSANE_LOG) << "SANE_CONSTRAINT_RANGE && SANE_TYPE_INT && !SANE_NAME_GAMMA_VECTOR...";
@@ -314,7 +315,7 @@ KSaneOption::KSaneOptType KSaneOption::optionType(const SANE_Option_Descriptor *
             break;
         case SANE_TYPE_FIXED:
             if (optDesc->size == sizeof(SANE_Word)) {
-                return TYPE_F_SLIDER;
+                return TypeFloat;
             }
             qCDebug(KSANE_LOG) << "Can not handle:" << optDesc->title;
             qCDebug(KSANE_LOG) << "SANE_CONSTRAINT_RANGE && SANE_TYPE_FIXED";
@@ -324,56 +325,18 @@ KSaneOption::KSaneOptType KSaneOption::optionType(const SANE_Option_Descriptor *
         case SANE_TYPE_STRING:
             qCDebug(KSANE_LOG) << "Can not handle:" << optDesc->title;
             qCDebug(KSANE_LOG) << "SANE_CONSTRAINT_RANGE && SANE_TYPE_STRING";
-            return TYPE_DETECT_FAIL;
+            return TypeDetectFail;
         case SANE_TYPE_BUTTON:
-            return TYPE_BUTTON;
+            return TypeAction;
         case SANE_TYPE_GROUP:
-            return TYPE_DETECT_FAIL;
+            return TypeDetectFail;
         }
         break;
     case SANE_CONSTRAINT_WORD_LIST:
     case SANE_CONSTRAINT_STRING_LIST:
-        return TYPE_COMBO;
+        return TypeValueList;
     }
-    return TYPE_DETECT_FAIL;
-}
-
-KSaneOptionWidget *KSaneOption::widget()
-{
-    return m_widget;
-}
-
-bool KSaneOption::hasGui()
-{
-    return false;
-}
-
-KLocalizedString KSaneOption::unitString()
-{
-    switch (m_optDesc->unit) {
-    case SANE_UNIT_NONE:        return KLocalizedString();
-    case SANE_UNIT_PIXEL:       return ki18ncp("SpinBox parameter unit", " Pixel", " Pixels");
-    case SANE_UNIT_BIT:         return ki18ncp("SpinBox parameter unit", " Bit", " Bits");
-    case SANE_UNIT_MM:          return ki18ncp("SpinBox parameter unit (Millimeter)", " mm", " mm");
-    case SANE_UNIT_DPI:         return ki18ncp("SpinBox parameter unit (Dots Per Inch)", " DPI", " DPI");
-    case SANE_UNIT_PERCENT:     return ki18ncp("SpinBox parameter unit (Percentage)", " %", " %");
-    case SANE_UNIT_MICROSECOND: return ki18ncp("SpinBox parameter unit (Microseconds)", " µs", " µs");
-    }
-    return KLocalizedString();
-}
-
-QString KSaneOption::unitDoubleString()
-{
-    switch (m_optDesc->unit) {
-    case SANE_UNIT_NONE:        return QString();
-    case SANE_UNIT_PIXEL:       return i18nc("Double numbers. SpinBox parameter unit", " Pixels");
-    case SANE_UNIT_BIT:         return i18nc("Double numbers. SpinBox parameter unit", " Bits");
-    case SANE_UNIT_MM:          return i18nc("Double numbers. SpinBox parameter unit (Millimeter)", " mm");
-    case SANE_UNIT_DPI:         return i18nc("Double numbers. SpinBox parameter unit (Dots Per Inch)", " DPI");
-    case SANE_UNIT_PERCENT:     return i18nc("Double numbers. SpinBox parameter unit (Percentage)", " %");
-    case SANE_UNIT_MICROSECOND: return i18nc("Double numbers. SpinBox parameter unit (Microseconds)", " µs");
-    }
-    return QString();
+    return TypeDetectFail;
 }
 
 }  // NameSpace KSaneIface

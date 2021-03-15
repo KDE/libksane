@@ -21,8 +21,6 @@
 namespace KSaneIface
 {
 
-class LabeledCombo;
-
 class KSaneOptCombo : public KSaneOption
 {
     Q_OBJECT
@@ -30,29 +28,22 @@ class KSaneOptCombo : public KSaneOption
 public:
     KSaneOptCombo(const SANE_Handle handle, const int index);
 
-    void createWidget(QWidget *parent) override;
-
     void readValue() override;
-    void readOption() override;
 
     bool getMinValue(float &max) override;
     bool getValue(float &val) override;
-    bool setValue(float val) override;
     bool getValue(QString &val) override;
-    bool setValue(const QString &val) override;
-    bool hasGui() override;
-
-private Q_SLOTS:
-    void comboboxChangedIndex(int val);
+    QVariantList getEntryList() const override;
+    
+public Q_SLOTS:
+    bool setValue(const QVariant &value) override;
 
 private:
-    QList<std::pair<QString, QString>> genComboStringList() const;
-    QString getSaneComboString(int ival) const;
-    QString getSaneComboString(float fval) const;
     std::pair<QString, QString> getSaneComboString(unsigned char *data) const;
+    bool setValue(float value);
+    bool setValue(const QString &value);
 
-    LabeledCombo *m_combo;
-    QString       m_currentText;
+    QVariant       m_currentValue;
 };
 
 }  // NameSpace KSaneIface

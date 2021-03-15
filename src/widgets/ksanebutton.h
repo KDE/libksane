@@ -39,12 +39,14 @@ public:
      * \param text is the text describing the checkbox.
      */
     KSaneButton(QWidget *parent, const QString &text);
+    KSaneButton(QWidget *parent, KSaneOption *option);
     ~KSaneButton();
 
 Q_SIGNALS:
-    void clicked();
+    void clicked(const QVariant &value);
 
 private:
+    void initButton(const QString &text);
     QPushButton *m_button;
 };
 

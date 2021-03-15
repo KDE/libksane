@@ -19,8 +19,6 @@
 namespace KSaneIface
 {
 
-class LabeledCheckbox;
-
 class KSaneOptCheckBox : public KSaneOption
 {
     Q_OBJECT
@@ -28,24 +26,18 @@ class KSaneOptCheckBox : public KSaneOption
 public:
     KSaneOptCheckBox(const SANE_Handle handle, const int index);
 
-    void createWidget(QWidget *parent) override;
-
     void readValue() override;
 
     bool getValue(float &val) override;
-    bool setValue(float val) override;
     bool getValue(QString &val) override;
-    bool setValue(const QString &val) override;
-    bool hasGui() override;
 
-private Q_SLOTS:
-    void checkboxChanged(bool toggled);
+public Q_SLOTS:
+    bool setValue(const QVariant &value) override;
 
 Q_SIGNALS:
     void buttonPressed(const QString &optionName, const QString &optionLabel, bool pressed);
 
 private:
-    LabeledCheckbox *m_checkbox;
     bool             m_checked;
 };
 

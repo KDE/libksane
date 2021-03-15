@@ -22,17 +22,46 @@ namespace KSaneIface
 KSaneOptionWidget::KSaneOptionWidget(QWidget *parent, const QString &labelText)
     : QWidget(parent)
 {
-    m_label = new QLabel;
+    m_label = new QLabel(this);
     setLabelText(labelText);
+    initWidget();
+}
 
-    m_layout = new QGridLayout(this);
-    m_layout->addWidget(m_label, 0, 0, Qt::AlignRight);
-    m_layout->setColumnStretch(0, 0);
-    m_layout->setContentsMargins(0, 0, 0, 0);
+KSaneOptionWidget::KSaneOptionWidget(QWidget *parent, KSaneOption *option)
+    : QWidget(parent)
+{
+    m_option = option;
+    m_label = new QLabel;
+    connect(option, &KSaneOption::optionReloaded, this, &KSaneOptionWidget::updateVisibility);
+    initWidget();
 }
 
 KSaneOptionWidget::~KSaneOptionWidget()
 {
+}
+
+void KSaneOptionWidget::initWidget()
+{
+    m_layout = new QGridLayout(this);
+    m_layout->addWidget(m_label, 0, 0, Qt::AlignRight);
+    m_layout->setColumnStretch(0, 0);
+    m_layout->setContentsMargins(0, 0, 0, 0);
+    updateVisibility();
+
+}
+
+void KSaneOptionWidget::updateVisibility()
+{
+    if (!m_option) {
+        return;
+    }
+
+    if (m_option->state() == KSaneOption::StateHidden) {
+        hide();
+    } else {
+        show();
+        setEnabled(m_option->state() == KSaneOption::StateActive);
+    }
 }
 
 void KSaneOptionWidget::setLabelText(const QString &text)

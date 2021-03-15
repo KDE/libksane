@@ -13,7 +13,8 @@
  * ============================================================ */
 
 #include "labeledslider.h"
-
+#include "ksaneoptslider.h"
+#include "ksaneoption.h"
 // Qt includes
 
 #include <QLabel>
@@ -25,32 +26,95 @@
 
 namespace KSaneIface
 {
-
 LabeledSlider::LabeledSlider(QWidget *parent, const QString &ltext,
                              int min, int max, int ste)
     : KSaneOptionWidget(parent, ltext)
 {
-    m_step = ste;
+    initSlider(min, max, ste);
+}        
+
+LabeledSlider::LabeledSlider(QWidget *parent, KSaneOption *option)
+    : KSaneOptionWidget(parent, option)
+{
+    float maxValueF = 0.0;
+    option->getMaxValue(maxValueF);
+    float minValueF = 0.0;
+    option->getMinValue(minValueF);
+    float stepValueF = 0.0;
+    option->getStepValue(stepValueF);
+    /* TEMPORARY
+     * due to float conversion, the max integer value of 2147483647 will be cast to 2147483648 and result in -2147483648 
+     * catch this specifically until the API allows to query the integer directly */
+    int maxInt = static_cast<int>(maxValueF);
+    if (maxInt == -2147483648) {
+        maxInt = 2147483647;
+    }
+    initSlider(static_cast<int>(minValueF), maxInt, static_cast<int>(stepValueF));
+    
+    KLocalizedString unitSuffix;
+    KSaneOption::KSaneOptionUnit unit = option->getUnit();
+    switch (unit) {
+
+    case KSaneOption::UnitPixel:
+        unitSuffix = ki18ncp("SpinBox parameter unit", " Pixel", " Pixels");
+        break;
+    case KSaneOption::UnitBit:
+        unitSuffix = ki18ncp("SpinBox parameter unit", " Bit", " Bits");
+        break;
+    case KSaneOption::UnitMilliMeter:
+        unitSuffix = ki18ncp("SpinBox parameter unit (Millimeter)", " mm", " mm");
+        break;
+    case KSaneOption::UnitDPI:
+        unitSuffix = ki18ncp("SpinBox parameter unit (Dots Per Inch)", " DPI", " DPI");
+        break;
+    case KSaneOption::UnitPercent:
+        unitSuffix = ki18ncp("SpinBox parameter unit (Percentage)", " %", " %");
+        break;
+    case KSaneOption::UnitMicroSecond:
+        unitSuffix = ki18ncp("SpinBox parameter unit (Microseconds)", " µs", " µs");
+        break;
+    default: 
+        unitSuffix = KLocalizedString();
+        break;
+    }
+    
+    setSuffix(unitSuffix);
+    setLabelText(option->title());
+    setToolTip(option->description());
+    connect(this, &LabeledSlider::valueChanged, option, &KSaneOption::setValue);
+    connect(option, &KSaneOption::valueChanged, this, &LabeledSlider::setValue);
+    float valueF = 0.0;
+    option->getValue(valueF);
+    setValue(static_cast<int>(valueF));
+}
+
+LabeledSlider::~LabeledSlider()
+{
+}
+
+void LabeledSlider::initSlider(int minValue, int maxValue, int stepValue)
+{
+    m_step = stepValue;
     if (m_step == 0) {
         m_step = 1;
     }
 
     m_slider = new QSlider(this);
     m_slider->setOrientation(Qt::Horizontal);
-    m_slider->setMinimum(min);
-    m_slider->setMaximum(max);
+    m_slider->setMinimum(minValue);
+    m_slider->setMaximum(maxValue);
     m_slider->setSingleStep(m_step);
 
     m_spinb = new KPluralHandlingSpinBox(this);
-    m_spinb->setMinimum(min);
-    m_spinb->setMaximum(max);
+    m_spinb->setMinimum(minValue);
+    m_spinb->setMaximum(maxValue);
     m_slider->setSingleStep(m_step);
-    m_spinb->setValue(max);
+    m_spinb->setValue(maxValue);
     //m_spinb->setMinimumWidth(m_spinb->sizeHint().width()+35);
     m_spinb->setAlignment(Qt::AlignRight);
-    m_spinb->setValue(min);
+    m_spinb->setValue(minValue);
 
-    m_spinb->setValue(min);
+    m_spinb->setValue(minValue);
     m_label->setBuddy(m_spinb);
 
     connect(m_spinb, QOverload<int>::of(&QSpinBox::valueChanged), this, &LabeledSlider::syncValues);
@@ -60,12 +124,7 @@ LabeledSlider::LabeledSlider(QWidget *parent, const QString &ltext,
     m_layout->addWidget(m_slider, 0, 2);
     m_layout->addWidget(m_spinb, 0, 1);
     m_layout->setColumnStretch(1, 0);
-    m_layout->setColumnStretch(2, 50);
-
-}
-
-LabeledSlider::~LabeledSlider()
-{
+    m_layout->setColumnStretch(2, 50); 
 }
 
 void LabeledSlider::setSuffix(const KLocalizedString &text)
@@ -73,8 +132,13 @@ void LabeledSlider::setSuffix(const KLocalizedString &text)
     m_spinb->setSuffix(text);
 }
 
-void LabeledSlider::setValue(int value)
+void LabeledSlider::setValue(const QVariant &val)
 {
+    bool ok;
+    int value = val.toInt(&ok);
+    if (!ok) {
+        return;
+    }
     if (value != m_slider->value()) {
         m_slider->setValue(value);
     } else if (value != m_spinb->value()) {

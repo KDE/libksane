@@ -25,10 +25,62 @@ LabeledFSlider::LabeledFSlider(QWidget *parent, const QString &ltext,
                                float min, float max, float step)
     : KSaneOptionWidget(parent, ltext)
 {
-    int imin = TO_FIX(min);
-    int imax = TO_FIX(max);
-    m_istep = TO_FIX(step);
-    m_fstep = step;
+    initFSlider(min, max, step);
+}
+
+LabeledFSlider::LabeledFSlider(QWidget *parent, KSaneOption *option)
+    : KSaneOptionWidget(parent, option)
+{
+    float maxValueF = 0.0;
+    option->getMaxValue(maxValueF);
+    float minValueF = 0.0;
+    option->getMinValue(minValueF);
+    float stepValueF = 0.0;
+    option->getStepValue(stepValueF);
+    initFSlider(minValueF, maxValueF , stepValueF);
+    
+    QString unitSuffix;
+    KSaneOption::KSaneOptionUnit unit = option->getUnit();
+    switch (unit) {
+    case KSaneOption::UnitPixel: 
+        unitSuffix = i18nc("Double numbers. SpinBox parameter unit", " Pixels");
+        break;
+    case KSaneOption::UnitBit:
+        unitSuffix = i18nc("Double numbers. SpinBox parameter unit", " Bits");
+        break;
+    case KSaneOption::UnitMilliMeter: 
+        unitSuffix = i18nc("Double numbers. SpinBox parameter unit (Millimeter)", " mm");
+        break;
+    case KSaneOption::UnitDPI:  
+        unitSuffix = i18nc("Double numbers. SpinBox parameter unit (Dots Per Inch)", " DPI");
+        break;
+    case KSaneOption::UnitPercent: 
+        unitSuffix = i18nc("Double numbers. SpinBox parameter unit (Percentage)", " %");
+        break;
+    case KSaneOption::UnitMicroSecond:
+        unitSuffix = i18nc("Double numbers. SpinBox parameter unit (Microseconds)", " µs");
+        break;
+    default: 
+        unitSuffix = QString();
+        break;
+    }
+    setSuffix(unitSuffix);
+    
+    setLabelText(option->title());
+    setToolTip(option->description());
+    connect(this, &LabeledFSlider::valueChanged, option, &KSaneOption::setValue);
+    connect(option, &KSaneOption::valueChanged, this, &LabeledFSlider::setValue);
+    float valueF = 0.0;
+    option->getValue(valueF);
+    setValue(valueF);
+}
+
+void LabeledFSlider::initFSlider(float minValueF, float maxValueF, float stepValueF)
+{
+    int imin = TO_FIX(minValueF);
+    int imax = TO_FIX(maxValueF);
+    m_istep = TO_FIX(stepValueF);
+    m_fstep = stepValueF;
     if (m_istep == 0) {
         m_istep = 1;
         m_fstep = TO_FLOAT(m_istep);
@@ -44,8 +96,8 @@ LabeledFSlider::LabeledFSlider(QWidget *parent, const QString &ltext,
     m_slider->setValue(imin);
 
     m_spinb = new QDoubleSpinBox(this);
-    m_spinb->setMinimum(min);
-    m_spinb->setMaximum(max);
+    m_spinb->setMinimum(minValueF);
+    m_spinb->setMaximum(maxValueF);
     m_spinb->setSingleStep(m_fstep);
     int decimals = 0;
     float tmp_step = m_fstep;
@@ -57,11 +109,11 @@ LabeledFSlider::LabeledFSlider(QWidget *parent, const QString &ltext,
         }
     }
     m_spinb->setDecimals(decimals);
-    m_spinb->setValue(max);
+    m_spinb->setValue(maxValueF);
     //m_spinb->setMinimumWidth(m_spinb->sizeHint().width()+35);
     m_spinb->setMinimumWidth(m_spinb->sizeHint().width());
     m_spinb->setAlignment(Qt::AlignRight);
-    m_spinb->setValue(min);
+    m_spinb->setValue(minValueF);
 
     m_label->setBuddy(m_spinb);
 
@@ -130,12 +182,17 @@ void LabeledFSlider::setStep(float step)
     m_spinb->setDecimals(decimals);
 }
 
-void LabeledFSlider::setValue(float value)
+void LabeledFSlider::setValue(const QVariant &value)
 {
-    int ivalue = TO_FIX(value);
+    bool ok;
+    float newValue = value.toFloat(&ok);
+    if (!ok) {
+        return;
+    }
+    int ivalue = TO_FIX(newValue);
 
-    if (((value - m_spinb->value()) > m_fstep) || ((m_spinb->value() - value) > m_fstep)) {
-        m_spinb->setValue(value);
+    if (((newValue - m_spinb->value()) > m_fstep) || ((m_spinb->value() - newValue) > m_fstep)) {
+        m_spinb->setValue(newValue);
     } else if (ivalue != m_slider->value()) {
         m_slider->setValue(ivalue);
     }

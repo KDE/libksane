@@ -37,6 +37,8 @@ public:
      * \param list a stringlist with values the list should contain.
      */
     LabeledCombo(QWidget *parent, const QString &label, const QStringList &list = QStringList());
+    
+    LabeledCombo(QWidget *parent, KSaneOption *option);
 
     /** This function forwards the request to the QComboBox equivalent */
     QVariant currentData(int role = Qt::UserRole) const;
@@ -85,11 +87,25 @@ public Q_SLOTS:
      */
     bool setIcon(const QIcon &icon, const QString &str);
 
+    void setValue(const QVariant &val);
+    
+private Q_SLOTS:   
+    
+      void emitChangedValue(int index); 
+      
 Q_SIGNALS:
 
     void activated(int);
+    
+    void valueChanged(const QVariant &value);
 
 private:
+    void initCombo(const QStringList &list);
+    
+    QString getStringWithUnitForInteger(int iValue) const;
+    
+    QString getStringWithUnitForFloat(float iValue) const;
+
     QComboBox   *m_combo;
 };
 

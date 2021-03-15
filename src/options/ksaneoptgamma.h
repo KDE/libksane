@@ -19,8 +19,6 @@
 namespace KSaneIface
 {
 
-class LabeledGamma;
-
 class KSaneOptGamma : public KSaneOption
 {
     Q_OBJECT
@@ -28,21 +26,23 @@ class KSaneOptGamma : public KSaneOption
 public:
     KSaneOptGamma(const SANE_Handle handle, const int index);
 
-    void createWidget(QWidget *parent) override;
-
     void readValue() override;
+    void readOption() override;
 
     bool getValue(float &val) override;
-    bool setValue(float val) override;
     bool getValue(QString &val) override;
-    bool setValue(const QString &val) override;
-    bool hasGui() override;
+    bool getMaxValue(float &val) override;
 
-private Q_SLOTS:
-    void gammaTableChanged(const QVector<int> &gam_tbl);
+public Q_SLOTS:
+    bool setValue(const QVariant & value) override;
 
 private:
-    LabeledGamma *m_gamma;
+    void calculateGTwriteData();
+    
+    int             m_brightness;
+    int             m_contrast;
+    int             m_gamma;
+    QVector<int>    m_gammaTable;
 };
 
 }  // NameSpace KSaneIface

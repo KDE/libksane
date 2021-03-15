@@ -14,9 +14,7 @@
 // Local includes
 #include "ksaneoptentry.h"
 
-#include "labeledentry.h"
-
-#include <QtCore/QVarLengthArray>
+#include <QVarLengthArray>
 
 #include <ksane_debug.h>
 
@@ -24,44 +22,29 @@ namespace KSaneIface
 {
 
 KSaneOptEntry::KSaneOptEntry(const SANE_Handle handle, const int index)
-    : KSaneOption(handle, index), m_entry(nullptr)
+    : KSaneOption(handle, index)
 {
+    m_optionType = KSaneOption::TypeString;
 }
 
-void KSaneOptEntry::createWidget(QWidget *parent)
+bool KSaneOptEntry::setValue(const QVariant &val)
 {
-    if (m_widget) {
-        return;
+    if (state() == StateHidden) {
+        return false;
     }
-
-    readOption();
-
-    if (!m_optDesc) {
-        qCDebug(KSANE_LOG) << "This is a bug";
-        m_widget = new KSaneOptionWidget(parent, QString());
-        return;
-    }
-
-    m_widget = m_entry = new LabeledEntry(parent, sane_i18n(m_optDesc->title));
-    m_widget->setToolTip(sane_i18n(m_optDesc->desc));
-    connect(m_entry, &LabeledEntry::entryEdited, this, &KSaneOptEntry::entryChanged);
-    updateVisibility();
-    readValue();
-}
-
-void KSaneOptEntry::entryChanged(const QString &text)
-{
+    QString text = val.toString();
     QString tmp;
     tmp += text.leftRef(m_optDesc->size);
     if (tmp != text) {
-        m_entry->setText(tmp);
         writeData(tmp.toLatin1().data());
+        Q_EMIT valueChanged(tmp);
     }
+    return true;
 }
 
 void KSaneOptEntry::readValue()
 {
-    if (state() == STATE_HIDDEN) {
+    if (state() == StateHidden) {
         return;
     }
 
@@ -75,41 +58,21 @@ void KSaneOptEntry::readValue()
     }
 
     m_string = QString::fromUtf8(reinterpret_cast<char *>(data.data()));
-    if (m_entry != nullptr) {
-        m_entry->setText(m_string);
-    }
+
+    Q_EMIT valueChanged(m_string);
 }
 
 bool KSaneOptEntry::getValue(float &)
 {
     return false;
 }
-bool KSaneOptEntry::setValue(float)
-{
-    return false;
-}
 
 bool KSaneOptEntry::getValue(QString &val)
 {
-    if (state() == STATE_HIDDEN) {
+    if (state() == StateHidden) {
         return false;
     }
     val = m_string;
-    return true;
-}
-
-bool KSaneOptEntry::setValue(const QString &val)
-{
-    if (state() == STATE_HIDDEN) {
-        return false;
-    }
-    entryChanged(val);
-    readValue();
-    return true;
-}
-
-bool KSaneOptEntry::hasGui()
-{
     return true;
 }
 

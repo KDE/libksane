@@ -43,6 +43,8 @@ public:
      * \param text is the text describing the checkbox.
      */
     LabeledCheckbox(QWidget *parent, const QString &text);
+
+    LabeledCheckbox(QWidget *parent, KSaneOption *option);
     ~LabeledCheckbox();
     void setChecked(bool);
     bool isChecked();
@@ -50,6 +52,12 @@ public:
 Q_SIGNALS:
     void toggled(bool);
 
+public Q_SLOTS:
+    void setValue(const QVariant &value);
+    
+protected:
+    void initCheckBox(const QString &name);
+    
 private:
 
     QCheckBox *chbx;

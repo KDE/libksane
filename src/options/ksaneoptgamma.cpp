@@ -14,58 +14,82 @@
 
 #include "ksaneoptgamma.h"
 
-#include "labeledgamma.h"
-
-#include <QtCore/QVarLengthArray>
+#include <QVarLengthArray>
 
 #include <ksane_debug.h>
+
+#include <cmath>
 
 namespace KSaneIface
 {
 
 KSaneOptGamma::KSaneOptGamma(const SANE_Handle handle, const int index)
-    : KSaneOption(handle, index), m_gamma(nullptr)
+    : KSaneOption(handle, index)
 {
+    m_optionType = KSaneOption::TypeGamma;
 }
 
-void KSaneOptGamma::createWidget(QWidget *parent)
+bool KSaneOptGamma::setValue(const QVariant &value)
 {
-    if (m_widget) {
-        return;
+    if (state() == StateHidden) {
+        return false;
     }
+    
+    if (static_cast<QMetaType::Type>(value.type()) == QMetaType::QString) {
+        const QString stringValue = value.toString();
+        QStringList gammaValues;
+        int brightness;
+        int contrast;
+        int gamma;
+        bool ok = true;
 
-    readOption();
+        gammaValues = stringValue.split(QLatin1Char(':'));
+        if (gammaValues.size() != 3) {
+            return false;
+        }
+        brightness = gammaValues.at(0).toInt(&ok);
+        if (ok) {
+            contrast = gammaValues.at(1).toInt(&ok);
+        }
+        if (ok) {
+            gamma = gammaValues.at(2).toInt(&ok);
+        }
 
-    if (!m_optDesc) {
-        qCDebug(KSANE_LOG) << "This is a bug";
-        m_widget = new KSaneOptionWidget(parent, QString());
-        return;
+        if (ok && (m_brightness != brightness || m_contrast != contrast || m_gamma != gamma) ) {
+            m_brightness = brightness;
+            m_contrast = contrast;
+            m_gamma = gamma;
+            calculateGTwriteData();
+        }
+        return true;
     }
-
-    m_widget = m_gamma = new LabeledGamma(parent,
-                                          sane_i18n(m_optDesc->title),
-                                          m_optDesc->size / sizeof(SANE_Word),
-                                          m_optDesc->constraint.range->max);
-    connect(m_gamma, &LabeledGamma::gammaTableChanged, this, &KSaneOptGamma::gammaTableChanged);
-    if (strcmp(m_optDesc->name, SANE_NAME_GAMMA_VECTOR_R) == 0) {
-        m_gamma->setColor(Qt::red);
+    if (value.canConvert<QVector<int>>()) {
+        QVector<int> copy = value.value<QVector<int>>();
+        if (copy.size() != 3) {
+            return false;
+        }
+        if (m_brightness != copy.at(0) || m_contrast != copy.at(1) || m_gamma != copy.at(2) ) {
+            m_brightness = copy.at(0);
+            m_contrast = copy.at(1);
+            m_gamma = copy.at(2);
+            calculateGTwriteData();
+        }
+        return true;
     }
-    if (strcmp(m_optDesc->name, SANE_NAME_GAMMA_VECTOR_G) == 0) {
-        m_gamma->setColor(Qt::green);
-    }
-    if (strcmp(m_optDesc->name, SANE_NAME_GAMMA_VECTOR_B) == 0) {
-        m_gamma->setColor(Qt::blue);
-    }
-
-    m_widget->setToolTip(sane_i18n(m_optDesc->desc));
-    updateVisibility();
-    readValue();
+    return false;
 }
 
-void KSaneOptGamma::gammaTableChanged(const QVector<int> &gam_tbl)
+void KSaneOptGamma::readOption()
 {
-    QVector<int> copy = gam_tbl;
-    writeData(copy.data());
+    KSaneOption::readOption();
+    
+    if (m_optDesc) {
+        int size = m_optDesc->size / sizeof(SANE_Word);
+        m_gammaTable.resize(size);
+        for (int i = 0; i < m_gammaTable.size(); i++) {
+            m_gammaTable[i] = i;
+        }
+    }
 }
 
 void KSaneOptGamma::readValue()
@@ -78,43 +102,59 @@ bool KSaneOptGamma::getValue(float &)
 {
     return false;
 }
-bool KSaneOptGamma::setValue(float)
+
+bool KSaneOptGamma::getMaxValue(float &value)
 {
+    if (m_optDesc) {
+        value = static_cast<float>(m_optDesc->constraint.range->max);
+        return true;
+    }
     return false;
 }
 
 bool KSaneOptGamma::getValue(QString &val)
 {
-    if (!m_gamma) {
+    if (state() == StateHidden) {
         return false;
     }
-    if (state() == STATE_HIDDEN) {
-        return false;
-    }
-    int bri;
-    int con;
-    int gam;
-    m_gamma->getValues(bri, con, gam);
-    val = QString::asprintf("%d:%d:%d", bri, con, gam);
+
+    val = QString::asprintf("%d:%d:%d", m_brightness, m_contrast, m_gamma);
     return true;
 }
 
-bool KSaneOptGamma::setValue(const QString &val)
-{
-    if (!m_gamma) {
-        return false;
-    }
-    if (state() == STATE_HIDDEN) {
-        return false;
+void KSaneOptGamma::calculateGTwriteData()
+{   
+    double maxValue = m_optDesc->constraint.range->max;
+    double gamma    = 100.0 / m_gamma;
+    double contrast = (200.0 / (100.0 - m_contrast)) - 1;
+    double halfMax  = maxValue / 2.0;
+    double brightness = (m_brightness / halfMax) * maxValue;
+    double x;
+
+    for (int i = 0; i < m_gammaTable.size(); i++) {
+        // apply gamma
+        x = std::pow(static_cast<double>(i) / m_gammaTable.size(), gamma) * maxValue;
+
+        // apply contrast
+        x = (contrast * (x - halfMax)) + halfMax;
+
+        // apply brightness + rounding
+        x += brightness + 0.5;
+
+        // ensure correct value
+        if (x > maxValue) {
+            x = maxValue;
+        }
+        if (x < 0) {
+            x = 0;
+        }
+
+        m_gammaTable[i] = static_cast<int>(x);
     }
 
-    m_gamma->setValues(val);
-    return true;
-}
-
-bool KSaneOptGamma::hasGui()
-{
-    return true;
+    writeData(m_gammaTable.data());
+    QVector<int> values = { m_brightness, m_contrast, m_gamma };
+    Q_EMIT valueChanged(QVariant::fromValue(values));
 }
 
 }  // NameSpace KSaneIface

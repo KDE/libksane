@@ -19,8 +19,6 @@
 namespace KSaneIface
 {
 
-class LabeledFSlider;
-
 class KSaneOptFSlider : public KSaneOption
 {
     Q_OBJECT
@@ -28,27 +26,19 @@ class KSaneOptFSlider : public KSaneOption
 public:
     KSaneOptFSlider(const SANE_Handle handle, const int index);
 
-    void createWidget(QWidget *parent) override;
-
     void readValue() override;
     void readOption() override;
 
-    bool getMinValue(float &max) override;
+    bool getMinValue(float &min) override;
     bool getMaxValue(float &max) override;
+    bool getStepValue(float &step) override;
     bool getValue(float &val) override;
-    bool setValue(float val) override;
     bool getValue(QString &val) override;
-    bool setValue(const QString &val) override;
-    bool hasGui() override;
 
-Q_SIGNALS:
-    void fValueRead(float);
-
-private Q_SLOTS:
-    void sliderChanged(float val);
+public Q_SLOTS:
+    bool setValue(const QVariant &value) override;
 
 private:
-    LabeledFSlider *m_slider;
     float           m_fVal;
     float           m_minChange;
 };

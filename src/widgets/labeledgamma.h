@@ -42,40 +42,42 @@ public:
      * \param elements is the number of elements in the gamma table
      * \param max is the maximum gamma-table-value
      */
-    LabeledGamma(QWidget *parent, const QString &text, int elements, int max);
+    LabeledGamma(QWidget *parent, const QString &text, int max);
+    
+    LabeledGamma(QWidget *parent, KSaneOption *option);
     ~LabeledGamma();
 
     void setColor(const QColor &color);
-    void setSize(int size);
-    const QVector<int> &gammaTablePtr();
-    int size();
-
+    
     int maxValue();
 
-    bool getValues(int &bri, int &con, int &gam);
+    bool getValues(int &brightness, int &contrast, int &gamma);
 
 public Q_SLOTS:
-    void setValues(int bri, int con, int gam);
+    void setValues(int brightness, int contrast, int gamma);
     void setValues(const QString &values);
-
-private Q_SLOTS:
-    void calculateGT();
 
 Q_SIGNALS:
 
-    void gammaChanged(int bri, int con, int gam);
-    void gammaTableChanged(const QVector<int> &gammaTable);
+    void gammaChanged(int brightness, int contrast, int gamma);
+    void valuesChanged(const QVariant &values);
 
+private Q_SLOTS:
+    void emitNewValues();
+    
 private:
-
+    void initGamma(QString text, int max);
+    
     LabeledSlider *m_brightSlider;
     LabeledSlider *m_contrastSlider;
     LabeledSlider *m_gammaSlider;
 
-    QVector<int>   m_gammaTable;
-    double         m_maxValue;
-
-    GammaDisp     *m_gammaDisplay;
+    int     m_brightness = 0;
+    int     m_contrast = 0;
+    int     m_gamma = 0;
+    int     m_maxValue;
+    
+    GammaDisp  *m_gammaDisplay;
 };
 
 }  // NameSpace KSaneIface

@@ -434,28 +434,28 @@ bool KSaneWidget::openDevice(const QString &deviceName)
     // read the rest of the options
     for (i = 1; i < numSaneOptions; ++i) {
         switch (KSaneOption::optionType(sane_get_option_descriptor(d->m_saneHandle, i))) {
-        case KSaneOption::TYPE_DETECT_FAIL:
+        case KSaneOption::TypeDetectFail:
             d->m_optList.append(new KSaneOption(d->m_saneHandle, i));
             break;
-        case KSaneOption::TYPE_CHECKBOX:
+        case KSaneOption::TypeBool:
             d->m_optList.append(new KSaneOptCheckBox(d->m_saneHandle, i));
             break;
-        case KSaneOption::TYPE_SLIDER:
+        case KSaneOption::TypeInteger:
             d->m_optList.append(new KSaneOptSlider(d->m_saneHandle, i));
             break;
-        case KSaneOption::TYPE_F_SLIDER:
+        case KSaneOption::TypeFloat:
             d->m_optList.append(new KSaneOptFSlider(d->m_saneHandle, i));
             break;
-        case KSaneOption::TYPE_COMBO:
+        case KSaneOption::TypeValueList:
             d->m_optList.append(new KSaneOptCombo(d->m_saneHandle, i));
             break;
-        case KSaneOption::TYPE_ENTRY:
+        case KSaneOption::TypeString:
             d->m_optList.append(new KSaneOptEntry(d->m_saneHandle, i));
             break;
-        case KSaneOption::TYPE_GAMMA:
+        case KSaneOption::TypeGamma:
             d->m_optList.append(new KSaneOptGamma(d->m_saneHandle, i));
             break;
-        case KSaneOption::TYPE_BUTTON:
+        case KSaneOption::TypeAction:
             d->m_optList.append(new KSaneOptButton(d->m_saneHandle, i));
             break;
         }
@@ -464,8 +464,8 @@ bool KSaneWidget::openDevice(const QString &deviceName)
     // do the connections of the option parameters
     for (i = 0; i < d->m_optList.size(); ++i) {
         //qCDebug(KSANE_LOG) << d->m_optList.at(i)->name();
-        connect(d->m_optList.at(i), SIGNAL(optsNeedReload()), d, SLOT(optReload()));
-        connect(d->m_optList.at(i), SIGNAL(valsNeedReload()), d, SLOT(scheduleValReload()));
+        connect(d->m_optList.at(i), SIGNAL(optionsNeedReload()), d, SLOT(optReload()));
+        connect(d->m_optList.at(i), SIGNAL(valuesNeedReload()), d, SLOT(scheduleValReload()));
 
         if (d->m_optList.at(i)->needsPolling()) {
             //qCDebug(KSANE_LOG) << d->m_optList.at(i)->name() << " needs polling";
@@ -890,7 +890,7 @@ float KSaneWidget::scanAreaWidth()
 {
     float result = 0.0;
     if (d->m_optBrX) {
-        if (d->m_optBrX->getUnit() == SANE_UNIT_PIXEL) {
+        if (d->m_optBrX->getUnit() == KSaneOption::UnitPixel) {
             d->m_optBrX->getMaxValue(result);
             float dpi = currentDPI();
             if (dpi < 1) {
@@ -898,7 +898,7 @@ float KSaneWidget::scanAreaWidth()
                 dpi = 1.0;
             }
             result = result / dpi / 25.4;
-        } else if (d->m_optBrX->getUnit() == SANE_UNIT_MM) {
+        } else if (d->m_optBrX->getUnit() == KSaneOption::UnitMilliMeter) {
             d->m_optBrX->getMaxValue(result);
         }
     }
@@ -909,7 +909,7 @@ float KSaneWidget::scanAreaHeight()
 {
     float result = 0.0;
     if (d->m_optBrY) {
-        if (d->m_optBrY->getUnit() == SANE_UNIT_PIXEL) {
+        if (d->m_optBrY->getUnit() == KSaneOption::UnitPixel) {
             d->m_optBrY->getMaxValue(result);
             float dpi = currentDPI();
             if (dpi < 1) {
@@ -917,7 +917,7 @@ float KSaneWidget::scanAreaHeight()
                 dpi = 1.0;
             }
             result = result / dpi / 25.4;
-        } else if (d->m_optBrY->getUnit() == SANE_UNIT_MM) {
+        } else if (d->m_optBrY->getUnit() == KSaneOption::UnitMilliMeter) {
             d->m_optBrY->getMaxValue(result);
         }
     }

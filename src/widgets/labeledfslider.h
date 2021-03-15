@@ -49,6 +49,8 @@ public:
      */
     LabeledFSlider(QWidget *parent, const QString &text,
                    float min, float max, float step);
+
+    LabeledFSlider(QWidget *parent, KSaneOption *option);
     ~LabeledFSlider();
 
     /**
@@ -60,7 +62,7 @@ public:
 public Q_SLOTS:
 
     /** Set the slider/spinbox value */
-    void setValue(float value);
+    void setValue(const QVariant &value);
     void setRange(float min, float max);
     void setStep(float step);
     /** Set the unit */
@@ -81,9 +83,10 @@ Q_SIGNALS:
     /**
      * Emit the slider value changes
      */
-    void valueChanged(float);
+    void valueChanged(const QVariant &val);
 
 private:
+    void initFSlider(float minValueF, float maxValueF, float stepValueF);
 
     QSlider        *m_slider;
     QDoubleSpinBox *m_spinb;

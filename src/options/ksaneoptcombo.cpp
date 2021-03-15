@@ -14,40 +14,23 @@
 
 #include "ksaneoptcombo.h"
 
-#include "labeledcombo.h"
-
-#include <QtCore/QVarLengthArray>
-
-#include <QIcon>
+#include <QVarLengthArray>
 #include <QLocale>
 
 #include <ksane_debug.h>
 
 namespace KSaneIface
 {
-static const char tmp_binary[] = "Binary";
 
 KSaneOptCombo::KSaneOptCombo(const SANE_Handle handle, const int index)
-    : KSaneOption(handle, index), m_combo(nullptr)
+    : KSaneOption(handle, index)
 {
-}
-
-void KSaneOptCombo::createWidget(QWidget *parent)
-{
-    if (m_widget) {
-        return;
-    }
-
-    m_widget = m_combo = new LabeledCombo(parent, QString(), QStringList());
-    readOption();
-    m_widget->setToolTip(sane_i18n(m_optDesc->desc));
-    connect(m_combo, QOverload<int>::of(&LabeledCombo::activated), this, &KSaneOptCombo::comboboxChangedIndex);
-    readValue();
+    m_optionType = KSaneOption::TypeValueList;
 }
 
 void KSaneOptCombo::readValue()
 {
-    if (state() == STATE_HIDDEN) {
+    if (state() == StateHidden) {
         return;
     }
 
@@ -60,170 +43,85 @@ void KSaneOptCombo::readValue()
         return;
     }
 
-    const std::pair<QString, QString> current = getSaneComboString(data.data());
-    m_currentText = current.second;
-    if (m_combo != nullptr) {
-        if (m_combo->currentData() != current.first) {
-            m_combo->setCurrentText(m_currentText);
-            Q_EMIT valueChanged();
-        }
+    QVariant newValue;
+    switch (m_optDesc->type) {
+    case SANE_TYPE_INT:
+        newValue = static_cast<int>(toSANE_Word(data.data()));
+        break;
+    case SANE_TYPE_FIXED:
+        newValue = static_cast<float>(SANE_UNFIX(toSANE_Word(data.data())));
+        break;
+    case SANE_TYPE_STRING:
+        newValue = sane_i18n(reinterpret_cast<char *>(data.data()));
+        break;
+    default :
+        break;
+    }
+
+    if (newValue != m_currentValue) {
+        m_currentValue = newValue;
+        Q_EMIT valueChanged(m_currentValue);
     }
 }
 
-void KSaneOptCombo::readOption()
-{
-    KSaneOption::readOption();
-
-    if (!m_combo) {
-        return;
-    }
-
-    QString saved = m_combo->currentText();
-
-    QList<std::pair<QString, QString>> list = genComboStringList();
-    m_combo->clear();
-    m_combo->setLabelText(sane_i18n(m_optDesc->title));
-    for (int i = 0; i < list.count(); ++i) {
-        m_combo->addItem(list[i].second, list[i].first);
-    }
-    m_combo->setIcon(QIcon::fromTheme(QStringLiteral("color")),
-                     getSaneComboString((unsigned char *)SANE_VALUE_SCAN_MODE_COLOR).second);
-    m_combo->setIcon(QIcon::fromTheme(QStringLiteral("gray-scale")),
-                     getSaneComboString((unsigned char *)SANE_VALUE_SCAN_MODE_GRAY).second);
-    m_combo->setIcon(QIcon::fromTheme(QStringLiteral("black-white")),
-                     getSaneComboString((unsigned char *)SANE_VALUE_SCAN_MODE_LINEART).second);
-    // The epkowa/epson backend uses "Binary" which is the same as "Lineart"
-    m_combo->setIcon(QIcon::fromTheme(QStringLiteral("black-white")), i18n(tmp_binary));
-
-    // set the previous value
-    m_combo->setCurrentText(saved);
-}
-
-QList<std::pair<QString, QString>> KSaneOptCombo::genComboStringList() const
+QVariantList KSaneOptCombo::getEntryList() const
 {
     int i;
-    QList<std::pair<QString, QString>> list;
+    QVariantList list;
 
     switch (m_optDesc->type) {
     case SANE_TYPE_INT:
         for (i = 1; i <= m_optDesc->constraint.word_list[0]; ++i) {
-            const QString tmp = getSaneComboString((int)m_optDesc->constraint.word_list[i]);
-            list += std::make_pair(tmp, tmp);
+            list << static_cast<int>(m_optDesc->constraint.word_list[i]);;
         }
         break;
     case SANE_TYPE_FIXED:
         for (i = 1; i <= m_optDesc->constraint.word_list[0]; ++i) {
-            const QString tmp = getSaneComboString((float)SANE_UNFIX(m_optDesc->constraint.word_list[i]));
-            list += std::make_pair(tmp, tmp);
+            list << static_cast<float>(SANE_UNFIX(m_optDesc->constraint.word_list[i]));
         }
         break;
     case SANE_TYPE_STRING:
         i = 0;
         while (m_optDesc->constraint.string_list[i] != nullptr) {
-            list += getSaneComboString((unsigned char *)m_optDesc->constraint.string_list[i]);
+            list << sane_i18n(m_optDesc->constraint.string_list[i]);
             i++;
         }
         break;
     default :
-        list += std::make_pair(QStringLiteral("NOT HANDELED"), QStringLiteral("NOT HANDELED"));
+        list << QStringLiteral("NOT HANDELED");
         break;
     }
     return list;
 }
 
-QString KSaneOptCombo::getSaneComboString(int ival) const
+bool KSaneOptCombo::setValue(const QVariant &value)
 {
-    switch (m_optDesc->unit) {
-    case SANE_UNIT_NONE:        break;
-    case SANE_UNIT_PIXEL:       return i18np("%1 Pixel", "%1 Pixels", ival);
-    case SANE_UNIT_BIT:         return i18np("%1 Bit", "%1 Bits", ival);
-    case SANE_UNIT_MM:          return i18np("%1 mm", "%1 mm", ival);
-    case SANE_UNIT_DPI:         return i18np("%1 DPI", "%1 DPI", ival);
-    case SANE_UNIT_PERCENT:     return i18np("%1 %", "%1 %", ival);
-    case SANE_UNIT_MICROSECOND: return i18np("%1 µs", "%1 µs", ival);
-    }
-    return QString::number(ival);
-}
-
-QString KSaneOptCombo::getSaneComboString(float fval) const
-{
-    switch (m_optDesc->unit) {
-    case SANE_UNIT_NONE:        break;
-    case SANE_UNIT_PIXEL:       return i18ncp("Parameter and Unit", "%1 Pixel", "%1 Pixels", fval);
-    case SANE_UNIT_BIT:         return i18ncp("Parameter and Unit", "%1 Bit", "%1 Bits", fval);
-    case SANE_UNIT_MM:          return i18nc("Parameter and Unit (Millimeter)", "%1 mm", fval);
-    case SANE_UNIT_DPI:         return i18nc("Parameter and Unit (Dots Per Inch)", "%1 DPI", fval);
-    case SANE_UNIT_PERCENT:     return i18nc("Parameter and Unit (Percentage)", "%1 %", fval);
-    case SANE_UNIT_MICROSECOND: return i18nc("Parameter and Unit (Microseconds)", "%1 µs", fval);
-    }
-    return QString::number(fval, 'F', 4);
-}
-
-std::pair<QString, QString> KSaneOptCombo::getSaneComboString(unsigned char *data) const
-{
-    QString tmp;
-    if (data == nullptr) {
-        return std::pair<QString, QString>();
+    bool success = false;
+    if (static_cast<QMetaType::Type>(value.type()) == QMetaType::QString) {
+        success = setValue(value.toString());
+    } else {
+        success = setValue(value.toFloat());
     }
 
-    switch (m_optDesc->type) {
-    case SANE_TYPE_INT:
-        tmp = getSaneComboString((int)toSANE_Word(data));
-        return std::make_pair(tmp, tmp);
-    case SANE_TYPE_FIXED:
-        tmp = getSaneComboString((float)SANE_UNFIX(toSANE_Word(data)));
-        return std::make_pair(tmp, tmp);
-    case SANE_TYPE_STRING:
-        return std::make_pair(QString::fromUtf8(reinterpret_cast<char *>(data)), sane_i18n(reinterpret_cast<char *>(data)));
-    default :
-        break;
-    }
-    return std::pair<QString, QString>();
-}
-
-void KSaneOptCombo::comboboxChangedIndex(int i)
-{
-    if (m_combo && (m_combo->currentText() == m_currentText)) {
-        return;
-    }
-
-    unsigned char data[4];
-    void *dataPtr;
-
-    switch (m_optDesc->type) {
-    case SANE_TYPE_INT:
-    case SANE_TYPE_FIXED:
-        fromSANE_Word(data, m_optDesc->constraint.word_list[i + 1]);
-        dataPtr = data;
-        break;
-    case SANE_TYPE_STRING:
-        dataPtr = (void *)m_optDesc->constraint.string_list[i];
-        break;
-    default:
-        qCDebug(KSANE_LOG) << "can not handle type:" << m_optDesc->type;
-        return;
-    }
-    writeData(dataPtr);
-    readValue();
-    Q_EMIT valueChanged();
+    return success;
 }
 
 bool KSaneOptCombo::getMinValue(float &val)
 {
-    if (state() == STATE_HIDDEN) {
+    if (state() == StateHidden) {
         return false;
     }
     switch (m_optDesc->type) {
     case SANE_TYPE_INT:
-        val = (float)m_optDesc->constraint.word_list[1];
+        val = static_cast<float>(m_optDesc->constraint.word_list[1]);
         for (int i = 2; i <= m_optDesc->constraint.word_list[0]; i++) {
-            val = qMin((float)m_optDesc->constraint.word_list[i], val);
+            val = qMin(static_cast<float>(m_optDesc->constraint.word_list[i]), val);
         }
         break;
     case SANE_TYPE_FIXED:
-        val = (float)SANE_UNFIX(m_optDesc->constraint.word_list[1]);
+        val = static_cast<float>(SANE_UNFIX(m_optDesc->constraint.word_list[1]));
         for (int i = 2; i <= m_optDesc->constraint.word_list[0]; i++) {
-            val = qMin((float)SANE_UNFIX(m_optDesc->constraint.word_list[i]), val);
+            val = qMin(static_cast<float>(SANE_UNFIX(m_optDesc->constraint.word_list[i])), val);
         }
         break;
     default:
@@ -235,32 +133,15 @@ bool KSaneOptCombo::getMinValue(float &val)
 
 bool KSaneOptCombo::getValue(float &val)
 {
-    if (state() == STATE_HIDDEN) {
+    if (state() == StateHidden) {
         return false;
     }
-
-    // read that current value
-    QVarLengthArray<unsigned char> data(m_optDesc->size);
-    SANE_Status status;
-    SANE_Int res;
-    status = sane_control_option(m_handle, m_index, SANE_ACTION_GET_VALUE, data.data(), &res);
-    if (status != SANE_STATUS_GOOD) {
-        qCDebug(KSANE_LOG) << m_optDesc->name << "sane_control_option returned" << status;
-        return false;
+    bool ok;
+    const float currentValue = m_currentValue.toFloat(&ok);
+    if (ok) {
+        val = currentValue;
     }
-
-    switch (m_optDesc->type) {
-    case SANE_TYPE_INT:
-        val = (float)toSANE_Word(data.data());
-        return true;
-    case SANE_TYPE_FIXED:
-        val = SANE_UNFIX(toSANE_Word(data.data()));
-        return true;
-    default:
-        qCDebug(KSANE_LOG) << "Type" << m_optDesc->type << "not supported!";
-        break;
-    }
-    return false;
+    return ok;
 }
 
 bool KSaneOptCombo::setValue(float value)
@@ -273,10 +154,10 @@ bool KSaneOptCombo::setValue(float value)
 
     switch (m_optDesc->type) {
     case SANE_TYPE_INT:
-        tmp = (float)m_optDesc->constraint.word_list[minIndex];
+        tmp = static_cast<float>(m_optDesc->constraint.word_list[minIndex]);
         minDiff = qAbs(value - tmp);
         for (i = 2; i <= m_optDesc->constraint.word_list[0]; ++i) {
-            tmp = (float)m_optDesc->constraint.word_list[i];
+            tmp = static_cast<float>(m_optDesc->constraint.word_list[i]);
             if (qAbs(value - tmp) < minDiff) {
                 minDiff = qAbs(value - tmp);
                 minIndex = i;
@@ -287,10 +168,10 @@ bool KSaneOptCombo::setValue(float value)
         readValue();
         return (minDiff < 1.0);
     case SANE_TYPE_FIXED:
-        tmp = (float)SANE_UNFIX(m_optDesc->constraint.word_list[minIndex]);
+        tmp = static_cast<float>(SANE_UNFIX(m_optDesc->constraint.word_list[minIndex]));
         minDiff = qAbs(value - tmp);
         for (i = 2; i <= m_optDesc->constraint.word_list[0]; ++i) {
-            tmp = (float)SANE_UNFIX(m_optDesc->constraint.word_list[i]);
+            tmp = static_cast<float>(SANE_UNFIX(m_optDesc->constraint.word_list[i]));
             if (qAbs(value - tmp) < minDiff) {
                 minDiff = qAbs(value - tmp);
                 minIndex = i;
@@ -309,16 +190,16 @@ bool KSaneOptCombo::setValue(float value)
 
 bool KSaneOptCombo::getValue(QString &val)
 {
-    if (state() == STATE_HIDDEN) {
+    if (state() == StateHidden) {
         return false;
     }
-    val = m_combo->currentData().toString();
+    val = m_currentValue.toString();
     return true;
 }
 
-bool KSaneOptCombo::setValue(const QString &val)
+bool KSaneOptCombo::setValue(const QString &value)
 {
-    if (state() == STATE_HIDDEN) {
+    if (state() == StateHidden) {
         return false;
     }
 
@@ -332,30 +213,31 @@ bool KSaneOptCombo::setValue(const QString &val)
 
     switch (m_optDesc->type) {
     case SANE_TYPE_INT:
-        tmp = val.left(val.indexOf(QLatin1Char(' '))); // strip the unit
-        // accept float formatting of the string
-        i = (int)(QLocale::system().toFloat(tmp,&ok));
-        if (ok == false) {
+        i = value.toInt(&ok);
+        if (ok) {
+            fromSANE_Word(data, i);
+            data_ptr = data;  
+        } else {
             return false;
         }
-        fromSANE_Word(data, i);
-        data_ptr = data;
+
         break;
     case SANE_TYPE_FIXED:
-        tmp = val.left(val.indexOf(QLatin1Char(' '))); // strip the unit
-        f = QLocale::system().toFloat(tmp,&ok);
-        if (ok == false) {
+        f = value.toFloat(&ok);
+        if (ok) {
+            fixed = SANE_FIX(f);
+            fromSANE_Word(data, fixed);
+            data_ptr = data; 
+        } else {
             return false;
         }
-        fixed = SANE_FIX(f);
-        fromSANE_Word(data, fixed);
-        data_ptr = data;
+
         break;
     case SANE_TYPE_STRING:
         i = 0;
         while (m_optDesc->constraint.string_list[i] != nullptr) {
-            tmp = getSaneComboString((unsigned char *)m_optDesc->constraint.string_list[i]).first;
-            if (val == tmp) {
+            tmp = sane_i18n(m_optDesc->constraint.string_list[i]);
+            if (value == tmp) {
                 data_ptr = (void *)m_optDesc->constraint.string_list[i];
                 break;
             }
@@ -372,11 +254,6 @@ bool KSaneOptCombo::setValue(const QString &val)
     writeData(data_ptr);
 
     readValue();
-    return true;
-}
-
-bool KSaneOptCombo::hasGui()
-{
     return true;
 }
 

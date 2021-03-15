@@ -18,6 +18,8 @@
 #include <QLabel>
 #include <QGridLayout>
 
+#include "ksaneoption.h"
+
 namespace KSaneIface
 {
 
@@ -39,16 +41,26 @@ public:
      * \param labelText text.
      */
     KSaneOptionWidget(QWidget *parent, const QString &labelText);
+
+    KSaneOptionWidget(QWidget *parent, KSaneOption *option);
     ~KSaneOptionWidget();
 
     void setLabelText(const QString &text);
 
     int labelWidthHint();
     void setLabelWidth(int labelWidth);
-
+    
+protected Q_SLOTS:
+    void updateVisibility(); 
+    
 protected:
+    void initWidget();
+   
     QLabel      *m_label;
     QGridLayout *m_layout;
+    KSaneOption *m_option = nullptr;
+    
+    
 };
 
 }  // NameSpace KSaneIface

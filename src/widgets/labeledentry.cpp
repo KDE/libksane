@@ -33,6 +33,28 @@ namespace KSaneIface
 LabeledEntry::LabeledEntry(QWidget *parent, const QString &ltext)
     : KSaneOptionWidget(parent, ltext)
 {
+    initEntry();
+}
+
+LabeledEntry::LabeledEntry(QWidget *parent, KSaneOption *option)
+    : KSaneOptionWidget(parent, option)
+{
+    initEntry();
+    setToolTip(option->description());
+    setLabelText(option->title());
+    connect(this, &LabeledEntry::entryEdited, option, &KSaneOption::setValue);
+    connect(option, &KSaneOption::valueChanged, this, &LabeledEntry::setValue);
+    QString value;
+    option->getValue(value);
+    m_entry->setText(value);
+}
+
+LabeledEntry::~LabeledEntry()
+{
+}
+
+void LabeledEntry::initEntry()
+{
     m_entry = new QLineEdit(this);
     m_reset = new QPushButton(this);
     m_reset->setText(i18nc("Label for button to reset text in a KLineEdit", "Reset"));
@@ -48,14 +70,18 @@ LabeledEntry::LabeledEntry(QWidget *parent, const QString &ltext)
     connect(m_set, &QPushButton::clicked, this, &LabeledEntry::setClicked);
 }
 
-LabeledEntry::~LabeledEntry()
-{
-}
-
 void LabeledEntry::setText(const QString &text)
 {
     m_eText = text;
     m_entry->setText(text);
+}
+
+void LabeledEntry::setValue(const QVariant &value)
+{
+    const QString text = value.toString();
+    if (!text.isEmpty()) {
+        setText(text);
+    }
 }
 
 void LabeledEntry::resetClicked()

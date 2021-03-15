@@ -19,8 +19,6 @@
 namespace KSaneIface
 {
 
-class LabeledEntry;
-
 class KSaneOptEntry : public KSaneOption
 {
     Q_OBJECT
@@ -28,21 +26,15 @@ class KSaneOptEntry : public KSaneOption
 public:
     KSaneOptEntry(const SANE_Handle handle, const int index);
 
-    void createWidget(QWidget *parent) override;
-
     void readValue() override;
 
     bool getValue(float &val) override;
-    bool setValue(float val) override;
     bool getValue(QString &val) override;
-    bool setValue(const QString &val) override;
-    bool hasGui() override;
 
-private Q_SLOTS:
-    void entryChanged(const QString &text);
+public Q_SLOTS:
+    bool setValue(const QVariant &val) override;
 
 private:
-    LabeledEntry *m_entry;
     QString       m_string;
 };
 

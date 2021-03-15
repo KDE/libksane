@@ -51,6 +51,8 @@ public:
      */
     LabeledSlider(QWidget *parent, const QString &text,
                   int min, int max, int st);
+
+    LabeledSlider(QWidget *parent, KSaneOption *option);
     ~LabeledSlider();
 
     int value() const;
@@ -58,11 +60,13 @@ public:
 public Q_SLOTS:
 
     /** Set the slider value */
-    void setValue(int);
+    void setValue(const QVariant &val);
     void setRange(int min, int max);
     void setStep(int);
     /** Set the unit */
     void setSuffix(const KLocalizedString &text);
+    
+    
 
 private Q_SLOTS:
 
@@ -76,9 +80,10 @@ Q_SIGNALS:
     /**
      * Emit the slider value changes
      */
-    void valueChanged(int);
+    void valueChanged(const QVariant &val);
 
 private:
+    void initSlider(int minValue, int maxValue, int stepValue);
     QSlider   *m_slider;
     KPluralHandlingSpinBox  *m_spinb;
     int        m_step;

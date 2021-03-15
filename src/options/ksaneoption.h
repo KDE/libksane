@@ -17,8 +17,6 @@
 
 // Qt includes
 
-#include <QFrame>
-
 //KDE includes
 
 #include <klocalizedstring.h>
@@ -39,7 +37,6 @@ inline QString sane_i18n(const char *text) {
     return i18nd(SANE_TRANSLATION_DOMAIN, text);
 }
 
-class KSaneOptionWidget;
 
 class KSaneOption : public QObject
 {
@@ -48,68 +45,85 @@ class KSaneOption : public QObject
 public:
 
     typedef enum {
-        TYPE_DETECT_FAIL,
-        TYPE_CHECKBOX,
-        TYPE_SLIDER,
-        TYPE_F_SLIDER,
-        TYPE_COMBO,
-        TYPE_ENTRY,
-        TYPE_GAMMA,
-        TYPE_BUTTON
-    } KSaneOptType;
+        TypeDetectFail,
+        TypeBool,
+        TypeInteger,
+        TypeFloat,
+        TypeValueList,
+        TypeString,
+        TypeGamma,
+        TypeAction
+    } KSaneOptionType;
 
+    Q_ENUM(KSaneOptionType);
+    
     typedef enum {
-        STATE_HIDDEN,
-        STATE_DISABLED,
-        STATE_SHOWN
-    } KSaneOptWState;
+        UnitNone,
+        UnitPixel,
+        UnitBit,
+        UnitMilliMeter,
+        UnitDPI,
+        UnitPercent,
+        UnitMicroSecond
+    } KSaneOptionUnit;
+    
+    Q_ENUM(KSaneOptionUnit);
+    
+    typedef enum {
+        StateHidden,
+        StateDisabled,
+        StateActive
+    } KSaneOptionState;
 
     KSaneOption(const SANE_Handle handle, const int index);
     ~KSaneOption();
-    static KSaneOptType optionType(const SANE_Option_Descriptor *optDesc);
+    static KSaneOptionType optionType(const SANE_Option_Descriptor *optDesc);
 
-    KSaneOptionWidget *widget();
-    virtual bool hasGui();
     bool needsPolling() const;
-    KSaneOptWState state() const;
+    KSaneOptionState state() const;
     QString name() const;
-
-    virtual void createWidget(QWidget *parent);
+    QString title() const;
+    QString description() const;
+    KSaneOptionType type() const;
 
     virtual void readOption();
     virtual void readValue();
 
-    virtual bool getMinValue(float &max);
+    virtual bool getMinValue(float &min);
     virtual bool getMaxValue(float &max);
+    virtual bool getStepValue(float &step);
+    virtual QVariantList getEntryList() const;
     virtual bool getValue(float &val);
-    virtual bool setValue(float val);
     virtual bool getValue(QString &val);
-    virtual bool setValue(const QString &val);
-    virtual int  getUnit();
+    virtual KSaneOptionUnit getUnit();
 
     bool storeCurrentData();
     bool restoreSavedData();
 
 Q_SIGNALS:
-    void optsNeedReload();
-    void valsNeedReload();
-    void valueChanged();
+    void optionsNeedReload();
+    void optionReloaded();
+    void valuesNeedReload();
+    void valueChanged(const QVariant &val);
 
+public Q_SLOTS:
+    
+    virtual bool setValue(const QVariant &val); 
+    
 protected:
 
     static SANE_Word toSANE_Word(unsigned char *data);
     static void fromSANE_Word(unsigned char *data, SANE_Word from);
     bool writeData(void *data);
-    KLocalizedString unitString();
-    QString unitDoubleString();
-    void updateVisibility();
 
     SANE_Handle                   m_handle;
     int                           m_index;
     const SANE_Option_Descriptor *m_optDesc; ///< This pointer is provided by sane
     unsigned char                *m_data;
-    KSaneOptionWidget            *m_widget;
+    KSaneOptionType               m_optionType = TypeDetectFail;
 };
+
+
 
 }  // NameSpace KSaneIface
 

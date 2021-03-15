@@ -19,8 +19,6 @@
 namespace KSaneIface
 {
 
-class KSaneButton;
-
 class KSaneOptButton : public KSaneOption
 {
     Q_OBJECT
@@ -28,15 +26,8 @@ class KSaneOptButton : public KSaneOption
 public:
     KSaneOptButton(const SANE_Handle handle, const int index);
 
-    void createWidget(QWidget *parent) override;
-
-    bool hasGui() override;
-
-private Q_SLOTS:
-    void buttonClicked();
-
-private:
-    KSaneButton  *m_button;
+public Q_SLOTS:
+    bool setValue(const QVariant &value) override;
 };
 
 }  // NameSpace KSaneIface

@@ -43,6 +43,7 @@ public:
      * \param text is the text describing the entry.
      */
     LabeledEntry(QWidget *parent, const QString &text);
+    LabeledEntry(QWidget *parent, KSaneOption *option);
     ~LabeledEntry();
     void setText(const QString &text);
 
@@ -50,12 +51,14 @@ private Q_SLOTS:
 
     void setClicked();
     void resetClicked();
+    void setValue(const QVariant &value);
 
 Q_SIGNALS:
 
     void entryEdited(const QString &text);
 
 private:
+    void initEntry();
 
     QLineEdit *m_entry;
     QPushButton *m_set;
