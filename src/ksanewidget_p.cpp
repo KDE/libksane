@@ -59,7 +59,6 @@ KSaneWidgetPrivate::KSaneWidgetPrivate(KSaneWidget *parent):
     m_isPreview     = false;
 
     m_saneHandle    = nullptr;
-    m_previewThread = nullptr;
     m_scanThread    = nullptr;
 
     m_splitGamChB   = nullptr;
@@ -144,9 +143,6 @@ void KSaneWidgetPrivate::clearDeviceOptions()
 
     delete m_otherOptsTab;
     m_otherOptsTab = nullptr;
-
-    delete m_previewThread;
-    m_previewThread = nullptr;
 
     delete m_scanThread;
     m_scanThread = nullptr;
@@ -799,7 +795,7 @@ void KSaneWidgetPrivate::setTLX(const QVariant &x)
     bool ok;
     float ftlx = x.toFloat(&ok);
     // ignore this when conversion not possible and during an active scan
-    if (!ok || m_previewThread->isRunning() || m_scanThread->isRunning() || m_scanOngoing) {
+    if (!ok || m_scanThread->isRunning() || m_scanOngoing) {
         return;
     }
 
@@ -813,7 +809,7 @@ void KSaneWidgetPrivate::setTLY(const QVariant &y)
     bool ok;
     float ftly = y.toFloat(&ok);
     // ignore this when conversion not possible and during an active scan
-    if (!ok || m_previewThread->isRunning() || m_scanThread->isRunning() || m_scanOngoing) {
+    if (!ok || m_scanThread->isRunning() || m_scanOngoing) {
         return;
     }
 
@@ -827,7 +823,7 @@ void KSaneWidgetPrivate::setBRX(const QVariant &x)
     bool ok;
     float fbrx = x.toFloat(&ok);
     // ignore this when conversion not possible and during an active scan
-    if (!ok || m_previewThread->isRunning() || m_scanThread->isRunning() || m_scanOngoing) {
+    if (!ok || m_scanThread->isRunning() ||  m_scanOngoing) {
         return;
     }
 
@@ -850,7 +846,7 @@ void KSaneWidgetPrivate::setBRY(const QVariant &y)
     bool ok;
     float fbry = y.toFloat(&ok);
     // ignore this when conversion not possible and during an active scan
-    if (!ok || m_previewThread->isRunning() || m_scanThread->isRunning() || m_scanOngoing) {
+    if (!ok || m_scanThread->isRunning() || m_scanOngoing) {
         return;
     }
 
@@ -1049,16 +1045,17 @@ void KSaneWidgetPrivate::startPreviewScan()
 
     m_progressBar->setValue(0);
     m_isPreview = true;
-    m_previewThread->setPreviewInverted(m_optInvert->value().toBool());
-    m_previewThread->start();
-    m_updProgressTmr.start();
+    m_scanThread->setPreview(true);
+    m_scanThread->start();
 }
 
 void KSaneWidgetPrivate::previewScanDone()
 {
     // even if the scan is finished successfully we need to call sane_cancel()
     sane_cancel(m_saneHandle);
-
+    
+    m_scanThread->setPreview(false);
+    
     if (m_closeDevicePending) {
         setBusy(false);
         sane_close(m_saneHandle);
@@ -1088,16 +1085,15 @@ void KSaneWidgetPrivate::previewScanDone()
     m_previewViewer->setQImage(&m_previewImg);
     m_previewViewer->zoom2Fit();
 
-    if ((m_previewThread->saneStatus() != SANE_STATUS_GOOD) &&
-            (m_previewThread->saneStatus() != SANE_STATUS_EOF)) {
-        alertUser(KSaneWidget::ErrorGeneral, sane_i18n(sane_strstatus(m_previewThread->saneStatus())));
+    if ((m_scanThread->saneStatus() != SANE_STATUS_GOOD) &&
+            (m_scanThread->saneStatus() != SANE_STATUS_EOF)) {
+        alertUser(KSaneWidget::ErrorGeneral, sane_i18n(sane_strstatus(m_scanThread->saneStatus())));
     } else if (m_autoSelect) {
         m_previewViewer->findSelections();
     }
 
     setBusy(false);
     m_scanOngoing = false;
-    m_updProgressTmr.stop();
 
     Q_EMIT q->scanDone(KSaneWidget::NoError, QString());
 
@@ -1111,6 +1107,7 @@ void KSaneWidgetPrivate::startFinalScan()
     }
     m_scanOngoing = true;
     m_isPreview = false;
+    m_scanThread->setPreview(false);
     m_cancelMultiScan = false;
 
     float x1 = 0, y1 = 0, x2 = 0, y2 = 0;
@@ -1137,8 +1134,6 @@ void KSaneWidgetPrivate::startFinalScan()
     }
 
     setBusy(true);
-    m_updProgressTmr.start();
-    m_scanThread->setImageInverted(m_optInvert->value().toBool());
     m_scanThread->start();
 }
 
@@ -1155,11 +1150,17 @@ bool KSaneWidgetPrivate::scanSourceADF()
     source.contains(QStringLiteral("Duplex"));
 }
 
+void KSaneWidgetPrivate::scanDone()
+{
+    if (m_isPreview) {
+        previewScanDone();
+    } else {
+        oneFinalScanDone();
+    }
+}
+
 void KSaneWidgetPrivate::oneFinalScanDone()
 {
-    m_updProgressTmr.stop();
-    updateProgress();
-
     if (m_closeDevicePending) {
         setBusy(false);
         sane_close(m_saneHandle);
@@ -1168,7 +1169,7 @@ void KSaneWidgetPrivate::oneFinalScanDone()
         return;
     }
 
-    if (m_scanThread->frameStatus() == KSaneScanThread::READ_READY) {
+    if (m_scanThread->frameStatus() == KSaneScanThread::ReadReady) {
         // scan finished OK
         SANE_Parameters params = m_scanThread->saneParameters();
         int lines = params.lines;
@@ -1186,7 +1187,6 @@ void KSaneWidgetPrivate::oneFinalScanDone()
         // now check if we should have automatic ADF batch scanning
         if (scanSourceADF() && !m_cancelMultiScan) {
             // in batch mode only one area can be scanned per page
-            m_updProgressTmr.start();
             m_scanThread->start();
             m_cancelMultiScan = false;
             return;
@@ -1201,7 +1201,6 @@ void KSaneWidgetPrivate::oneFinalScanDone()
             if (wait == QStringLiteral("true")) {
                 // in batch mode only one area can be scanned per page
                 //qCDebug(KSANE_LOG) << "source == \"Automatic Document Feeder\"";
-                m_updProgressTmr.start();
                 m_scanThread->start();
                 return;
             }
@@ -1239,7 +1238,6 @@ void KSaneWidgetPrivate::oneFinalScanDone()
                 }
 
                 if (!m_cancelMultiScan) {
-                    m_updProgressTmr.start();
                     m_scanThread->start();
                     m_cancelMultiScan = false;
                     return;
@@ -1330,28 +1328,25 @@ void KSaneWidgetPrivate::checkInvert()
 
 void KSaneWidgetPrivate::invertPreview()
 {
-    m_previewImg.invertPixels();
     m_previewViewer->updateImage();
 }
 
-void KSaneWidgetPrivate::updateProgress()
+void KSaneWidgetPrivate::updateProgress(int progress)
 {
-    int progress;
     if (m_isPreview) {
-        progress = m_previewThread->scanProgress();
-        if (m_previewThread->saneStartDone()) {
-            if (!m_progressBar->isVisible() || m_previewThread->imageResized()) {
+        if (m_scanThread->saneStartDone()) {
+            if (!m_progressBar->isVisible() || m_scanThread->imageResized()) {
                 m_warmingUp->hide();
                 m_activityFrame->show();
                 // the image size might have changed
-                m_previewThread->imgMutex.lock();
+                m_scanThread->lockImage();
                 m_previewViewer->setQImage(&m_previewImg);
                 m_previewViewer->zoom2Fit();
-                m_previewThread->imgMutex.unlock();
+                m_scanThread->unlockImage();
             } else {
-                m_previewThread->imgMutex.lock();
+                m_scanThread->lockImage();
                 m_previewViewer->updateImage();
-                m_previewThread->imgMutex.unlock();
+                m_scanThread->unlockImage();
             }
         }
     } else {
@@ -1359,7 +1354,6 @@ void KSaneWidgetPrivate::updateProgress()
             m_warmingUp->hide();
             m_activityFrame->show();
         }
-        progress = m_scanThread->scanProgress();
         m_previewViewer->setHighlightShown(progress);
     }
 

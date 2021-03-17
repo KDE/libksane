@@ -37,7 +37,6 @@
 #include "labeledcheckbox.h"
 #include "splittercollapser.h"
 #include "ksanescanthread.h"
-#include "ksanepreviewthread.h"
 #include "ksanefinddevicesthread.h"
 #include "ksaneauth.h"
 
@@ -78,9 +77,10 @@ public Q_SLOTS:
     void signalDevListUpdate();
     void startFinalScan();
     void startPreviewScan();
+    void scanDone();
     void previewScanDone();
     void oneFinalScanDone();
-    void updateProgress();
+    void updateProgress(int progress);
     void scheduleValuesReload();
     void reloadOptions();
     void reloadValues();
@@ -192,10 +192,8 @@ public:
 
     // option handling
     QTimer              m_readValsTmr;
-    QTimer              m_updProgressTmr;
     QTimer              m_optionPollTmr;
     KSaneScanThread    *m_scanThread;
-    KSanePreviewThread *m_previewThread;
 
     QString             m_saneUserName;
     QString             m_sanePassword;

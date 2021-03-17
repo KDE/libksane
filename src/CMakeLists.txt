@@ -25,7 +25,6 @@ target_sources(KF5Sane PRIVATE
     ksanefinddevicesthread.cpp
     ksanewidget.cpp
     ksanescanthread.cpp
-    ksanepreviewthread.cpp
     ksanepreviewimagebuilder.cpp
     ksanewidget_p.cpp
     splittercollapser.cpp

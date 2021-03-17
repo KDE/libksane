@@ -116,10 +116,6 @@ KSaneWidget::KSaneWidget(QWidget *parent)
     d->m_readValsTmr.setSingleShot(true);
     connect(&d->m_readValsTmr, &QTimer::timeout, d, &KSaneWidgetPrivate::reloadValues);
 
-    d->m_updProgressTmr.setSingleShot(false);
-    d->m_updProgressTmr.setInterval(300);
-    connect(&d->m_updProgressTmr, &QTimer::timeout, d, &KSaneWidgetPrivate::updateProgress);
-
     // Create the static UI
     // create the preview
     d->m_previewViewer = new KSaneViewer(&(d->m_previewImg), this);
@@ -535,15 +531,16 @@ bool KSaneWidget::openDevice(const QString &deviceName)
     }
     
     // add extra option for inverting image colors
-    option = new KSaneInvertOption();
-    d->m_optionsList.append(option);
-    d->m_externalOptionsList.append(new KSaneInternalOption(option));
+    KSaneBaseOption *invertOption = new KSaneInvertOption();
+    d->m_optionsList.append(invertOption);
+    d->m_externalOptionsList.append(new KSaneInternalOption(invertOption));
+
     d->m_optionsLocation.insert(InvertColorOption, d->m_optionsList.size() - 1);  
     // add extra option for selecting specific page sizes
-    option = new KSanePageSizeOption(m_optionTopLeftX, m_optionTopLeftY,
+    KSaneBaseOption *pageSizeOption = new KSanePageSizeOption(m_optionTopLeftX, m_optionTopLeftY,
                             m_optionBottomRightX, m_optionBottomRightY, m_optionResolution);
-    d->m_optionsList.append(option);
-    d->m_externalOptionsList.append(new KSaneInternalOption(option));
+    d->m_optionsList.append(pageSizeOption);
+    d->m_externalOptionsList.append(new KSaneInternalOption(pageSizeOption));
     d->m_optionsLocation.insert(PageSizeOption, d->m_optionsList.size() - 1);  
 
     // start polling the poll options
@@ -552,13 +549,10 @@ bool KSaneWidget::openDevice(const QString &deviceName)
     }
 
     // Create the preview thread
-    d->m_previewThread = new KSanePreviewThread(d->m_saneHandle, &d->m_previewImg);
-    connect(d->m_previewThread, &KSanePreviewThread::finished, d, &KSaneWidgetPrivate::previewScanDone);
-
-    // Create the read thread
-    d->m_scanThread = new KSaneScanThread(d->m_saneHandle, &d->m_scanData);
-    connect(d->m_scanThread, &KSaneScanThread::finished, d, &KSaneWidgetPrivate::oneFinalScanDone);
-
+    d->m_scanThread = new KSaneScanThread(d->m_saneHandle, &d->m_previewImg, &d->m_scanData);
+    connect(d->m_scanThread, &KSaneScanThread::finished, d, &KSaneWidgetPrivate::scanDone);
+    connect(invertOption, &KSaneInvertOption::valueChanged, d->m_scanThread, &KSaneScanThread::setImageInverted);
+    connect(d->m_scanThread, &KSaneScanThread::scanProgressUpdated, d, &KSaneWidgetPrivate::updateProgress);
     // Create the options interface
     d->createOptInterface();
 
@@ -586,12 +580,6 @@ bool KSaneWidget::closeDevice()
 
     if (d->m_scanThread->isRunning()) {
         d->m_scanThread->cancelScan();
-        d->m_closeDevicePending = true;
-        return false;
-    }
-
-    if (d->m_previewThread->isRunning()) {
-        d->m_previewThread->cancelScan();
         d->m_closeDevicePending = true;
         return false;
     }
@@ -744,10 +732,6 @@ void KSaneWidget::scanCancel()
     if (d->m_scanThread->isRunning()) {
         d->m_scanThread->cancelScan();
     }
-
-    if (d->m_previewThread->isRunning()) {
-        d->m_previewThread->cancelScan();
-    }
     d->m_cancelMultiScan = true;
 }
 
@@ -808,8 +792,7 @@ bool KSaneWidget::getOptVal(const QString &optname, QString &value)
 
 int KSaneWidget::setOptVals(const QMap <QString, QString> &opts)
 {
-    if (d->m_scanThread->isRunning() ||
-            d->m_previewThread->isRunning()) {
+    if (d->m_scanThread->isRunning()) {
         return -1;
     }
 
@@ -868,8 +851,7 @@ int KSaneWidget::setOptVals(const QMap <QString, QString> &opts)
 
 bool KSaneWidget::setOptVal(const QString &option, const QString &value)
 {
-    if (d->m_scanThread->isRunning() ||
-            d->m_previewThread->isRunning()) {
+    if (d->m_scanThread->isRunning()) {
         return false;
     }
 
