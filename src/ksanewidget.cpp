@@ -82,17 +82,17 @@ KSaneWidget::KSaneWidget(QWidget *parent)
     d->m_findDevThread->start();
 
     d->m_readValsTmr.setSingleShot(true);
-    connect(&d->m_readValsTmr, SIGNAL(timeout()), d, SLOT(valReload()));
+    connect(&d->m_readValsTmr, &QTimer::timeout, d, &KSaneWidgetPrivate::reloadValues);
 
     d->m_updProgressTmr.setSingleShot(false);
     d->m_updProgressTmr.setInterval(300);
-    connect(&d->m_updProgressTmr, SIGNAL(timeout()), d, SLOT(updateProgress()));
+    connect(&d->m_updProgressTmr, &QTimer::timeout, d, &KSaneWidgetPrivate::updateProgress);
 
     // Create the static UI
     // create the preview
     d->m_previewViewer = new KSaneViewer(&(d->m_previewImg), this);
-    connect(d->m_previewViewer, SIGNAL(newSelection(float,float,float,float)),
-            d, SLOT(handleSelection(float,float,float,float)));
+    connect(d->m_previewViewer, &KSaneViewer::newSelection,
+            d, &KSaneWidgetPrivate::handleSelection);
 
     d->m_warmingUp = new QLabel;
     d->m_warmingUp->setText(i18n("Waiting for the scan to start."));
@@ -108,7 +108,7 @@ KSaneWidget::KSaneWidget(QWidget *parent)
     d->m_cancelBtn   = new QPushButton;
     d->m_cancelBtn->setIcon(QIcon::fromTheme(QStringLiteral("process-stop")));
     d->m_cancelBtn->setToolTip(i18n("Cancel current scan operation"));
-    connect(d->m_cancelBtn, SIGNAL(clicked()), this, SLOT(scanCancel()));
+    connect(d->m_cancelBtn, &QPushButton::clicked, this, &KSaneWidget::scanCancel);
 
     d->m_activityFrame = new QWidget;
     QHBoxLayout *progress_lay = new QHBoxLayout(d->m_activityFrame);
@@ -121,50 +121,50 @@ KSaneWidget::KSaneWidget(QWidget *parent)
     d->m_zInBtn->setAutoRaise(true);
     d->m_zInBtn->setIcon(QIcon::fromTheme(QStringLiteral("zoom-in")));
     d->m_zInBtn->setToolTip(i18n("Zoom In"));
-    connect(d->m_zInBtn, SIGNAL(clicked()), d->m_previewViewer, SLOT(zoomIn()));
+    connect(d->m_zInBtn, &QToolButton::clicked, d->m_previewViewer, &KSaneViewer::zoomIn);
 
     d->m_zOutBtn = new QToolButton(this);
     d->m_zOutBtn->setAutoRaise(true);
     d->m_zOutBtn->setIcon(QIcon::fromTheme(QStringLiteral("zoom-out")));
     d->m_zOutBtn->setToolTip(i18n("Zoom Out"));
-    connect(d->m_zOutBtn, SIGNAL(clicked()), d->m_previewViewer, SLOT(zoomOut()));
+    connect(d->m_zOutBtn, &QToolButton::clicked, d->m_previewViewer, &KSaneViewer::zoomOut);
 
     d->m_zSelBtn = new QToolButton(this);
     d->m_zSelBtn->setAutoRaise(true);
     d->m_zSelBtn->setIcon(QIcon::fromTheme(QStringLiteral("zoom-fit-best")));
     d->m_zSelBtn->setToolTip(i18n("Zoom to Selection"));
-    connect(d->m_zSelBtn, SIGNAL(clicked()), d->m_previewViewer, SLOT(zoomSel()));
+    connect(d->m_zSelBtn, &QToolButton::clicked, d->m_previewViewer, &KSaneViewer::zoomSel);
 
     d->m_zFitBtn = new QToolButton(this);
     d->m_zFitBtn->setAutoRaise(true);
     d->m_zFitBtn->setIcon(QIcon::fromTheme(QStringLiteral("document-preview")));
     d->m_zFitBtn->setToolTip(i18n("Zoom to Fit"));
-    connect(d->m_zFitBtn, SIGNAL(clicked()), d->m_previewViewer, SLOT(zoom2Fit()));
+    connect(d->m_zFitBtn, &QToolButton::clicked, d->m_previewViewer, &KSaneViewer::zoom2Fit);
 
     d->m_clearSelBtn = new QToolButton(this);
     d->m_clearSelBtn->setAutoRaise(true);
     d->m_clearSelBtn->setIcon(QIcon::fromTheme(QStringLiteral("edit-clear")));
     d->m_clearSelBtn->setToolTip(i18n("Clear Selections"));
-    connect(d->m_clearSelBtn, SIGNAL(clicked()), d->m_previewViewer, SLOT(clearSelections()));
+    connect(d->m_clearSelBtn, &QToolButton::clicked, d->m_previewViewer, &KSaneViewer::clearSelections);
 
     QShortcut *prevShortcut = new QShortcut(QKeySequence(QStringLiteral("Ctrl+P")), this);
-    connect(prevShortcut,   SIGNAL(activated()), d, SLOT(startPreviewScan()));
+    connect(prevShortcut, &QShortcut::activated, d, &KSaneWidgetPrivate::startPreviewScan);
 
     QShortcut *scanShortcut = new QShortcut(QKeySequence(QStringLiteral("Ctrl+S")), this);
-    connect(scanShortcut,   SIGNAL(activated()), d, SLOT(startFinalScan()));
+    connect(scanShortcut, &QShortcut::activated, d, &KSaneWidgetPrivate::startFinalScan);
 
     d->m_prevBtn = new QPushButton(this);
     d->m_prevBtn->setIcon(QIcon::fromTheme(QStringLiteral("document-import")));
     d->m_prevBtn->setToolTip(i18n("Scan Preview Image (%1)", prevShortcut->key().toString()));
     d->m_prevBtn->setText(i18nc("Preview button text", "Preview"));
-    connect(d->m_prevBtn,   SIGNAL(clicked()), d, SLOT(startPreviewScan()));
+    connect(d->m_prevBtn, &QToolButton::clicked, d, &KSaneWidgetPrivate::startPreviewScan);
 
     d->m_scanBtn = new QPushButton(this);
     d->m_scanBtn->setIcon(QIcon::fromTheme(QStringLiteral("document-save")));
     d->m_scanBtn->setToolTip(i18n("Scan Final Image (%1)", scanShortcut->key().toString()));
     d->m_scanBtn->setText(i18nc("Final scan button text", "Scan"));
     d->m_scanBtn->setFocus(Qt::OtherFocusReason);
-    connect(d->m_scanBtn,   SIGNAL(clicked()), d, SLOT(startFinalScan()));
+    connect(d->m_scanBtn, &QToolButton::clicked, d, &KSaneWidgetPrivate::startFinalScan);
 
     d->m_btnFrame = new QWidget;
     QHBoxLayout *btn_lay = new QHBoxLayout(d->m_btnFrame);
@@ -466,16 +466,16 @@ bool KSaneWidget::openDevice(const QString &deviceName)
     // do the connections of the option parameters
     for (i = 0; i < d->m_optList.size(); ++i) {
         //qCDebug(KSANE_LOG) << d->m_optList.at(i)->name();
-        connect(d->m_optList.at(i), SIGNAL(optionsNeedReload()), d, SLOT(optReload()));
-        connect(d->m_optList.at(i), SIGNAL(valuesNeedReload()), d, SLOT(scheduleValReload()));
+        connect(d->m_optList.at(i), &KSaneOption::optionsNeedReload, d, &KSaneWidgetPrivate::reloadOptions);
+        connect(d->m_optList.at(i), &KSaneOption::valuesNeedReload, d, &KSaneWidgetPrivate::scheduleValuesReload);
 
         if (d->m_optList.at(i)->needsPolling()) {
             //qCDebug(KSANE_LOG) << d->m_optList.at(i)->name() << " needs polling";
             d->m_pollList.append(d->m_optList.at(i));
             KSaneOptCheckBox *buttonOption = qobject_cast<KSaneOptCheckBox *>(d->m_optList.at(i));
             if (buttonOption) {
-                connect(buttonOption, SIGNAL(buttonPressed(QString,QString,bool)),
-                        this, SIGNAL(buttonPressed(QString,QString,bool)));
+                connect(buttonOption, &KSaneOptCheckBox::buttonPressed,
+                        this, &KSaneWidget::buttonPressed);
             }
         }
     }
@@ -487,11 +487,11 @@ bool KSaneWidget::openDevice(const QString &deviceName)
 
     // Create the preview thread
     d->m_previewThread = new KSanePreviewThread(d->m_saneHandle, &d->m_previewImg);
-    connect(d->m_previewThread, SIGNAL(finished()), d, SLOT(previewScanDone()));
+    connect(d->m_previewThread, &KSanePreviewThread::finished, d, &KSaneWidgetPrivate::previewScanDone);
 
     // Create the read thread
     d->m_scanThread = new KSaneScanThread(d->m_saneHandle, &d->m_scanData);
-    connect(d->m_scanThread, SIGNAL(finished()), d, SLOT(oneFinalScanDone()));
+    connect(d->m_scanThread, &KSaneScanThread::finished, d, &KSaneWidgetPrivate::oneFinalScanDone);
 
     // Create the options interface
     d->createOptInterface();
@@ -508,7 +508,7 @@ bool KSaneWidget::openDevice(const QString &deviceName)
     // this is done so that you can select scan area without
     // having to scan a preview.
     d->updatePreviewSize();
-    QTimer::singleShot(1000, d->m_previewViewer, SLOT(zoom2Fit()));
+    QTimer::singleShot(1000, d->m_previewViewer, &KSaneViewer::zoom2Fit);
     return true;
 }
 
@@ -947,9 +947,9 @@ void KSaneWidget::setSelection(QPointF topLeft, QPointF bottomRight)
 void KSaneWidget::setOptionsCollapsed(bool collapse)
 {
     if (collapse) {
-        QTimer::singleShot(0, d->m_optionsCollapser, SLOT(slotCollapse()));
+        QTimer::singleShot(0, d->m_optionsCollapser, &SplitterCollapser::slotCollapse);
     } else {
-        QTimer::singleShot(0, d->m_optionsCollapser, SLOT(slotRestore()));
+        QTimer::singleShot(0, d->m_optionsCollapser, &SplitterCollapser::slotRestore);
     }
 }
 

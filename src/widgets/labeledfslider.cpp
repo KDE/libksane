@@ -117,9 +117,9 @@ void LabeledFSlider::initFSlider(float minValueF, float maxValueF, float stepVal
 
     m_label->setBuddy(m_spinb);
 
-    connect(m_spinb,  SIGNAL(valueChanged(double)), this, SLOT(syncValues(double)));
-    connect(m_slider, SIGNAL(valueChanged(int)),    this, SLOT(syncValues(int)));
-    connect(m_slider, SIGNAL(sliderReleased()),   this, SLOT(fixValue()));
+    connect(m_spinb, QOverload<double>::of(&QDoubleSpinBox::valueChanged), this, QOverload<double>::of(&LabeledFSlider::syncValues));
+    connect(m_slider, QOverload<int>::of(&QSlider::valueChanged), this, QOverload<int>::of(&LabeledFSlider::syncValues));
+    connect(m_slider, &QSlider::sliderReleased, this, &LabeledFSlider::fixValue);
 
     m_layout->addWidget(m_slider, 0, 2);
     m_layout->addWidget(m_spinb, 0, 1);

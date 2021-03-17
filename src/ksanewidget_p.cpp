@@ -22,6 +22,7 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QMessageBox>
+#include <QMetaMethod>
 #include <QPageSize>
 
 #include <ksane_debug.h>
@@ -97,12 +98,12 @@ KSaneWidgetPrivate::KSaneWidgetPrivate(KSaneWidget *parent):
     clearDeviceOptions();
 
     m_findDevThread = FindSaneDevicesThread::getInstance();
-    connect(m_findDevThread, SIGNAL(finished()), this, SLOT(devListUpdated()));
-    connect(m_findDevThread, SIGNAL(finished()), this, SLOT(signalDevListUpdate()));
+    connect(m_findDevThread, &FindSaneDevicesThread::finished, this, &KSaneWidgetPrivate::devListUpdated);
+    connect(m_findDevThread, &FindSaneDevicesThread::finished, this, &KSaneWidgetPrivate::signalDevListUpdate);
 
     m_auth = KSaneAuth::getInstance();
     m_optionPollTmr.setInterval(100);
-    connect(&m_optionPollTmr, SIGNAL(timeout()), this, SLOT(pollPollOptions()));
+    connect(&m_optionPollTmr, &QTimer::timeout, this, &KSaneWidgetPrivate::pollPollOptions);
 }
 
 void KSaneWidgetPrivate::clearDeviceOptions()
@@ -430,7 +431,7 @@ void KSaneWidgetPrivate::createOptInterface()
         m_optFilmType = option;
         KSaneOptionWidget *film = createOptionWidget(m_basicOptsTab, option);
         basic_layout->addWidget(film);
-        connect(m_optFilmType, SIGNAL(valueChanged()), this, SLOT(checkInvert()), Qt::QueuedConnection);
+        connect(m_optFilmType, &KSaneOption::valueChanged, this, &KSaneWidgetPrivate::checkInvert, Qt::QueuedConnection);
     } else if ((option = getOption(QStringLiteral(SANE_NAME_NEGATIVE))) != nullptr) {
         m_optNegative = option;
         KSaneOptionWidget *negative = createOptionWidget(m_basicOptsTab, option);
@@ -726,12 +727,12 @@ void KSaneWidgetPrivate::setDefaultValues()
     }
 }
 
-void KSaneWidgetPrivate::scheduleValReload()
+void KSaneWidgetPrivate::scheduleValuesReload()
 {
     m_readValsTmr.start(5);
 }
 
-void KSaneWidgetPrivate::optReload()
+void KSaneWidgetPrivate::reloadOptions()
 {
     int i;
 
@@ -762,7 +763,7 @@ void KSaneWidgetPrivate::optReload()
     m_previewViewer->zoom2Fit();
 }
 
-void KSaneWidgetPrivate::valReload()
+void KSaneWidgetPrivate::reloadValues()
 {
     for (int i = 0; i < m_optList.size(); ++i) {
         m_optList.at(i)->readValue();
@@ -1042,7 +1043,7 @@ void KSaneWidgetPrivate::startPreviewScan()
     // execute valReload if there is a pending value reload
     while (m_readValsTmr.isActive()) {
         m_readValsTmr.stop();
-        valReload();
+        reloadValues();
     }
 
     // clear the preview
@@ -1139,7 +1140,7 @@ void KSaneWidgetPrivate::startFinalScan()
     // execute a pending value reload
     while (m_readValsTmr.isActive()) {
         m_readValsTmr.stop();
-        valReload();
+        reloadValues();
     }
 
     setBusy(true);
@@ -1243,7 +1244,7 @@ void KSaneWidgetPrivate::oneFinalScanDone()
                 // execute a pending value reload
                 while (m_readValsTmr.isActive()) {
                     m_readValsTmr.stop();
-                    valReload();
+                    reloadValues();
                 }
 
                 if (!m_cancelMultiScan) {
@@ -1379,7 +1380,7 @@ void KSaneWidgetPrivate::updateProgress()
 
 void KSaneWidgetPrivate::alertUser(int type, const QString &strStatus)
 {
-    if (q->receivers(SIGNAL(userMessage(int,QString))) == 0) {
+    if (!q->isSignalConnected(QMetaMethod::fromSignal(&KSaneWidget::userMessage))) {
         switch (type) {
         case KSaneWidget::ErrorGeneral:
             QMessageBox::critical(nullptr, i18nc("@title:window", "General Error"), strStatus);

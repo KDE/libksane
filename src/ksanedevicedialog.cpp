@@ -71,8 +71,7 @@ KSaneDeviceDialog::KSaneDeviceDialog(QWidget *parent)
     m_btnOk = bottomButtonBox->button(QDialogButtonBox::Ok);
     m_btnReloadDevices = bottomButtonBox->addButton(i18n("Reload devices list"), QDialogButtonBox::ButtonRole::ActionRole);
     layout->addWidget(bottomButtonBox);
-    //connect(buttonBox, SIGNAL(accepted()), this, SLOT(accept()));
-    //connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+
     connect(bottomButtonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
     connect(bottomButtonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
     connect(m_btnReloadDevices, &QPushButton::clicked, this, &KSaneDeviceDialog::reloadDevicesList);

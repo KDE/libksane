@@ -91,12 +91,13 @@ public Q_SLOTS:
     void previewScanDone();
     void oneFinalScanDone();
     void updateProgress();
-
-private Q_SLOTS:
-    void scheduleValReload();
-    void optReload();
-    void valReload();
+    void scheduleValuesReload();
+    void reloadOptions();
+    void reloadValues();
     void handleSelection(float tl_x, float tl_y, float br_x, float br_y);
+    
+private Q_SLOTS:
+
     void setTLX(const QVariant &x);
     void setTLY(const QVariant &y);
     void setBRX(const QVariant &x);
