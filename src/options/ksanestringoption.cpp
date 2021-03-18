@@ -12,7 +12,7 @@
  *
  * ============================================================ */
 // Local includes
-#include "ksaneoptentry.h"
+#include "ksanestringoption.h"
 
 #include <QVarLengthArray>
 
@@ -21,13 +21,13 @@
 namespace KSaneIface
 {
 
-KSaneOptEntry::KSaneOptEntry(const SANE_Handle handle, const int index)
+KSaneStringOption::KSaneStringOption(const SANE_Handle handle, const int index)
     : KSaneOption(handle, index)
 {
     m_optionType = KSaneOption::TypeString;
 }
 
-bool KSaneOptEntry::setValue(const QVariant &val)
+bool KSaneStringOption::setValue(const QVariant &val)
 {
     if (state() == StateHidden) {
         return false;
@@ -42,7 +42,7 @@ bool KSaneOptEntry::setValue(const QVariant &val)
     return true;
 }
 
-void KSaneOptEntry::readValue()
+void KSaneStringOption::readValue()
 {
     if (state() == StateHidden) {
         return;
@@ -62,12 +62,12 @@ void KSaneOptEntry::readValue()
     Q_EMIT valueChanged(m_string);
 }
 
-QVariant KSaneOptEntry::getValue() const
+QVariant KSaneStringOption::getValue() const
 {
     return QVariant(m_string);
 }
 
-QString KSaneOptEntry::getValueAsString() const
+QString KSaneStringOption::getValueAsString() const
 {
     if (state() == StateHidden) {
         return QString();

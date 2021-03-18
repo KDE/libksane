@@ -2,7 +2,7 @@
  *
  * This file is part of the KDE project
  *
- * Date        : 2009-01-21
+ * Date        : 2009-01-31
  * Description : Sane interface for KDE
  *
  * SPDX-FileCopyrightText: 2009 Kare Sars <kare dot sars at iki dot fi>
@@ -11,31 +11,38 @@
  *
  * ============================================================ */
 
-#ifndef KSANE_OPT_ENTRY_H
-#define KSANE_OPT_ENTRY_H
+#ifndef KSANE_OPT_GAMMA_H
+#define KSANE_OPT_GAMMA_H
 
 #include "ksaneoption.h"
 
 namespace KSaneIface
 {
 
-class KSaneOptEntry : public KSaneOption
+class KSaneGammaOption : public KSaneOption
 {
     Q_OBJECT
 
 public:
-    KSaneOptEntry(const SANE_Handle handle, const int index);
+    KSaneGammaOption(const SANE_Handle handle, const int index);
 
     void readValue() override;
-
+    void readOption() override;
+    
+    QVariant getMaxValue() const override;
     QVariant getValue() const override;
     QString getValueAsString() const override;
 
 public Q_SLOTS:
-    bool setValue(const QVariant &val) override;
+    bool setValue(const QVariant & value) override;
 
 private:
-    QString       m_string;
+    void calculateGTwriteData();
+    
+    int             m_brightness;
+    int             m_contrast;
+    int             m_gamma;
+    QVector<int>    m_gammaTable;
 };
 
 }  // NameSpace KSaneIface

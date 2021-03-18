@@ -33,13 +33,13 @@ set(ksane_SRCS
     splittercollapser.cpp
     ksaneauth.cpp
     options/ksaneoption.cpp
-    options/ksaneoptbutton.cpp
-    options/ksaneoptcheckbox.cpp
-    options/ksaneoptentry.cpp
-    options/ksaneoptgamma.cpp
-    options/ksaneoptslider.cpp
-    options/ksaneoptfslider.cpp
-    options/ksaneoptcombo.cpp
+    options/ksaneactionoption.cpp
+    options/ksanebooloption.cpp
+    options/ksanestringoption.cpp
+    options/ksanegammaoption.cpp
+    options/ksaneintegeroption.cpp
+    options/ksanefloatoption.cpp
+    options/ksanelistoption.cpp
     options/ksaneinvertoption.cpp
 )
 

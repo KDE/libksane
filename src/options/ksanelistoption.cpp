@@ -12,7 +12,7 @@
  *
  * ============================================================ */
 
-#include "ksaneoptcombo.h"
+#include "ksanelistoption.h"
 
 #include <QVarLengthArray>
 #include <QLocale>
@@ -22,13 +22,13 @@
 namespace KSaneIface
 {
 
-KSaneOptCombo::KSaneOptCombo(const SANE_Handle handle, const int index)
+KSaneListOption::KSaneListOption(const SANE_Handle handle, const int index)
     : KSaneOption(handle, index)
 {
     m_optionType = KSaneOption::TypeValueList;
 }
 
-void KSaneOptCombo::readValue()
+void KSaneListOption::readValue()
 {
     if (state() == StateHidden) {
         return;
@@ -64,7 +64,7 @@ void KSaneOptCombo::readValue()
     }
 }
 
-QVariantList KSaneOptCombo::getEntryList() const
+QVariantList KSaneListOption::getEntryList() const
 {
     int i;
     QVariantList list;
@@ -94,7 +94,7 @@ QVariantList KSaneOptCombo::getEntryList() const
     return list;
 }
 
-bool KSaneOptCombo::setValue(const QVariant &value)
+bool KSaneListOption::setValue(const QVariant &value)
 {
     bool success = false;
     if (static_cast<QMetaType::Type>(value.type()) == QMetaType::QString) {
@@ -106,7 +106,7 @@ bool KSaneOptCombo::setValue(const QVariant &value)
     return success;
 }
 
-QVariant KSaneOptCombo::getMinValue() const
+QVariant KSaneListOption::getMinValue() const
 {
     QVariant value;
     if (state() == StateHidden) {
@@ -136,7 +136,7 @@ QVariant KSaneOptCombo::getMinValue() const
     return value;
 }
 
-QVariant KSaneOptCombo::getValue() const
+QVariant KSaneListOption::getValue() const
 {
     if (state() == StateHidden) {
         return QVariant();
@@ -144,7 +144,7 @@ QVariant KSaneOptCombo::getValue() const
     return m_currentValue;
 }
 
-bool KSaneOptCombo::setValue(float value)
+bool KSaneListOption::setValue(float value)
 {
     unsigned char data[4];
     float tmp;
@@ -188,7 +188,7 @@ bool KSaneOptCombo::setValue(float value)
     return false;
 }
 
-QString KSaneOptCombo::getValueAsString() const
+QString KSaneListOption::getValueAsString() const
 {
     if (state() == StateHidden) {
         return QString();
@@ -196,7 +196,7 @@ QString KSaneOptCombo::getValueAsString() const
     return m_currentValue.toString();
 }
 
-bool KSaneOptCombo::setValue(const QString &value)
+bool KSaneListOption::setValue(const QString &value)
 {
     if (state() == StateHidden) {
         return false;

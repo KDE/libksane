@@ -35,13 +35,13 @@
 #endif
 
 #include "ksaneoption.h"
-#include "ksaneoptbutton.h"
-#include "ksaneoptcheckbox.h"
-#include "ksaneoptcombo.h"
-#include "ksaneoptentry.h"
-#include "ksaneoptfslider.h"
-#include "ksaneoptgamma.h"
-#include "ksaneoptslider.h"
+#include "ksaneactionoption.h"
+#include "ksanebooloption.h"
+#include "ksanelistoption.h"
+#include "ksanestringoption.h"
+#include "ksanefloatoption.h"
+#include "ksanegammaoption.h"
+#include "ksaneintegeroption.h"
 #include "ksanedevicedialog.h"
 #include "labeledgamma.h"
 #include "ksaneinvertoption.h"
@@ -439,25 +439,25 @@ bool KSaneWidget::openDevice(const QString &deviceName)
             d->m_optList.append(new KSaneOption(d->m_saneHandle, i));
             break;
         case KSaneOption::TypeBool:
-            d->m_optList.append(new KSaneOptCheckBox(d->m_saneHandle, i));
+            d->m_optList.append(new KSaneBoolOption(d->m_saneHandle, i));
             break;
         case KSaneOption::TypeInteger:
-            d->m_optList.append(new KSaneOptSlider(d->m_saneHandle, i));
+            d->m_optList.append(new KSaneIntegerOption(d->m_saneHandle, i));
             break;
         case KSaneOption::TypeFloat:
-            d->m_optList.append(new KSaneOptFSlider(d->m_saneHandle, i));
+            d->m_optList.append(new KSaneFloatOption(d->m_saneHandle, i));
             break;
         case KSaneOption::TypeValueList:
-            d->m_optList.append(new KSaneOptCombo(d->m_saneHandle, i));
+            d->m_optList.append(new KSaneListOption(d->m_saneHandle, i));
             break;
         case KSaneOption::TypeString:
-            d->m_optList.append(new KSaneOptEntry(d->m_saneHandle, i));
+            d->m_optList.append(new KSaneStringOption(d->m_saneHandle, i));
             break;
         case KSaneOption::TypeGamma:
-            d->m_optList.append(new KSaneOptGamma(d->m_saneHandle, i));
+            d->m_optList.append(new KSaneGammaOption(d->m_saneHandle, i));
             break;
         case KSaneOption::TypeAction:
-            d->m_optList.append(new KSaneOptButton(d->m_saneHandle, i));
+            d->m_optList.append(new KSaneActionOption(d->m_saneHandle, i));
             break;
         }
     }

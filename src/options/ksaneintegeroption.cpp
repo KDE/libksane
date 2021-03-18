@@ -12,7 +12,7 @@
  *
  * ============================================================ */
 
-#include "ksaneoptslider.h"
+#include "ksaneintegeroption.h"
 
 #include <QVarLengthArray>
 
@@ -22,13 +22,13 @@ static const int KSW_INT_MIN = -2147483647 - 1; // prevent warning
 namespace KSaneIface
 {
 
-KSaneOptSlider::KSaneOptSlider(const SANE_Handle handle, const int index)
+KSaneIntegerOption::KSaneIntegerOption(const SANE_Handle handle, const int index)
     : KSaneOption(handle, index), m_iVal(0)
 {
     m_optionType = KSaneOption::TypeInteger;
 }
 
-void KSaneOptSlider::readValue()
+void KSaneIntegerOption::readValue()
 {
     if (state() == StateHidden) {
         return;
@@ -48,7 +48,7 @@ void KSaneOptSlider::readValue()
     Q_EMIT valueChanged(m_iVal);
 }
 
-QVariant KSaneOptSlider::getMinValue() const
+QVariant KSaneIntegerOption::getMinValue() const
 {
     QVariant value;
     if (m_optDesc->constraint_type == SANE_CONSTRAINT_RANGE) {
@@ -59,7 +59,7 @@ QVariant KSaneOptSlider::getMinValue() const
     return value;
 }
 
-QVariant KSaneOptSlider::getMaxValue() const
+QVariant KSaneIntegerOption::getMaxValue() const
 {
     QVariant value;
     if (m_optDesc->constraint_type == SANE_CONSTRAINT_RANGE) {
@@ -70,7 +70,7 @@ QVariant KSaneOptSlider::getMaxValue() const
     return value;
 }
 
-QVariant KSaneOptSlider::getStepValue() const
+QVariant KSaneIntegerOption::getStepValue() const
 {
     QVariant value;
     if (m_optDesc->constraint_type == SANE_CONSTRAINT_RANGE) {
@@ -81,7 +81,7 @@ QVariant KSaneOptSlider::getStepValue() const
     return value;
 }
 
-QVariant KSaneOptSlider::getValue() const
+QVariant KSaneIntegerOption::getValue() const
 {
     QVariant value;
     if (state() == StateHidden) {
@@ -91,7 +91,7 @@ QVariant KSaneOptSlider::getValue() const
     return value;
 }
 
-QString KSaneOptSlider::getValueAsString() const
+QString KSaneIntegerOption::getValueAsString() const
 {
     if (state() == StateHidden) {
         return QString();
@@ -99,7 +99,7 @@ QString KSaneOptSlider::getValueAsString() const
     return QString::number(m_iVal);
 }
 
-bool KSaneOptSlider::setValue(const QVariant &val)
+bool KSaneIntegerOption::setValue(const QVariant &val)
 {
     bool ok;
     int newValue = val.toInt(&ok);

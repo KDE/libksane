@@ -12,20 +12,20 @@
  *
  * ============================================================ */
 
-#include "ksaneoptbutton.h"
+#include "ksaneactionoption.h"
 
 #include <ksane_debug.h>
 
 namespace KSaneIface
 {
 
-KSaneOptButton::KSaneOptButton(const SANE_Handle handle, const int index)
+KSaneActionOption::KSaneActionOption(const SANE_Handle handle, const int index)
     : KSaneOption(handle, index)
 {
     m_optionType = KSaneOption::TypeAction;
 }
 
-bool KSaneOptButton::setValue(const QVariant &)
+bool KSaneActionOption::setValue(const QVariant &)
 {
     unsigned char data[4];
     writeData(data);

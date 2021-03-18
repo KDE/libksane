@@ -12,7 +12,7 @@
  *
  * ============================================================ */
 // Local includes
-#include "ksaneoptfslider.h"
+#include "ksanefloatoption.h"
 
 #include <QVarLengthArray>
 
@@ -24,13 +24,13 @@ static const float MIN_FIXED_STEP = 0.0001;
 namespace KSaneIface
 {
 
-KSaneOptFSlider::KSaneOptFSlider(const SANE_Handle handle, const int index)
+KSaneFloatOption::KSaneFloatOption(const SANE_Handle handle, const int index)
     : KSaneOption(handle, index), m_fVal(0), m_minChange(MIN_FIXED_STEP)
 {
     m_optionType = KSaneOption::TypeFloat;
 }
 
-void KSaneOptFSlider::readOption()
+void KSaneFloatOption::readOption()
 {
     KSaneOption::readOption();
 
@@ -44,7 +44,7 @@ void KSaneOptFSlider::readOption()
     m_minChange = step;
 }
 
-void KSaneOptFSlider::readValue()
+void KSaneFloatOption::readValue()
 {
     if (state() == StateHidden) {
         return;
@@ -64,7 +64,7 @@ void KSaneOptFSlider::readValue()
     Q_EMIT valueChanged(m_fVal);
 }
 
-bool KSaneOptFSlider::setValue(const QVariant &value)
+bool KSaneFloatOption::setValue(const QVariant &value)
 {
     if (state() == StateHidden) {
         return false;
@@ -84,7 +84,7 @@ bool KSaneOptFSlider::setValue(const QVariant &value)
     return ok;
 }
 
-QVariant KSaneOptFSlider::getMinValue() const
+QVariant KSaneFloatOption::getMinValue() const
 {
     QVariant value;
     if (m_optDesc->constraint_type == SANE_CONSTRAINT_RANGE) {
@@ -95,7 +95,7 @@ QVariant KSaneOptFSlider::getMinValue() const
     return value;
 }
 
-QVariant KSaneOptFSlider::getMaxValue() const
+QVariant KSaneFloatOption::getMaxValue() const
 {
     QVariant value;
     if (m_optDesc->constraint_type == SANE_CONSTRAINT_RANGE) {
@@ -106,7 +106,7 @@ QVariant KSaneOptFSlider::getMaxValue() const
     return value;
 }
 
-QVariant KSaneOptFSlider::getStepValue() const
+QVariant KSaneFloatOption::getStepValue() const
 {
     QVariant value;
     if (m_optDesc->constraint_type == SANE_CONSTRAINT_RANGE) {
@@ -117,7 +117,7 @@ QVariant KSaneOptFSlider::getStepValue() const
     return value;
 }
 
-QVariant KSaneOptFSlider::getValue() const
+QVariant KSaneFloatOption::getValue() const
 {
     if (state() == StateHidden) {
         return QVariant();
@@ -125,7 +125,7 @@ QVariant KSaneOptFSlider::getValue() const
     return QVariant(m_fVal);
 }
 
-QString KSaneOptFSlider::getValueAsString() const
+QString KSaneFloatOption::getValueAsString() const
 {
     if (state() == StateHidden) {
         return QString();

@@ -12,7 +12,7 @@
  *
  * ============================================================ */
 
-#include "ksaneoptgamma.h"
+#include "ksanegammaoption.h"
 
 #include <QVarLengthArray>
 
@@ -23,13 +23,13 @@
 namespace KSaneIface
 {
 
-KSaneOptGamma::KSaneOptGamma(const SANE_Handle handle, const int index)
+KSaneGammaOption::KSaneGammaOption(const SANE_Handle handle, const int index)
     : KSaneOption(handle, index)
 {
     m_optionType = KSaneOption::TypeGamma;
 }
 
-bool KSaneOptGamma::setValue(const QVariant &value)
+bool KSaneGammaOption::setValue(const QVariant &value)
 {
     if (state() == StateHidden) {
         return false;
@@ -79,7 +79,7 @@ bool KSaneOptGamma::setValue(const QVariant &value)
     return false;
 }
 
-void KSaneOptGamma::readOption()
+void KSaneGammaOption::readOption()
 {
     KSaneOption::readOption();
     
@@ -92,13 +92,13 @@ void KSaneOptGamma::readOption()
     }
 }
 
-void KSaneOptGamma::readValue()
+void KSaneGammaOption::readValue()
 {
     // Unfortunately gamma table to brightness, contrast and gamma is
     // not easy nor fast.. ergo not done
 }
 
-QVariant KSaneOptGamma::getValue() const
+QVariant KSaneGammaOption::getValue() const
 {
     if (state() == StateHidden) {
         return QVariant();
@@ -106,7 +106,7 @@ QVariant KSaneOptGamma::getValue() const
     return QVariant::fromValue(QVector<int>{ m_brightness, m_contrast, m_gamma });
 }
 
-QVariant KSaneOptGamma::getMaxValue() const
+QVariant KSaneGammaOption::getMaxValue() const
 {
     QVariant value;
     if (m_optDesc) {
@@ -116,7 +116,7 @@ QVariant KSaneOptGamma::getMaxValue() const
     return value;
 }
 
-QString KSaneOptGamma::getValueAsString() const
+QString KSaneGammaOption::getValueAsString() const
 {
     if (state() == StateHidden) {
         return QString();
@@ -125,7 +125,7 @@ QString KSaneOptGamma::getValueAsString() const
     return QString::asprintf("%d:%d:%d", m_brightness, m_contrast, m_gamma);
 }
 
-void KSaneOptGamma::calculateGTwriteData()
+void KSaneGammaOption::calculateGTwriteData()
 {   
     double maxValue = m_optDesc->constraint.range->max;
     double gamma    = 100.0 / m_gamma;

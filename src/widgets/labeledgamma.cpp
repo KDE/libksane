@@ -14,7 +14,7 @@
 
 // Local includes
 #include "labeledgamma.h"
-#include "ksaneoptgamma.h"
+#include "ksaneoption.h"
 
 #include <QGroupBox>
 

@@ -11,27 +11,23 @@
  *
  * ============================================================ */
 
-#ifndef KSANE_OPT_FSLIDER_H
-#define KSANE_OPT_FSLIDER_H
+#ifndef KSANE_OPT_CHECKBOX_H
+#define KSANE_OPT_CHECKBOX_H
 
 #include "ksaneoption.h"
 
 namespace KSaneIface
 {
 
-class KSaneOptFSlider : public KSaneOption
+class KSaneBoolOption : public KSaneOption
 {
     Q_OBJECT
 
 public:
-    KSaneOptFSlider(const SANE_Handle handle, const int index);
+    KSaneBoolOption(const SANE_Handle handle, const int index);
 
     void readValue() override;
-    void readOption() override;
 
-    QVariant getMinValue() const override;
-    QVariant getMaxValue() const override;
-    QVariant getStepValue() const override;
     QVariant getValue() const override;
     QString getValueAsString() const override;
 
@@ -39,8 +35,7 @@ public Q_SLOTS:
     bool setValue(const QVariant &value) override;
 
 private:
-    float           m_fVal;
-    float           m_minChange;
+    bool             m_checked;
 };
 
 }  // NameSpace KSaneIface

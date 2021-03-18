@@ -11,31 +11,39 @@
  *
  * ============================================================ */
 
-#ifndef KSANE_OPT_CHECKBOX_H
-#define KSANE_OPT_CHECKBOX_H
+#ifndef KSANE_OPT_COMBO_H
+#define KSANE_OPT_COMBO_H
 
 #include "ksaneoption.h"
+
+#include <utility>
 
 namespace KSaneIface
 {
 
-class KSaneOptCheckBox : public KSaneOption
+class KSaneListOption : public KSaneOption
 {
     Q_OBJECT
 
 public:
-    KSaneOptCheckBox(const SANE_Handle handle, const int index);
+    KSaneListOption(const SANE_Handle handle, const int index);
 
     void readValue() override;
 
+    QVariant getMinValue() const override;
     QVariant getValue() const override;
     QString getValueAsString() const override;
-
+    QVariantList getEntryList() const override;
+    
 public Q_SLOTS:
     bool setValue(const QVariant &value) override;
 
 private:
-    bool             m_checked;
+    std::pair<QString, QString> getSaneComboString(unsigned char *data) const;
+    bool setValue(float value);
+    bool setValue(const QString &value);
+
+    QVariant       m_currentValue;
 };
 
 }  // NameSpace KSaneIface

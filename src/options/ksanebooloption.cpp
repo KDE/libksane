@@ -12,7 +12,7 @@
  *
  * ============================================================ */
 // Local includes
-#include "ksaneoptcheckbox.h"
+#include "ksanebooloption.h"
 
 #include <QtCore/QVarLengthArray>
 
@@ -21,13 +21,13 @@
 namespace KSaneIface
 {
 
-KSaneOptCheckBox::KSaneOptCheckBox(const SANE_Handle handle, const int index)
+KSaneBoolOption::KSaneBoolOption(const SANE_Handle handle, const int index)
     : KSaneOption(handle, index), m_checked(false)
 {
     m_optionType = KSaneOption::TypeBool;
 }
 
-bool KSaneOptCheckBox::setValue(const QVariant &value)
+bool KSaneBoolOption::setValue(const QVariant &value)
 {
     if (state() == StateHidden) {
         return false;
@@ -46,7 +46,7 @@ bool KSaneOptCheckBox::setValue(const QVariant &value)
     return true;
 }
 
-void KSaneOptCheckBox::readValue()
+void KSaneBoolOption::readValue()
 {
     if (state() == StateHidden) {
         return;
@@ -68,7 +68,7 @@ void KSaneOptCheckBox::readValue()
     }
 }
 
-QVariant KSaneOptCheckBox::getValue() const
+QVariant KSaneBoolOption::getValue() const
 {
     if (state() == StateHidden) {
         return QVariant();
@@ -76,7 +76,7 @@ QVariant KSaneOptCheckBox::getValue() const
     return m_checked;
 }
 
-QString KSaneOptCheckBox::getValueAsString() const
+QString KSaneBoolOption::getValueAsString() const
 {
     if (state() == StateHidden) {
         return QString();

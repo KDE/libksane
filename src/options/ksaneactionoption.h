@@ -19,12 +19,12 @@
 namespace KSaneIface
 {
 
-class KSaneOptButton : public KSaneOption
+class KSaneActionOption : public KSaneOption
 {
     Q_OBJECT
 
 public:
-    KSaneOptButton(const SANE_Handle handle, const int index);
+    KSaneActionOption(const SANE_Handle handle, const int index);
 
 public Q_SLOTS:
     bool setValue(const QVariant &value) override;

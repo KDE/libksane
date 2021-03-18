@@ -13,7 +13,6 @@
  * ============================================================ */
 
 #include "labeledslider.h"
-#include "ksaneoptslider.h"
 #include "ksaneoption.h"
 // Qt includes
 

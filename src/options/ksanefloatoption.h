@@ -11,39 +11,36 @@
  *
  * ============================================================ */
 
-#ifndef KSANE_OPT_COMBO_H
-#define KSANE_OPT_COMBO_H
+#ifndef KSANE_OPT_FSLIDER_H
+#define KSANE_OPT_FSLIDER_H
 
 #include "ksaneoption.h"
-
-#include <utility>
 
 namespace KSaneIface
 {
 
-class KSaneOptCombo : public KSaneOption
+class KSaneFloatOption : public KSaneOption
 {
     Q_OBJECT
 
 public:
-    KSaneOptCombo(const SANE_Handle handle, const int index);
+    KSaneFloatOption(const SANE_Handle handle, const int index);
 
     void readValue() override;
+    void readOption() override;
 
     QVariant getMinValue() const override;
+    QVariant getMaxValue() const override;
+    QVariant getStepValue() const override;
     QVariant getValue() const override;
     QString getValueAsString() const override;
-    QVariantList getEntryList() const override;
-    
+
 public Q_SLOTS:
     bool setValue(const QVariant &value) override;
 
 private:
-    std::pair<QString, QString> getSaneComboString(unsigned char *data) const;
-    bool setValue(float value);
-    bool setValue(const QString &value);
-
-    QVariant       m_currentValue;
+    float           m_fVal;
+    float           m_minChange;
 };
 
 }  // NameSpace KSaneIface
