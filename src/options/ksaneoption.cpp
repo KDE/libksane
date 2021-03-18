@@ -168,19 +168,19 @@ void KSaneOption::fromSANE_Word(unsigned char *data, SANE_Word from)
 #endif
 }
 
-bool KSaneOption::getMinValue(float &)
+QVariant KSaneOption::getMinValue() const
 {
-    return false;
+    return QVariant();
 }
 
-bool KSaneOption::getMaxValue(float &)
+QVariant KSaneOption::getMaxValue() const
 {
-    return false;
+    return QVariant();
 }
 
-bool KSaneOption::getStepValue(float &)
+QVariant KSaneOption::getStepValue() const
 {
-    return false;
+    return QVariant();
 }
 
 QVariantList KSaneOption::getEntryList() const
@@ -188,22 +188,17 @@ QVariantList KSaneOption::getEntryList() const
     return QVariantList();
 }
 
-bool KSaneOption::getValue(float &)
+QVariant KSaneOption::getValue() const
 {
-    return false;
+    return QVariant();
 }
 
-bool KSaneOption::getValue(QString &)
+QString KSaneOption::getValueAsString() const
 {
-    return false;
+    return QString();
 }
 
-bool KSaneOption::setValue(const QVariant &)
-{
-    return false;
-}
- 
-KSaneOption::KSaneOptionUnit KSaneOption::getUnit()
+KSaneOption::KSaneOptionUnit KSaneOption::getUnit() const
 {
     switch (m_optDesc->unit) {
     case SANE_UNIT_PIXEL:       return UnitPixel;
@@ -216,6 +211,11 @@ KSaneOption::KSaneOptionUnit KSaneOption::getUnit()
     }
 }
 
+bool KSaneOption::setValue(const QVariant &)
+{
+    return false;
+}
+ 
 bool KSaneOption::storeCurrentData()
 {
     SANE_Status status;

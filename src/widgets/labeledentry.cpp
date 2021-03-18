@@ -44,8 +44,7 @@ LabeledEntry::LabeledEntry(QWidget *parent, KSaneOption *option)
     setLabelText(option->title());
     connect(this, &LabeledEntry::entryEdited, option, &KSaneOption::setValue);
     connect(option, &KSaneOption::valueChanged, this, &LabeledEntry::setValue);
-    QString value;
-    option->getValue(value);
+    QString value = option->getValue().toString();
     m_entry->setText(value);
 }
 

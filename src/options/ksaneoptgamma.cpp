@@ -98,28 +98,31 @@ void KSaneOptGamma::readValue()
     // not easy nor fast.. ergo not done
 }
 
-bool KSaneOptGamma::getValue(float &)
-{
-    return false;
-}
-
-bool KSaneOptGamma::getMaxValue(float &value)
-{
-    if (m_optDesc) {
-        value = static_cast<float>(m_optDesc->constraint.range->max);
-        return true;
-    }
-    return false;
-}
-
-bool KSaneOptGamma::getValue(QString &val)
+QVariant KSaneOptGamma::getValue() const
 {
     if (state() == StateHidden) {
-        return false;
+        return QVariant();
+    }
+    return QVariant::fromValue(QVector<int>{ m_brightness, m_contrast, m_gamma });
+}
+
+QVariant KSaneOptGamma::getMaxValue() const
+{
+    QVariant value;
+    if (m_optDesc) {
+        value = static_cast<float>(m_optDesc->constraint.range->max);
+        return value;
+    }
+    return value;
+}
+
+QString KSaneOptGamma::getValueAsString() const
+{
+    if (state() == StateHidden) {
+        return QString();
     }
 
-    val = QString::asprintf("%d:%d:%d", m_brightness, m_contrast, m_gamma);
-    return true;
+    return QString::asprintf("%d:%d:%d", m_brightness, m_contrast, m_gamma);
 }
 
 void KSaneOptGamma::calculateGTwriteData()

@@ -48,52 +48,55 @@ void KSaneOptSlider::readValue()
     Q_EMIT valueChanged(m_iVal);
 }
 
-bool KSaneOptSlider::getMinValue(float &val)
+QVariant KSaneOptSlider::getMinValue() const
 {
+    QVariant value;
     if (m_optDesc->constraint_type == SANE_CONSTRAINT_RANGE) {
-        val = (float)m_optDesc->constraint.range->min;
+        value = static_cast<int>(m_optDesc->constraint.range->min);
     } else {
-        val = (float)KSW_INT_MIN;
+        value = KSW_INT_MIN;
     }
-    return true;
+    return value;
 }
 
-bool KSaneOptSlider::getMaxValue(float &val)
+QVariant KSaneOptSlider::getMaxValue() const
 {
+    QVariant value;
     if (m_optDesc->constraint_type == SANE_CONSTRAINT_RANGE) {
-        val = (float)m_optDesc->constraint.range->max;
+        value = static_cast<int>(m_optDesc->constraint.range->max);
     } else {
-        val = (float)KSW_INT_MAX;
+        value = KSW_INT_MAX;
     }
-    return true;
+    return value;
 }
 
-bool KSaneOptSlider::getStepValue(float &val)
+QVariant KSaneOptSlider::getStepValue() const
 {
+    QVariant value;
     if (m_optDesc->constraint_type == SANE_CONSTRAINT_RANGE) {
-        val = (float)m_optDesc->constraint.range->quant;
+        value = static_cast<int>(m_optDesc->constraint.range->quant);
     } else {
-        val = 1;
+        value = 1;
     }
-    return true;
+    return value;
 }
 
-bool KSaneOptSlider::getValue(float &val)
+QVariant KSaneOptSlider::getValue() const
+{
+    QVariant value;
+    if (state() == StateHidden) {
+        return value;
+    }
+    value = m_iVal;
+    return value;
+}
+
+QString KSaneOptSlider::getValueAsString() const
 {
     if (state() == StateHidden) {
-        return false;
+        return QString();
     }
-    val = (float)m_iVal;
-    return true;
-}
-
-bool KSaneOptSlider::getValue(QString &val)
-{
-    if (state() == StateHidden) {
-        return false;
-    }
-    val = QString::number(m_iVal);
-    return true;
+    return QString::number(m_iVal);
 }
 
 bool KSaneOptSlider::setValue(const QVariant &val)

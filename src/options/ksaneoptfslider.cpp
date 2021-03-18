@@ -84,52 +84,53 @@ bool KSaneOptFSlider::setValue(const QVariant &value)
     return ok;
 }
 
-bool KSaneOptFSlider::getMinValue(float &val)
+QVariant KSaneOptFSlider::getMinValue() const
 {
+    QVariant value;
     if (m_optDesc->constraint_type == SANE_CONSTRAINT_RANGE) {
-        val = SANE_UNFIX(m_optDesc->constraint.range->min);
+        value = SANE_UNFIX(m_optDesc->constraint.range->min);
     } else {
-        val = FIXED_MIN;
+        value = FIXED_MIN;
     }
-    return true;
+    return value;
 }
 
-bool KSaneOptFSlider::getMaxValue(float &max)
+QVariant KSaneOptFSlider::getMaxValue() const
 {
+    QVariant value;
     if (m_optDesc->constraint_type == SANE_CONSTRAINT_RANGE) {
-        max = SANE_UNFIX(m_optDesc->constraint.range->max);
+        value = SANE_UNFIX(m_optDesc->constraint.range->max);
     } else {
-        max = FIXED_MAX;
+        value = FIXED_MAX;
     }
-    return true;
+    return value;
 }
 
-bool KSaneOptFSlider::getStepValue(float &val)
+QVariant KSaneOptFSlider::getStepValue() const
 {
+    QVariant value;
     if (m_optDesc->constraint_type == SANE_CONSTRAINT_RANGE) {
-        val = SANE_UNFIX(m_optDesc->constraint.range->quant);
+        value = SANE_UNFIX(m_optDesc->constraint.range->quant);
     } else {
-        val = 0.0001;
+        value = 0.0001;
     }
-    return true;
+    return value;
 }
 
-bool KSaneOptFSlider::getValue(float &val)
+QVariant KSaneOptFSlider::getValue() const
 {
     if (state() == StateHidden) {
-        return false;
+        return QVariant();
     }
-    val = m_fVal;
-    return true;
+    return QVariant(m_fVal);
 }
 
-bool KSaneOptFSlider::getValue(QString &val)
+QString KSaneOptFSlider::getValueAsString() const
 {
     if (state() == StateHidden) {
-        return false;
+        return QString();
     }
-    val = QString::number(m_fVal, 'F', 6);
-    return true;
+    return QString::number(m_fVal, 'F', 6);
 }
     
 }  // NameSpace KSaneIface

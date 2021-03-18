@@ -698,7 +698,8 @@ void KSaneWidget::getOptVals(QMap <QString, QString> &opts)
 
     for (int i = 0; i < d->m_optList.size(); i++) {
         option = d->m_optList.at(i);
-        if (option->getValue(tmp)) {
+        tmp = option->getValueAsString();
+        if (!tmp.isEmpty()) {
             opts[option->name()] = tmp;
         }
     }
@@ -711,7 +712,8 @@ bool KSaneWidget::getOptVal(const QString &optname, QString &value)
     KSaneOption *option;
 
     if ((option = d->getOption(optname)) != nullptr) {
-        return option->getValue(value);
+        value = option->getValueAsString();
+        return !value.isEmpty();
     }
     // Special handling for non sane option
     if (optname == InvetColorsOption) {
@@ -774,12 +776,10 @@ int KSaneWidget::setOptVals(const QMap <QString, QString> &opts)
             (d->m_optGamB)) {
         // check if the current gamma values are identical. if they are identical,
         // uncheck the "Separate color intensity tables" checkbox
-        QString redGamma;
-        QString greenGamma;
-        QString blueGamma;
-        d->m_optGamR->getValue(redGamma);
-        d->m_optGamG->getValue(greenGamma);
-        d->m_optGamB->getValue(blueGamma);
+        QString redGamma = d->m_optGamR->getValueAsString();
+        QString greenGamma = d->m_optGamG->getValueAsString();
+        QString blueGamma = d->m_optGamB->getValueAsString();
+
         if ((redGamma == greenGamma) && (greenGamma == blueGamma)) {
             d->m_splitGamChB->setChecked(false);
             // set the values to the common gamma widget
@@ -822,12 +822,9 @@ bool KSaneWidget::setOptVal(const QString &option, const QString &value)
                      (opt == d->m_optGamB))) {
                 // check if the current gamma values are identical. if they are identical,
                 // uncheck the "Separate color intensity tables" checkbox
-                QString redGamma;
-                QString greenGamma;
-                QString blueGamma;
-                d->m_optGamR->getValue(redGamma);
-                d->m_optGamG->getValue(greenGamma);
-                d->m_optGamB->getValue(blueGamma);
+                QString redGamma = d->m_optGamR->getValueAsString();
+                QString greenGamma = d->m_optGamG->getValueAsString();
+                QString blueGamma = d->m_optGamB->getValueAsString();
                 if ((redGamma == greenGamma) && (greenGamma == blueGamma)) {
                     d->m_splitGamChB->setChecked(false);
                     // set the values to the common gamma widget
@@ -880,9 +877,9 @@ void KSaneWidget::enableAutoSelect(bool enable)
 float KSaneWidget::currentDPI()
 {
     if (d->m_optRes) {
-        float value;
-        if (d->m_optRes->getValue(value)) {
-            return value;
+        QVariant value = d->m_optRes->getValue();
+        if (!value.isNull()) {
+            return value.toFloat();
         }
     }
     return 0.0; // Failure to read DPI
@@ -893,7 +890,7 @@ float KSaneWidget::scanAreaWidth()
     float result = 0.0;
     if (d->m_optBrX) {
         if (d->m_optBrX->getUnit() == KSaneOption::UnitPixel) {
-            d->m_optBrX->getMaxValue(result);
+            result = d->m_optBrX->getMaxValue().toFloat();
             float dpi = currentDPI();
             if (dpi < 1) {
                 qCDebug(KSANE_LOG) << "Broken DPI value";
@@ -901,7 +898,7 @@ float KSaneWidget::scanAreaWidth()
             }
             result = result / dpi / 25.4;
         } else if (d->m_optBrX->getUnit() == KSaneOption::UnitMilliMeter) {
-            d->m_optBrX->getMaxValue(result);
+            result = d->m_optBrX->getMaxValue().toFloat();
         }
     }
     return result;
@@ -912,7 +909,7 @@ float KSaneWidget::scanAreaHeight()
     float result = 0.0;
     if (d->m_optBrY) {
         if (d->m_optBrY->getUnit() == KSaneOption::UnitPixel) {
-            d->m_optBrY->getMaxValue(result);
+            result = d->m_optBrY->getMaxValue().toFloat();
             float dpi = currentDPI();
             if (dpi < 1) {
                 qCDebug(KSANE_LOG) << "Broken DPI value";
@@ -920,7 +917,7 @@ float KSaneWidget::scanAreaHeight()
             }
             result = result / dpi / 25.4;
         } else if (d->m_optBrY->getUnit() == KSaneOption::UnitMilliMeter) {
-            d->m_optBrY->getMaxValue(result);
+            result = d->m_optBrY->getMaxValue().toFloat();
         }
     }
     return result;

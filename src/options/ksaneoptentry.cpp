@@ -62,18 +62,17 @@ void KSaneOptEntry::readValue()
     Q_EMIT valueChanged(m_string);
 }
 
-bool KSaneOptEntry::getValue(float &)
+QVariant KSaneOptEntry::getValue() const
 {
-    return false;
+    return QVariant(m_string);
 }
 
-bool KSaneOptEntry::getValue(QString &val)
+QString KSaneOptEntry::getValueAsString() const
 {
     if (state() == StateHidden) {
-        return false;
+        return QString();
     }
-    val = m_string;
-    return true;
+    return m_string;
 }
 
 }  // NameSpace KSaneIface

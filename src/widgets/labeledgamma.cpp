@@ -33,8 +33,7 @@ LabeledGamma::LabeledGamma(QWidget *parent, KSaneOption *option)
     : KSaneOptionWidget(parent, option)
 {
 
-    float max;
-    option->getMaxValue(max);
+    int max = option->getMaxValue().toInt();
     initGamma(option->title(), max);
     connect(this, &LabeledGamma::valuesChanged, option, &KSaneOption::setValue);
     if (option->name() == QString::fromUtf8(SANE_NAME_GAMMA_VECTOR_R)) {

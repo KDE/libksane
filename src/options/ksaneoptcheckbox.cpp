@@ -67,25 +67,26 @@ void KSaneOptCheckBox::readValue()
         Q_EMIT buttonPressed(name(), sane_i18n(m_optDesc->title), m_checked);
         Q_EMIT valueChanged(m_checked);
     }
-    
 }
 
-bool KSaneOptCheckBox::getValue(float &val)
+QVariant KSaneOptCheckBox::getValue() const
 {
     if (state() == StateHidden) {
-        return false;
+        return QVariant();
     }
-    val = m_checked ? 1.0 : 0.0;
-    return true;
+    return m_checked;
 }
 
-bool KSaneOptCheckBox::getValue(QString &val)
+QString KSaneOptCheckBox::getValueAsString() const
 {
     if (state() == StateHidden) {
-        return false;
+        return QString();
     }
-    val = m_checked ? QStringLiteral("true") : QStringLiteral("false");
-    return true;
+    if (m_checked) {
+        return QStringLiteral("true");
+    } else {
+        return QStringLiteral("false");
+    }
 }
 
 }  // NameSpace KSaneIface

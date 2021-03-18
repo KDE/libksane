@@ -30,9 +30,9 @@ public:
 
     void readValue() override;
 
-    bool getMinValue(float &max) override;
-    bool getValue(float &val) override;
-    bool getValue(QString &val) override;
+    QVariant getMinValue() const override;
+    QVariant getValue() const override;
+    QString getValueAsString() const override;
     QVariantList getEntryList() const override;
     
 public Q_SLOTS:

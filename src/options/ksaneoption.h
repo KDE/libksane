@@ -89,13 +89,13 @@ public:
     virtual void readOption();
     virtual void readValue();
 
-    virtual bool getMinValue(float &min);
-    virtual bool getMaxValue(float &max);
-    virtual bool getStepValue(float &step);
+    virtual QVariant getMinValue() const;
+    virtual QVariant getMaxValue() const;
+    virtual QVariant getStepValue() const;
+    virtual QVariant getValue() const;
+    virtual QString getValueAsString() const;
     virtual QVariantList getEntryList() const;
-    virtual bool getValue(float &val);
-    virtual bool getValue(QString &val);
-    virtual KSaneOptionUnit getUnit();
+    virtual KSaneOptionUnit getUnit() const;
 
     bool storeCurrentData();
     bool restoreSavedData();

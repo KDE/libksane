@@ -36,20 +36,11 @@ LabeledSlider::LabeledSlider(QWidget *parent, const QString &ltext,
 LabeledSlider::LabeledSlider(QWidget *parent, KSaneOption *option)
     : KSaneOptionWidget(parent, option)
 {
-    float maxValueF = 0.0;
-    option->getMaxValue(maxValueF);
-    float minValueF = 0.0;
-    option->getMinValue(minValueF);
-    float stepValueF = 0.0;
-    option->getStepValue(stepValueF);
-    /* TEMPORARY
-     * due to float conversion, the max integer value of 2147483647 will be cast to 2147483648 and result in -2147483648 
-     * catch this specifically until the API allows to query the integer directly */
-    int maxInt = static_cast<int>(maxValueF);
-    if (maxInt == -2147483648) {
-        maxInt = 2147483647;
-    }
-    initSlider(static_cast<int>(minValueF), maxInt, static_cast<int>(stepValueF));
+    int maxValue = option->getMaxValue().toInt();
+    int minValue = option->getMinValue().toInt();
+    int stepValue = option->getStepValue().toInt();
+
+    initSlider(minValue, maxValue, stepValue);
     
     KLocalizedString unitSuffix;
     KSaneOption::KSaneOptionUnit unit = option->getUnit();
@@ -83,9 +74,8 @@ LabeledSlider::LabeledSlider(QWidget *parent, KSaneOption *option)
     setToolTip(option->description());
     connect(this, &LabeledSlider::valueChanged, option, &KSaneOption::setValue);
     connect(option, &KSaneOption::valueChanged, this, &LabeledSlider::setValue);
-    float valueF = 0.0;
-    option->getValue(valueF);
-    setValue(static_cast<int>(valueF));
+    int value = option->getValue().toInt();
+    setValue(value);
 }
 
 LabeledSlider::~LabeledSlider()

@@ -28,10 +28,10 @@ public:
 
     void readValue() override;
     void readOption() override;
-
-    bool getValue(float &val) override;
-    bool getValue(QString &val) override;
-    bool getMaxValue(float &val) override;
+    
+    QVariant getMaxValue() const override;
+    QVariant getValue() const override;
+    QString getValueAsString() const override;
 
 public Q_SLOTS:
     bool setValue(const QVariant & value) override;

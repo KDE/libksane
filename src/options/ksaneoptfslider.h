@@ -29,11 +29,11 @@ public:
     void readValue() override;
     void readOption() override;
 
-    bool getMinValue(float &min) override;
-    bool getMaxValue(float &max) override;
-    bool getStepValue(float &step) override;
-    bool getValue(float &val) override;
-    bool getValue(QString &val) override;
+    QVariant getMinValue() const override;
+    QVariant getMaxValue() const override;
+    QVariant getStepValue() const override;
+    QVariant getValue() const override;
+    QString getValueAsString() const override;
 
 public Q_SLOTS:
     bool setValue(const QVariant &value) override;

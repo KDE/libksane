@@ -106,42 +106,42 @@ bool KSaneOptCombo::setValue(const QVariant &value)
     return success;
 }
 
-bool KSaneOptCombo::getMinValue(float &val)
+QVariant KSaneOptCombo::getMinValue() const
 {
+    QVariant value;
     if (state() == StateHidden) {
-        return false;
+        return value;
     }
+    float fValueMin;
+    int iValueMin;
     switch (m_optDesc->type) {
     case SANE_TYPE_INT:
-        val = static_cast<float>(m_optDesc->constraint.word_list[1]);
+        iValueMin = static_cast<int>(m_optDesc->constraint.word_list[1]);
         for (int i = 2; i <= m_optDesc->constraint.word_list[0]; i++) {
-            val = qMin(static_cast<float>(m_optDesc->constraint.word_list[i]), val);
+            iValueMin = qMin(static_cast<int>(m_optDesc->constraint.word_list[i]), iValueMin);
         }
+        value = iValueMin;
         break;
     case SANE_TYPE_FIXED:
-        val = static_cast<float>(SANE_UNFIX(m_optDesc->constraint.word_list[1]));
+        fValueMin = static_cast<float>(SANE_UNFIX(m_optDesc->constraint.word_list[1]));
         for (int i = 2; i <= m_optDesc->constraint.word_list[0]; i++) {
-            val = qMin(static_cast<float>(SANE_UNFIX(m_optDesc->constraint.word_list[i])), val);
+            fValueMin = qMin(static_cast<float>(SANE_UNFIX(m_optDesc->constraint.word_list[i])), fValueMin);
         }
+        value = fValueMin;
         break;
     default:
         qCDebug(KSANE_LOG) << "can not handle type:" << m_optDesc->type;
-        return false;
+        return value;
     }
-    return true;
+    return value;
 }
 
-bool KSaneOptCombo::getValue(float &val)
+QVariant KSaneOptCombo::getValue() const
 {
     if (state() == StateHidden) {
-        return false;
+        return QVariant();
     }
-    bool ok;
-    const float currentValue = m_currentValue.toFloat(&ok);
-    if (ok) {
-        val = currentValue;
-    }
-    return ok;
+    return m_currentValue;
 }
 
 bool KSaneOptCombo::setValue(float value)
@@ -188,13 +188,12 @@ bool KSaneOptCombo::setValue(float value)
     return false;
 }
 
-bool KSaneOptCombo::getValue(QString &val)
+QString KSaneOptCombo::getValueAsString() const
 {
     if (state() == StateHidden) {
-        return false;
+        return QString();
     }
-    val = m_currentValue.toString();
-    return true;
+    return m_currentValue.toString();
 }
 
 bool KSaneOptCombo::setValue(const QString &value)

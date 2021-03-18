@@ -31,12 +31,9 @@ LabeledFSlider::LabeledFSlider(QWidget *parent, const QString &ltext,
 LabeledFSlider::LabeledFSlider(QWidget *parent, KSaneOption *option)
     : KSaneOptionWidget(parent, option)
 {
-    float maxValueF = 0.0;
-    option->getMaxValue(maxValueF);
-    float minValueF = 0.0;
-    option->getMinValue(minValueF);
-    float stepValueF = 0.0;
-    option->getStepValue(stepValueF);
+    float maxValueF = option->getMaxValue().toFloat();
+    float minValueF= option->getMinValue().toFloat();
+    float stepValueF = option->getStepValue().toFloat();
     initFSlider(minValueF, maxValueF , stepValueF);
     
     QString unitSuffix;
@@ -70,8 +67,7 @@ LabeledFSlider::LabeledFSlider(QWidget *parent, KSaneOption *option)
     setToolTip(option->description());
     connect(this, &LabeledFSlider::valueChanged, option, &KSaneOption::setValue);
     connect(option, &KSaneOption::valueChanged, this, &LabeledFSlider::setValue);
-    float valueF = 0.0;
-    option->getValue(valueF);
+    float valueF = option->getValue().toFloat();
     setValue(valueF);
 }
 

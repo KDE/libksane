@@ -53,8 +53,7 @@ LabeledCombo::LabeledCombo(QWidget *parent, KSaneOption *option)
     setIcon(QIcon::fromTheme(QStringLiteral("black-white")), QString::fromUtf8(SANE_VALUE_SCAN_MODE_LINEART));
     // The epkowa/epson backend uses "Binary" which is the same as "Lineart"
     setIcon(QIcon::fromTheme(QStringLiteral("black-white")), i18n(tmp_binary));
-    QString currentText;
-    option->getValue(currentText);
+    QString currentText = option->getValue().toString();
 
     setCurrentText(currentText);
 }
