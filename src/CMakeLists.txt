@@ -41,6 +41,7 @@ set(ksane_SRCS
     options/ksanedoubleoption.cpp
     options/ksanelistoption.cpp
     options/ksaneinvertoption.cpp
+    options/ksanepagesizeoption.cpp
 )
 
 ecm_qt_declare_logging_category(ksane_SRCS

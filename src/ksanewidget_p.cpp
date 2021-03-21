@@ -22,6 +22,9 @@
 
 #include <ksane_debug.h>
 
+#include "ksaneinvertoption.h"
+#include "ksanepagesizeoption.h"
+
 #define SCALED_PREVIEW_MAX_SIDE 400
 
 static constexpr int ActiveSelection = 100000;
@@ -128,7 +131,7 @@ void KSaneWidgetPrivate::clearDeviceOptions()
         delete m_optList.takeFirst();
     }
     m_pollList.clear();
-    m_optWithWidget.clear();
+    m_handledOptions.clear();
     m_optionPollTmr.stop();
 
     // remove the remaining layouts/widgets and read thread
@@ -392,7 +395,7 @@ KSaneOptionWidget *KSaneWidgetPrivate::createOptionWidget(QWidget *parent, KSane
             widget = new KSaneOptionWidget(parent, option);
             break;
     }
-    m_optWithWidget.insert(option->name());
+    m_handledOptions.insert(option->name());
     return widget;
 }
 
@@ -477,18 +480,25 @@ void KSaneWidgetPrivate::createOptInterface()
     if ((option = getOption(QStringLiteral(SANE_NAME_SCAN_TL_X))) != nullptr) {
         m_optTlX = option;
         connect(option, &KSaneOption::valueChanged, this, &KSaneWidgetPrivate::setTLX);
+        m_handledOptions.insert(option->name());
     }
     if ((option = getOption(QStringLiteral(SANE_NAME_SCAN_TL_Y))) != nullptr) {
         m_optTlY = option;
         connect(option, &KSaneOption::valueChanged, this, &KSaneWidgetPrivate::setTLY);
+        m_handledOptions.insert(option->name());
     }
     if ((option = getOption(QStringLiteral(SANE_NAME_SCAN_BR_X))) != nullptr) {
         m_optBrX = option;
         connect(option, &KSaneOption::valueChanged, this, &KSaneWidgetPrivate::setBRX);
+        m_handledOptions.insert(option->name());
     }
     if ((option = getOption(QStringLiteral(SANE_NAME_SCAN_BR_Y))) != nullptr) {
         m_optBrY = option;
         connect(option, &KSaneOption::valueChanged, this, &KSaneWidgetPrivate::setBRY);
+        m_handledOptions.insert(option->name());
+    }
+    if ((option = getOption(PageSizeOptionName)) != nullptr) {
+        m_handledOptions.insert(option->name());
     }
 
     // Color Options Frame
@@ -519,19 +529,19 @@ void KSaneWidgetPrivate::createOptInterface()
         m_optGamR = option;
         gammaR = new LabeledGamma(gamma_frm, option);
         gam_frm_l->addWidget(gammaR);
-        m_optWithWidget.insert(option->name());
+        m_handledOptions.insert(option->name());
     }
     if ((option = getOption(QStringLiteral(SANE_NAME_GAMMA_VECTOR_G))) != nullptr) {
         m_optGamG = option;
         gammaG = new LabeledGamma(gamma_frm, option);
         gam_frm_l->addWidget(gammaG);
-        m_optWithWidget.insert(option->name());
+        m_handledOptions.insert(option->name());
     }
     if ((option = getOption(QStringLiteral(SANE_NAME_GAMMA_VECTOR_B))) != nullptr) {
         m_optGamB = option;
         gammaB = new LabeledGamma(gamma_frm, option);
         gam_frm_l->addWidget(gammaB);
-        m_optWithWidget.insert(option->name());
+        m_handledOptions.insert(option->name());
     }
 
     if ((m_optGamR != nullptr) && (m_optGamG != nullptr) && (m_optGamB != nullptr) 
@@ -612,15 +622,10 @@ void KSaneWidgetPrivate::createOptInterface()
     // add the remaining parameters
     for (int i = 0; i < m_optList.size(); ++i) {
         KSaneOption *option = m_optList.at(i);
-        if (m_optWithWidget.find(option->name()) != m_optWithWidget.end()) {
+        if (m_handledOptions.find(option->name()) != m_handledOptions.end()) {
             continue;
         }
-        if ((option->name() != QStringLiteral(SANE_NAME_SCAN_TL_X)) &&
-            (option->name() != QStringLiteral(SANE_NAME_SCAN_TL_Y)) &&
-            (option->name() != QStringLiteral(SANE_NAME_SCAN_BR_X)) &&
-            (option->name() != QStringLiteral(SANE_NAME_SCAN_BR_Y)) &&
-            (option->name() != QStringLiteral(SANE_NAME_PREVIEW)) &&
-            (option->type() != KSaneOption::TypeDetectFail)) {
+        if (option->type() != KSaneOption::TypeDetectFail) {
             KSaneOptionWidget *widget = createOptionWidget(m_otherOptsTab, option);
             if (widget != nullptr) {
                 other_layout->addWidget(widget);

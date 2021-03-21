@@ -31,7 +31,6 @@ extern "C"
 
 #include "ksanewidget.h"
 #include "ksaneoption.h"
-#include "ksaneinvertoption.h"
 #include "ksaneoptionwidget.h"
 #include "ksaneviewer.h"
 #include "labeledcombo.h"
@@ -155,7 +154,7 @@ public:
     // Option variables
     QList<KSaneOption *> m_optList;
     QList<KSaneOption *> m_pollList;
-    QSet<QString>        m_optWithWidget;
+    QSet<QString>        m_handledOptions;
     KSaneOption        *m_optSource;
     KSaneOption        *m_optNegative;
     KSaneOption        *m_optFilmType;

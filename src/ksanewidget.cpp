@@ -10,6 +10,13 @@
  *
  * ============================================================ */
 
+// Sane includes
+extern "C"
+{
+#include <sane/saneopts.h>
+#include <sane/sane.h>
+}
+
 #include "ksanewidget.h"
 #include "ksanewidget_p.h"
 
@@ -40,6 +47,7 @@
 #include "ksanedevicedialog.h"
 #include "labeledgamma.h"
 #include "ksaneinvertoption.h"
+#include "ksanepagesizeoption.h"
 
 #include <ksane_debug.h>
 
@@ -428,40 +436,57 @@ bool KSaneWidget::openDevice(const QString &deviceName)
     numSaneOptions = *reinterpret_cast<SANE_Word *>(data.data());
 
     // read the rest of the options
+    KSaneOption *option;
+    KSaneOption *m_optionTopLeftX;
+    KSaneOption *m_optionTopLeftY;
+    KSaneOption *m_optionBottomRightX;
+    KSaneOption *m_optionBottomRightY;
+    KSaneOption *m_optionResolution;
     for (i = 1; i < numSaneOptions; ++i) {
         switch (KSaneOption::optionType(sane_get_option_descriptor(d->m_saneHandle, i))) {
         case KSaneOption::TypeDetectFail:
-            d->m_optList.append(new KSaneOption(d->m_saneHandle, i));
+            option = new KSaneOption(d->m_saneHandle, i);
             break;
         case KSaneOption::TypeBool:
-            d->m_optList.append(new KSaneBoolOption(d->m_saneHandle, i));
+            option = new KSaneBoolOption(d->m_saneHandle, i);
             break;
         case KSaneOption::TypeInteger:
-            d->m_optList.append(new KSaneIntegerOption(d->m_saneHandle, i));
+            option = new KSaneIntegerOption(d->m_saneHandle, i);
             break;
         case KSaneOption::TypeDouble:
-            d->m_optList.append(new KSaneDoubleOption(d->m_saneHandle, i));
+            option = new KSaneDoubleOption(d->m_saneHandle, i);
             break;
         case KSaneOption::TypeValueList:
-            d->m_optList.append(new KSaneListOption(d->m_saneHandle, i));
+            option = new KSaneListOption(d->m_saneHandle, i);
             break;
         case KSaneOption::TypeString:
-            d->m_optList.append(new KSaneStringOption(d->m_saneHandle, i));
+            option = new KSaneStringOption(d->m_saneHandle, i);
             break;
         case KSaneOption::TypeGamma:
-            d->m_optList.append(new KSaneGammaOption(d->m_saneHandle, i));
+            option = new KSaneGammaOption(d->m_saneHandle, i);
             break;
         case KSaneOption::TypeAction:
-            d->m_optList.append(new KSaneActionOption(d->m_saneHandle, i));
+            option = new KSaneActionOption(d->m_saneHandle, i);
             break;
         }
-    }
-    
-    // add extra option for inverting image colors
-    d->m_optList.append(new KSaneInvertOption());
 
-    // do the connections of the option parameters
-    for (const auto &option : qAsConst(d->m_optList)) {
+        d->m_optList.append(option);
+
+        if (option->name() == QStringLiteral(SANE_NAME_SCAN_TL_X)) {
+            m_optionTopLeftX = option;
+        }
+        if (option->name() == QStringLiteral(SANE_NAME_SCAN_TL_Y)) {
+            m_optionTopLeftY = option;
+        }
+        if (option->name() == QStringLiteral(SANE_NAME_SCAN_BR_X)) {
+            m_optionBottomRightX = option;
+        }
+        if (option->name() == QStringLiteral(SANE_NAME_SCAN_BR_Y)) {
+            m_optionBottomRightY = option;
+        }
+        if (option->name() == QStringLiteral(SANE_NAME_SCAN_RESOLUTION)) {
+            m_optionResolution = option;
+        }
         connect(option, &KSaneOption::optionsNeedReload, d, &KSaneWidgetPrivate::reloadOptions);
         connect(option, &KSaneOption::valuesNeedReload, d, &KSaneWidgetPrivate::scheduleValuesReload);
 
@@ -469,11 +494,18 @@ bool KSaneWidget::openDevice(const QString &deviceName)
             d->m_pollList.append(option);
             if (option->type() == KSaneOption::TypeBool) {
                 connect( option, &KSaneOption::valueChanged,
-                        [=]( const QVariant &newValue ) { Q_EMIT buttonPressed(option->name(), option->title(), newValue.toBool()); } );
+                    [=]( const QVariant &newValue ) { Q_EMIT buttonPressed(option->name(), option->title(), newValue.toBool()); } );
             }
         }
     }
-
+    
+    // add extra option for inverting image colors
+    d->m_optList.append(new KSaneInvertOption());
+   
+    // add extra option for selecting specific page sizes
+    d->m_optList.append(new KSanePageSizeOption(m_optionTopLeftX, m_optionTopLeftY,
+                            m_optionBottomRightX, m_optionBottomRightY, m_optionResolution));
+   
     // start polling the poll options
     if (d->m_pollList.size() > 0) {
         d->m_optionPollTmr.start();
