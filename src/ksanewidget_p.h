@@ -36,6 +36,7 @@ extern "C"
 
 #include "ksanewidget.h"
 #include "ksaneoption.h"
+#include "ksaneinvertoption.h"
 #include "ksaneoptionwidget.h"
 #include "ksaneviewer.h"
 #include "labeledcombo.h"
@@ -122,7 +123,6 @@ public:
     QWidget            *m_colorOpts;
     QScrollArea        *m_otherScrollA;
     QWidget            *m_otherOptsTab;
-    LabeledCheckbox    *m_invertColors;
 
     QVector<int>        m_sizeCodes;
     LabeledCombo       *m_scanareaPapersize;
@@ -177,6 +177,7 @@ public:
     KSaneOption        *m_optGamR;
     KSaneOption        *m_optGamG;
     KSaneOption        *m_optGamB;
+    KSaneOption        *m_optInvert;
     LabeledCheckbox    *m_splitGamChB;
     LabeledGamma       *m_commonGamma;
     KSaneOption        *m_optWaitForBtn;

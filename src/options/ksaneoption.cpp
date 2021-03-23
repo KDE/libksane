@@ -19,10 +19,13 @@
 namespace KSaneIface
 {
 
+KSaneOption::KSaneOption() : QObject()
+{
+}
+
 KSaneOption::KSaneOption(const SANE_Handle handle, const int index)
     : QObject(), m_handle(handle), m_index(index)
 {
-    m_data = nullptr;
     readOption();
     readValue();
 }
@@ -37,13 +40,15 @@ KSaneOption::~KSaneOption()
 
 void KSaneOption::readOption()
 {
-    m_optDesc = sane_get_option_descriptor(m_handle, m_index);
-    Q_EMIT optionReloaded();
+    if (m_handle != nullptr) {
+        m_optDesc = sane_get_option_descriptor(m_handle, m_index);
+        Q_EMIT optionReloaded();
+    }
 }
 
 KSaneOption::KSaneOptionState KSaneOption::state() const
 {
-    if (!m_optDesc) {
+    if (m_optDesc == nullptr) {
         return StateHidden;
     }
 
@@ -200,14 +205,18 @@ QString KSaneOption::getValueAsString() const
 
 KSaneOption::KSaneOptionUnit KSaneOption::getUnit() const
 {
-    switch (m_optDesc->unit) {
-    case SANE_UNIT_PIXEL:       return UnitPixel;
-    case SANE_UNIT_BIT:         return UnitBit;
-    case SANE_UNIT_MM:          return UnitMilliMeter;
-    case SANE_UNIT_DPI:         return UnitDPI;
-    case SANE_UNIT_PERCENT:     return UnitPercent;
-    case SANE_UNIT_MICROSECOND: return UnitMicroSecond;
-    default: return UnitNone;
+    if (m_optDesc != nullptr) {
+        switch (m_optDesc->unit) {
+        case SANE_UNIT_PIXEL:       return UnitPixel;
+        case SANE_UNIT_BIT:         return UnitBit;
+        case SANE_UNIT_MM:          return UnitMilliMeter;
+        case SANE_UNIT_DPI:         return UnitDPI;
+        case SANE_UNIT_PERCENT:     return UnitPercent;
+        case SANE_UNIT_MICROSECOND: return UnitMicroSecond;
+        default: return UnitNone;
+        }
+    } else {
+        return UnitNone;
     }
 }
 

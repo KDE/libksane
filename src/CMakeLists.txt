@@ -40,6 +40,7 @@ set(ksane_SRCS
     options/ksaneoptslider.cpp
     options/ksaneoptfslider.cpp
     options/ksaneoptcombo.cpp
+    options/ksaneinvertoption.cpp
 )
 
 ecm_qt_declare_logging_category(ksane_SRCS

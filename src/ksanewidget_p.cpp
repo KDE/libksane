@@ -66,7 +66,6 @@ KSaneWidgetPrivate::KSaneWidgetPrivate(KSaneWidget *parent):
     m_splitGamChB   = nullptr;
     m_commonGamma   = nullptr;
     m_previewDPI    = 0;
-    m_invertColors  = nullptr;
 
     m_previewWidth  = 0;
     m_previewHeight = 0;
@@ -570,11 +569,13 @@ void KSaneWidgetPrivate::createOptInterface()
         KSaneOptionWidget *blackLevel = createOptionWidget(m_colorOpts, option);
         color_lay->addWidget(blackLevel);
     }
-
-    m_invertColors = new LabeledCheckbox(m_colorOpts, i18n("Invert colors"));
-    color_lay->addWidget(m_invertColors);
-    m_invertColors->setChecked(false);
-    connect(m_invertColors, &LabeledCheckbox::toggled, this, &KSaneWidgetPrivate::invertPreview);
+    
+    if ((option = getOption(InvertColorsOptionName)) != nullptr) {
+        m_optInvert = option;
+        KSaneOptionWidget *invertColor = createOptionWidget(m_colorOpts, option);
+        color_lay->addWidget(invertColor);
+        connect(m_optInvert, &KSaneOption::valueChanged, this, &KSaneWidgetPrivate::invertPreview);
+    }
 
     // Add our own size options
     m_scanareaPapersize = new LabeledCombo(m_basicOptsTab, i18n("Scan Area Size"));
@@ -1057,7 +1058,7 @@ void KSaneWidgetPrivate::startPreviewScan()
 
     m_progressBar->setValue(0);
     m_isPreview = true;
-    m_previewThread->setPreviewInverted(m_invertColors->isChecked());
+    m_previewThread->setPreviewInverted(m_optInvert->getValue().toBool());
     m_previewThread->start();
     m_updProgressTmr.start();
 }
@@ -1146,7 +1147,7 @@ void KSaneWidgetPrivate::startFinalScan()
 
     setBusy(true);
     m_updProgressTmr.start();
-    m_scanThread->setImageInverted(m_invertColors->isChecked());
+    m_scanThread->setImageInverted(m_optInvert->getValue().toBool());
     m_scanThread->start();
 }
 
@@ -1330,9 +1331,9 @@ void KSaneWidgetPrivate::checkInvert()
                                "Transparency"), Qt::CaseInsensitive)) &&
             (filmtype.contains(i18nc("This is compared to the option string returned by sane",
                                      "Negative"), Qt::CaseInsensitive))) {
-        m_invertColors->setChecked(true);
+        m_optInvert->setValue(true);
     } else {
-        m_invertColors->setChecked(false);
+        m_optInvert->setValue(false);
     }
 }
 

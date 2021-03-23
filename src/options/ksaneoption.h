@@ -75,15 +75,16 @@ public:
         StateActive
     } KSaneOptionState;
 
+    KSaneOption();
     KSaneOption(const SANE_Handle handle, const int index);
     ~KSaneOption();
     static KSaneOptionType optionType(const SANE_Option_Descriptor *optDesc);
 
     bool needsPolling() const;
-    KSaneOptionState state() const;
-    QString name() const;
-    QString title() const;
-    QString description() const;
+    virtual KSaneOptionState state() const;
+    virtual QString name() const;
+    virtual QString title() const;
+    virtual QString description() const;
     KSaneOptionType type() const;
 
     virtual void readOption();
@@ -116,10 +117,10 @@ protected:
     static void fromSANE_Word(unsigned char *data, SANE_Word from);
     bool writeData(void *data);
 
-    SANE_Handle                   m_handle;
-    int                           m_index;
-    const SANE_Option_Descriptor *m_optDesc; ///< This pointer is provided by sane
-    unsigned char                *m_data;
+    SANE_Handle                   m_handle = nullptr;
+    int                           m_index = -1;
+    const SANE_Option_Descriptor *m_optDesc = nullptr; ///< This pointer is provided by sane
+    unsigned char                *m_data= nullptr;
     KSaneOptionType               m_optionType = TypeDetectFail;
 };
 

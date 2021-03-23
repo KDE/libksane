@@ -44,6 +44,7 @@
 #include "ksaneoptslider.h"
 #include "ksanedevicedialog.h"
 #include "labeledgamma.h"
+#include "ksaneinvertoption.h"
 
 #include <ksane_debug.h>
 
@@ -51,8 +52,6 @@ namespace KSaneIface
 {
 static int     s_objectCount = 0;
 Q_GLOBAL_STATIC(QMutex, s_objectMutex)
-
-static const QLatin1String InvetColorsOption("KSane::InvertColors");
 
 KSaneWidget::KSaneWidget(QWidget *parent)
     : QWidget(parent), d(new KSaneWidgetPrivate(this))
@@ -462,6 +461,9 @@ bool KSaneWidget::openDevice(const QString &deviceName)
             break;
         }
     }
+    
+    // add extra option for inverting image colors
+    d->m_optList.append(new KSaneInvertOption());
 
     // do the connections of the option parameters
     for (const auto &option : qAsConst(d->m_optList)) {
@@ -700,8 +702,6 @@ void KSaneWidget::getOptVals(QMap <QString, QString> &opts)
             opts[option->name()] = tmp;
         }
     }
-    // Special handling for non sane option
-    opts[InvetColorsOption] = d->m_invertColors->isChecked() ? QStringLiteral("true") : QStringLiteral("false");
 }
 
 bool KSaneWidget::getOptVal(const QString &optname, QString &value)
@@ -711,11 +711,6 @@ bool KSaneWidget::getOptVal(const QString &optname, QString &value)
     if ((option = d->getOption(optname)) != nullptr) {
         value = option->getValueAsString();
         return !value.isEmpty();
-    }
-    // Special handling for non sane option
-    if (optname == InvetColorsOption) {
-        value = d->m_invertColors->isChecked() ? QStringLiteral("true") : QStringLiteral("false");
-        return true;
     }
     return false;
 }
@@ -785,17 +780,6 @@ int KSaneWidget::setOptVals(const QMap <QString, QString> &opts)
             d->m_splitGamChB->setChecked(true);
         }
     }
-
-    // special handling for non-sane option
-    if (optionMapCopy.contains(InvetColorsOption)) {
-        tmp = optionMapCopy[InvetColorsOption];
-        if ((tmp.compare(QStringLiteral("true"), Qt::CaseInsensitive) == 0) ||
-                (tmp.compare(QStringLiteral("1")) == 0)) {
-            d->m_invertColors->setChecked(true);
-        } else {
-            d->m_invertColors->setChecked(false);
-        }
-    }
     return ret;
 }
 
@@ -832,17 +816,6 @@ bool KSaneWidget::setOptVal(const QString &option, const QString &value)
             }
             return true;
         }
-    }
-
-    // special handling for non-sane option
-    if (option == InvetColorsOption) {
-        if ((value.compare(QStringLiteral("true"), Qt::CaseInsensitive) == 0) ||
-                (value.compare(QStringLiteral("1")) == 0)) {
-            d->m_invertColors->setChecked(true);
-        } else {
-            d->m_invertColors->setChecked(false);
-        }
-        return true;
     }
 
     return false;
