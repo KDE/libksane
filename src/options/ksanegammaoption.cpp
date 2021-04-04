@@ -63,15 +63,17 @@ bool KSaneGammaOption::setValue(const QVariant &value)
         }
         return true;
     }
-    if (value.canConvert<QVector<int>>()) {
-        QVector<int> copy = value.value<QVector<int>>();
-        if (copy.size() != 3) {
+    if (static_cast<QMetaType::Type>(value.type()) == QMetaType::QVariantList) {
+        QVariantList copy = value.toList();
+        if (copy.size() != 3 || static_cast<QMetaType::Type>(copy.at(0).type()) != QMetaType::Int
+            || static_cast<QMetaType::Type>(copy.at(1).type()) != QMetaType::Int
+            || static_cast<QMetaType::Type>(copy.at(2).type()) != QMetaType::Int ) {
             return false;
         }
-        if (m_brightness != copy.at(0) || m_contrast != copy.at(1) || m_gamma != copy.at(2) ) {
-            m_brightness = copy.at(0);
-            m_contrast = copy.at(1);
-            m_gamma = copy.at(2);
+        if (m_brightness != copy.at(0).toInt() || m_contrast != copy.at(1).toInt() || m_gamma != copy.at(2).toInt() ) {
+            m_brightness = copy.at(0).toInt();
+            m_contrast = copy.at(1).toInt();
+            m_gamma = copy.at(2).toInt();
             calculateGTwriteData();
         }
         return true;
@@ -103,7 +105,7 @@ QVariant KSaneGammaOption::getValue() const
     if (state() == StateHidden) {
         return QVariant();
     }
-    return QVariant::fromValue(QVector<int>{ m_brightness, m_contrast, m_gamma });
+    return QVariantList{ m_brightness, m_contrast, m_gamma };
 }
 
 QVariant KSaneGammaOption::getMaxValue() const
@@ -156,8 +158,8 @@ void KSaneGammaOption::calculateGTwriteData()
     }
 
     writeData(m_gammaTable.data());
-    QVector<int> values = { m_brightness, m_contrast, m_gamma };
-    Q_EMIT valueChanged(QVariant::fromValue(values));
+    QVariantList values = { m_brightness, m_contrast, m_gamma };
+    Q_EMIT valueChanged(values);
 }
 
 }  // NameSpace KSaneIface

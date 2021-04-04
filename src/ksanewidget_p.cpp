@@ -548,9 +548,9 @@ void KSaneWidgetPrivate::createOptInterface()
 
         m_commonGamma->setToolTip(i18n(SANE_DESC_GAMMA_VECTOR));
 
-        connect(m_commonGamma, &LabeledGamma::gammaChanged, gammaR, QOverload<int,int,int>::of(&LabeledGamma::setValues));
-        connect(m_commonGamma, &LabeledGamma::gammaChanged, gammaG, QOverload<int,int,int>::of(&LabeledGamma::setValues));
-        connect(m_commonGamma, &LabeledGamma::gammaChanged, gammaB, QOverload<int,int,int>::of(&LabeledGamma::setValues));
+        connect(m_commonGamma, &LabeledGamma::valuesChanged, gammaR, &LabeledGamma::setValues);
+        connect(m_commonGamma, &LabeledGamma::valuesChanged, gammaG, &LabeledGamma::setValues);
+        connect(m_commonGamma, &LabeledGamma::valuesChanged, gammaB, &LabeledGamma::setValues);
 
         m_splitGamChB = new LabeledCheckbox(m_colorOpts, i18n("Separate color intensity tables"));
         color_lay->addWidget(m_splitGamChB);

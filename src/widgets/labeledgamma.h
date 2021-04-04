@@ -35,11 +35,10 @@ class LabeledGamma : public KSaneOptionWidget
 public:
 
     /**
-     * Create the checkbox.
+     * Create the labeled gamma widget.
      *
      * \param parent parent widget
      * \param text is the text describing the checkbox.
-     * \param elements is the number of elements in the gamma table
      * \param max is the maximum gamma-table-value
      */
     LabeledGamma(QWidget *parent, const QString &text, int max);
@@ -54,12 +53,9 @@ public:
     bool getValues(int &brightness, int &contrast, int &gamma);
 
 public Q_SLOTS:
-    void setValues(int brightness, int contrast, int gamma);
-    void setValues(const QString &values);
+    void setValues(const QVariant &values);
 
 Q_SIGNALS:
-
-    void gammaChanged(int brightness, int contrast, int gamma);
     void valuesChanged(const QVariant &values);
 
 private Q_SLOTS:

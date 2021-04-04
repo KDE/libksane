@@ -768,9 +768,9 @@ int KSaneWidget::setOptVals(const QMap <QString, QString> &opts)
             (d->m_optGamB)) {
         // check if the current gamma values are identical. if they are identical,
         // uncheck the "Separate color intensity tables" checkbox
-        QString redGamma = d->m_optGamR->getValueAsString();
-        QString greenGamma = d->m_optGamG->getValueAsString();
-        QString blueGamma = d->m_optGamB->getValueAsString();
+        QVariant redGamma = d->m_optGamR->getValue();
+        QVariant greenGamma = d->m_optGamG->getValue();
+        QVariant blueGamma = d->m_optGamB->getValue();
 
         if ((redGamma == greenGamma) && (greenGamma == blueGamma)) {
             d->m_splitGamChB->setChecked(false);
@@ -803,9 +803,9 @@ bool KSaneWidget::setOptVal(const QString &option, const QString &value)
                      (opt == d->m_optGamB))) {
                 // check if the current gamma values are identical. if they are identical,
                 // uncheck the "Separate color intensity tables" checkbox
-                QString redGamma = d->m_optGamR->getValueAsString();
-                QString greenGamma = d->m_optGamG->getValueAsString();
-                QString blueGamma = d->m_optGamB->getValueAsString();
+                QVariant redGamma = d->m_optGamR->getValue();
+                QVariant greenGamma = d->m_optGamG->getValue();
+                QVariant blueGamma = d->m_optGamB->getValue();
                 if ((redGamma == greenGamma) && (greenGamma == blueGamma)) {
                     d->m_splitGamChB->setChecked(false);
                     // set the values to the common gamma widget

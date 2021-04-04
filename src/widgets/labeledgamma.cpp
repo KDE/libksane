@@ -36,6 +36,7 @@ LabeledGamma::LabeledGamma(QWidget *parent, KSaneOption *option)
     int max = option->getMaxValue().toInt();
     initGamma(option->title(), max);
     connect(this, &LabeledGamma::valuesChanged, option, &KSaneOption::setValue);
+    connect(option, &KSaneOption::valueChanged, this, &LabeledGamma::setValues);
     if (option->name() == QString::fromUtf8(SANE_NAME_GAMMA_VECTOR_R)) {
         setColor(Qt::red);
     }
@@ -101,62 +102,32 @@ void LabeledGamma::setColor(const QColor &color)
     }
 }
 
-void LabeledGamma::setValues(int brightness, int contrast, int gamma)
+void LabeledGamma::setValues(const QVariant &values)
 {
-    m_brightSlider->blockSignals(true);
-    m_contrastSlider->blockSignals(true);
-    m_gammaSlider->blockSignals(true);
+    if (static_cast<QMetaType::Type>(values.type()) == QMetaType::QVariantList) {
+        QVariantList copy = values.toList();
+        if (copy.size() != 3) {
+            return;
+        }
 
-    m_brightness = brightness;
-    m_contrast = contrast;
-    m_gamma = gamma;
-    
-    m_brightSlider->setValue(brightness);
-    m_contrastSlider->setValue(contrast);
-    m_gammaSlider->setValue(gamma);
-
-    emitNewValues();
-    
-    m_brightSlider->blockSignals(false);
-    m_contrastSlider->blockSignals(false);
-    m_gammaSlider->blockSignals(false);
-}
-
-void LabeledGamma::setValues(const QString &values)
-{
-    m_brightSlider->blockSignals(true);
-    m_contrastSlider->blockSignals(true);
-    m_gammaSlider->blockSignals(true);
-
-    QStringList gammaValues;
-    int brightness;
-    int contrast;
-    int gamma;
-    bool ok = true;
-
-    gammaValues = values.split(QLatin1Char(':'));
-    brightness = gammaValues.at(0).toInt(&ok);
-    if (ok) {
-        contrast = gammaValues.at(1).toInt(&ok);
-    }
-    if (ok) {
-        gamma = gammaValues.at(2).toInt(&ok);
-    }
-
-    if (ok) {
-        m_brightness = brightness;
-        m_contrast = contrast;
-        m_gamma = gamma;
-        m_brightSlider->setValue(brightness);
-        m_contrastSlider->setValue(contrast);
-        m_gammaSlider->setValue(gamma);
+        m_brightSlider->blockSignals(true);
+        m_contrastSlider->blockSignals(true);
+        m_gammaSlider->blockSignals(true);
         
-        emitNewValues();
-    }
+        m_brightness = copy.at(0).toInt();
+        m_contrast = copy.at(1).toInt();
+        m_gamma = copy.at(2).toInt();
+        
+        m_brightSlider->setValue(m_brightness);
+        m_contrastSlider->setValue(m_contrast);
+        m_gammaSlider->setValue(m_gamma);
 
-    m_brightSlider->blockSignals(false);
-    m_contrastSlider->blockSignals(false);
-    m_gammaSlider->blockSignals(false);
+        emitNewValues();
+        
+        m_brightSlider->blockSignals(false);
+        m_contrastSlider->blockSignals(false);
+        m_gammaSlider->blockSignals(false); 
+    }
 }
 
 void LabeledGamma::emitNewValues()
@@ -164,10 +135,9 @@ void LabeledGamma::emitNewValues()
     m_brightness = m_brightSlider->value();
     m_contrast = m_contrastSlider->value();
     m_gamma = m_gammaSlider->value();
-    QVector<int> values = { m_brightness, m_contrast, m_gamma };
+    QVariantList values = { m_brightness, m_contrast, m_gamma };
     
     m_gammaDisplay->update();
-    Q_EMIT gammaChanged(m_brightness, m_contrast, m_gamma);
     Q_EMIT valuesChanged(QVariant::fromValue(values));  
 }
 
