@@ -11,8 +11,8 @@
  *
  * ============================================================ */
 
-#ifndef KSANE_OPT_GAMMA_H
-#define KSANE_OPT_GAMMA_H
+#ifndef KSANE_GAMMA_OPTION_H
+#define KSANE_GAMMA_OPTION_H
 
 #include "ksaneoption.h"
 
@@ -47,4 +47,4 @@ private:
 
 }  // NameSpace KSaneIface
 
-#endif
+#endif // KSANE_GAMMA_OPTION_H

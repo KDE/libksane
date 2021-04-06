@@ -11,8 +11,8 @@
  *
  * ============================================================ */
 
-#ifndef KSANE_OPT_FSLIDER_H
-#define KSANE_OPT_FSLIDER_H
+#ifndef KSANE_FLOAT_OPTION_H
+#define KSANE_FLOAT_OPTION_H
 
 #include "ksaneoption.h"
 
@@ -45,4 +45,4 @@ private:
 
 }  // NameSpace KSaneIface
 
-#endif
+#endif // KSANE_FLOAT_OPTION_H

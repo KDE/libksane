@@ -11,8 +11,8 @@
  *
  * ============================================================ */
 
-#ifndef KSANE_OPT_BUTTON_H
-#define KSANE_OPT_BUTTON_H
+#ifndef KSANE_ACTION_OPTION_H
+#define KSANE_ACTION_OPTION_H
 
 #include "ksaneoption.h"
 
@@ -32,4 +32,4 @@ public Q_SLOTS:
 
 }  // NameSpace KSaneIface
 
-#endif // KSANE_BUTTON_OPT_H
+#endif // KSANE_ACTION_OPTION_H

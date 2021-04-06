@@ -11,8 +11,8 @@
  *
  * ============================================================ */
 
-#ifndef KSANE_OPT_COMBO_H
-#define KSANE_OPT_COMBO_H
+#ifndef KSANE_VALUELIST_OPTION_H
+#define KSANE_VALUELIST_OPTION_H
 
 #include "ksaneoption.h"
 
@@ -48,4 +48,4 @@ private:
 
 }  // NameSpace KSaneIface
 
-#endif
+#endif // KSANE_VALUELIST_OPTION_H

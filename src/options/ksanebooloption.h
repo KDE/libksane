@@ -11,8 +11,8 @@
  *
  * ============================================================ */
 
-#ifndef KSANE_OPT_CHECKBOX_H
-#define KSANE_OPT_CHECKBOX_H
+#ifndef KSANE_BOOL_OPTION_H
+#define KSANE_BOOL_OPTION_H
 
 #include "ksaneoption.h"
 
@@ -40,4 +40,4 @@ private:
 
 }  // NameSpace KSaneIface
 
-#endif
+#endif // KSANE_BOOL_OPTION_H

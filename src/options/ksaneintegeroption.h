@@ -11,8 +11,8 @@
  *
  * ============================================================ */
 
-#ifndef KSANE_OPT_SLIDER_H
-#define KSANE_OPT_SLIDER_H
+#ifndef KSANE_INTEGER_OPTION_H
+#define KSANE_INTEGER_OPTION_H
 
 #include "ksaneoption.h"
 
@@ -43,4 +43,4 @@ private:
 
 }  // NameSpace KSaneIface
 
-#endif
+#endif // KSANE_INTEGER_OPTION_H

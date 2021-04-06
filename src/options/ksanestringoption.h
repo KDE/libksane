@@ -11,8 +11,8 @@
  *
  * ============================================================ */
 
-#ifndef KSANE_OPT_ENTRY_H
-#define KSANE_OPT_ENTRY_H
+#ifndef KSANE_STRING_OPTION_H
+#define KSANE_STRING_OPTION_H
 
 #include "ksaneoption.h"
 
@@ -40,4 +40,4 @@ private:
 
 }  // NameSpace KSaneIface
 
-#endif
+#endif // KSANE_STRING_OPTION_H
