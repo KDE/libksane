@@ -15,14 +15,14 @@
 #include "labeledfslider.h"
 
 #define FLOAT_MULTIP 32768.0
-#define TO_FLOAT(v) ((float)v / FLOAT_MULTIP)
-#define TO_FIX(v) ((int)(v * FLOAT_MULTIP))
+#define TO_DOUBLE(v) (static_cast<double>(v) / FLOAT_MULTIP)
+#define TO_FIX(v) (static_cast<int>(v * FLOAT_MULTIP))
 
 namespace KSaneIface
 {
 
 LabeledFSlider::LabeledFSlider(QWidget *parent, const QString &ltext,
-                               float min, float max, float step)
+                               double min, double max, double step)
     : KSaneOptionWidget(parent, ltext)
 {
     initFSlider(min, max, step);
@@ -31,10 +31,10 @@ LabeledFSlider::LabeledFSlider(QWidget *parent, const QString &ltext,
 LabeledFSlider::LabeledFSlider(QWidget *parent, KSaneOption *option)
     : KSaneOptionWidget(parent, option)
 {
-    float maxValueF = option->getMaxValue().toFloat();
-    float minValueF= option->getMinValue().toFloat();
-    float stepValueF = option->getStepValue().toFloat();
-    initFSlider(minValueF, maxValueF , stepValueF);
+    double maxValue = option->getMaxValue().toDouble();
+    double minValue = option->getMinValue().toDouble();
+    double stepValue = option->getStepValue().toDouble();
+    initFSlider(minValue, maxValue , stepValue);
     
     QString unitSuffix;
     KSaneOption::KSaneOptionUnit unit = option->getUnit();
@@ -67,19 +67,19 @@ LabeledFSlider::LabeledFSlider(QWidget *parent, KSaneOption *option)
     setToolTip(option->description());
     connect(this, &LabeledFSlider::valueChanged, option, &KSaneOption::setValue);
     connect(option, &KSaneOption::valueChanged, this, &LabeledFSlider::setValue);
-    float valueF = option->getValue().toFloat();
-    setValue(valueF);
+    double value = option->getValue().toDouble();
+    setValue(value);
 }
 
-void LabeledFSlider::initFSlider(float minValueF, float maxValueF, float stepValueF)
+void LabeledFSlider::initFSlider(double minValue, double maxValue, double stepValue)
 {
-    int imin = TO_FIX(minValueF);
-    int imax = TO_FIX(maxValueF);
-    m_istep = TO_FIX(stepValueF);
-    m_fstep = stepValueF;
+    int imin = TO_FIX(minValue);
+    int imax = TO_FIX(maxValue);
+    m_istep = TO_FIX(stepValue);
+    m_fstep = stepValue;
     if (m_istep == 0) {
         m_istep = 1;
-        m_fstep = TO_FLOAT(m_istep);
+        m_fstep = TO_DOUBLE(m_istep);
     }
 
     //std::cout << "min=" << min << ", max=" << max << ", m_fstep="<<m_fstep<<std::endl;
@@ -92,11 +92,11 @@ void LabeledFSlider::initFSlider(float minValueF, float maxValueF, float stepVal
     m_slider->setValue(imin);
 
     m_spinb = new QDoubleSpinBox(this);
-    m_spinb->setMinimum(minValueF);
-    m_spinb->setMaximum(maxValueF);
+    m_spinb->setMinimum(minValue);
+    m_spinb->setMaximum(maxValue);
     m_spinb->setSingleStep(m_fstep);
     int decimals = 0;
-    float tmp_step = m_fstep;
+    double tmp_step = m_fstep;
     while (tmp_step < 1) {
         tmp_step *= 10;
         decimals++;
@@ -105,11 +105,11 @@ void LabeledFSlider::initFSlider(float minValueF, float maxValueF, float stepVal
         }
     }
     m_spinb->setDecimals(decimals);
-    m_spinb->setValue(maxValueF);
+    m_spinb->setValue(maxValue);
     //m_spinb->setMinimumWidth(m_spinb->sizeHint().width()+35);
     m_spinb->setMinimumWidth(m_spinb->sizeHint().width());
     m_spinb->setAlignment(Qt::AlignRight);
-    m_spinb->setValue(minValueF);
+    m_spinb->setValue(minValue);
 
     m_label->setBuddy(m_spinb);
 
@@ -128,12 +128,12 @@ LabeledFSlider::~LabeledFSlider()
 {
 }
 
-float LabeledFSlider::value() const
+double LabeledFSlider::value() const
 {
-    return (float)m_spinb->value();
+    return m_spinb->value();
 }
 
-float LabeledFSlider::step() const
+double LabeledFSlider::step() const
 {
     return m_fstep;
 }
@@ -143,7 +143,7 @@ void LabeledFSlider::setSuffix(const QString &text)
     m_spinb->setSuffix(text);
 }
 
-void LabeledFSlider::setRange(float min, float max)
+void LabeledFSlider::setRange(double min, double max)
 {
     //qCDebug(KSANE_LOG) << "min,max(" << m_spinb->minimum() << " - " << m_spinb->maximum();
     //qCDebug(KSANE_LOG) << ") -> (" << min << " - " << max << ")" << std::endl;
@@ -155,19 +155,19 @@ void LabeledFSlider::setRange(float min, float max)
     m_spinb->setRange(min, max);
 }
 
-void LabeledFSlider::setStep(float step)
+void LabeledFSlider::setStep(double step)
 {
     m_istep = TO_FIX(step);
     m_fstep = step;
     if (m_istep == 0) {
         m_istep = 1;
-        m_fstep = TO_FLOAT(m_istep);
+        m_fstep = TO_DOUBLE(m_istep);
     }
     m_slider->setSingleStep(m_istep);
     m_spinb->setSingleStep(m_fstep);
 
     int decimals = 0;
-    float tmp_step = m_fstep;
+    double tmp_step = m_fstep;
     while (tmp_step < 1) {
         tmp_step *= 10;
         decimals++;
@@ -181,7 +181,7 @@ void LabeledFSlider::setStep(float step)
 void LabeledFSlider::setValue(const QVariant &value)
 {
     bool ok;
-    float newValue = value.toFloat(&ok);
+    double newValue = value.toDouble(&ok);
     if (!ok) {
         return;
     }
@@ -196,7 +196,7 @@ void LabeledFSlider::setValue(const QVariant &value)
 
 void LabeledFSlider::syncValues(int ivalue)
 {
-    double value = TO_FLOAT(ivalue);
+    double value = TO_DOUBLE(ivalue);
     if (((value - m_spinb->value()) > m_fstep) || ((m_spinb->value() - value) > m_fstep)) {
         m_spinb->setValue(value);
     } else if (ivalue != m_slider->value()) {
@@ -229,7 +229,7 @@ void LabeledFSlider::fixValue()
         } else {
             m_slider->setValue(m_slider->value() - rest);
         }
-        m_spinb->setValue(TO_FLOAT(m_slider->value()));
+        m_spinb->setValue(TO_DOUBLE(m_slider->value()));
     }
 }
 

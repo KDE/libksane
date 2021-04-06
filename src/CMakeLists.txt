@@ -38,7 +38,7 @@ set(ksane_SRCS
     options/ksanestringoption.cpp
     options/ksanegammaoption.cpp
     options/ksaneintegeroption.cpp
-    options/ksanefloatoption.cpp
+    options/ksanedoubleoption.cpp
     options/ksanelistoption.cpp
     options/ksaneinvertoption.cpp
 )

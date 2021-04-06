@@ -289,7 +289,7 @@ KSaneOption::KSaneOptionType KSaneOption::optionType(const SANE_Option_Descripto
             break;
         case SANE_TYPE_FIXED:
             if (optDesc->size == sizeof(SANE_Word)) {
-                return TypeFloat;
+                return TypeDouble;
             }
             qCDebug(KSANE_LOG) << "Can not handle:" << optDesc->title;
             qCDebug(KSANE_LOG) << "SANE_CONSTRAINT_NONE && SANE_TYPE_FIXED";
@@ -324,7 +324,7 @@ KSaneOption::KSaneOptionType KSaneOption::optionType(const SANE_Option_Descripto
             break;
         case SANE_TYPE_FIXED:
             if (optDesc->size == sizeof(SANE_Word)) {
-                return TypeFloat;
+                return TypeDouble;
             }
             qCDebug(KSANE_LOG) << "Can not handle:" << optDesc->title;
             qCDebug(KSANE_LOG) << "SANE_CONSTRAINT_RANGE && SANE_TYPE_FIXED";

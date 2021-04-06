@@ -45,10 +45,10 @@ public:
      *        contains a '&', a buddy for the slider will be created.
      * \param min minimum slider value
      * \param max maximum slider value
-     * \param st is the step between values.
+     * \param step is the step between values.
      */
     LabeledFSlider(QWidget *parent, const QString &text,
-                   float min, float max, float step);
+                   double min, double max, double step);
 
     LabeledFSlider(QWidget *parent, KSaneOption *option);
     ~LabeledFSlider();
@@ -56,15 +56,15 @@ public:
     /**
      * \return the slider value.
      */
-    float value() const;
-    float step() const;
+    double value() const;
+    double step() const;
 
 public Q_SLOTS:
 
     /** Set the slider/spinbox value */
     void setValue(const QVariant &value);
-    void setRange(float min, float max);
-    void setStep(float step);
+    void setRange(double min, double max);
+    void setStep(double step);
     /** Set the unit */
     void setSuffix(const QString &text);
 
@@ -86,11 +86,11 @@ Q_SIGNALS:
     void valueChanged(const QVariant &val);
 
 private:
-    void initFSlider(float minValueF, float maxValueF, float stepValueF);
+    void initFSlider(double minValue, double maxValue, double stepValue);
 
     QSlider        *m_slider;
     QDoubleSpinBox *m_spinb;
-    float           m_fstep;
+    double          m_fstep;
     int             m_istep;
 };
 

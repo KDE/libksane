@@ -378,7 +378,7 @@ KSaneOptionWidget *KSaneWidgetPrivate::createOptionWidget(QWidget *parent, KSane
         case KSaneOption::TypeInteger:
             widget = new LabeledSlider(parent, option);
             break;
-        case KSaneOption::TypeFloat:
+        case KSaneOption::TypeDouble:
             widget = new LabeledFSlider(parent, option);
             break;
         case KSaneOption::TypeValueList:

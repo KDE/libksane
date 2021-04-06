@@ -7,12 +7,13 @@
  *
  * SPDX-FileCopyrightText: 2009 Kare Sars <kare dot sars at iki dot fi>
  * SPDX-FileCopyrightText: 2014 Gregor Mitsch : port to KDE5 frameworks
+ * SPDX-FileCopyrightText: 2021 Alexander Stippich <a.stippich@gmx.net>
  *
  * SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
  *
  * ============================================================ */
 // Local includes
-#include "ksanefloatoption.h"
+#include "ksanedoubleoption.h"
 
 #include <QVarLengthArray>
 
@@ -24,17 +25,17 @@ static const float MIN_FIXED_STEP = 0.0001;
 namespace KSaneIface
 {
 
-KSaneFloatOption::KSaneFloatOption(const SANE_Handle handle, const int index)
-    : KSaneOption(handle, index), m_fVal(0), m_minChange(MIN_FIXED_STEP)
+KSaneDoubleOption::KSaneDoubleOption(const SANE_Handle handle, const int index)
+    : KSaneOption(handle, index)
 {
-    m_optionType = KSaneOption::TypeFloat;
+    m_optionType = KSaneOption::TypeDouble;
 }
 
-void KSaneFloatOption::readOption()
+void KSaneDoubleOption::readOption()
 {
     KSaneOption::readOption();
 
-    float step = MIN_FIXED_STEP;
+    double step = MIN_FIXED_STEP;
     if (m_optDesc->constraint_type == SANE_CONSTRAINT_RANGE) {
         step = SANE_UNFIX(m_optDesc->constraint.range->quant);
         if (step < MIN_FIXED_STEP) {
@@ -44,7 +45,7 @@ void KSaneFloatOption::readOption()
     m_minChange = step;
 }
 
-void KSaneFloatOption::readValue()
+void KSaneDoubleOption::readValue()
 {
     if (state() == StateHidden) {
         return;
@@ -59,32 +60,32 @@ void KSaneFloatOption::readValue()
         return;
     }
 
-    m_fVal = SANE_UNFIX(toSANE_Word(data.data()));
+    m_value = SANE_UNFIX(toSANE_Word(data.data()));
 
-    Q_EMIT valueChanged(m_fVal);
+    Q_EMIT valueChanged(m_value);
 }
 
-bool KSaneFloatOption::setValue(const QVariant &value)
+bool KSaneDoubleOption::setValue(const QVariant &value)
 {
     if (state() == StateHidden) {
         return false;
     }
     bool ok;
-    float newValue = value.toFloat(&ok);
-    if (ok && (((newValue - m_fVal) >= m_minChange) || ((m_fVal - newValue) >= m_minChange)) ) {
+    double newValue = value.toDouble(&ok);
+    if (ok && (((newValue - m_value) >= m_minChange) || ((m_value - newValue) >= m_minChange)) ) {
         unsigned char data[4];
         SANE_Word fixed;
         //qCDebug(KSANE_LOG) <<m_optDesc->name << fVal << "!=" << val;
-        m_fVal = newValue;
+        m_value = newValue;
         fixed = SANE_FIX(newValue);
         fromSANE_Word(data, fixed);
         writeData(data);
-        Q_EMIT valueChanged(m_fVal);
+        Q_EMIT valueChanged(m_value);
     }
     return ok;
 }
 
-QVariant KSaneFloatOption::getMinValue() const
+QVariant KSaneDoubleOption::getMinValue() const
 {
     QVariant value;
     if (m_optDesc->constraint_type == SANE_CONSTRAINT_RANGE) {
@@ -95,7 +96,7 @@ QVariant KSaneFloatOption::getMinValue() const
     return value;
 }
 
-QVariant KSaneFloatOption::getMaxValue() const
+QVariant KSaneDoubleOption::getMaxValue() const
 {
     QVariant value;
     if (m_optDesc->constraint_type == SANE_CONSTRAINT_RANGE) {
@@ -106,7 +107,7 @@ QVariant KSaneFloatOption::getMaxValue() const
     return value;
 }
 
-QVariant KSaneFloatOption::getStepValue() const
+QVariant KSaneDoubleOption::getStepValue() const
 {
     QVariant value;
     if (m_optDesc->constraint_type == SANE_CONSTRAINT_RANGE) {
@@ -117,20 +118,20 @@ QVariant KSaneFloatOption::getStepValue() const
     return value;
 }
 
-QVariant KSaneFloatOption::getValue() const
+QVariant KSaneDoubleOption::getValue() const
 {
     if (state() == StateHidden) {
         return QVariant();
     }
-    return QVariant(m_fVal);
+    return QVariant(m_value);
 }
 
-QString KSaneFloatOption::getValueAsString() const
+QString KSaneDoubleOption::getValueAsString() const
 {
     if (state() == StateHidden) {
         return QString();
     }
-    return QString::number(m_fVal, 'F', 6);
+    return QString::number(m_value, 'F', 6);
 }
     
 }  // NameSpace KSaneIface

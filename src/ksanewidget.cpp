@@ -39,7 +39,7 @@
 #include "ksanebooloption.h"
 #include "ksanelistoption.h"
 #include "ksanestringoption.h"
-#include "ksanefloatoption.h"
+#include "ksanedoubleoption.h"
 #include "ksanegammaoption.h"
 #include "ksaneintegeroption.h"
 #include "ksanedevicedialog.h"
@@ -444,8 +444,8 @@ bool KSaneWidget::openDevice(const QString &deviceName)
         case KSaneOption::TypeInteger:
             d->m_optList.append(new KSaneIntegerOption(d->m_saneHandle, i));
             break;
-        case KSaneOption::TypeFloat:
-            d->m_optList.append(new KSaneFloatOption(d->m_saneHandle, i));
+        case KSaneOption::TypeDouble:
+            d->m_optList.append(new KSaneDoubleOption(d->m_saneHandle, i));
             break;
         case KSaneOption::TypeValueList:
             d->m_optList.append(new KSaneListOption(d->m_saneHandle, i));

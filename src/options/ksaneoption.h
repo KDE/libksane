@@ -48,7 +48,7 @@ public:
         TypeDetectFail,
         TypeBool,
         TypeInteger,
-        TypeFloat,
+        TypeDouble,
         TypeValueList,
         TypeString,
         TypeGamma,
