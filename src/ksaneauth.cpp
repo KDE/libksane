@@ -1,10 +1,5 @@
 /* ============================================================
 *
-* This file is part of the KDE project
-*
-* Date        : 2010
-* Description : Sane authentication helpers.
-*
 * SPDX-FileCopyrightText: 2010 Kare Sars <kare dot sars at iki dot fi>
 * SPDX-FileCopyrightText: 2014 Gregor Mitsch : port to KDE5 frameworks
 *

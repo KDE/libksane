@@ -1,10 +1,5 @@
 /* ============================================================
  *
- * This file is part of the KDE project
- *
- * Date        : 2007-09-13
- * Description : Sane interface for KDE
- *
  * SPDX-FileCopyrightText: 2007-2008 Kare Sars <kare.sars@iki .fi>
  * SPDX-FileCopyrightText: 2014 Gregor Mitsch : port to KDE5 frameworks
  *

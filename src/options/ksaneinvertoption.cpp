@@ -1,8 +1,5 @@
 /* ============================================================
  *
- * Date        : 2021-03-21
- * Description : Sane interface for KDE
- *
  * SPDX-FileCopyrightText: 2021 Alexander Stippich <a.stippich@gmx.net>
  *
  * SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL

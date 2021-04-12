@@ -1,10 +1,5 @@
 /* ============================================================
  *
- * This file is part of the KDE project
- *
- * Date        : 2009-11-13
- * Description : Sane interface for KDE
- *
  * SPDX-FileCopyrightText: 2009 Kare Sars <kare dot sars at iki dot fi>
  *
  * SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL

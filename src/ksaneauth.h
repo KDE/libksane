@@ -1,10 +1,5 @@
 /* ============================================================
 *
-* This file is part of the KDE project
-*
-* Date        : 2010
-* Description : Sane authentication helpers.
-*
 * SPDX-FileCopyrightText: 2010 Kare Sars <kare dot sars at iki dot fi>
 *
 * SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
@@ -26,7 +21,10 @@ extern "C"
 
 namespace KSaneIface
 {
-
+    
+/**
+ * Sane authentication helpers.
+ */
 class KSaneAuth
 {
 public:

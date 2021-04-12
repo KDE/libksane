@@ -1,10 +1,5 @@
 /* ============================================================
  *
- * This file is part of the KDE project
- *
- * Date        : 2021-04-6
- * Description : Sane interface for KDE
- *
  * SPDX-FileCopyrightText: 2009 Kare Sars <kare dot sars at iki dot fi>
  * SPDX-FileCopyrightText: 2021 Alexander Stippich <a.stippich@gmx.net>
  *

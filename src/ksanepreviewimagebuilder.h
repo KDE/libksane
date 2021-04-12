@@ -1,9 +1,5 @@
 /* ============================================================
  *
- * This file is part of the KDE project
- *
- * Description : Sane interface for KDE
- *
  * SPDX-FileCopyrightText: 2009 Kare Sars <kare dot sars at iki dot fi>
  * SPDX-FileCopyrightText: 2018 Alexander Volkov <a.volkov@rusbitech.ru>
  *

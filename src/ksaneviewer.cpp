@@ -1,10 +1,5 @@
 /* ============================================================
 *
-* This file is part of the KDE project
-*
-* Date        : 2008-11-15
-* Description : Preview image viewer that can handle a selection.
-*
 * SPDX-FileCopyrightText: 2008 Kare Sars <kare dot sars at iki dot fi>
 * SPDX-FileCopyrightText: 2014 Gregor Mitsch : port to KDE5 frameworks
 *

@@ -1,10 +1,5 @@
 /* ============================================================
 *
-* This file is part of the KDE project
-*
-* Date        : 2008-11-15
-* Description :Selection QGraphicsItem for the image viewer.
-*
 * SPDX-FileCopyrightText: 2008 Kare Sars <kare dot sars at iki dot fi>
 *
 * SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
