@@ -38,9 +38,11 @@ void KSaneIntegerOption::readValue()
         return;
     }
 
-    m_iVal = toSANE_Word(data.data());
-
-    Q_EMIT valueChanged(m_iVal);
+    int newValue = toSANE_Word(data.data());
+    if (newValue != m_iVal) {
+        m_iVal = newValue;
+        Q_EMIT valueChanged(m_iVal);
+    }
 }
 
 QVariant KSaneIntegerOption::getMinValue() const

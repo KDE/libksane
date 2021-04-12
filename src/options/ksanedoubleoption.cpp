@@ -14,9 +14,10 @@
 
 #include <ksane_debug.h>
 
-static const float FIXED_MAX = 32767.0;
-static const float FIXED_MIN = -32768.0;
-static const float MIN_FIXED_STEP = 0.0001;
+static const double FIXED_MAX = 32767.9999;
+static const double FIXED_MIN = -32768.0;
+static const double MIN_FIXED_STEP = 0.0001;
+static const double FIXED_PRECISION = 1.0 / 65536;
 namespace KSaneIface
 {
 
@@ -55,9 +56,11 @@ void KSaneDoubleOption::readValue()
         return;
     }
 
-    m_value = SANE_UNFIX(toSANE_Word(data.data()));
-
-    Q_EMIT valueChanged(m_value);
+    double newValue = SANE_UNFIX(toSANE_Word(data.data()));
+    if (abs(newValue - m_value) >= FIXED_PRECISION) {
+        m_value = newValue;
+        Q_EMIT valueChanged(m_value);
+    }
 }
 
 bool KSaneDoubleOption::setValue(const QVariant &value)
@@ -67,7 +70,7 @@ bool KSaneDoubleOption::setValue(const QVariant &value)
     }
     bool ok;
     double newValue = value.toDouble(&ok);
-    if (ok && (((newValue - m_value) >= m_minChange) || ((m_value - newValue) >= m_minChange)) ) {
+    if (ok && abs(newValue - m_value) >= m_minChange) {
         unsigned char data[4];
         SANE_Word fixed;
         //qCDebug(KSANE_LOG) <<m_optDesc->name << fVal << "!=" << val;
@@ -108,7 +111,7 @@ QVariant KSaneDoubleOption::getStepValue() const
     if (m_optDesc->constraint_type == SANE_CONSTRAINT_RANGE) {
         value = SANE_UNFIX(m_optDesc->constraint.range->quant);
     } else {
-        value = 0.0001;
+        value = MIN_FIXED_STEP;
     }
     return value;
 }
