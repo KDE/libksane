@@ -23,11 +23,11 @@ public:
 
     void readValue() override;
 
-    QVariant getMinValue() const override;
-    QVariant getMaxValue() const override;
-    QVariant getStepValue() const override;
-    QVariant getValue() const override;
-    QString getValueAsString() const override;
+    QVariant minimumValue() const override;
+    QVariant maximumValue() const override;
+    QVariant stepValue() const override;
+    QVariant value() const override;
+    QString valueAsString() const override;
 
 public Q_SLOTS:
     bool setValue(const QVariant &value) override;

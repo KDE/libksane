@@ -25,10 +25,10 @@ public:
 
     void readValue() override;
 
-    QVariant getMinValue() const override;
-    QVariant getValue() const override;
-    QString getValueAsString() const override;
-    QVariantList getEntryList() const override;
+    QVariant minimumValue() const override;
+    QVariant value() const override;
+    QString valueAsString() const override;
+    QVariantList valueList() const override;
     
 public Q_SLOTS:
     bool setValue(const QVariant &value) override;

@@ -23,8 +23,8 @@ class KSaneInvertOption : public KSaneOption
 public:
     KSaneInvertOption();
 
-    QVariant getValue() const override;
-    QString getValueAsString() const override;
+    QVariant value() const override;
+    QString valueAsString() const override;
     
     KSaneOptionState state() const override;
     QString name() const override;

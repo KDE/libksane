@@ -38,7 +38,8 @@ class KSaneOption : public QObject
     Q_OBJECT
 
 public:
-
+    
+    /** This enumeration describes the type of the option. */
     typedef enum {
         TypeDetectFail,
         TypeBool,
@@ -52,6 +53,8 @@ public:
 
     Q_ENUM(KSaneOptionType);
     
+    /** This enumeration describes the unit of the value of the option,
+     * if any. */
     typedef enum {
         UnitNone,
         UnitPixel,
@@ -64,6 +67,8 @@ public:
     
     Q_ENUM(KSaneOptionUnit);
     
+    /** This enumeration describes the current statue of the value of 
+     * the option, indicating if this option should be displayed or not. */
     typedef enum {
         StateHidden,
         StateDisabled,
@@ -76,31 +81,94 @@ public:
     static KSaneOptionType optionType(const SANE_Option_Descriptor *optDesc);
 
     bool needsPolling() const;
-    virtual KSaneOptionState state() const;
-    virtual QString name() const;
-    virtual QString title() const;
-    virtual QString description() const;
-    KSaneOptionType type() const;
-
     virtual void readOption();
     virtual void readValue();
+    virtual QString valueAsString() const;
+    
+    /** This function returns the internal name of the option
+     * @return the internal name */
+    virtual QString name() const;
+    
+    /** This function returns the translated title of the option
+     * @return the title */
+    virtual QString title() const;
 
-    virtual QVariant getMinValue() const;
-    virtual QVariant getMaxValue() const;
-    virtual QVariant getStepValue() const;
-    virtual QVariant getValue() const;
-    virtual QString getValueAsString() const;
-    virtual QVariantList getEntryList() const;
-    virtual KSaneOptionUnit getUnit() const;
+    /** This function returns a more verbose, translated description
+     * of the option.
+     * @return the description */
+    virtual QString description() const;
+    
+    /** This function the type of the option as determined by libksane.
+     * Each type provides a different implementation for different 
+     * variable types, e.g. integer, float or string.
+     * @return the type of option the of value KSaneOptionType */
+    KSaneOptionType type() const;
 
+    /** This function returns the state of the option indicating
+     * if the function is disabled or should be hidden.
+     * @return the state of option the of value KSaneOptionState */
+    virtual KSaneOptionState state() const;
+     
+    /** This function returns the currently active value for the option.
+     * @return the current value */  
+    virtual QVariant value() const;
+    
+    /** This function returns the minimum value for the option.
+     * Returns an empty QVariant if this value is not applicable
+     * for the option type.
+     * @return the minimum value */
+    virtual QVariant minimumValue() const;
+        
+    /** This function returns the maximum value for the option.
+     * Returns an empty QVariant if this value is not applicable
+     * for the option type.
+     * @return the maximum value */
+    virtual QVariant maximumValue() const;
+        
+    /** This function returns the step value for the option.
+     * Returns an empty QVariant if this value is not applicable
+     * for the option type.
+     * @return the step value */
+    virtual QVariant stepValue() const;
+    
+    /** This function returns the list of possible values if the option
+     * is of type KSaneOptionType::values. 
+     * @return a list with all possible values */
+    virtual QVariantList valueList() const;
+    
+    /** This function returns an enum specifying whether the values
+     * of the option have a unit, e.g. mm, px, etc.
+     * @return unit of value KSaneOptionUnit */
+    virtual KSaneOptionUnit valueUnit() const;
+    
+    /** This function returns the size of the values of the option
+     * of type KSaneOptionType::TypeValueList.
+     * If the size is greater than one, value() and setValue() 
+     * return and expect a QVariantList with an accordingly number
+     * of elements. If the option is a KSaneOptionType::TypeString,
+     * the size represents the number of characters in the string.
+     * @return the number of elements */
+    virtual int valueSize() const;
+
+    /** This function temporarily stores the current value 
+     * in a member variable. */
     bool storeCurrentData();
+    
+    /** This function restores the previously saved value 
+     * and makes it the current value. */
     bool restoreSavedData();
 
 Q_SIGNALS:
-    void optionsNeedReload();
+    /** This signal is emitted when the option is reloaded, which may
+     * happen if the value of other options has changed. */ 
     void optionReloaded();
+    
+    /** This signal is emitted when the current value is updated, 
+     * either when a user sets a new value or by a reload by the backend. */   
+    void valueChanged(const QVariant &value);
+    
+    void optionsNeedReload();
     void valuesNeedReload();
-    void valueChanged(const QVariant &val);
 
 public Q_SLOTS:
     

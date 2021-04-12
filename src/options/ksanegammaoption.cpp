@@ -95,7 +95,7 @@ void KSaneGammaOption::readValue()
     // not easy nor fast.. ergo not done
 }
 
-QVariant KSaneGammaOption::getValue() const
+QVariant KSaneGammaOption::value() const
 {
     if (state() == StateHidden) {
         return QVariant();
@@ -103,7 +103,12 @@ QVariant KSaneGammaOption::getValue() const
     return QVariantList{ m_brightness, m_contrast, m_gamma };
 }
 
-QVariant KSaneGammaOption::getMaxValue() const
+int KSaneGammaOption::valueSize() const
+{
+    return 3;
+}
+
+QVariant KSaneGammaOption::maximumValue() const
 {
     QVariant value;
     if (m_optDesc) {
@@ -113,7 +118,7 @@ QVariant KSaneGammaOption::getMaxValue() const
     return value;
 }
 
-QString KSaneGammaOption::getValueAsString() const
+QString KSaneGammaOption::valueAsString() const
 {
     if (state() == StateHidden) {
         return QString();

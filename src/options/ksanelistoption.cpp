@@ -59,7 +59,7 @@ void KSaneListOption::readValue()
     }
 }
 
-QVariantList KSaneListOption::getEntryList() const
+QVariantList KSaneListOption::valueList() const
 {
     int i;
     QVariantList list;
@@ -101,7 +101,7 @@ bool KSaneListOption::setValue(const QVariant &value)
     return success;
 }
 
-QVariant KSaneListOption::getMinValue() const
+QVariant KSaneListOption::minimumValue() const
 {
     QVariant value;
     if (state() == StateHidden) {
@@ -131,7 +131,7 @@ QVariant KSaneListOption::getMinValue() const
     return value;
 }
 
-QVariant KSaneListOption::getValue() const
+QVariant KSaneListOption::value() const
 {
     if (state() == StateHidden) {
         return QVariant();
@@ -183,7 +183,7 @@ bool KSaneListOption::setValue(float value)
     return false;
 }
 
-QString KSaneListOption::getValueAsString() const
+QString KSaneListOption::valueAsString() const
 {
     if (state() == StateHidden) {
         return QString();

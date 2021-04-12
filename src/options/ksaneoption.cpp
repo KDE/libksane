@@ -168,37 +168,32 @@ void KSaneOption::fromSANE_Word(unsigned char *data, SANE_Word from)
 #endif
 }
 
-QVariant KSaneOption::getMinValue() const
+QVariant KSaneOption::value() const
 {
     return QVariant();
 }
 
-QVariant KSaneOption::getMaxValue() const
+QVariant KSaneOption::minimumValue() const
 {
     return QVariant();
 }
 
-QVariant KSaneOption::getStepValue() const
+QVariant KSaneOption::maximumValue() const
 {
     return QVariant();
 }
 
-QVariantList KSaneOption::getEntryList() const
+QVariant KSaneOption::stepValue() const
+{
+    return QVariant();
+}
+
+QVariantList KSaneOption::valueList() const
 {
     return QVariantList();
 }
 
-QVariant KSaneOption::getValue() const
-{
-    return QVariant();
-}
-
-QString KSaneOption::getValueAsString() const
-{
-    return QString();
-}
-
-KSaneOption::KSaneOptionUnit KSaneOption::getUnit() const
+KSaneOption::KSaneOptionUnit KSaneOption::valueUnit() const
 {
     if (m_optDesc != nullptr) {
         switch (m_optDesc->unit) {
@@ -213,6 +208,19 @@ KSaneOption::KSaneOptionUnit KSaneOption::getUnit() const
     } else {
         return UnitNone;
     }
+}
+
+int KSaneOption::valueSize() const
+{
+    if (m_optDesc != nullptr) {
+        return m_optDesc->size / sizeof(SANE_Word);
+    }
+    return 0;
+}
+
+QString KSaneOption::valueAsString() const
+{
+    return QString();
 }
 
 bool KSaneOption::setValue(const QVariant &)

@@ -692,7 +692,7 @@ void KSaneWidget::getOptVals(QMap <QString, QString> &opts)
 
     for (int i = 0; i < d->m_optList.size(); i++) {
         option = d->m_optList.at(i);
-        tmp = option->getValueAsString();
+        tmp = option->valueAsString();
         if (!tmp.isEmpty()) {
             opts[option->name()] = tmp;
         }
@@ -704,7 +704,7 @@ bool KSaneWidget::getOptVal(const QString &optname, QString &value)
     KSaneOption *option;
 
     if ((option = d->getOption(optname)) != nullptr) {
-        value = option->getValueAsString();
+        value = option->valueAsString();
         return !value.isEmpty();
     }
     return false;
@@ -763,9 +763,9 @@ int KSaneWidget::setOptVals(const QMap <QString, QString> &opts)
             (d->m_optGamB)) {
         // check if the current gamma values are identical. if they are identical,
         // uncheck the "Separate color intensity tables" checkbox
-        QVariant redGamma = d->m_optGamR->getValue();
-        QVariant greenGamma = d->m_optGamG->getValue();
-        QVariant blueGamma = d->m_optGamB->getValue();
+        QVariant redGamma = d->m_optGamR->value();
+        QVariant greenGamma = d->m_optGamG->value();
+        QVariant blueGamma = d->m_optGamB->value();
 
         if ((redGamma == greenGamma) && (greenGamma == blueGamma)) {
             d->m_splitGamChB->setChecked(false);
@@ -798,9 +798,9 @@ bool KSaneWidget::setOptVal(const QString &option, const QString &value)
                      (opt == d->m_optGamB))) {
                 // check if the current gamma values are identical. if they are identical,
                 // uncheck the "Separate color intensity tables" checkbox
-                QVariant redGamma = d->m_optGamR->getValue();
-                QVariant greenGamma = d->m_optGamG->getValue();
-                QVariant blueGamma = d->m_optGamB->getValue();
+                QVariant redGamma = d->m_optGamR->value();
+                QVariant greenGamma = d->m_optGamG->value();
+                QVariant blueGamma = d->m_optGamB->value();
                 if ((redGamma == greenGamma) && (greenGamma == blueGamma)) {
                     d->m_splitGamChB->setChecked(false);
                     // set the values to the common gamma widget
@@ -842,7 +842,7 @@ void KSaneWidget::enableAutoSelect(bool enable)
 float KSaneWidget::currentDPI()
 {
     if (d->m_optRes) {
-        QVariant value = d->m_optRes->getValue();
+        QVariant value = d->m_optRes->value();
         if (!value.isNull()) {
             return value.toFloat();
         }
@@ -854,16 +854,16 @@ float KSaneWidget::scanAreaWidth()
 {
     float result = 0.0;
     if (d->m_optBrX) {
-        if (d->m_optBrX->getUnit() == KSaneOption::UnitPixel) {
-            result = d->m_optBrX->getMaxValue().toFloat();
+        if (d->m_optBrX->valueUnit() == KSaneOption::UnitPixel) {
+            result = d->m_optBrX->maximumValue().toFloat();
             float dpi = currentDPI();
             if (dpi < 1) {
                 qCDebug(KSANE_LOG) << "Broken DPI value";
                 dpi = 1.0;
             }
             result = result / dpi / 25.4;
-        } else if (d->m_optBrX->getUnit() == KSaneOption::UnitMilliMeter) {
-            result = d->m_optBrX->getMaxValue().toFloat();
+        } else if (d->m_optBrX->valueUnit() == KSaneOption::UnitMilliMeter) {
+            result = d->m_optBrX->maximumValue().toFloat();
         }
     }
     return result;
@@ -873,16 +873,16 @@ float KSaneWidget::scanAreaHeight()
 {
     float result = 0.0;
     if (d->m_optBrY) {
-        if (d->m_optBrY->getUnit() == KSaneOption::UnitPixel) {
-            result = d->m_optBrY->getMaxValue().toFloat();
+        if (d->m_optBrY->valueUnit() == KSaneOption::UnitPixel) {
+            result = d->m_optBrY->maximumValue().toFloat();
             float dpi = currentDPI();
             if (dpi < 1) {
                 qCDebug(KSANE_LOG) << "Broken DPI value";
                 dpi = 1.0;
             }
             result = result / dpi / 25.4;
-        } else if (d->m_optBrY->getUnit() == KSaneOption::UnitMilliMeter) {
-            result = d->m_optBrY->getMaxValue().toFloat();
+        } else if (d->m_optBrY->valueUnit() == KSaneOption::UnitMilliMeter) {
+            result = d->m_optBrY->maximumValue().toFloat();
         }
     }
     return result;

@@ -63,7 +63,7 @@ void KSaneBoolOption::readValue()
     }
 }
 
-QVariant KSaneBoolOption::getValue() const
+QVariant KSaneBoolOption::value() const
 {
     if (state() == StateHidden) {
         return QVariant();
@@ -71,7 +71,7 @@ QVariant KSaneBoolOption::getValue() const
     return m_checked;
 }
 
-QString KSaneBoolOption::getValueAsString() const
+QString KSaneBoolOption::valueAsString() const
 {
     if (state() == StateHidden) {
         return QString();

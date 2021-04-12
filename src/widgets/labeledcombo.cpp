@@ -32,7 +32,7 @@ LabeledCombo::LabeledCombo(QWidget *parent, KSaneOption *option)
     connect(option, &KSaneOption::valueChanged, this, &LabeledCombo::setValue);
     clear();
     
-    const QVariantList list = option->getEntryList();
+    const QVariantList list = option->valueList();
     for (const auto &value : list) {
         if (value.type() == static_cast<QVariant::Type>(QMetaType::Int)) {
             addItem(getStringWithUnitForInteger(value.toInt()), value);
@@ -48,7 +48,7 @@ LabeledCombo::LabeledCombo(QWidget *parent, KSaneOption *option)
     setIcon(QIcon::fromTheme(QStringLiteral("black-white")), QString::fromUtf8(SANE_VALUE_SCAN_MODE_LINEART));
     // The epkowa/epson backend uses "Binary" which is the same as "Lineart"
     setIcon(QIcon::fromTheme(QStringLiteral("black-white")), i18n(tmp_binary));
-    QString currentText = option->getValue().toString();
+    QString currentText = option->value().toString();
 
     setCurrentText(currentText);
 }
@@ -153,7 +153,7 @@ int LabeledCombo::currentIndex() const
 
 QString LabeledCombo::getStringWithUnitForInteger(int iValue) const
 {
-    switch (m_option->getUnit()) {
+    switch (m_option->valueUnit()) {
 
     case KSaneOption::UnitPixel:
         return i18ncp("Parameter and Unit", "%1 Pixel", "%1 Pixels", iValue);
@@ -181,7 +181,7 @@ QString LabeledCombo::getStringWithUnitForInteger(int iValue) const
 
 QString LabeledCombo::getStringWithUnitForFloat(float fValue) const
 {
-    switch (m_option->getUnit()) {
+    switch (m_option->valueUnit()) {
 
     case KSaneOption::UnitPixel:
         return i18ncp("Parameter and Unit", "%1 Pixel", "%1 Pixels", static_cast<int>(fValue));

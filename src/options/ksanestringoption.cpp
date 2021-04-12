@@ -57,12 +57,17 @@ void KSaneStringOption::readValue()
     Q_EMIT valueChanged(m_string);
 }
 
-QVariant KSaneStringOption::getValue() const
+QVariant KSaneStringOption::value() const
 {
     return QVariant(m_string);
+}  
+
+int KSaneStringOption::valueSize() const
+{
+    return static_cast<int>(m_optDesc->size);
 }
 
-QString KSaneStringOption::getValueAsString() const
+QString KSaneStringOption::valueAsString() const
 {
     if (state() == StateHidden) {
         return QString();

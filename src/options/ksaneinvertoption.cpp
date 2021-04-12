@@ -31,12 +31,12 @@ bool KSaneInvertOption::setValue(const QVariant &value)
     }
 }
 
-QVariant KSaneInvertOption::getValue() const
+QVariant KSaneInvertOption::value() const
 {
     return m_checked;
 }
 
-QString KSaneInvertOption::getValueAsString() const
+QString KSaneInvertOption::valueAsString() const
 {
     if (m_checked) {
         return QStringLiteral("true");

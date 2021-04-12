@@ -24,9 +24,10 @@ public:
     void readValue() override;
     void readOption() override;
     
-    QVariant getMaxValue() const override;
-    QVariant getValue() const override;
-    QString getValueAsString() const override;
+    QVariant maximumValue() const override;
+    QVariant value() const override;
+    int valueSize() const override;
+    QString valueAsString() const override;
 
 public Q_SLOTS:
     bool setValue(const QVariant & value) override;

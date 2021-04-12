@@ -28,7 +28,7 @@ LabeledGamma::LabeledGamma(QWidget *parent, KSaneOption *option)
     : KSaneOptionWidget(parent, option)
 {
 
-    int max = option->getMaxValue().toInt();
+    int max = option->maximumValue().toInt();
     initGamma(option->title(), max);
     connect(this, &LabeledGamma::valuesChanged, option, &KSaneOption::setValue);
     connect(option, &KSaneOption::valueChanged, this, &LabeledGamma::setValues);

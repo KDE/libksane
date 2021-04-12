@@ -30,14 +30,14 @@ LabeledSlider::LabeledSlider(QWidget *parent, const QString &ltext,
 LabeledSlider::LabeledSlider(QWidget *parent, KSaneOption *option)
     : KSaneOptionWidget(parent, option)
 {
-    int maxValue = option->getMaxValue().toInt();
-    int minValue = option->getMinValue().toInt();
-    int stepValue = option->getStepValue().toInt();
+    int maxValue = option->maximumValue().toInt();
+    int minValue = option->minimumValue().toInt();
+    int stepValue = option->stepValue().toInt();
 
     initSlider(minValue, maxValue, stepValue);
     
     KLocalizedString unitSuffix;
-    KSaneOption::KSaneOptionUnit unit = option->getUnit();
+    KSaneOption::KSaneOptionUnit unit = option->valueUnit();
     switch (unit) {
 
     case KSaneOption::UnitPixel:
@@ -68,7 +68,7 @@ LabeledSlider::LabeledSlider(QWidget *parent, KSaneOption *option)
     setToolTip(option->description());
     connect(this, &LabeledSlider::valueChanged, option, &KSaneOption::setValue);
     connect(option, &KSaneOption::valueChanged, this, &LabeledSlider::setValue);
-    int value = option->getValue().toInt();
+    int value = option->value().toInt();
     setValue(value);
 }
 

@@ -45,7 +45,7 @@ void KSaneIntegerOption::readValue()
     }
 }
 
-QVariant KSaneIntegerOption::getMinValue() const
+QVariant KSaneIntegerOption::minimumValue() const
 {
     QVariant value;
     if (m_optDesc->constraint_type == SANE_CONSTRAINT_RANGE) {
@@ -56,7 +56,7 @@ QVariant KSaneIntegerOption::getMinValue() const
     return value;
 }
 
-QVariant KSaneIntegerOption::getMaxValue() const
+QVariant KSaneIntegerOption::maximumValue() const
 {
     QVariant value;
     if (m_optDesc->constraint_type == SANE_CONSTRAINT_RANGE) {
@@ -67,7 +67,7 @@ QVariant KSaneIntegerOption::getMaxValue() const
     return value;
 }
 
-QVariant KSaneIntegerOption::getStepValue() const
+QVariant KSaneIntegerOption::stepValue() const
 {
     QVariant value;
     if (m_optDesc->constraint_type == SANE_CONSTRAINT_RANGE) {
@@ -78,7 +78,7 @@ QVariant KSaneIntegerOption::getStepValue() const
     return value;
 }
 
-QVariant KSaneIntegerOption::getValue() const
+QVariant KSaneIntegerOption::value() const
 {
     QVariant value;
     if (state() == StateHidden) {
@@ -88,7 +88,7 @@ QVariant KSaneIntegerOption::getValue() const
     return value;
 }
 
-QString KSaneIntegerOption::getValueAsString() const
+QString KSaneIntegerOption::valueAsString() const
 {
     if (state() == StateHidden) {
         return QString();

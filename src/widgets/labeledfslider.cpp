@@ -26,13 +26,13 @@ LabeledFSlider::LabeledFSlider(QWidget *parent, const QString &ltext,
 LabeledFSlider::LabeledFSlider(QWidget *parent, KSaneOption *option)
     : KSaneOptionWidget(parent, option)
 {
-    double maxValue = option->getMaxValue().toDouble();
-    double minValue = option->getMinValue().toDouble();
-    double stepValue = option->getStepValue().toDouble();
+    double maxValue = option->maximumValue().toDouble();
+    double minValue = option->minimumValue().toDouble();
+    double stepValue = option->stepValue().toDouble();
     initFSlider(minValue, maxValue , stepValue);
     
     QString unitSuffix;
-    KSaneOption::KSaneOptionUnit unit = option->getUnit();
+    KSaneOption::KSaneOptionUnit unit = option->valueUnit();
     switch (unit) {
     case KSaneOption::UnitPixel: 
         unitSuffix = i18nc("Double numbers. SpinBox parameter unit", " Pixels");
@@ -62,7 +62,7 @@ LabeledFSlider::LabeledFSlider(QWidget *parent, KSaneOption *option)
     setToolTip(option->description());
     connect(this, &LabeledFSlider::valueChanged, option, &KSaneOption::setValue);
     connect(option, &KSaneOption::valueChanged, this, &LabeledFSlider::setValue);
-    double value = option->getValue().toDouble();
+    double value = option->value().toDouble();
     setValue(value);
 }
 

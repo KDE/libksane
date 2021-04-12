@@ -83,7 +83,7 @@ bool KSaneDoubleOption::setValue(const QVariant &value)
     return ok;
 }
 
-QVariant KSaneDoubleOption::getMinValue() const
+QVariant KSaneDoubleOption::minimumValue() const
 {
     QVariant value;
     if (m_optDesc->constraint_type == SANE_CONSTRAINT_RANGE) {
@@ -94,7 +94,7 @@ QVariant KSaneDoubleOption::getMinValue() const
     return value;
 }
 
-QVariant KSaneDoubleOption::getMaxValue() const
+QVariant KSaneDoubleOption::maximumValue() const
 {
     QVariant value;
     if (m_optDesc->constraint_type == SANE_CONSTRAINT_RANGE) {
@@ -105,7 +105,7 @@ QVariant KSaneDoubleOption::getMaxValue() const
     return value;
 }
 
-QVariant KSaneDoubleOption::getStepValue() const
+QVariant KSaneDoubleOption::stepValue() const
 {
     QVariant value;
     if (m_optDesc->constraint_type == SANE_CONSTRAINT_RANGE) {
@@ -116,7 +116,7 @@ QVariant KSaneDoubleOption::getStepValue() const
     return value;
 }
 
-QVariant KSaneDoubleOption::getValue() const
+QVariant KSaneDoubleOption::value() const
 {
     if (state() == StateHidden) {
         return QVariant();
@@ -124,7 +124,7 @@ QVariant KSaneDoubleOption::getValue() const
     return QVariant(m_value);
 }
 
-QString KSaneDoubleOption::getValueAsString() const
+QString KSaneDoubleOption::valueAsString() const
 {
     if (state() == StateHidden) {
         return QString();

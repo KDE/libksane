@@ -226,7 +226,7 @@ float KSaneWidgetPrivate::ratioToScanAreaX(float ratio)
     if (!m_optBrX) {
         return 0.0;
     }
-    float max = m_optBrX->getMaxValue().toFloat();
+    float max = m_optBrX->maximumValue().toFloat();
 
     return max * ratio;
 }
@@ -236,7 +236,7 @@ float KSaneWidgetPrivate::ratioToScanAreaY(float ratio)
     if (!m_optBrY) {
         return 0.0;
     }
-    float max = m_optBrY->getMaxValue().toFloat();
+    float max = m_optBrY->maximumValue().toFloat();
 
     return max * ratio;
 }
@@ -246,7 +246,7 @@ float KSaneWidgetPrivate::scanAreaToRatioX(float scanArea)
     if (!m_optBrX) {
         return 0.0;
     }
-    float max = m_optBrX->getMaxValue().toFloat();
+    float max = m_optBrX->maximumValue().toFloat();
 
     if (scanArea > max) {
         return 1.0;
@@ -264,7 +264,7 @@ float KSaneWidgetPrivate::scanAreaToRatioY(float scanArea)
     if (!m_optBrY) {
         return 0.0;
     }
-    float max = m_optBrY->getMaxValue().toFloat();
+    float max = m_optBrY->maximumValue().toFloat();
 
     if (scanArea > max) {
         return 1.0;
@@ -295,12 +295,12 @@ float KSaneWidgetPrivate::ratioToDispUnitX(float ratio)
 
     float result = ratioToScanAreaX(ratio);
 
-    if (m_optBrX->getUnit() == KSaneOption::UnitMilliMeter) {
+    if (m_optBrX->valueUnit() == KSaneOption::UnitMilliMeter) {
         return mmToDispUnit(result);
     }
-    else if (m_optBrX->getUnit() == KSaneOption::UnitPixel && m_optRes) {
+    else if (m_optBrX->valueUnit() == KSaneOption::UnitPixel && m_optRes) {
         // get current DPI
-        float dpi = m_optRes->getValue().toFloat();
+        float dpi = m_optRes->value().toFloat();
         if (dpi > 1) {
             result = result / (dpi / 25.4);
             return mmToDispUnit(result);
@@ -318,12 +318,12 @@ float KSaneWidgetPrivate::ratioToDispUnitY(float ratio)
 
     float result = ratioToScanAreaY(ratio);
 
-    if (m_optBrY->getUnit() == KSaneOption::UnitMilliMeter) {
+    if (m_optBrY->valueUnit() == KSaneOption::UnitMilliMeter) {
         return mmToDispUnit(result);
     }
-    else if (m_optBrY->getUnit() == KSaneOption::UnitPixel && m_optRes) {
+    else if (m_optBrY->valueUnit() == KSaneOption::UnitPixel && m_optRes) {
         // get current DPI
-        float dpi = m_optRes->getValue().toFloat();
+        float dpi = m_optRes->value().toFloat();
         if (dpi > 1) {
             result = result / (dpi / 25.4);
             return mmToDispUnit(result);
@@ -842,7 +842,7 @@ void KSaneWidgetPrivate::setBRX(const QVariant &x)
         return;
     }
     
-    QVariant tlx = m_optTlX->getValue();
+    QVariant tlx = m_optTlX->value();
     if (!tlx.isNull()) {
         float tlxRatio = scanAreaToRatioX(tlx.toFloat());
         m_scanareaWidth->setValue(ratioToDispUnitX(ratio) - ratioToDispUnitX(tlxRatio));
@@ -864,7 +864,7 @@ void KSaneWidgetPrivate::setBRY(const QVariant &y)
     if (!m_optTlY) {
         return;
     }
-    QVariant tly = m_optTlY->getValue();
+    QVariant tly = m_optTlY->value();
     if (!tly.isNull()) {
         float tlyRatio = scanAreaToRatioY(tly.toFloat());
         m_scanareaHeight->setValue(ratioToDispUnitY(ratio) - ratioToDispUnitY(tlyRatio));
@@ -880,10 +880,10 @@ void KSaneWidgetPrivate::updatePreviewSize()
 
     // check if an update is necessary
     if (m_optBrX != nullptr) {
-        max_x = m_optBrX->getMaxValue().toFloat();
+        max_x = m_optBrX->maximumValue().toFloat();
     }
     if (m_optBrY != nullptr) {
-        max_y = m_optBrY->getMaxValue().toFloat();
+        max_y = m_optBrY->maximumValue().toFloat();
     }
     if ((max_x == m_previewWidth) && (max_y == m_previewHeight)) {
         //qCDebug(KSANE_LOG) << "no preview size change";
@@ -979,8 +979,8 @@ void KSaneWidgetPrivate::startPreviewScan()
     if ((m_optTlX != nullptr) && (m_optTlY != nullptr) &&
             (m_optBrX != nullptr) && (m_optBrY != nullptr)) {
         // get maximums
-        max_x = m_optBrX->getMaxValue().toFloat();
-        max_y = m_optBrY->getMaxValue().toFloat();
+        max_x = m_optBrX->maximumValue().toFloat();
+        max_y = m_optBrY->maximumValue().toFloat();
         // select the whole area
         m_optTlX->setValue(0);
         m_optTlY->setValue(0);
@@ -1001,7 +1001,7 @@ void KSaneWidgetPrivate::startPreviewScan()
         } else {
             // set the resolution to getMinValue and increase if necessary
             SANE_Parameters params;
-            dpi = m_optRes->getMinValue().toFloat();
+            dpi = m_optRes->minimumValue().toFloat();
             do {
                 m_optRes->setValue(dpi);
                 if ((m_optResY != nullptr) && (m_optRes->name() == QStringLiteral(SANE_NAME_SCAN_X_RESOLUTION))) {
@@ -1025,7 +1025,7 @@ void KSaneWidgetPrivate::startPreviewScan()
 
             if (params.pixels_per_line == 0) {
                 // This is a security measure for broken backends
-                dpi = m_optRes->getMinValue().toFloat();
+                dpi = m_optRes->minimumValue().toFloat();
                 m_optRes->setValue(dpi);
                 qCDebug(KSANE_LOG) << "Setting minimum DPI value for a broken back-end";
             }
@@ -1053,7 +1053,7 @@ void KSaneWidgetPrivate::startPreviewScan()
 
     m_progressBar->setValue(0);
     m_isPreview = true;
-    m_previewThread->setPreviewInverted(m_optInvert->getValue().toBool());
+    m_previewThread->setPreviewInverted(m_optInvert->value().toBool());
     m_previewThread->start();
     m_updProgressTmr.start();
 }
@@ -1142,7 +1142,7 @@ void KSaneWidgetPrivate::startFinalScan()
 
     setBusy(true);
     m_updProgressTmr.start();
-    m_scanThread->setImageInverted(m_optInvert->getValue().toBool());
+    m_scanThread->setImageInverted(m_optInvert->value().toBool());
     m_scanThread->start();
 }
 
@@ -1152,7 +1152,7 @@ bool KSaneWidgetPrivate::scanSourceADF()
         return false;
     }
 
-    QString source = m_optSource->getValue().toString();
+    QString source = m_optSource->value().toString();
 
     return source.contains(QStringLiteral("Automatic Document Feeder")) ||
     source.contains(QStringLiteral("ADF")) ||
@@ -1199,7 +1199,7 @@ void KSaneWidgetPrivate::oneFinalScanDone()
         // Check if we have a "wait for button" batch scanning
         if (m_optWaitForBtn) {
             qCDebug(KSANE_LOG) << m_optWaitForBtn->name();
-            QString wait = m_optWaitForBtn->getValue().toString();
+            QString wait = m_optWaitForBtn->value().toString();
 
             qCDebug(KSANE_LOG) << "wait ==" << wait;
             if (wait == QStringLiteral("true")) {
@@ -1319,8 +1319,8 @@ void KSaneWidgetPrivate::checkInvert()
         return;
     }
 
-    QString source = m_optSource->getValue().toString();
-    QString filmtype = m_optFilmType->getValue().toString();
+    QString source = m_optSource->value().toString();
+    QString filmtype = m_optFilmType->value().toString();
 
     if ((source.contains(i18nc("This is compared to the option string returned by sane",
                                "Transparency"), Qt::CaseInsensitive)) &&
@@ -1398,12 +1398,12 @@ void KSaneWidgetPrivate::updateScanSelection()
 {
     QVariant maxX;
     if (m_optBrX) {
-        maxX = m_optBrX->getMaxValue();
+        maxX = m_optBrX->maximumValue();
     }
 
     QVariant maxY;
     if (m_optBrY) {
-        maxY = m_optBrY->getMaxValue();
+        maxY = m_optBrY->maximumValue();
     }
 
     float x1 = m_scanareaX->value();
