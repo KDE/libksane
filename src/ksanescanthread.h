@@ -2,6 +2,7 @@
  *
  * SPDX-FileCopyrightText: 2009 Kare Sars <kare dot sars at iki dot fi>
  * SPDX-FileCopyrightText: 2014 Gregor Mitsch : port to KDE5 frameworks
+ * SPDX-FileCopyrightText: 2021 Alexander Stippich <a.stippich@gmx.net>
  * 
  * SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
  *
@@ -10,7 +11,7 @@
 #ifndef KSANE_SCAN_THREAD_H
 #define KSANE_SCAN_THREAD_H
 
-#include "ksanepreviewimagebuilder.h"
+#include "ksaneimagebuilder.h"
 
 // Sane includes
 extern "C"
@@ -40,10 +41,10 @@ public:
         ReadReady
     };
 
-    KSaneScanThread(SANE_Handle handle, QImage *img, QByteArray *data);
+    KSaneScanThread(SANE_Handle handle);
     void run() override;
-    void setImageInverted(QVariant newValue);
-    void setPreview(bool isPreview);
+    void setImageInverted(const QVariant &newValue);
+    void setImageResolution(const QVariant &newValue);
     void cancelScan();
 
     bool saneStartDone();
@@ -51,10 +52,10 @@ public:
 
     ReadStatus frameStatus();
     SANE_Status saneStatus();
-    SANE_Parameters saneParameters();
     
-    void lockImage();
-    void unlockImage();
+    void lockScanImage();
+    QImage *scanImage();
+    void unlockScanImage();
 
 Q_SIGNALS:
     
@@ -65,8 +66,6 @@ private:
     void updateScanProgress();
     void finishProgress();
     void copyToScanData(int readBytes);
-    void copyToPreviewImg(int readBytes);
-    void copyToByteArray(int readBytes);
      
     SANE_Byte       m_readData[SCAN_READ_CHUNK_SIZE];
     SANE_Handle     m_saneHandle;
@@ -74,15 +73,14 @@ private:
     int             m_frameRead = 0;
     int             m_frame_t_count = 0;
     int             m_dataSize = 0;
+    int             m_dpi = 0;
     SANE_Parameters m_params;
     SANE_Status     m_saneStatus = SANE_STATUS_GOOD;
     ReadStatus      m_readStatus = ReadReady;
     bool            m_saneStartDone = false;
     bool            m_invertColors = false;
-    bool            m_isPreview = false;
-    KSanePreviewImageBuilder m_imageBuilder;
-    QByteArray     *m_data;
-    QImage         *m_image;
+    KSaneImageBuilder m_imageBuilder;
+    QImage          m_image;
     QMutex          m_imageMutex;
     
     QTimer          m_emitProgressUpdateTimer;

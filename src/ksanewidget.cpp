@@ -549,7 +549,7 @@ bool KSaneWidget::openDevice(const QString &deviceName)
     }
 
     // Create the preview thread
-    d->m_scanThread = new KSaneScanThread(d->m_saneHandle, &d->m_previewImg, &d->m_scanData);
+    d->m_scanThread = new KSaneScanThread(d->m_saneHandle);
     connect(d->m_scanThread, &KSaneScanThread::finished, d, &KSaneWidgetPrivate::scanDone);
     connect(invertOption, &KSaneInvertOption::valueChanged, d->m_scanThread, &KSaneScanThread::setImageInverted);
     connect(d->m_scanThread, &KSaneScanThread::scanProgressUpdated, d, &KSaneWidgetPrivate::updateProgress);
@@ -597,8 +597,6 @@ bool KSaneWidget::closeDevice()
 
     return true;
 }
-
-#define inc_pixel(x,y,ppl) { x++; if (x>=ppl) { y++; x=0;} }
 
 QImage KSaneWidget::toQImageSilent(const QByteArray &data,
                                    int width,

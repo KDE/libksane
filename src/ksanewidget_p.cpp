@@ -173,55 +173,22 @@ void KSaneWidgetPrivate::signalDevListUpdate()
     Q_EMIT q->availableDevices(m_findDevThread->devicesList());
 }
 
-KSaneWidget::ImageFormat KSaneWidgetPrivate::getImgFormat(SANE_Parameters &params)
+KSaneWidget::ImageFormat KSaneWidgetPrivate::getImgFormat(const QImage &image)
 {
-    switch (params.format) {
-    case SANE_FRAME_GRAY:
-        switch (params.depth) {
-        case 1:
-            return KSaneWidget::FormatBlackWhite;
-        case 8:
-            return KSaneWidget::FormatGrayScale8;
-        case 16:
-            return KSaneWidget::FormatGrayScale16;
-        default:
-            return KSaneWidget::FormatNone;
-        }
-    case SANE_FRAME_RGB:
-    case SANE_FRAME_RED:
-    case SANE_FRAME_GREEN:
-    case SANE_FRAME_BLUE:
-        switch (params.depth) {
-        case 8:
-            return KSaneWidget::FormatRGB_8_C;
-        case 16:
-            return KSaneWidget::FormatRGB_16_C;
-        default:
-            return KSaneWidget::FormatNone;
-        }
+    switch (image.format()) {
+    case QImage::Format_Mono:
+        return KSaneWidget::FormatBlackWhite;
+    case QImage::Format_Grayscale8:
+        return KSaneWidget::FormatGrayScale8;
+    case QImage::Format_Grayscale16:
+         return KSaneWidget::FormatGrayScale16;
+    case QImage::Format_RGB32:
+        return KSaneWidget::FormatRGB_8_C;
+    case QImage::Format_RGBX64:
+        return KSaneWidget::FormatRGB_16_C;
+    default:
+         return KSaneWidget::FormatNone;
     }
-    return KSaneWidget::FormatNone;
-}
-
-int KSaneWidgetPrivate::getBytesPerLines(SANE_Parameters &params)
-{
-    switch (getImgFormat(params)) {
-    case KSaneWidget::FormatBlackWhite:
-    case KSaneWidget::FormatGrayScale8:
-    case KSaneWidget::FormatGrayScale16:
-        return params.bytes_per_line;
-
-    case KSaneWidget::FormatRGB_8_C:
-        return params.pixels_per_line * 3;
-
-    case KSaneWidget::FormatRGB_16_C:
-        return params.pixels_per_line * 6;
-
-    case KSaneWidget::FormatNone:
-    case KSaneWidget::FormatBMP: // to remove warning (BMP is omly valid in the twain wrapper)
-        return 0;
-    }
-    return 0;
 }
 
 float KSaneWidgetPrivate::ratioToScanAreaX(float ratio)
@@ -1045,7 +1012,6 @@ void KSaneWidgetPrivate::startPreviewScan()
 
     m_progressBar->setValue(0);
     m_isPreview = true;
-    m_scanThread->setPreview(true);
     m_scanThread->start();
 }
 
@@ -1053,8 +1019,6 @@ void KSaneWidgetPrivate::previewScanDone()
 {
     // even if the scan is finished successfully we need to call sane_cancel()
     sane_cancel(m_saneHandle);
-    
-    m_scanThread->setPreview(false);
     
     if (m_closeDevicePending) {
         setBusy(false);
@@ -1082,6 +1046,7 @@ void KSaneWidgetPrivate::previewScanDone()
         m_optPreview->restoreSavedData();
     }
 
+    m_previewImg = std::move(*m_scanThread->scanImage());
     m_previewViewer->setQImage(&m_previewImg);
     m_previewViewer->zoom2Fit();
 
@@ -1107,7 +1072,6 @@ void KSaneWidgetPrivate::startFinalScan()
     }
     m_scanOngoing = true;
     m_isPreview = false;
-    m_scanThread->setPreview(false);
     m_cancelMultiScan = false;
 
     float x1 = 0, y1 = 0, x2 = 0, y2 = 0;
@@ -1171,19 +1135,72 @@ void KSaneWidgetPrivate::oneFinalScanDone()
 
     if (m_scanThread->frameStatus() == KSaneScanThread::ReadReady) {
         // scan finished OK
-        SANE_Parameters params = m_scanThread->saneParameters();
-        int lines = params.lines;
-        if (lines == -1) {
-            // this is probably a handscanner -> calculate the size from the read data
-            int bytesPerLine = qMax(getBytesPerLines(params), 1); // ensure no div by 0
-            lines = m_scanData.size() / bytesPerLine;
-        }
-        Q_EMIT q->imageReady(m_scanData,
-                           params.pixels_per_line,
-                           lines,
-                           getBytesPerLines(params),
-                           (int)getImgFormat(params));
+        Q_EMIT q->scannedImageReady(*m_scanThread->scanImage());
 
+        //TODO: only for compatibility, remove in the future
+        if (q->isSignalConnected(QMetaMethod::fromSignal(&KSaneWidget::imageReady))) {
+            QImage *scanImage = m_scanThread->scanImage();
+            KSaneWidget::ImageFormat format = getImgFormat(*scanImage);
+            QByteArray scanData;
+            scanData.reserve(scanImage->sizeInBytes());
+            switch (format) {
+                case KSaneWidget::FormatBlackWhite:
+                    scanData = QByteArray::fromRawData(reinterpret_cast<const char*>(scanImage->bits()), scanImage->sizeInBytes());
+                    break;
+                case KSaneWidget::FormatGrayScale8: {
+                    for (int y = 0; y < scanImage->height(); y++) {
+                        const uchar *line = scanImage->scanLine(y);
+                        for (int x = 0; x < scanImage->width(); x++) {
+                            scanData.append(line[x]);
+                        }
+                    }
+                    break;
+                }
+                case KSaneWidget::FormatGrayScale16: {
+                    for (int y = 0; y < scanImage->height(); y++) {
+                        const uchar *line = scanImage->scanLine(y);
+                        for (int x = 0; x < scanImage->width(); x++) {
+                            scanData.append(line[2 * x]);
+                            scanData.append(line[2 * x + 1]);
+                        }
+                    }
+                    break;
+                }
+                case KSaneWidget::FormatRGB_8_C: {
+                    for (int y = 0; y < scanImage->height(); y++) {
+                        const uchar *line = scanImage->scanLine(y);
+                        for (int x = 0; x < scanImage->width(); x++) {
+                            scanData.append(line[4 * x]);
+                            scanData.append(line[4 * x + 1]);
+                            scanData.append(line[4 * x + 2]);
+                        }
+                    }
+                    break;
+                }
+                case KSaneWidget::FormatRGB_16_C: {
+                    for (int y = 0; y < scanImage->height(); y++) {
+                        const uchar *line = scanImage->scanLine(y);
+                        for (int x = 0; x < scanImage->width(); x++) {
+                            scanData.append(line[8 * x]);
+                            scanData.append(line[8 * x + 1]);
+                            scanData.append(line[8 * x + 2]);
+                            scanData.append(line[8 * x + 3]);
+                            scanData.append(line[8 * x + 4]);
+                            scanData.append(line[8 * x + 5]);
+                        }
+                    }
+                    break;
+                }
+                default:
+                    break;
+            }
+
+            Q_EMIT q->imageReady(scanData,
+                scanImage->width(),
+                scanImage->height(),
+                scanImage->bytesPerLine(),
+                format);
+        }
         // now check if we should have automatic ADF batch scanning
         if (scanSourceADF() && !m_cancelMultiScan) {
             // in batch mode only one area can be scanned per page
@@ -1339,14 +1356,14 @@ void KSaneWidgetPrivate::updateProgress(int progress)
                 m_warmingUp->hide();
                 m_activityFrame->show();
                 // the image size might have changed
-                m_scanThread->lockImage();
-                m_previewViewer->setQImage(&m_previewImg);
+                m_scanThread->lockScanImage();
+                m_previewViewer->setQImage(m_scanThread->scanImage());
                 m_previewViewer->zoom2Fit();
-                m_scanThread->unlockImage();
+                m_scanThread->unlockScanImage();
             } else {
-                m_scanThread->lockImage();
+                m_scanThread->lockScanImage();
                 m_previewViewer->updateImage();
-                m_scanThread->unlockImage();
+                m_scanThread->unlockScanImage();
             }
         }
     } else {

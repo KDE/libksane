@@ -52,6 +52,7 @@ public Q_SLOTS:
 
 Q_SIGNALS:
     void ImageReady(QByteArray &data, int width, int height, int bytes_per_line, int format);
+    void qImageReady(const QImage &image);
 
 private:
 

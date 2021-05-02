@@ -130,8 +130,9 @@ public:
      * This is a convenience method that can be used to create a QImage from the image data
      * returned by the imageReady(...) signal.
      * @note: If the image data has 16 bits/color the * data is truncated to 8 bits/color
-     * since QImage does not support 16 bits/color. A warning message will be shown.
-     *
+     * A warning message will be shown.
+     * @deprecated since 21.08
+     * @see use scannedImageReady(const QImage &scannedImage) and directly use the provided QImage
      * @param data is the byte data containing the image.
      * @param width is the width of the image in pixels.
      * @param height is the height of the image in pixels.
@@ -139,7 +140,7 @@ public:
      * and is probably only relevant for 'FormatBlackWhite'.
      * @param format is the KSane image format of the data.
      * @return This function returns the provided image data as a QImage. */
-    QImage toQImage(const QByteArray &data,
+    KSANE_DEPRECATED QImage toQImage(const QByteArray &data,
                     int width,
                     int height,
                     int bytes_per_line,
@@ -150,7 +151,8 @@ public:
      * returned by the imageReady(...) signal.
      * @note: If the image data has 16 bits/color the * data is truncated to 8 bits/color, but
      * unlike toQImage() this function will not give a warning.
-     *
+     * @deprecated since 21.08
+     * @see use scannedImageReady(const QImage &scannedImage) and directly use the provided QImage
      * @param data is the byte data containing the image.
      * @param width is the width of the image in pixels.
      * @param height is the height of the image in pixels.
@@ -158,7 +160,7 @@ public:
      * and is probably only relevant for 'FormatBlackWhite'.
      * @param format is the KSane image format of the data.
      * @return This function returns the provided image data as a QImage. */
-    QImage toQImageSilent(const QByteArray &data,
+    KSANE_DEPRECATED QImage toQImageSilent(const QByteArray &data,
                           int width,
                           int height,
                           int bytes_per_line,
@@ -167,7 +169,8 @@ public:
     /**
      * This is a static version of toQImageSilent() method that requires dpi as additional
      * argument. Non-static version uses currentDPI() for it.
-     *
+     * @deprecated since 21.08
+     * @see use scannedImageReady(const QImage &scannedImage) and directly use the provided QImage
      * @param data is the byte data containing the image.
      * @param width is the width of the image in pixels.
      * @param height is the height of the image in pixels.
@@ -176,7 +179,7 @@ public:
      * @param format is the KSane image format of the data.
      * @param dpi is the dpi value of the image.
      * @return This function returns the provided image data as a QImage. */
-    static
+    KSANE_DEPRECATED static
     QImage toQImageSilent(const QByteArray &data,
                           int width,
                           int height,
@@ -308,14 +311,21 @@ public Q_SLOTS:
 
 Q_SIGNALS:
     /**
+     * This signal is emitted when a final scan is ready.
+     * @param scannedImage is the QImage containing the scanned image data. */
+    void scannedImageReady(const QImage &scannedImage);
+
+    /**
      * This Signal is emitted when a final scan is ready.
+     * @deprecated since 21.08
+     * @see use new scannedImageReady(const QImage &scannedImage) instead
      * @param data is the byte data containing the image.
      * @param width is the width of the image in pixels.
      * @param height is the height of the image in pixels.
      * @param bytes_per_line is the number of bytes used per line. This might include padding
      * and is probably only relevant for 'FormatBlackWhite'.
      * @param format is the KSane image format of the data. */
-    void imageReady(QByteArray &data, int width, int height,
+    KSANE_DEPRECATED void imageReady(QByteArray &data, int width, int height,
                     int bytes_per_line, int format);
 
     /**

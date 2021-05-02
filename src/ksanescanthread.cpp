@@ -2,6 +2,7 @@
 *
 * SPDX-FileCopyrightText: 2009 Kare Sars <kare dot sars at iki dot fi>
 * SPDX-FileCopyrightText: 2014 Gregor Mitsch : port to KDE5 frameworks
+* SPDX-FileCopyrightText: 2021 Alexander Stippich <a.stippich@gmx.net>
 *
 * SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 *
@@ -16,8 +17,8 @@
 
 namespace KSaneIface
 {
-KSaneScanThread::KSaneScanThread(SANE_Handle handle, QImage *img, QByteArray *data):
-    QThread(), m_saneHandle(handle), m_imageBuilder(img), m_data(data), m_image(img)
+KSaneScanThread::KSaneScanThread(SANE_Handle handle):
+    QThread(), m_saneHandle(handle), m_imageBuilder(&m_image, &m_dpi)
 {
     m_emitProgressUpdateTimer.setSingleShot(false);
     m_emitProgressUpdateTimer.setInterval(300);
@@ -26,20 +27,22 @@ KSaneScanThread::KSaneScanThread(SANE_Handle handle, QImage *img, QByteArray *da
     connect(this, &QThread::finished, this, &KSaneScanThread::finishProgress);
 }
 
-void KSaneScanThread::setImageInverted(QVariant newValue)
+void KSaneScanThread::setImageInverted(const QVariant &newValue)
 {
     const bool newInvert = newValue.toBool();
     if (m_invertColors != newInvert) {
         m_invertColors = newInvert;
-        if (m_image != nullptr) {
-            m_image->invertPixels();
-        }
+        m_image.invertPixels();
     }
 }
 
-void KSaneScanThread::setPreview(bool isPreview)
+void KSaneScanThread::setImageResolution(const QVariant &newValue)
 {
-    m_isPreview = isPreview;
+    bool ok;
+    const int newDPI = newValue.toInt(&ok);
+    if (ok && m_dpi != newDPI) {
+        m_dpi = newDPI;
+    }
 }
 
 KSaneScanThread::ReadStatus KSaneScanThread::frameStatus()
@@ -52,17 +55,17 @@ SANE_Status KSaneScanThread::saneStatus()
     return m_saneStatus;
 }
 
-SANE_Parameters KSaneScanThread::saneParameters()
+QImage *KSaneScanThread::scanImage()
 {
-    return m_params;
+    return &m_image;
 }
 
-void KSaneScanThread::lockImage()
+void KSaneScanThread::lockScanImage()
 {
     m_imageMutex.lock();
 }
 
-void KSaneScanThread::unlockImage()
+void KSaneScanThread::unlockScanImage()
 {
     m_imageMutex.unlock();
 }
@@ -114,16 +117,9 @@ void KSaneScanThread::run()
         m_dataSize = m_frameSize;
     }
 
-    if (m_isPreview) {
-        m_imageBuilder.start(m_params);
-    }
+    m_imageBuilder.start(m_params);
     m_frameRead = 0;
     m_frame_t_count = 0;
-    
-    m_data->clear();
-    if (m_dataSize > 0) {
-        m_data->reserve(m_dataSize);
-    }
 
     while (m_readStatus == ReadOngoing) {
         readData();
@@ -236,101 +232,12 @@ void KSaneScanThread::copyToScanData(int readBytes)
         }
     }
     
-    if (m_isPreview) {
-        copyToPreviewImg(readBytes);
-    } else {
-        copyToByteArray(readBytes);  
-    } 
-}
-
-void KSaneScanThread::copyToPreviewImg(int readBytes)
-{  
     QMutexLocker locker(&m_imageMutex);
     if (m_imageBuilder.copyToImage(m_readData, readBytes)) {
         m_frameRead += readBytes;
     } else {
         m_readStatus = ReadError;
     }
-}
-
-#define index_red8_to_rgb8(i)     (i*3)
-#define index_red16_to_rgb16(i)   ((i/2)*6 + i%2)
-
-#define index_green8_to_rgb8(i)   (i*3 + 1)
-#define index_green16_to_rgb16(i) ((i/2)*6 + i%2 + 2)
-
-#define index_blue8_to_rgb8(i)    (i*3 + 2)
-#define index_blue16_to_rgb16(i)  ((i/2)*6 + i%2 + 4)
-
-void KSaneScanThread::copyToByteArray(int readBytes)
-{
-    switch (m_params.format) {
-    case SANE_FRAME_GRAY:
-        m_data->append(reinterpret_cast<const char *>(m_readData), readBytes);
-        m_frameRead += readBytes;
-        return;
-    case SANE_FRAME_RGB:
-        if (m_params.depth == 1) {
-            break;
-        }
-        m_data->append(reinterpret_cast<const char *>(m_readData), readBytes);
-        m_frameRead += readBytes;
-        return;
-
-    case SANE_FRAME_RED:
-        if (m_params.depth == 8) {
-            for (int i = 0; i < readBytes; i++) {
-                (*m_data)[index_red8_to_rgb8(m_frameRead)] = m_readData[i];
-                m_frameRead++;
-            }
-            return;
-        } else if (m_params.depth == 16) {
-            for (int i = 0; i < readBytes; i++) {
-                (*m_data)[index_red16_to_rgb16(m_frameRead)] = m_readData[i];
-                m_frameRead++;
-            }
-            return;
-        }
-        break;
-
-    case SANE_FRAME_GREEN:
-        if (m_params.depth == 8) {
-            for (int i = 0; i < readBytes; i++) {
-                (*m_data)[index_green8_to_rgb8(m_frameRead)] = m_readData[i];
-                m_frameRead++;
-            }
-            return;
-        } else if (m_params.depth == 16) {
-            for (int i = 0; i < readBytes; i++) {
-                (*m_data)[index_green16_to_rgb16(m_frameRead)] = m_readData[i];
-                m_frameRead++;
-            }
-            return;
-        }
-        break;
-
-    case SANE_FRAME_BLUE:
-        if (m_params.depth == 8) {
-            for (int i = 0; i < readBytes; i++) {
-                (*m_data)[index_blue8_to_rgb8(m_frameRead)] = m_readData[i];
-                m_frameRead++;
-            }
-            return;
-        } else if (m_params.depth == 16) {
-            for (int i = 0; i < readBytes; i++) {
-                (*m_data)[index_blue16_to_rgb16(m_frameRead)] = m_readData[i];
-                m_frameRead++;
-            }
-            return;
-        }
-        break;
-    }
-
-    qCDebug(KSANE_LOG) << "Format" << m_params.format
-             << "and depth" << m_params.depth
-             << "is not yet supported by libksane!";
-    m_readStatus = ReadError;
-    return;
 }
 
 bool KSaneScanThread::saneStartDone()

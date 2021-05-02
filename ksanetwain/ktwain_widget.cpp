@@ -39,12 +39,12 @@ KSaneWidget::KSaneWidget(QWidget *parent)
     lay->addWidget(openDialog);
     setLayout(lay);
 
-    connect(openDialog, SIGNAL(clicked()), d, SLOT(ReOpenDialog()));
+    connect(openDialog, &QPushButton::clicked, d, &KSaneWidgetPrivate::ReOpenDialog);
 
     // Forward signals from the private class
     //connect(d, SIGNAL(scanProgress(int)), this, SIGNAL(scanProgress(int)));
-    connect(d, SIGNAL(ImageReady(QByteArray&,int,int,int,int)),
-            this, SIGNAL(imageReady(QByteArray&,int,int,int,int)));
+    connect(d, &KSaneWidgetPrivate::ImageReady, this, &KSaneWidget::imageReady);
+    connect(d, &KSaneWidgetPrivate::qImageReady, this, &KSaneWidget::scannedImageReady);
     //connect(d, SIGNAL(scanDone(int,QString)), this, SIGNAL(scanDone(int,QString)));
 
 }
@@ -66,7 +66,7 @@ bool KSaneWidget::openDevice(const QString &device_name)
     if (!d->OpenSource(device_name)) {
         return false;
     }
-    QTimer::singleShot(0, d, SLOT(OpenDialog()));
+    QTimer::singleShot(0, d, &KSaneWidgetPrivate::OpenDialog);
 
     return true;
 }

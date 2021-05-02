@@ -57,8 +57,7 @@ public:
     void setDefaultValues();
     void setBusy(bool busy);
     KSaneOptionWidget *createOptionWidget(QWidget *parent, KSaneOption *option);
-    KSaneWidget::ImageFormat getImgFormat(SANE_Parameters &params);
-    int getBytesPerLines(SANE_Parameters &params);
+    KSaneWidget::ImageFormat getImgFormat(const QImage &image);
 
     float ratioToScanAreaX(float ratio);
     float ratioToScanAreaY(float ratio);
@@ -186,9 +185,6 @@ public:
     bool                m_scanOngoing;
     bool                m_closeDevicePending;
     bool                m_cancelMultiScan = false;
-
-    // final image data
-    QByteArray          m_scanData;
 
     // option handling
     QTimer              m_readValsTmr;

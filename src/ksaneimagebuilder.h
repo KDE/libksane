@@ -2,13 +2,14 @@
  *
  * SPDX-FileCopyrightText: 2009 Kare Sars <kare dot sars at iki dot fi>
  * SPDX-FileCopyrightText: 2018 Alexander Volkov <a.volkov@rusbitech.ru>
+ * SPDX-FileCopyrightText: 2021 Alexander Stippich <a.stippich@gmx.net>
  *
  * SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
  *
  * ============================================================ */
 
-#ifndef KSANE_PREVIEW_IMAGE_BUILDER_H
-#define KSANE_PREVIEW_IMAGE_BUILDER_H
+#ifndef KSANE_IMAGE_BUILDER_H
+#define KSANE_IMAGE_BUILDER_H
 
 extern "C"
 {
@@ -19,30 +20,35 @@ class QImage;
 
 namespace KSaneIface
 {
-class KSanePreviewImageBuilder
+
+/* Constructs a QImage out of the raw scanned data retrieved via libsane */
+class KSaneImageBuilder
 {
 public:
-    KSanePreviewImageBuilder(QImage *img);
+    KSaneImageBuilder(QImage *image, int *dpi);
 
     void start(const SANE_Parameters &params);
     void beginFrame(const SANE_Parameters &params);
     bool copyToImage(const SANE_Byte readData[], int read_bytes);
     bool imageResized();
+    void setDPI(int dpi);
 
 private:
     void renewImage();
+    void incrementPixelData();
 
     SANE_Parameters m_params;
-    int m_frameRead;
-    int m_pixel_x;
-    int m_pixel_y;
-    int m_px_colors[3];
-    int m_px_c_index;
+    int m_frameRead = 0;
+    int m_pixelX = 0;
+    int m_pixelY = 0;
+    int m_pixelData[6];
+    int m_pixelDataIndex = 0;
 
-    QImage *m_img;
+    QImage *m_image;
+    int *m_dpi;
 
-    bool m_imageResized;
+    bool m_imageResized = false;
 };
 }
 
-#endif // KSANE_PREVIEW_IMAGE_BUILDER_H
+#endif // KSANE_IMAGE_BUILDER_H
