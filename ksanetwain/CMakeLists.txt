@@ -27,7 +27,7 @@ target_link_libraries(KF5Sane
 )
 
 set_target_properties(KF5Sane
-    PROPERTIES VERSION ${KSANE_VERSION_STRING}
+    PROPERTIES VERSION ${KSANE_VERSION}
     SOVERSION ${KSANE_SOVERSION}
     EXPORT_NAME "Sane"
 )
