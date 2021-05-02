@@ -262,10 +262,7 @@ KSaneWidget::KSaneWidget(QWidget *parent)
 
 KSaneWidget::~KSaneWidget()
 {
-    while (!closeDevice()) {
-        usleep(100);
-    }
-    // wait for any thread to exit
+    closeDevice();
 
     s_objectMutex->lock();
     s_objectCount--;
@@ -585,15 +582,21 @@ bool KSaneWidget::closeDevice()
 
     if (d->m_scanThread->isRunning()) {
         d->m_scanThread->cancelScan();
-        d->m_closeDevicePending = true;
-        return false;
     }
 
+    disconnect(d->m_scanThread);
+    if (d->m_scanThread->isRunning()) {
+        connect(d->m_scanThread, &QThread::finished, d->m_scanThread, &QThread::deleteLater);
+    }
+    if (d->m_scanThread->isFinished()) {
+        d->m_scanThread->deleteLater();
+    }
+    d->m_scanThread = nullptr;
+    
     d->m_auth->clearDeviceAuth(d->m_devName);
-    // else
+    d->clearDeviceOptions();
     sane_close(d->m_saneHandle);
     d->m_saneHandle = nullptr;
-    d->clearDeviceOptions();
 
     // disable the interface until a new device is opened.
     d->m_optsTabWidget->setDisabled(true);

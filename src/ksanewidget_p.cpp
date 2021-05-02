@@ -124,7 +124,6 @@ void KSaneWidgetPrivate::clearDeviceOptions()
     m_optPreview    = nullptr;
     m_optWaitForBtn = nullptr;
     m_scanOngoing   = false;
-    m_closeDevicePending = false;
 
     // delete all the options in the list.
     while (!m_optionsList.isEmpty()) {
@@ -143,9 +142,6 @@ void KSaneWidgetPrivate::clearDeviceOptions()
 
     delete m_otherOptsTab;
     m_otherOptsTab = nullptr;
-
-    delete m_scanThread;
-    m_scanThread = nullptr;
 
     m_devName.clear();
     m_model.clear();
@@ -1019,15 +1015,6 @@ void KSaneWidgetPrivate::previewScanDone()
 {
     // even if the scan is finished successfully we need to call sane_cancel()
     sane_cancel(m_saneHandle);
-    
-    if (m_closeDevicePending) {
-        setBusy(false);
-        sane_close(m_saneHandle);
-        m_saneHandle = nullptr;
-        clearDeviceOptions();
-        Q_EMIT q->scanDone(KSaneWidget::NoError, QString());
-        return;
-    }
 
     // restore the original settings of the changed parameters
     if (m_optDepth != nullptr) {
@@ -1125,13 +1112,6 @@ void KSaneWidgetPrivate::scanDone()
 
 void KSaneWidgetPrivate::oneFinalScanDone()
 {
-    if (m_closeDevicePending) {
-        setBusy(false);
-        sane_close(m_saneHandle);
-        m_saneHandle = nullptr;
-        clearDeviceOptions();
-        return;
-    }
 
     if (m_scanThread->frameStatus() == KSaneScanThread::ReadReady) {
         // scan finished OK

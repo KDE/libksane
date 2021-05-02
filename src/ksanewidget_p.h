@@ -183,7 +183,6 @@ public:
     int                 m_selIndex;
 
     bool                m_scanOngoing;
-    bool                m_closeDevicePending;
     bool                m_cancelMultiScan = false;
 
     // option handling
