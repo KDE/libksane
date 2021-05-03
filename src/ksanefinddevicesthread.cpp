@@ -61,7 +61,7 @@ void FindSaneDevicesThread::run()
     m_deviceList.clear();
     if (status == SANE_STATUS_GOOD) {
         int i = 0;
-        KSaneWidget::DeviceInfo deviceInfo;
+        KSaneCore::DeviceInfo deviceInfo;
 
         while (devList[i] != nullptr) {
             deviceInfo.name = QString::fromUtf8(devList[i]->name);
@@ -74,7 +74,7 @@ void FindSaneDevicesThread::run()
     }
 }
 
-const QList<KSaneWidget::DeviceInfo> FindSaneDevicesThread::devicesList() const
+const QList<KSaneCore::DeviceInfo> FindSaneDevicesThread::devicesList() const
 {
     return m_deviceList;
 }

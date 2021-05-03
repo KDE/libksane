@@ -11,24 +11,15 @@
  *
  * ============================================================ */
 
-// Sane includes
-extern "C"
-{
-#include <sane/saneopts.h>
-#include <sane/sane.h>
-}
-
 #include "ksanewidget.h"
 #include "ksanewidget_p.h"
 
 #include <unistd.h>
 
 #include <QApplication>
-#include <QVarLengthArray>
 #include <QList>
 #include <QLabel>
 #include <QSplitter>
-#include <QMutex>
 #include <QPointer>
 #include <QIcon>
 #include <QShortcut>
@@ -38,84 +29,27 @@ extern "C"
 #include <kwallet.h>
 #endif
 
-#include "ksaneinternaloption.h"
-#include "ksanebaseoption.h"
-#include "ksaneactionoption.h"
-#include "ksanebooloption.h"
-#include "ksanelistoption.h"
-#include "ksanestringoption.h"
-#include "ksanedoubleoption.h"
-#include "ksanegammaoption.h"
-#include "ksaneintegeroption.h"
-#include "ksanedevicedialog.h"
-#include "labeledgamma.h"
-#include "ksaneinvertoption.h"
-#include "ksanepagesizeoption.h"
+#include <KLocalizedString>
 
+#include "ksanedevicedialog.h"
 #include <ksane_debug.h>
 
 namespace KSaneIface
 {
-static int     s_objectCount = 0;
-
-static const QHash<QString, KSaneWidget::KSaneOptionName> stringEnumTranslation = {
-    { QStringLiteral(SANE_NAME_SCAN_SOURCE), KSaneWidget::SourceOption },
-    { QStringLiteral(SANE_NAME_SCAN_MODE), KSaneWidget::ScanModeOption },
-    { QStringLiteral(SANE_NAME_BIT_DEPTH), KSaneWidget::BitDepthOption },
-    { QStringLiteral(SANE_NAME_SCAN_RESOLUTION), KSaneWidget::ResolutionOption },
-    { QStringLiteral(SANE_NAME_SCAN_TL_X), KSaneWidget::TopLeftXOption },
-    { QStringLiteral(SANE_NAME_SCAN_TL_Y), KSaneWidget::TopLeftYOption },
-    { QStringLiteral(SANE_NAME_SCAN_BR_X), KSaneWidget::BottomRightXOption },
-    { QStringLiteral(SANE_NAME_SCAN_BR_Y), KSaneWidget::BottomRightYOption },
-    { QStringLiteral("film-type"), KSaneWidget::FilmTypeOption },
-    { QStringLiteral(SANE_NAME_NEGATIVE), KSaneWidget::NegativeOption },
-    { InvertColorsOptionName, KSaneWidget::InvertColorOption },
-    { PageSizeOptionName, KSaneWidget::PageSizeOption },
-    { QStringLiteral(SANE_NAME_THRESHOLD), KSaneWidget::ThresholdOption },
-    { QStringLiteral(SANE_NAME_SCAN_X_RESOLUTION), KSaneWidget::XResolutionOption },
-    { QStringLiteral(SANE_NAME_SCAN_Y_RESOLUTION), KSaneWidget::YResolutionOption },
-    { QStringLiteral(SANE_NAME_PREVIEW), KSaneWidget::PreviewOption },
-    { QStringLiteral("wait-for-button"), KSaneWidget::WaitForButtonOption },
-    { QStringLiteral(SANE_NAME_BRIGHTNESS), KSaneWidget::BrightnessOption },
-    { QStringLiteral(SANE_NAME_CONTRAST), KSaneWidget::ContrastOption },
-    { QStringLiteral(SANE_NAME_GAMMA_VECTOR_R), KSaneWidget::GammaRedOption },
-    { QStringLiteral(SANE_NAME_GAMMA_VECTOR_G), KSaneWidget::GammaGreenOption },
-    { QStringLiteral(SANE_NAME_GAMMA_VECTOR_B), KSaneWidget::GammaBlueOption },
-    { QStringLiteral(SANE_NAME_BLACK_LEVEL),  KSaneWidget::BlackLevelOption },
-    { QStringLiteral(SANE_NAME_WHITE_LEVEL), KSaneWidget::WhiteLevelOption }, };
-
-Q_GLOBAL_STATIC(QMutex, s_objectMutex)
 
 KSaneWidget::KSaneWidget(QWidget *parent)
     : QWidget(parent), d(new KSaneWidgetPrivate(this))
 {
-    SANE_Int    version;
-    SANE_Status status;
-
-    s_objectMutex->lock();
-    s_objectCount++;
-
-    if (s_objectCount == 1) {
-        // only call sane init for the first instance
-        status = sane_init(&version, &KSaneAuth::authorization);
-        if (status != SANE_STATUS_GOOD) {
-            qCDebug(KSANE_LOG) << "libksane: sane_init() failed("
-                     << sane_strstatus(status) << ")";
-        } else {
-            //qCDebug(KSANE_LOG) << "Sane Version = "
-            //         << SANE_VERSION_MAJOR(version) << "."
-            //         << SANE_VERSION_MINORparent(version) << "."
-            //         << SANE_VERSION_BUILD(version);
-        }
-    }
-    s_objectMutex->unlock();
-
-    // read the device list to get a list of vendor and model info
-    d->m_findDevThread->start();
-
-    d->m_readValsTmr.setSingleShot(true);
-    connect(&d->m_readValsTmr, &QTimer::timeout, d, &KSaneWidgetPrivate::reloadValues);
-
+    d->m_ksaneCoreInterface = new KSaneCore();
+    
+    connect(d->m_ksaneCoreInterface, &KSaneCore::scannedImageReady, d, &KSaneWidgetPrivate::imageReady);
+    connect(d->m_ksaneCoreInterface, &KSaneCore::scanFinished, d, &KSaneWidgetPrivate::scanDone);
+    connect(d->m_ksaneCoreInterface, &KSaneCore::userMessage, d, &KSaneWidgetPrivate::alertUser);
+    connect(d->m_ksaneCoreInterface, &KSaneCore::scanProgress, d, &KSaneWidgetPrivate::updateProgress);
+    connect(d->m_ksaneCoreInterface, &KSaneCore::availableDevices, d, &KSaneWidgetPrivate::signalDevListUpdate);
+    connect(d->m_ksaneCoreInterface, &KSaneCore::buttonPressed, this, &KSaneWidget::buttonPressed);
+    connect(d->m_ksaneCoreInterface, &KSaneCore::openedDeviceInfoUpdated, this, &KSaneWidget::openedDeviceInfoUpdated);
+    
     // Create the static UI
     // create the preview
     d->m_previewViewer = new KSaneViewer(&(d->m_previewImg), this);
@@ -262,51 +196,40 @@ KSaneWidget::KSaneWidget(QWidget *parent)
 
 KSaneWidget::~KSaneWidget()
 {
-    closeDevice();
-
-    s_objectMutex->lock();
-    s_objectCount--;
-    if (s_objectCount <= 0) {
-        // only delete the find-devices and authorization singletons and call sane_exit
-        // if this is the last instance
-        delete d->m_findDevThread;
-        delete d->m_auth;
-        sane_exit();
-    }
-    s_objectMutex->unlock();
+    delete d->m_ksaneCoreInterface;
     delete d;
 }
 
 QString KSaneWidget::deviceName() const
 {
-    return d->m_devName;
+    return d->m_ksaneCoreInterface->deviceName();
 }
 
 QString KSaneWidget::deviceVendor() const
 {
-    return d->m_vendor;
+    return d->m_ksaneCoreInterface->deviceVendor();
 }
 
 QString KSaneWidget::deviceModel() const
 {
-    return d->m_model;
+    return d->m_ksaneCoreInterface->deviceModel();
 }
 
 QString KSaneWidget::vendor() const
 {
-    const QString &vendor = deviceVendor();
+    const QString &vendor = d->m_ksaneCoreInterface->deviceVendor();
     if (!vendor.isEmpty()) {
         return vendor;
     }
     
-    const QString &name = deviceName();
+    const QString &name = d->m_ksaneCoreInterface->deviceName();
     if (name.isEmpty()) {
         return QString();
     }
     QEventLoop loop;
     connect(this, &KSaneWidget::openedDeviceInfoUpdated, &loop, &QEventLoop::quit, Qt::QueuedConnection);
     loop.exec();
-    return deviceVendor();
+    return d->m_ksaneCoreInterface->deviceVendor();
 }
 
 QString KSaneWidget::make() const
@@ -316,27 +239,27 @@ QString KSaneWidget::make() const
 
 QString KSaneWidget::model() const
 {
-    const QString &model = deviceModel();
+    const QString &model = d->m_ksaneCoreInterface->deviceModel();
     if (!model.isEmpty()) {
         return model;
     }
     
-    const QString &name = deviceName();
+    const QString &name = d->m_ksaneCoreInterface->deviceName();
     if (name.isEmpty()) {
         return QString();
     }
     QEventLoop loop;
     connect(this, &KSaneWidget::openedDeviceInfoUpdated, &loop, &QEventLoop::quit, Qt::QueuedConnection);
     loop.exec();
-    return deviceModel();
+    return d->m_ksaneCoreInterface->deviceModel();
 }
 
 QString KSaneWidget::selectDevice(QWidget *parent)
 {
     QString selected_name;
     QPointer<KSaneDeviceDialog> sel = new KSaneDeviceDialog(parent);
-    connect(this, &KSaneWidget::availableDevices, sel, &KSaneDeviceDialog::updateDevicesList);
-    connect(sel, &KSaneDeviceDialog::requestReloadList, this, &KSaneWidget::initGetDeviceList);
+    connect(d->m_ksaneCoreInterface, &KSaneCore::availableDevices, sel, &KSaneDeviceDialog::updateDevicesList);
+    connect(sel, &KSaneDeviceDialog::requestReloadList, d->m_ksaneCoreInterface, &KSaneCore::reloadDevicesList);
     
     // set default scanner - perhaps application using libksane should remember that
     // 2014-01-21: gm: +1
@@ -352,21 +275,11 @@ QString KSaneWidget::selectDevice(QWidget *parent)
 
 void KSaneWidget::initGetDeviceList() const
 {
-    /* On some SANE backends, the handle becomes invalid when
-     * querying for new devices. Hence, this is only allowed when
-     * no device is currently opened. */
-    if (d->m_saneHandle == nullptr) {
-        d->m_findDevThread->start();
-    }
+    d->m_ksaneCoreInterface->reloadDevicesList();
 }
 
 bool KSaneWidget::openDevice(const QString &deviceName)
 {
-    int                            i = 0;
-    const SANE_Option_Descriptor  *optDesc;
-    SANE_Status                    status;
-    SANE_Word                      numSaneOptions;
-    SANE_Int                       res;
     KPasswordDialog               *dlg;
 #ifdef HAVE_KF5WALLET
     KWallet::Wallet               *saneWallet;
@@ -374,25 +287,15 @@ bool KSaneWidget::openDevice(const QString &deviceName)
     QString                        myFolderName = QStringLiteral("ksane");
     QMap<QString, QString>         wallet_entry;
 
-    if (d->m_saneHandle != nullptr) {
-        // this KSaneWidget already has an open device
+    KSaneCore::KSaneOpenStatus status = d->m_ksaneCoreInterface->openDevice(deviceName);
+    if (status == KSaneCore::OpeningFailed) {
         return false;
     }
-
-    // don't bother trying to open if the device string is empty
-    if (deviceName.isEmpty()) {
-        return false;
-    }
-    // save the device name
-    d->m_devName = deviceName;
-
-    // Try to open the device
-    status = sane_open(deviceName.toLatin1().constData(), &d->m_saneHandle);
 
     bool password_dialog_ok = true;
 
     // prepare wallet for authentication and create password dialog
-    if (status == SANE_STATUS_ACCESS_DENIED) {
+    if (status == KSaneCore::OpeningDenied) {
 #ifdef HAVE_KF5WALLET
         saneWallet = KWallet::Wallet::openWallet(KWallet::Wallet::LocalWallet(), winId());
 
@@ -419,23 +322,20 @@ bool KSaneWidget::openDevice(const QString &deviceName)
 
     // sane_open failed due to insufficient authorization
     // retry opening device with user provided data assisted with kwallet records
-    while (status == SANE_STATUS_ACCESS_DENIED) {
+    while (status == KSaneCore::OpeningDenied) {
 
         password_dialog_ok = dlg->exec();
         if (!password_dialog_ok) {
             delete dlg;
-            d->m_devName.clear();
             return false; //the user canceled
         }
-
+        
         // add/update the device user-name and password for authentication
-        d->m_auth->setDeviceAuth(d->m_devName, dlg->username(), dlg->password());
-
-        status = sane_open(deviceName.toLatin1().constData(), &d->m_saneHandle);
+        status = d->m_ksaneCoreInterface->openRestrictedDevice(deviceName, dlg->username(), dlg->password());
 
 #ifdef HAVE_KF5WALLET
         // store password in wallet on successful authentication
-        if (dlg->keepPassword() && status != SANE_STATUS_ACCESS_DENIED) {
+        if (dlg->keepPassword() && status != KSaneCore::OpeningDenied) {
             QMap<QString, QString> entry;
             entry[QStringLiteral("username")] = dlg->username();
             entry[QStringLiteral("password")] = dlg->password();
@@ -446,138 +346,8 @@ bool KSaneWidget::openDevice(const QString &deviceName)
 #endif
     }
 
-    if (status != SANE_STATUS_GOOD) {
-        qCDebug(KSANE_LOG) << "sane_open(\"" << deviceName << "\", &handle) failed! status = " << sane_strstatus(status);
-        d->m_auth->clearDeviceAuth(d->m_devName);
-        d->m_devName.clear();
-        return false;
-    }
-
-    // update the device list if needed to get the vendor and model info
-    if (d->m_findDevThread->devicesList().size() == 0) {
-        d->m_findDevThread->start();
-    } else {
-        // use the "old" existing list
-        d->devListUpdated();
-        // if m_vendor is not updated it means that the list needs to be updated.
-        if (d->m_vendor.isEmpty()) {
-            d->m_findDevThread->start();
-        }
-    }
-
-    // Read the options (start with option 0 the number of parameters)
-    optDesc = sane_get_option_descriptor(d->m_saneHandle, 0);
-    if (optDesc == nullptr) {
-        d->m_auth->clearDeviceAuth(d->m_devName);
-        d->m_devName.clear();
-        return false;
-    }
-    QVarLengthArray<char> data(optDesc->size);
-    status = sane_control_option(d->m_saneHandle, 0, SANE_ACTION_GET_VALUE, data.data(), &res);
-    if (status != SANE_STATUS_GOOD) {
-        d->m_auth->clearDeviceAuth(d->m_devName);
-        d->m_devName.clear();
-        return false;
-    }
-    numSaneOptions = *reinterpret_cast<SANE_Word *>(data.data());
-
-    // read the rest of the options
-    KSaneBaseOption *option = nullptr;
-    KSaneBaseOption *m_optionTopLeftX = nullptr;
-    KSaneBaseOption *m_optionTopLeftY = nullptr;
-    KSaneBaseOption *m_optionBottomRightX = nullptr;
-    KSaneBaseOption *m_optionBottomRightY = nullptr;
-    KSaneBaseOption *m_optionResolution = nullptr;
-    for (i = 1; i < numSaneOptions; ++i) {
-        switch (KSaneBaseOption::optionType(sane_get_option_descriptor(d->m_saneHandle, i))) {
-        case KSaneOption::TypeDetectFail:
-            option = new KSaneBaseOption(d->m_saneHandle, i);
-            break;
-        case KSaneOption::TypeBool:
-            option = new KSaneBoolOption(d->m_saneHandle, i);
-            break;
-        case KSaneOption::TypeInteger:
-            option = new KSaneIntegerOption(d->m_saneHandle, i);
-            break;
-        case KSaneOption::TypeDouble:
-            option = new KSaneDoubleOption(d->m_saneHandle, i);
-            break;
-        case KSaneOption::TypeValueList:
-            option = new KSaneListOption(d->m_saneHandle, i);
-            break;
-        case KSaneOption::TypeString:
-            option = new KSaneStringOption(d->m_saneHandle, i);
-            break;
-        case KSaneOption::TypeGamma:
-            option = new KSaneGammaOption(d->m_saneHandle, i);
-            break;
-        case KSaneOption::TypeAction:
-            option = new KSaneActionOption(d->m_saneHandle, i);
-            break;
-        }
-
-        if (option->name() == QStringLiteral(SANE_NAME_SCAN_TL_X)) {
-            m_optionTopLeftX = option;
-        }
-        if (option->name() == QStringLiteral(SANE_NAME_SCAN_TL_Y)) {
-            m_optionTopLeftY = option;
-        }
-        if (option->name() == QStringLiteral(SANE_NAME_SCAN_BR_X)) {
-            m_optionBottomRightX = option;
-        }
-        if (option->name() == QStringLiteral(SANE_NAME_SCAN_BR_Y)) {
-            m_optionBottomRightY = option;
-        }
-        if (option->name() == QStringLiteral(SANE_NAME_SCAN_RESOLUTION)) {
-            m_optionResolution = option;
-        }
-        
-        d->m_optionsList.append(option);
-        d->m_externalOptionsList.append(new KSaneInternalOption(option));
-        connect(option, &KSaneBaseOption::optionsNeedReload, d, &KSaneWidgetPrivate::reloadOptions);
-        connect(option, &KSaneBaseOption::valuesNeedReload, d, &KSaneWidgetPrivate::scheduleValuesReload);
-
-        if (option->needsPolling()) {
-            d->m_optionsPollList.append(option);
-            if (option->type() == KSaneOption::TypeBool) {
-                connect( option, &KSaneBaseOption::valueChanged,
-                    [=]( const QVariant &newValue ) { Q_EMIT buttonPressed(option->name(), option->title(), newValue.toBool()); } );
-            }
-        }
-        const auto it = stringEnumTranslation.find(option->name());
-        if (it != stringEnumTranslation.constEnd()) {
-            d->m_optionsLocation.insert(it.value(), i - 1);
-        }
-    }
-    
-    // add extra option for inverting image colors
-    KSaneBaseOption *invertOption = new KSaneInvertOption();
-    d->m_optionsList.append(invertOption);
-    d->m_externalOptionsList.append(new KSaneInternalOption(invertOption));
-
-    d->m_optionsLocation.insert(InvertColorOption, d->m_optionsList.size() - 1);  
-    // add extra option for selecting specific page sizes
-    KSaneBaseOption *pageSizeOption = new KSanePageSizeOption(m_optionTopLeftX, m_optionTopLeftY,
-                            m_optionBottomRightX, m_optionBottomRightY, m_optionResolution);
-    d->m_optionsList.append(pageSizeOption);
-    d->m_externalOptionsList.append(new KSaneInternalOption(pageSizeOption));
-    d->m_optionsLocation.insert(PageSizeOption, d->m_optionsList.size() - 1);  
-
-    // start polling the poll options
-    if (d->m_optionsPollList.size() > 0) {
-        d->m_optionPollTmr.start();
-    }
-
-    // Create the preview thread
-    d->m_scanThread = new KSaneScanThread(d->m_saneHandle);
-    connect(d->m_scanThread, &KSaneScanThread::finished, d, &KSaneWidgetPrivate::scanDone);
-    connect(invertOption, &KSaneInvertOption::valueChanged, d->m_scanThread, &KSaneScanThread::setImageInverted);
-    connect(d->m_scanThread, &KSaneScanThread::scanProgressUpdated, d, &KSaneWidgetPrivate::updateProgress);
     // Create the options interface
     d->createOptInterface();
-
-    // try to set KSaneWidget default values
-    d->setDefaultValues();
 
     // Enable the interface
     d->m_optsTabWidget->setDisabled(false);
@@ -594,28 +364,11 @@ bool KSaneWidget::openDevice(const QString &deviceName)
 
 bool KSaneWidget::closeDevice()
 {
-    if (!d->m_saneHandle) {
-        return true;
+    bool result = d->m_ksaneCoreInterface->closeDevice();
+    if (!result) {
+        return false;
     }
-
-    if (d->m_scanThread->isRunning()) {
-        d->m_scanThread->cancelScan();
-    }
-
-    disconnect(d->m_scanThread);
-    if (d->m_scanThread->isRunning()) {
-        connect(d->m_scanThread, &QThread::finished, d->m_scanThread, &QThread::deleteLater);
-    }
-    if (d->m_scanThread->isFinished()) {
-        d->m_scanThread->deleteLater();
-    }
-    d->m_scanThread = nullptr;
-    
-    d->m_auth->clearDeviceAuth(d->m_devName);
-    d->clearDeviceOptions();
-    sane_close(d->m_saneHandle);
-    d->m_saneHandle = nullptr;
-
+ 
     // disable the interface until a new device is opened.
     d->m_optsTabWidget->setDisabled(true);
     d->m_previewViewer->setDisabled(true);
@@ -725,7 +478,7 @@ QImage KSaneWidget::toQImage(const QByteArray &data,
 {
 
     if ((format == FormatRGB_16_C) || (format == FormatGrayScale16)) {
-        d->alertUser(KSaneWidget::ErrorGeneral, i18n("The image data contained 16 bits per color, "
+        d->alertUser(KSaneCore::ErrorGeneral, i18n("The image data contained 16 bits per color, "
                      "but the color depth has been truncated to 8 bits per color."));
     }
     return toQImageSilent(data, width, height, bytes_per_line, format);
@@ -734,6 +487,7 @@ QImage KSaneWidget::toQImage(const QByteArray &data,
 void KSaneWidget::scanFinal()
 {
     if (d->m_btnFrame->isEnabled()) {
+        d->m_cancelMultiScan = false;
         d->startFinalScan();
     } else {
         // if the button frame is disabled, there is no open device to scan from
@@ -744,6 +498,7 @@ void KSaneWidget::scanFinal()
 void KSaneWidget::startPreviewScan()
 {
     if (d->m_btnFrame->isEnabled()) {
+        d->m_cancelMultiScan = false;
         d->startPreviewScan();
     } else {
         // if the button frame is disabled, there is no open device to scan from
@@ -753,10 +508,8 @@ void KSaneWidget::startPreviewScan()
 
 void KSaneWidget::scanCancel()
 {
-    if (d->m_scanThread->isRunning()) {
-        d->m_scanThread->cancelScan();
-    }
     d->m_cancelMultiScan = true;
+    d->m_ksaneCoreInterface->stopScan();
 }
 
 void KSaneWidget::setPreviewResolution(float dpi)
@@ -766,92 +519,45 @@ void KSaneWidget::setPreviewResolution(float dpi)
 
 QList<KSaneOption *> KSaneWidget::getOptionsList()
 {
-    return d->m_externalOptionsList;
+    return d->m_ksaneCoreInterface->getOptionsList();
 }
 
 KSaneOption *KSaneWidget::getOption(KSaneWidget::KSaneOptionName optionEnum) 
 {
-    auto it = d->m_optionsLocation.find(optionEnum);
-    if (it != d->m_optionsLocation.end()) {
-        return d->m_externalOptionsList.at(it.value());
-    }
-    return nullptr;
+    return d->m_ksaneCoreInterface->getOption(static_cast<KSaneCore::KSaneOptionName>(optionEnum));
 }
 
 KSaneOption *KSaneWidget::getOption(QString optionName) 
 {
-    for (const auto &option : qAsConst(d->m_externalOptionsList)) {
-        if (option->name() == optionName) {
-            return option;
-        }
-    }
-    return nullptr;
+    return d->m_ksaneCoreInterface->getOption(optionName);
 }
 
 void KSaneWidget::getOptVals(QMap <QString, QString> &opts)
 {
-    KSaneBaseOption *option;
     opts.clear();
-    QString tmp;
-
-    for (int i = 0; i < d->m_optionsList.size(); i++) {
-        option = d->m_optionsList.at(i);
-        tmp = option->valueAsString();
-        if (!tmp.isEmpty()) {
-            opts[option->name()] = tmp;
-        }
-    }
+    opts = d->m_ksaneCoreInterface->getOptionsMap();
 }
 
 bool KSaneWidget::getOptVal(const QString &optname, QString &value)
 {
-    for (const auto &option : qAsConst(d->m_optionsList)) {
-        if (option->name() == optname) {
-            value = option->valueAsString();
+    const auto optionsMap = d->m_ksaneCoreInterface->getOptionsMap();
+    auto it = optionsMap.constBegin();
+    while (it != optionsMap.constEnd()) {
+        if(it.key() == optname) {
+            value = it.value();
             return !value.isEmpty();
         }
+        it++;        
     }
     return false;
 }
 
 int KSaneWidget::setOptVals(const QMap <QString, QString> &opts)
 {
-    if (d->m_scanThread->isRunning()) {
-        return -1;
-    }
-
-    QMap <QString, QString> optionMapCopy = opts;
-
-    QString tmp;
-    int i;
     int ret = 0;
 
-    KSaneOption *sourceOption = getOption(SourceOption);
-    KSaneOption *modeOption = getOption(ScanModeOption);
+    ret = d->m_ksaneCoreInterface->setOptionsMap(opts);
     
-    // Priorize source option
-    if (sourceOption != nullptr && optionMapCopy.contains(sourceOption->name())) {
-        if (sourceOption->setValue(optionMapCopy[sourceOption->name()]) ) {
-            ret++;
-        }
-        optionMapCopy.remove(sourceOption->name());
-    }
-
-    // Priorize mode option
-    if (modeOption != nullptr && optionMapCopy.contains(modeOption->name())) {
-        if (modeOption->setValue(optionMapCopy[modeOption->name()])) {
-            ret++;
-        }
-        optionMapCopy.remove(modeOption->name());
-    }
-
-    // Update remaining options
-    for (i = 0; i < d->m_optionsList.size(); i++) {
-        const auto it = optionMapCopy.find(d->m_optionsList.at(i)->name());
-        if (it != optionMapCopy.end() && d->m_optionsList.at(i)->setValue(it.value())) {
-            ret++;
-        }
-    }
     if ((d->m_splitGamChB) &&
             (d->m_optGamR) &&
             (d->m_optGamG) &&
@@ -875,11 +581,11 @@ int KSaneWidget::setOptVals(const QMap <QString, QString> &opts)
 
 bool KSaneWidget::setOptVal(const QString &option, const QString &value)
 {
-    if (d->m_scanThread->isRunning()) {
+    if (d->m_scanOngoing) {
         return false;
     }
 
-    const auto optionsList = getOptionsList();
+    const auto optionsList = d->m_ksaneCoreInterface->getOptionsList();
     for (auto &writeOption : optionsList) {
         if (writeOption->name() == option) {
             if (writeOption->setValue(value)) {

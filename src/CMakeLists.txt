@@ -28,6 +28,8 @@ target_sources(KF5Sane PRIVATE
     ksaneimagebuilder.cpp
     ksanewidget_p.cpp
     splittercollapser.cpp
+    ksanecore.cpp
+    ksanecore_p.cpp
     ksaneauth.cpp
     ksaneoption.cpp
     ksaneinternaloption.cpp
@@ -80,6 +82,7 @@ set_target_properties(KF5Sane
 ecm_generate_headers(KSane_HEADERS
     HEADER_NAMES
         KSaneWidget
+        KSaneCore
         KSaneOption
     REQUIRED_HEADERS KSane_HEADERS
     RELATIVE "../src/"

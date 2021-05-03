@@ -118,7 +118,7 @@ QString KSaneDeviceDialog::getSelectedName() const
     return QString();
 }
 
-void KSaneDeviceDialog::updateDevicesList(const QList<KSaneWidget::DeviceInfo> &list)
+void KSaneDeviceDialog::updateDevicesList(const QList<KSaneCore::DeviceInfo> &list)
 {
     qDeleteAll(m_btnGroupDevices->buttons());
 

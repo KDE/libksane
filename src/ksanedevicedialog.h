@@ -16,7 +16,7 @@
 #ifndef KSANE_DEVICE_DIALOG_H
 #define KSANE_DEVICE_DIALOG_H
 
-#include "ksanewidget.h"
+#include "ksanecore.h"
 
 #include <QGroupBox>
 #include <QStringList>
@@ -43,7 +43,7 @@ public:
     void setDefault(const QString &);
 
 public Q_SLOTS:
-    void updateDevicesList(const QList<KSaneWidget::DeviceInfo> &list);
+    void updateDevicesList(const QList<KSaneCore::DeviceInfo> &list);
     void reloadDevicesList();
     
 Q_SIGNALS:

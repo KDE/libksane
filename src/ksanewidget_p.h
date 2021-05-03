@@ -14,7 +14,6 @@
 #include <QWidget>
 #include <QCheckBox>
 #include <QTimer>
-#include <QTime>
 #include <QProgressBar>
 #include <QTabWidget>
 #include <QPushButton>
@@ -22,11 +21,9 @@
 #include <QSplitter>
 #include <QToolButton>
 #include <QSet>
-#include <QList>
-#include <QHash>
 
+#include "ksanecore.h"
 #include "ksanewidget.h"
-#include "ksanebaseoption.h"
 #include "ksaneoptionwidget.h"
 #include "ksaneviewer.h"
 #include "labeledcombo.h"
@@ -36,9 +33,6 @@
 #include "labeledgamma.h"
 #include "labeledcheckbox.h"
 #include "splittercollapser.h"
-#include "ksanescanthread.h"
-#include "ksanefinddevicesthread.h"
-#include "ksaneauth.h"
 
 #define IMG_DATA_R_SIZE 100000
 
@@ -54,7 +48,6 @@ public:
     void clearDeviceOptions();
     void createOptInterface();
     void updatePreviewSize();
-    void setDefaultValues();
     void setBusy(bool busy);
     KSaneOptionWidget *createOptionWidget(QWidget *parent, KSaneOption *option);
     KSaneWidget::ImageFormat getImgFormat(const QImage &image);
@@ -72,18 +65,15 @@ public:
     bool scanSourceADF();
 
 public Q_SLOTS:
-    void devListUpdated();
-    void signalDevListUpdate();
     void startFinalScan();
     void startPreviewScan();
-    void scanDone();
-    void previewScanDone();
-    void oneFinalScanDone();
+    void scanDone(KSaneCore::KSaneScanStatus status, const QString &strStatus);
+    void previewScanDone(KSaneCore::KSaneScanStatus status, const QString &strStatus);
+    void oneFinalScanDone(KSaneCore::KSaneScanStatus status, const QString &strStatus);
     void updateProgress(int progress);
-    void scheduleValuesReload();
-    void reloadOptions();
-    void reloadValues();
     void handleSelection(float tl_x, float tl_y, float br_x, float br_y);
+    void signalDevListUpdate(const QList<KSaneCore::DeviceInfo> &deviceList);
+    void imageReady(const QImage &image);
     
 private Q_SLOTS:
 
@@ -94,16 +84,20 @@ private Q_SLOTS:
 
     void checkInvert();
     void invertPreview();
-    void pollPollOptions();
 
     void updateScanSelection();
     void setPossibleScanSizes();
     void setPageSize(int index);
+    
+    void updateCommonGamma();
+    void updatePreviewViewer();
+    
+public:
+    void alertUser(KSaneCore::KSaneScanStatus status, const QString &strStatus);
 
 public:
-    void alertUser(int type, const QString &strStatus);
-
-public:
+    KSaneCore          *m_ksaneCoreInterface;
+    
     // backend independent
     QTabWidget         *m_optsTabWidget;
     QScrollArea        *m_basicScrollA;
@@ -139,17 +133,7 @@ public:
     QProgressBar       *m_progressBar;
     QPushButton        *m_cancelBtn;
 
-    // device info
-    SANE_Handle         m_saneHandle;
-    QString             m_devName;
-    QString             m_vendor;
-    QString             m_model;
-
     // Option variables
-    QList<KSaneBaseOption *> m_optionsList;
-    QList<KSaneOption *>     m_externalOptionsList;
-    QHash<KSaneWidget::KSaneOptionName, int> m_optionsLocation;
-    QList<KSaneBaseOption *> m_optionsPollList;
     QSet<QString>            m_handledOptions;
     KSaneOption        *m_optSource;
     KSaneOption        *m_optNegative;
@@ -179,22 +163,11 @@ public:
     QImage              m_previewImg;
     bool                m_isPreview;
     bool                m_autoSelect;
-
+    
+    bool                m_cancelMultiScan = false;
+    bool                m_scanOngoing = false;
     int                 m_selIndex;
 
-    bool                m_scanOngoing;
-    bool                m_cancelMultiScan = false;
-
-    // option handling
-    QTimer              m_readValsTmr;
-    QTimer              m_optionPollTmr;
-    KSaneScanThread    *m_scanThread;
-
-    QString             m_saneUserName;
-    QString             m_sanePassword;
-
-    FindSaneDevicesThread *m_findDevThread;
-    KSaneAuth             *m_auth;
     KSaneWidget           *q;
 };
 

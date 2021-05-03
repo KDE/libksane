@@ -10,7 +10,7 @@
 #ifndef KSANE_FIND_DEVICES_THREAD_H
 #define KSANE_FIND_DEVICES_THREAD_H
 
-#include "ksanewidget.h"
+#include "ksanecore.h"
 
 #include <QThread>
 #include <QList>
@@ -27,12 +27,12 @@ public:
     ~FindSaneDevicesThread();
     void run() override;
 
-    const QList<KSaneWidget::DeviceInfo> devicesList() const;
+    const QList<KSaneCore::DeviceInfo> devicesList() const;
 
 private:
     FindSaneDevicesThread();
 
-    QList<KSaneWidget::DeviceInfo> m_deviceList;
+    QList<KSaneCore::DeviceInfo> m_deviceList;
 };
 
 }
