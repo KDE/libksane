@@ -10,12 +10,12 @@
 #ifndef KSANE_DOUBLE_OPTION_H
 #define KSANE_DOUBLE_OPTION_H
 
-#include "ksaneoption.h"
+#include "ksanebaseoption.h"
 
 namespace KSaneIface
 {
 
-class KSaneDoubleOption : public KSaneOption
+class KSaneDoubleOption : public KSaneBaseOption
 {
     Q_OBJECT
 
@@ -41,4 +41,4 @@ private:
 
 }  // NameSpace KSaneIface
 
-#endif // KSANE_FLOAT_OPTION_H
+#endif // KSANE_DOUBLE_OPTION_H

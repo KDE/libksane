@@ -15,7 +15,7 @@ namespace KSaneIface
 {
 
 KSaneActionOption::KSaneActionOption(const SANE_Handle handle, const int index)
-    : KSaneOption(handle, index)
+    : KSaneBaseOption(handle, index)
 {
     m_optionType = KSaneOption::TypeAction;
 }

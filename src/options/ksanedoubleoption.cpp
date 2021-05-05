@@ -22,14 +22,14 @@ namespace KSaneIface
 {
 
 KSaneDoubleOption::KSaneDoubleOption(const SANE_Handle handle, const int index)
-    : KSaneOption(handle, index)
+    : KSaneBaseOption(handle, index)
 {
     m_optionType = KSaneOption::TypeDouble;
 }
 
 void KSaneDoubleOption::readOption()
 {
-    KSaneOption::readOption();
+    KSaneBaseOption::readOption();
 
     double step = MIN_FIXED_STEP;
     if (m_optDesc->constraint_type == SANE_CONSTRAINT_RANGE) {
@@ -43,7 +43,7 @@ void KSaneDoubleOption::readOption()
 
 void KSaneDoubleOption::readValue()
 {
-    if (state() == StateHidden) {
+    if (state() == KSaneOption::StateHidden) {
         return;
     }
 
@@ -65,7 +65,7 @@ void KSaneDoubleOption::readValue()
 
 bool KSaneDoubleOption::setValue(const QVariant &value)
 {
-    if (state() == StateHidden) {
+    if (state() == KSaneOption::StateHidden) {
         return false;
     }
     bool ok;
@@ -110,6 +110,11 @@ QVariant KSaneDoubleOption::stepValue() const
     QVariant value;
     if (m_optDesc->constraint_type == SANE_CONSTRAINT_RANGE) {
         value = SANE_UNFIX(m_optDesc->constraint.range->quant);
+        /* work around broken backends, the step value must never be zero
+         * assume a minimum step value of 0.1 */    
+        if (value == 0) {
+            value = 0.1;
+        }
     } else {
         value = MIN_FIXED_STEP;
     }
@@ -118,7 +123,7 @@ QVariant KSaneDoubleOption::stepValue() const
 
 QVariant KSaneDoubleOption::value() const
 {
-    if (state() == StateHidden) {
+    if (state() == KSaneOption::StateHidden) {
         return QVariant();
     }
     return QVariant(m_value);
@@ -126,7 +131,7 @@ QVariant KSaneDoubleOption::value() const
 
 QString KSaneDoubleOption::valueAsString() const
 {
-    if (state() == StateHidden) {
+    if (state() == KSaneOption::StateHidden) {
         return QString();
     }
     return QString::number(m_value, 'F', 6);

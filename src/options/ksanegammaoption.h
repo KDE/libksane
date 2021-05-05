@@ -9,12 +9,12 @@
 #ifndef KSANE_GAMMA_OPTION_H
 #define KSANE_GAMMA_OPTION_H
 
-#include "ksaneoption.h"
+#include "ksanebaseoption.h"
 
 namespace KSaneIface
 {
 
-class KSaneGammaOption : public KSaneOption
+class KSaneGammaOption : public KSaneBaseOption
 {
     Q_OBJECT
 

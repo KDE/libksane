@@ -9,12 +9,12 @@
 #ifndef KSANE_INTEGER_OPTION_H
 #define KSANE_INTEGER_OPTION_H
 
-#include "ksaneoption.h"
+#include "ksanebaseoption.h"
 
 namespace KSaneIface
 {
 
-class KSaneIntegerOption : public KSaneOption
+class KSaneIntegerOption : public KSaneBaseOption
 {
     Q_OBJECT
 
@@ -33,7 +33,7 @@ public Q_SLOTS:
     bool setValue(const QVariant &value) override;
 
 private:
-    int            m_iVal;
+    int m_iVal = 0;
 };
 
 }  // NameSpace KSaneIface

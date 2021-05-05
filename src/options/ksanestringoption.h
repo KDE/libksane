@@ -9,12 +9,12 @@
 #ifndef KSANE_STRING_OPTION_H
 #define KSANE_STRING_OPTION_H
 
-#include "ksaneoption.h"
+#include "ksanebaseoption.h"
 
 namespace KSaneIface
 {
 
-class KSaneStringOption : public KSaneOption
+class KSaneStringOption : public KSaneBaseOption
 {
     Q_OBJECT
 

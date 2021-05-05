@@ -9,14 +9,14 @@
 #ifndef KSANE_INVERT_OPTION_H
 #define KSANE_INVERT_OPTION_H
 
-#include "ksaneoption.h"
+#include "ksanebaseoption.h"
 
 namespace KSaneIface
 {
 
 static const QString InvertColorsOptionName = QStringLiteral("KSane::InvertColors");    
     
-class KSaneInvertOption : public KSaneOption
+class KSaneInvertOption : public KSaneBaseOption
 {
     Q_OBJECT
 
@@ -26,7 +26,7 @@ public:
     QVariant value() const override;
     QString valueAsString() const override;
     
-    KSaneOptionState state() const override;
+    KSaneOption::KSaneOptionState state() const override;
     QString name() const override;
     QString title() const override;
     QString description() const override;

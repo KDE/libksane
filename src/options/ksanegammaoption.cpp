@@ -19,14 +19,14 @@ namespace KSaneIface
 {
 
 KSaneGammaOption::KSaneGammaOption(const SANE_Handle handle, const int index)
-    : KSaneOption(handle, index)
+    : KSaneBaseOption(handle, index)
 {
     m_optionType = KSaneOption::TypeGamma;
 }
 
 bool KSaneGammaOption::setValue(const QVariant &value)
 {
-    if (state() == StateHidden) {
+    if (state() == KSaneOption::StateHidden) {
         return false;
     }
     
@@ -78,7 +78,7 @@ bool KSaneGammaOption::setValue(const QVariant &value)
 
 void KSaneGammaOption::readOption()
 {
-    KSaneOption::readOption();
+    KSaneBaseOption::readOption();
     
     if (m_optDesc) {
         int size = m_optDesc->size / sizeof(SANE_Word);
@@ -97,7 +97,7 @@ void KSaneGammaOption::readValue()
 
 QVariant KSaneGammaOption::value() const
 {
-    if (state() == StateHidden) {
+    if (state() == KSaneOption::StateHidden) {
         return QVariant();
     }
     return QVariantList{ m_brightness, m_contrast, m_gamma };
@@ -120,7 +120,7 @@ QVariant KSaneGammaOption::maximumValue() const
 
 QString KSaneGammaOption::valueAsString() const
 {
-    if (state() == StateHidden) {
+    if (state() == KSaneOption::StateHidden) {
         return QString();
     }
 

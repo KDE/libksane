@@ -9,12 +9,12 @@
 #ifndef KSANE_BOOL_OPTION_H
 #define KSANE_BOOL_OPTION_H
 
-#include "ksaneoption.h"
+#include "ksanebaseoption.h"
 
 namespace KSaneIface
 {
 
-class KSaneBoolOption : public KSaneOption
+class KSaneBoolOption : public KSaneBaseOption
 {
     Q_OBJECT
 
@@ -30,7 +30,7 @@ public Q_SLOTS:
     bool setValue(const QVariant &value) override;
 
 private:
-    bool             m_checked;
+    bool m_checked = false;
 };
 
 }  // NameSpace KSaneIface

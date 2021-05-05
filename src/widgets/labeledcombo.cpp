@@ -11,6 +11,17 @@
 
 #include <QComboBox>
 
+//KDE includes
+
+#include <klocalizedstring.h>
+
+// Sane includes
+extern "C"
+{
+#include <sane/sane.h>
+#include <sane/saneopts.h>
+}
+
 namespace KSaneIface
 {
     

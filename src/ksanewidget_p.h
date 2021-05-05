@@ -2,6 +2,7 @@
  *
  * SPDX-FileCopyrightText: 2009 Kare Sars <kare dot sars at iki dot fi>
  * SPDX-FileCopyrightText: 2014 Gregor Mitsch : port to KDE5 frameworks
+ * SPDX-FileCopyrightText: 2021 Alexander Stippich <a.stippich@gmx.net>
  *
  * SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
  *
@@ -9,13 +10,6 @@
 
 #ifndef KSANE_WIDGET_PRIVATE_H
 #define KSANE_WIDGET_PRIVATE_H
-
-// Sane includes
-extern "C"
-{
-#include <sane/saneopts.h>
-#include <sane/sane.h>
-}
 
 #include <QWidget>
 #include <QCheckBox>
@@ -28,9 +22,11 @@ extern "C"
 #include <QSplitter>
 #include <QToolButton>
 #include <QSet>
+#include <QList>
+#include <QHash>
 
 #include "ksanewidget.h"
-#include "ksaneoption.h"
+#include "ksanebaseoption.h"
 #include "ksaneoptionwidget.h"
 #include "ksaneviewer.h"
 #include "labeledcombo.h"
@@ -61,7 +57,6 @@ public:
     void updatePreviewSize();
     void setDefaultValues();
     void setBusy(bool busy);
-    KSaneOption *getOption(const QString &name);
     KSaneOptionWidget *createOptionWidget(QWidget *parent, KSaneOption *option);
     KSaneWidget::ImageFormat getImgFormat(SANE_Parameters &params);
     int getBytesPerLines(SANE_Parameters &params);
@@ -152,9 +147,11 @@ public:
     QString             m_model;
 
     // Option variables
-    QList<KSaneOption *> m_optList;
-    QList<KSaneOption *> m_pollList;
-    QSet<QString>        m_handledOptions;
+    QList<KSaneBaseOption *> m_optionsList;
+    QList<KSaneOption *>     m_externalOptionsList;
+    QHash<KSaneWidget::KSaneOptionName, int> m_optionsLocation;
+    QList<KSaneBaseOption *> m_optionsPollList;
+    QSet<QString>            m_handledOptions;
     KSaneOption        *m_optSource;
     KSaneOption        *m_optNegative;
     KSaneOption        *m_optFilmType;

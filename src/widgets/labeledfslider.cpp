@@ -9,6 +9,10 @@
 // Local includes
 #include "labeledfslider.h"
 
+//KDE includes
+
+#include <klocalizedstring.h>
+
 #define FLOAT_MULTIP 32768.0
 #define TO_DOUBLE(v) (static_cast<double>(v) / FLOAT_MULTIP)
 #define TO_FIX(v) (static_cast<int>(v * FLOAT_MULTIP))

@@ -3,7 +3,8 @@
  * SPDX-FileCopyrightText: 2007-2010 Kare Sars <kare dot sars at iki dot fi>
  * SPDX-FileCopyrightText: 2007 Gilles Caulier <caulier dot gilles at gmail dot com>
  * SPDX-FileCopyrightText: 2014 Gregor Mitsch : port to KDE5 frameworks
- *
+ * SPDX-FileCopyrightText: 2021 Alexander Stippich <a.stippich@gmx.net>
+ * 
  * SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
  *
  * ============================================================ */
@@ -20,7 +21,8 @@ namespace KSaneIface
 {
 
 class KSaneWidgetPrivate;
-
+class KSaneOption;
+    
 /**
  * This class provides the widget containing the scan options and the preview.
  * @author Kare Sars <kare.sars@iki.fi>
@@ -56,6 +58,37 @@ public:
         ErrorGeneral,        /**< The error string should contain an error message. */
         Information          /**< There is some information to the user. */
     } ScanStatus;
+    
+    /** This enumeration is used to obtain a specific option with getOption(KSaneOptionName)
+     * or getOptionIndex(KSaneOptionName).
+     * Depending on the backend, not all options are available, nor this list is complete.
+     * For the remaining options, getOptionsList() must be used. */   
+    enum KSaneOptionName {
+        SourceOption,
+        ScanModeOption,
+        BitDepthOption,
+        ResolutionOption,
+        TopLeftXOption,
+        TopLeftYOption,
+        BottomRightXOption,
+        BottomRightYOption,
+        FilmTypeOption,
+        NegativeOption,
+        InvertColorOption,
+        PageSizeOption,
+        ThresholdOption,
+        XResolutionOption,
+        YResolutionOption,
+        PreviewOption,
+        WaitForButtonOption,
+        BrightnessOption,
+        ContrastOption,
+        GammaRedOption,
+        GammaGreenOption,
+        GammaBlueOption,
+        BlackLevelOption,
+        WhiteLevelOption,
+    };
 
     struct DeviceInfo {
         QString name;     /* unique device name */
@@ -197,6 +230,24 @@ public:
     * @note setting the value 0 means that the default calculated value should be used */
     void setPreviewResolution(float dpi);
 
+    /** This function returns all available options when a device is opened.
+     * @return list containing pointers to all KSaneOptions provided by the backend.
+     * Becomes invalid when closing a device. 
+     * The pointers must not be deleted by the client. */
+    QList<KSaneOption *> getOptionsList();
+    
+    /** This function returns a specific option. 
+     * @param optionEnum the enum specifying the option.
+     * @return pointer to the KSaneOption. Returns a nullptr in case the options
+     * is not available for the currently opened device. */  
+    KSaneOption *getOption(KSaneOptionName optionEnum);
+    
+    /** This function returns a specific option. 
+     * @param optionName the internal name of the option defined by SANE.
+     * @return pointer to the KSaneOption. Returns a nullptr in case the options
+     * is not available for the currently opened device. */  
+    KSaneOption *getOption(QString optionName); 
+    
     /** This method reads the available parameters and their values and
      * returns them in a QMap (Name, value)
      * @param opts is a QMap with the parameter names and values. */

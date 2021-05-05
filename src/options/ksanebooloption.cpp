@@ -17,14 +17,14 @@ namespace KSaneIface
 {
 
 KSaneBoolOption::KSaneBoolOption(const SANE_Handle handle, const int index)
-    : KSaneOption(handle, index), m_checked(false)
+    : KSaneBaseOption(handle, index)
 {
     m_optionType = KSaneOption::TypeBool;
 }
 
 bool KSaneBoolOption::setValue(const QVariant &value)
 {
-    if (state() == StateHidden) {
+    if (state() == KSaneOption::StateHidden) {
         return false;
     }
     
@@ -43,7 +43,7 @@ bool KSaneBoolOption::setValue(const QVariant &value)
 
 void KSaneBoolOption::readValue()
 {
-    if (state() == StateHidden) {
+    if (state() == KSaneOption::StateHidden) {
         return;
     }
 
@@ -65,7 +65,7 @@ void KSaneBoolOption::readValue()
 
 QVariant KSaneBoolOption::value() const
 {
-    if (state() == StateHidden) {
+    if (state() == KSaneOption::StateHidden) {
         return QVariant();
     }
     return m_checked;
@@ -73,7 +73,7 @@ QVariant KSaneBoolOption::value() const
 
 QString KSaneBoolOption::valueAsString() const
 {
-    if (state() == StateHidden) {
+    if (state() == KSaneOption::StateHidden) {
         return QString();
     }
     if (m_checked) {

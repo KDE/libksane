@@ -20,9 +20,9 @@ static constexpr int PageSizeWiggleRoom = 2; // in mm
 namespace KSaneIface
 {
 
-KSanePageSizeOption::KSanePageSizeOption(KSaneOption *optionTopLeftX, KSaneOption *optionTopLeftY,
-                        KSaneOption *optionBottomRightX, KSaneOption *optionBottomRightY,
-                        KSaneOption *optionResolution) : KSaneOption()
+KSanePageSizeOption::KSanePageSizeOption(KSaneBaseOption *optionTopLeftX, KSaneBaseOption *optionTopLeftY,
+                        KSaneBaseOption *optionBottomRightX, KSaneBaseOption *optionBottomRightY,
+                        KSaneBaseOption *optionResolution) : KSaneBaseOption()
 {
     if (optionTopLeftX == nullptr || optionTopLeftY == nullptr || 
         optionBottomRightX == nullptr || optionBottomRightY == nullptr) {
@@ -30,10 +30,12 @@ KSanePageSizeOption::KSanePageSizeOption(KSaneOption *optionTopLeftX, KSaneOptio
         m_optionType = KSaneOption::TypeDetectFail;
         return;
     }
-    connect(optionTopLeftX, &KSaneOption::valueChanged, this, &KSanePageSizeOption::optionTopLeftXUpdated);
-    connect(optionTopLeftY, &KSaneOption::valueChanged, this, &KSanePageSizeOption::optionTopLeftYUpdated);
-    connect(optionBottomRightX, &KSaneOption::valueChanged, this, &KSanePageSizeOption::optionBottomRightXUpdated);
-    connect(optionBottomRightY, &KSaneOption::valueChanged, this, &KSanePageSizeOption::optionBottomRightYUpdated);
+
+    connect(optionTopLeftX, &KSaneBaseOption::valueChanged, this, &KSanePageSizeOption::optionTopLeftXUpdated);
+    connect(optionTopLeftY, &KSaneBaseOption::valueChanged, this, &KSanePageSizeOption::optionTopLeftYUpdated);
+    connect(optionBottomRightX, &KSaneBaseOption::valueChanged, this, &KSanePageSizeOption::optionBottomRightXUpdated);
+    connect(optionBottomRightY, &KSaneBaseOption::valueChanged, this, &KSanePageSizeOption::optionBottomRightYUpdated);
+
     m_optionTopLeftX = optionTopLeftX;
     m_optionTopLeftY = optionTopLeftY;
     m_optionBottomRightX = optionBottomRightX;
@@ -100,9 +102,9 @@ KSanePageSizeOption::KSanePageSizeOption(KSaneOption *optionTopLeftX, KSaneOptio
     // Set custom as current
     m_currentIndex = 0;
     if (m_availableSizesList.count() > 1) { 
-        m_state = KSaneOptionState::StateActive;
+        m_state = KSaneOption::StateActive;
     } else {
-        m_state = KSaneOptionState::StateHidden;
+        m_state = KSaneOption::StateHidden;
     }    
     m_optionType = KSaneOption::TypeValueList;
 }
@@ -213,7 +215,7 @@ void KSanePageSizeOption::optionBottomRightYUpdated()
     }
 }
 
-double KSanePageSizeOption::ensureMilliMeter(KSaneOption *option, double value) 
+double KSanePageSizeOption::ensureMilliMeter(KSaneBaseOption *option, double value) 
 {
     // convert if necessary with current DPI if available
     if (option->valueUnit() == KSaneOption::UnitPixel &&  m_optionResolution != nullptr) {

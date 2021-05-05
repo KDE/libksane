@@ -9,14 +9,14 @@
 #ifndef KSANE_VALUELIST_OPTION_H
 #define KSANE_VALUELIST_OPTION_H
 
-#include "ksaneoption.h"
+#include "ksanebaseoption.h"
 
 #include <utility>
 
 namespace KSaneIface
 {
 
-class KSaneListOption : public KSaneOption
+class KSaneListOption : public KSaneBaseOption
 {
     Q_OBJECT
 

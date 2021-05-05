@@ -17,14 +17,14 @@ namespace KSaneIface
 {
 
 KSaneStringOption::KSaneStringOption(const SANE_Handle handle, const int index)
-    : KSaneOption(handle, index)
+    : KSaneBaseOption(handle, index)
 {
     m_optionType = KSaneOption::TypeString;
 }
 
 bool KSaneStringOption::setValue(const QVariant &val)
 {
-    if (state() == StateHidden) {
+    if (state() == KSaneOption::StateHidden) {
         return false;
     }
     QString text = val.toString();
@@ -39,7 +39,7 @@ bool KSaneStringOption::setValue(const QVariant &val)
 
 void KSaneStringOption::readValue()
 {
-    if (state() == StateHidden) {
+    if (state() == KSaneOption::StateHidden) {
         return;
     }
 
@@ -69,7 +69,7 @@ int KSaneStringOption::valueSize() const
 
 QString KSaneStringOption::valueAsString() const
 {
-    if (state() == StateHidden) {
+    if (state() == KSaneOption::StateHidden) {
         return QString();
     }
     return m_string;

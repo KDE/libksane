@@ -32,7 +32,9 @@ set(ksane_SRCS
     ksanewidget_p.cpp
     splittercollapser.cpp
     ksaneauth.cpp
-    options/ksaneoption.cpp
+    ksaneoption.cpp
+    ksaneinternaloption.cpp
+    options/ksanebaseoption.cpp
     options/ksaneactionoption.cpp
     options/ksanebooloption.cpp
     options/ksanestringoption.cpp
@@ -78,6 +80,7 @@ set_target_properties(KF5Sane
 ecm_generate_headers(KSane_HEADERS
     HEADER_NAMES
         KSaneWidget
+        KSaneOption
     REQUIRED_HEADERS KSane_HEADERS
     RELATIVE "../src/"
 )

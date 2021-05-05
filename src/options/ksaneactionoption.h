@@ -9,12 +9,12 @@
 #ifndef KSANE_ACTION_OPTION_H
 #define KSANE_ACTION_OPTION_H
 
-#include "ksaneoption.h"
+#include "ksanebaseoption.h"
 
 namespace KSaneIface
 {
 
-class KSaneActionOption : public KSaneOption
+class KSaneActionOption : public KSaneBaseOption
 {
     Q_OBJECT
 

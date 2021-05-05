@@ -7,25 +7,25 @@
  *
  * ============================================================ */
 
-#include "ksaneoption.h"
+#include "ksanebaseoption.h"
 
 #include <ksane_debug.h>
 
 namespace KSaneIface
 {
 
-KSaneOption::KSaneOption() : QObject()
+KSaneBaseOption::KSaneBaseOption() : QObject()
 {
 }
 
-KSaneOption::KSaneOption(const SANE_Handle handle, const int index)
+KSaneBaseOption::KSaneBaseOption(const SANE_Handle handle, const int index)
     : QObject(), m_handle(handle), m_index(index)
 {
     readOption();
     readValue();
 }
 
-KSaneOption::~KSaneOption()
+KSaneBaseOption::~KSaneBaseOption()
 {
     if (m_data) {
         free(m_data);
@@ -33,7 +33,7 @@ KSaneOption::~KSaneOption()
     }
 }
 
-void KSaneOption::readOption()
+void KSaneBaseOption::readOption()
 {
     if (m_handle != nullptr) {
         m_optDesc = sane_get_option_descriptor(m_handle, m_index);
@@ -41,23 +41,23 @@ void KSaneOption::readOption()
     }
 }
 
-KSaneOption::KSaneOptionState KSaneOption::state() const
+KSaneOption::KSaneOptionState KSaneBaseOption::state() const
 {
     if (m_optDesc == nullptr) {
-        return StateHidden;
+        return KSaneOption::StateHidden;
     }
 
     if (((m_optDesc->cap & SANE_CAP_SOFT_DETECT) == 0) ||
             (m_optDesc->cap & SANE_CAP_INACTIVE) ||
-            ((m_optDesc->size == 0) && (type() != TypeAction))) {
-        return StateHidden;
+            ((m_optDesc->size == 0) && (type() != KSaneOption::TypeAction))) {
+        return KSaneOption::StateHidden;
     } else if ((m_optDesc->cap & SANE_CAP_SOFT_SELECT) == 0) {
-        return StateDisabled;
+        return KSaneOption::StateDisabled;
     }
-    return StateActive;
+    return KSaneOption::StateActive;
 }
 
-bool KSaneOption::needsPolling() const
+bool KSaneBaseOption::needsPolling() const
 {
     if (!m_optDesc) {
         return false;
@@ -71,7 +71,7 @@ bool KSaneOption::needsPolling() const
     return false;
 }
 
-QString KSaneOption::name() const
+QString KSaneBaseOption::name() const
 {
     if (m_optDesc == nullptr) {
         return QString();
@@ -79,7 +79,7 @@ QString KSaneOption::name() const
     return QString::fromUtf8(m_optDesc->name);
 }
 
-QString KSaneOption::title() const
+QString KSaneBaseOption::title() const
 {
     if (m_optDesc == nullptr) {
         return QString();
@@ -87,7 +87,7 @@ QString KSaneOption::title() const
     return sane_i18n(m_optDesc->title);
 }
 
-QString KSaneOption::description() const
+QString KSaneBaseOption::description() const
 {
     if (m_optDesc == nullptr) {
         return QString();
@@ -95,17 +95,17 @@ QString KSaneOption::description() const
     return sane_i18n(m_optDesc->desc);
 }
 
-KSaneOption::KSaneOptionType KSaneOption::type() const
+KSaneOption::KSaneOptionType KSaneBaseOption::type() const
 {
     return m_optionType;
 }
 
-bool KSaneOption::writeData(void *data)
+bool KSaneBaseOption::writeData(void *data)
 {
     SANE_Status status;
     SANE_Int res;
 
-    if (state() == StateDisabled) {
+    if (state() == KSaneOption::StateDisabled) {
         return false;
     }
 
@@ -132,9 +132,9 @@ bool KSaneOption::writeData(void *data)
     return true;
 }
 
-void KSaneOption::readValue() {}
+void KSaneBaseOption::readValue() {}
 
-SANE_Word KSaneOption::toSANE_Word(unsigned char *data)
+SANE_Word KSaneBaseOption::toSANE_Word(unsigned char *data)
 {
     SANE_Word tmp;
     // if __BYTE_ORDER is not defined we get #if 0 == 0
@@ -152,7 +152,7 @@ SANE_Word KSaneOption::toSANE_Word(unsigned char *data)
     return tmp;
 }
 
-void KSaneOption::fromSANE_Word(unsigned char *data, SANE_Word from)
+void KSaneBaseOption::fromSANE_Word(unsigned char *data, SANE_Word from)
 {
     // if __BYTE_ORDER is not defined we get #if 0 == 0
 #if __BYTE_ORDER == __LITTLE_ENDIAN
@@ -168,49 +168,49 @@ void KSaneOption::fromSANE_Word(unsigned char *data, SANE_Word from)
 #endif
 }
 
-QVariant KSaneOption::value() const
+QVariant KSaneBaseOption::value() const
 {
     return QVariant();
 }
 
-QVariant KSaneOption::minimumValue() const
+QVariant KSaneBaseOption::minimumValue() const
 {
     return QVariant();
 }
 
-QVariant KSaneOption::maximumValue() const
+QVariant KSaneBaseOption::maximumValue() const
 {
     return QVariant();
 }
 
-QVariant KSaneOption::stepValue() const
+QVariant KSaneBaseOption::stepValue() const
 {
     return QVariant();
 }
 
-QVariantList KSaneOption::valueList() const
+QVariantList KSaneBaseOption::valueList() const
 {
     return QVariantList();
 }
 
-KSaneOption::KSaneOptionUnit KSaneOption::valueUnit() const
+KSaneOption::KSaneOptionUnit KSaneBaseOption::valueUnit() const
 {
     if (m_optDesc != nullptr) {
         switch (m_optDesc->unit) {
-        case SANE_UNIT_PIXEL:       return UnitPixel;
-        case SANE_UNIT_BIT:         return UnitBit;
-        case SANE_UNIT_MM:          return UnitMilliMeter;
-        case SANE_UNIT_DPI:         return UnitDPI;
-        case SANE_UNIT_PERCENT:     return UnitPercent;
-        case SANE_UNIT_MICROSECOND: return UnitMicroSecond;
-        default: return UnitNone;
+        case SANE_UNIT_PIXEL:       return KSaneOption::UnitPixel;
+        case SANE_UNIT_BIT:         return KSaneOption::UnitBit;
+        case SANE_UNIT_MM:          return KSaneOption::UnitMilliMeter;
+        case SANE_UNIT_DPI:         return KSaneOption::UnitDPI;
+        case SANE_UNIT_PERCENT:     return KSaneOption::UnitPercent;
+        case SANE_UNIT_MICROSECOND: return KSaneOption::UnitMicroSecond;
+        default: return KSaneOption::UnitNone;
         }
     } else {
-        return UnitNone;
+        return KSaneOption::UnitNone;
     }
 }
 
-int KSaneOption::valueSize() const
+int KSaneBaseOption::valueSize() const
 {
     if (m_optDesc != nullptr) {
         return m_optDesc->size / sizeof(SANE_Word);
@@ -218,23 +218,23 @@ int KSaneOption::valueSize() const
     return 0;
 }
 
-QString KSaneOption::valueAsString() const
+QString KSaneBaseOption::valueAsString() const
 {
     return QString();
 }
 
-bool KSaneOption::setValue(const QVariant &)
+bool KSaneBaseOption::setValue(const QVariant &)
 {
     return false;
 }
  
-bool KSaneOption::storeCurrentData()
+bool KSaneBaseOption::storeCurrentData()
 {
     SANE_Status status;
     SANE_Int res;
 
     // check if we can read the value
-    if (state() == StateHidden) {
+    if (state() == KSaneOption::StateHidden) {
         return false;
     }
 
@@ -251,7 +251,7 @@ bool KSaneOption::storeCurrentData()
     return true;
 }
 
-bool KSaneOption::restoreSavedData()
+bool KSaneBaseOption::restoreSavedData()
 {
     // check if we have saved any data
     if (m_data == nullptr) {
@@ -259,10 +259,10 @@ bool KSaneOption::restoreSavedData()
     }
 
     // check if we can write the value
-    if (state() == StateHidden) {
+    if (state() == KSaneOption::StateHidden) {
         return false;
     }
-    if (state() == StateDisabled) {
+    if (state() == KSaneOption::StateDisabled) {
         return false;
     }
 
@@ -271,20 +271,20 @@ bool KSaneOption::restoreSavedData()
     return true;
 }
 
-KSaneOption::KSaneOptionType KSaneOption::optionType(const SANE_Option_Descriptor *optDesc)
+KSaneOption::KSaneOptionType KSaneBaseOption::optionType(const SANE_Option_Descriptor *optDesc)
 {
     if (!optDesc) {
-        return TypeDetectFail;
+        return KSaneOption::TypeDetectFail;
     }
 
     switch (optDesc->constraint_type) {
     case SANE_CONSTRAINT_NONE:
         switch (optDesc->type) {
         case SANE_TYPE_BOOL:
-            return TypeBool;
+            return KSaneOption::TypeBool;
         case SANE_TYPE_INT:
             if (optDesc->size == sizeof(SANE_Word)) {
-                return TypeInteger;
+                return KSaneOption::TypeInteger;
             }
             qCDebug(KSANE_LOG) << "Can not handle:" << optDesc->title;
             qCDebug(KSANE_LOG) << "SANE_CONSTRAINT_NONE && SANE_TYPE_INT";
@@ -292,34 +292,34 @@ KSaneOption::KSaneOptionType KSaneOption::optionType(const SANE_Option_Descripto
             break;
         case SANE_TYPE_FIXED:
             if (optDesc->size == sizeof(SANE_Word)) {
-                return TypeDouble;
+                return KSaneOption::TypeDouble;
             }
             qCDebug(KSANE_LOG) << "Can not handle:" << optDesc->title;
             qCDebug(KSANE_LOG) << "SANE_CONSTRAINT_NONE && SANE_TYPE_FIXED";
             qCDebug(KSANE_LOG) << "size" << optDesc->size << "!= sizeof(SANE_Word)";
             break;
         case SANE_TYPE_BUTTON:
-            return TypeAction;
+            return KSaneOption::TypeAction;
         case SANE_TYPE_STRING:
-            return TypeString;
+            return KSaneOption::TypeString;
         case SANE_TYPE_GROUP:
-            return TypeDetectFail;
+            return KSaneOption::TypeDetectFail;
         }
         break;
     case SANE_CONSTRAINT_RANGE:
         switch (optDesc->type) {
         case SANE_TYPE_BOOL:
-            return TypeBool;
+            return KSaneOption::TypeBool;
         case SANE_TYPE_INT:
             if (optDesc->size == sizeof(SANE_Word)) {
-                return TypeInteger;
+                return KSaneOption::TypeInteger;
             }
 
             if ((strcmp(optDesc->name, SANE_NAME_GAMMA_VECTOR) == 0) ||
                     (strcmp(optDesc->name, SANE_NAME_GAMMA_VECTOR_R) == 0) ||
                     (strcmp(optDesc->name, SANE_NAME_GAMMA_VECTOR_G) == 0) ||
                     (strcmp(optDesc->name, SANE_NAME_GAMMA_VECTOR_B) == 0)) {
-                return TypeGamma;
+                return KSaneOption::TypeGamma;
             }
             qCDebug(KSANE_LOG) << "Can not handle:" << optDesc->title;
             qCDebug(KSANE_LOG) << "SANE_CONSTRAINT_RANGE && SANE_TYPE_INT && !SANE_NAME_GAMMA_VECTOR...";
@@ -327,7 +327,7 @@ KSaneOption::KSaneOptionType KSaneOption::optionType(const SANE_Option_Descripto
             break;
         case SANE_TYPE_FIXED:
             if (optDesc->size == sizeof(SANE_Word)) {
-                return TypeDouble;
+                return KSaneOption::TypeDouble;
             }
             qCDebug(KSANE_LOG) << "Can not handle:" << optDesc->title;
             qCDebug(KSANE_LOG) << "SANE_CONSTRAINT_RANGE && SANE_TYPE_FIXED";
@@ -337,18 +337,18 @@ KSaneOption::KSaneOptionType KSaneOption::optionType(const SANE_Option_Descripto
         case SANE_TYPE_STRING:
             qCDebug(KSANE_LOG) << "Can not handle:" << optDesc->title;
             qCDebug(KSANE_LOG) << "SANE_CONSTRAINT_RANGE && SANE_TYPE_STRING";
-            return TypeDetectFail;
+            return KSaneOption::TypeDetectFail;
         case SANE_TYPE_BUTTON:
-            return TypeAction;
+            return KSaneOption::TypeAction;
         case SANE_TYPE_GROUP:
-            return TypeDetectFail;
+            return KSaneOption::TypeDetectFail;
         }
         break;
     case SANE_CONSTRAINT_WORD_LIST:
     case SANE_CONSTRAINT_STRING_LIST:
-        return TypeValueList;
+        return KSaneOption::TypeValueList;
     }
-    return TypeDetectFail;
+    return KSaneOption::TypeDetectFail;
 }
 
 }  // NameSpace KSaneIface

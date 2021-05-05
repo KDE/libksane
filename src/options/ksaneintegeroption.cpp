@@ -18,14 +18,14 @@ namespace KSaneIface
 {
 
 KSaneIntegerOption::KSaneIntegerOption(const SANE_Handle handle, const int index)
-    : KSaneOption(handle, index), m_iVal(0)
+    : KSaneBaseOption(handle, index)
 {
     m_optionType = KSaneOption::TypeInteger;
 }
 
 void KSaneIntegerOption::readValue()
 {
-    if (state() == StateHidden) {
+    if (state() == KSaneOption::StateHidden) {
         return;
     }
 
@@ -72,6 +72,10 @@ QVariant KSaneIntegerOption::stepValue() const
     QVariant value;
     if (m_optDesc->constraint_type == SANE_CONSTRAINT_RANGE) {
         value = static_cast<int>(m_optDesc->constraint.range->quant);
+        // guard against possible broken backends
+        if (value == 0) {
+            value = 1;
+        }
     } else {
         value = 1;
     }
@@ -81,7 +85,7 @@ QVariant KSaneIntegerOption::stepValue() const
 QVariant KSaneIntegerOption::value() const
 {
     QVariant value;
-    if (state() == StateHidden) {
+    if (state() == KSaneOption::StateHidden) {
         return value;
     }
     value = m_iVal;
@@ -90,7 +94,7 @@ QVariant KSaneIntegerOption::value() const
 
 QString KSaneIntegerOption::valueAsString() const
 {
-    if (state() == StateHidden) {
+    if (state() == KSaneOption::StateHidden) {
         return QString();
     }
     return QString::number(m_iVal);

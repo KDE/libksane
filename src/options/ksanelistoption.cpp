@@ -18,14 +18,14 @@ namespace KSaneIface
 {
 
 KSaneListOption::KSaneListOption(const SANE_Handle handle, const int index)
-    : KSaneOption(handle, index)
+    : KSaneBaseOption(handle, index)
 {
     m_optionType = KSaneOption::TypeValueList;
 }
 
 void KSaneListOption::readValue()
 {
-    if (state() == StateHidden) {
+    if (state() == KSaneOption::StateHidden) {
         return;
     }
 
@@ -49,7 +49,7 @@ void KSaneListOption::readValue()
     case SANE_TYPE_STRING:
         newValue = sane_i18n(reinterpret_cast<char *>(data.data()));
         break;
-    default :
+    default:
         break;
     }
 
@@ -104,7 +104,7 @@ bool KSaneListOption::setValue(const QVariant &value)
 QVariant KSaneListOption::minimumValue() const
 {
     QVariant value;
-    if (state() == StateHidden) {
+    if (state() == KSaneOption::StateHidden) {
         return value;
     }
     float fValueMin;
@@ -133,7 +133,7 @@ QVariant KSaneListOption::minimumValue() const
 
 QVariant KSaneListOption::value() const
 {
-    if (state() == StateHidden) {
+    if (state() == KSaneOption::StateHidden) {
         return QVariant();
     }
     return m_currentValue;
@@ -185,7 +185,7 @@ bool KSaneListOption::setValue(float value)
 
 QString KSaneListOption::valueAsString() const
 {
-    if (state() == StateHidden) {
+    if (state() == KSaneOption::StateHidden) {
         return QString();
     }
     return m_currentValue.toString();
@@ -193,7 +193,7 @@ QString KSaneListOption::valueAsString() const
 
 bool KSaneListOption::setValue(const QString &value)
 {
-    if (state() == StateHidden) {
+    if (state() == KSaneOption::StateHidden) {
         return false;
     }
 

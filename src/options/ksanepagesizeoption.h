@@ -11,26 +11,26 @@
 
 #include <QList>
 
-#include "ksaneoption.h"
+#include "ksanebaseoption.h"
 
 namespace KSaneIface
 {
 
 static const QString PageSizeOptionName = QStringLiteral("KSane::PageSize");    
     
-class KSanePageSizeOption : public KSaneOption
+class KSanePageSizeOption : public KSaneBaseOption
 {
     Q_OBJECT
 
 public:
-    KSanePageSizeOption(KSaneOption *m_optionTopLeftX, KSaneOption *m_optionTopLeftY,
-                        KSaneOption *m_optionBottomRightX, KSaneOption *m_optionBottomRightY,
-                        KSaneOption *m_optionResolution);
+    KSanePageSizeOption(KSaneBaseOption *m_optionTopLeftX, KSaneBaseOption *m_optionTopLeftY,
+                        KSaneBaseOption *m_optionBottomRightX, KSaneBaseOption *m_optionBottomRightY,
+                        KSaneBaseOption *m_optionResolution);
 
     QVariant value() const override;
     QString valueAsString() const override;
     
-    KSaneOptionState state() const override;
+    KSaneOption::KSaneOptionState state() const override;
     QString name() const override;
     QString title() const override;
     QString description() const override;
@@ -46,15 +46,15 @@ private Q_SLOTS:
     void optionBottomRightYUpdated();
         
 private:  
-    double ensureMilliMeter(KSaneOption *option, double value);
+    double ensureMilliMeter(KSaneBaseOption *option, double value);
     
-    KSaneOption *m_optionTopLeftX;
-    KSaneOption *m_optionTopLeftY;
-    KSaneOption *m_optionBottomRightX;
-    KSaneOption *m_optionBottomRightY;
-    KSaneOption *m_optionResolution;
+    KSaneBaseOption *m_optionTopLeftX;
+    KSaneBaseOption *m_optionTopLeftY;
+    KSaneBaseOption *m_optionBottomRightX;
+    KSaneBaseOption *m_optionBottomRightY;
+    KSaneBaseOption *m_optionResolution;
     int m_currentIndex = -1;
-    KSaneOption::KSaneOptionState m_state = StateDisabled;
+    KSaneOption::KSaneOptionState m_state = KSaneOption::StateDisabled;
     QVariantList m_availableSizesListNames;
     QList<QSizeF> m_availableSizesList;
 };  

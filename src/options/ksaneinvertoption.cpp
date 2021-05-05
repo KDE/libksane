@@ -47,7 +47,7 @@ QString KSaneInvertOption::valueAsString() const
 
 KSaneOption::KSaneOptionState KSaneInvertOption::state() const
 {
-    return StateActive;
+    return KSaneOption::StateActive;
 }
 
 QString KSaneInvertOption::name() const

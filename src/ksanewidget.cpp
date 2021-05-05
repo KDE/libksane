@@ -5,7 +5,8 @@
  * SPDX-FileCopyrightText: 2009 Grzegorz Kurtyka <grzegorz dot kurtyka at gmail dot com>
  * SPDX-FileCopyrightText: 2007-2008 Gilles Caulier <caulier dot gilles at gmail dot com>
  * SPDX-FileCopyrightText: 2014 Gregor Mitsch : port to KDE5 frameworks
- *
+ * SPDX-FileCopyrightText: 2021 Alexander Stippich <a.stippich@gmx.net>
+ * 
  * SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
  *
  * ============================================================ */
@@ -24,6 +25,7 @@ extern "C"
 
 #include <QApplication>
 #include <QVarLengthArray>
+#include <QList>
 #include <QLabel>
 #include <QSplitter>
 #include <QMutex>
@@ -36,7 +38,8 @@ extern "C"
 #include <kwallet.h>
 #endif
 
-#include "ksaneoption.h"
+#include "ksaneinternaloption.h"
+#include "ksanebaseoption.h"
 #include "ksaneactionoption.h"
 #include "ksanebooloption.h"
 #include "ksanelistoption.h"
@@ -54,6 +57,33 @@ extern "C"
 namespace KSaneIface
 {
 static int     s_objectCount = 0;
+
+static const QHash<QString, KSaneWidget::KSaneOptionName> stringEnumTranslation = {
+    { QStringLiteral(SANE_NAME_SCAN_SOURCE), KSaneWidget::SourceOption },
+    { QStringLiteral(SANE_NAME_SCAN_MODE), KSaneWidget::ScanModeOption },
+    { QStringLiteral(SANE_NAME_BIT_DEPTH), KSaneWidget::BitDepthOption },
+    { QStringLiteral(SANE_NAME_SCAN_RESOLUTION), KSaneWidget::ResolutionOption },
+    { QStringLiteral(SANE_NAME_SCAN_TL_X), KSaneWidget::TopLeftXOption },
+    { QStringLiteral(SANE_NAME_SCAN_TL_Y), KSaneWidget::TopLeftYOption },
+    { QStringLiteral(SANE_NAME_SCAN_BR_X), KSaneWidget::BottomRightXOption },
+    { QStringLiteral(SANE_NAME_SCAN_BR_Y), KSaneWidget::BottomRightYOption },
+    { QStringLiteral("film-type"), KSaneWidget::FilmTypeOption },
+    { QStringLiteral(SANE_NAME_NEGATIVE), KSaneWidget::NegativeOption },
+    { InvertColorsOptionName, KSaneWidget::InvertColorOption },
+    { PageSizeOptionName, KSaneWidget::PageSizeOption },
+    { QStringLiteral(SANE_NAME_THRESHOLD), KSaneWidget::ThresholdOption },
+    { QStringLiteral(SANE_NAME_SCAN_X_RESOLUTION), KSaneWidget::XResolutionOption },
+    { QStringLiteral(SANE_NAME_SCAN_Y_RESOLUTION), KSaneWidget::YResolutionOption },
+    { QStringLiteral(SANE_NAME_PREVIEW), KSaneWidget::PreviewOption },
+    { QStringLiteral("wait-for-button"), KSaneWidget::WaitForButtonOption },
+    { QStringLiteral(SANE_NAME_BRIGHTNESS), KSaneWidget::BrightnessOption },
+    { QStringLiteral(SANE_NAME_CONTRAST), KSaneWidget::ContrastOption },
+    { QStringLiteral(SANE_NAME_GAMMA_VECTOR_R), KSaneWidget::GammaRedOption },
+    { QStringLiteral(SANE_NAME_GAMMA_VECTOR_G), KSaneWidget::GammaGreenOption },
+    { QStringLiteral(SANE_NAME_GAMMA_VECTOR_B), KSaneWidget::GammaBlueOption },
+    { QStringLiteral(SANE_NAME_BLACK_LEVEL),  KSaneWidget::BlackLevelOption },
+    { QStringLiteral(SANE_NAME_WHITE_LEVEL), KSaneWidget::WhiteLevelOption }, };
+
 Q_GLOBAL_STATIC(QMutex, s_objectMutex)
 
 KSaneWidget::KSaneWidget(QWidget *parent)
@@ -436,16 +466,16 @@ bool KSaneWidget::openDevice(const QString &deviceName)
     numSaneOptions = *reinterpret_cast<SANE_Word *>(data.data());
 
     // read the rest of the options
-    KSaneOption *option;
-    KSaneOption *m_optionTopLeftX;
-    KSaneOption *m_optionTopLeftY;
-    KSaneOption *m_optionBottomRightX;
-    KSaneOption *m_optionBottomRightY;
-    KSaneOption *m_optionResolution;
+    KSaneBaseOption *option;
+    KSaneBaseOption *m_optionTopLeftX;
+    KSaneBaseOption *m_optionTopLeftY;
+    KSaneBaseOption *m_optionBottomRightX;
+    KSaneBaseOption *m_optionBottomRightY;
+    KSaneBaseOption *m_optionResolution;
     for (i = 1; i < numSaneOptions; ++i) {
-        switch (KSaneOption::optionType(sane_get_option_descriptor(d->m_saneHandle, i))) {
+        switch (KSaneBaseOption::optionType(sane_get_option_descriptor(d->m_saneHandle, i))) {
         case KSaneOption::TypeDetectFail:
-            option = new KSaneOption(d->m_saneHandle, i);
+            option = new KSaneBaseOption(d->m_saneHandle, i);
             break;
         case KSaneOption::TypeBool:
             option = new KSaneBoolOption(d->m_saneHandle, i);
@@ -470,8 +500,6 @@ bool KSaneWidget::openDevice(const QString &deviceName)
             break;
         }
 
-        d->m_optList.append(option);
-
         if (option->name() == QStringLiteral(SANE_NAME_SCAN_TL_X)) {
             m_optionTopLeftX = option;
         }
@@ -487,27 +515,39 @@ bool KSaneWidget::openDevice(const QString &deviceName)
         if (option->name() == QStringLiteral(SANE_NAME_SCAN_RESOLUTION)) {
             m_optionResolution = option;
         }
-        connect(option, &KSaneOption::optionsNeedReload, d, &KSaneWidgetPrivate::reloadOptions);
-        connect(option, &KSaneOption::valuesNeedReload, d, &KSaneWidgetPrivate::scheduleValuesReload);
+        
+        d->m_optionsList.append(option);
+        d->m_externalOptionsList.append(new KSaneInternalOption(option));
+        connect(option, &KSaneBaseOption::optionsNeedReload, d, &KSaneWidgetPrivate::reloadOptions);
+        connect(option, &KSaneBaseOption::valuesNeedReload, d, &KSaneWidgetPrivate::scheduleValuesReload);
 
         if (option->needsPolling()) {
-            d->m_pollList.append(option);
+            d->m_optionsPollList.append(option);
             if (option->type() == KSaneOption::TypeBool) {
-                connect( option, &KSaneOption::valueChanged,
+                connect( option, &KSaneBaseOption::valueChanged,
                     [=]( const QVariant &newValue ) { Q_EMIT buttonPressed(option->name(), option->title(), newValue.toBool()); } );
             }
+        }
+        const auto it = stringEnumTranslation.find(option->name());
+        if (it != stringEnumTranslation.constEnd()) {
+            d->m_optionsLocation.insert(it.value(), i - 1);
         }
     }
     
     // add extra option for inverting image colors
-    d->m_optList.append(new KSaneInvertOption());
-   
+    option = new KSaneInvertOption();
+    d->m_optionsList.append(option);
+    d->m_externalOptionsList.append(new KSaneInternalOption(option));
+    d->m_optionsLocation.insert(InvertColorOption, d->m_optionsList.size() - 1);  
     // add extra option for selecting specific page sizes
-    d->m_optList.append(new KSanePageSizeOption(m_optionTopLeftX, m_optionTopLeftY,
-                            m_optionBottomRightX, m_optionBottomRightY, m_optionResolution));
-   
+    option = new KSanePageSizeOption(m_optionTopLeftX, m_optionTopLeftY,
+                            m_optionBottomRightX, m_optionBottomRightY, m_optionResolution);
+    d->m_optionsList.append(option);
+    d->m_externalOptionsList.append(new KSaneInternalOption(option));
+    d->m_optionsLocation.insert(PageSizeOption, d->m_optionsList.size() - 1);  
+
     // start polling the poll options
-    if (d->m_pollList.size() > 0) {
+    if (d->m_optionsPollList.size() > 0) {
         d->m_optionPollTmr.start();
     }
 
@@ -716,14 +756,38 @@ void KSaneWidget::setPreviewResolution(float dpi)
     d->m_previewDPI = dpi;
 }
 
+QList<KSaneOption *> KSaneWidget::getOptionsList()
+{
+    return d->m_externalOptionsList;
+}
+
+KSaneOption *KSaneWidget::getOption(KSaneWidget::KSaneOptionName optionEnum) 
+{
+    auto it = d->m_optionsLocation.find(optionEnum);
+    if (it != d->m_optionsLocation.end()) {
+        return d->m_externalOptionsList.at(it.value());
+    }
+    return nullptr;
+}
+
+KSaneOption *KSaneWidget::getOption(QString optionName) 
+{
+    for (const auto &option : qAsConst(d->m_externalOptionsList)) {
+        if (option->name() == optionName) {
+            return option;
+        }
+    }
+    return nullptr;
+}
+
 void KSaneWidget::getOptVals(QMap <QString, QString> &opts)
 {
-    KSaneOption *option;
+    KSaneBaseOption *option;
     opts.clear();
     QString tmp;
 
-    for (int i = 0; i < d->m_optList.size(); i++) {
-        option = d->m_optList.at(i);
+    for (int i = 0; i < d->m_optionsList.size(); i++) {
+        option = d->m_optionsList.at(i);
         tmp = option->valueAsString();
         if (!tmp.isEmpty()) {
             opts[option->name()] = tmp;
@@ -733,11 +797,11 @@ void KSaneWidget::getOptVals(QMap <QString, QString> &opts)
 
 bool KSaneWidget::getOptVal(const QString &optname, QString &value)
 {
-    KSaneOption *option;
-
-    if ((option = d->getOption(optname)) != nullptr) {
-        value = option->valueAsString();
-        return !value.isEmpty();
+    for (const auto &option : qAsConst(d->m_optionsList)) {
+        if (option->name() == optname) {
+            value = option->valueAsString();
+            return !value.isEmpty();
+        }
     }
     return false;
 }
@@ -755,38 +819,30 @@ int KSaneWidget::setOptVals(const QMap <QString, QString> &opts)
     int i;
     int ret = 0;
 
-    const QString sourceOptionSaneName = QStringLiteral(SANE_NAME_SCAN_SOURCE);
-    const QString modeOptionSaneName   = QStringLiteral(SANE_NAME_SCAN_MODE);
-
-    KSaneOption *opt;
-
+    KSaneOption *sourceOption = getOption(SourceOption);
+    KSaneOption *modeOption = getOption(ScanModeOption);
+    
     // Priorize source option
-    if (optionMapCopy.contains(sourceOptionSaneName)) {
-        if ((opt = d->getOption(sourceOptionSaneName)) != nullptr) {
-            if (opt->setValue(optionMapCopy[sourceOptionSaneName])) {
-                ret++;
-            }
+    if (sourceOption != nullptr && optionMapCopy.contains(sourceOption->name())) {
+        if (sourceOption->setValue(optionMapCopy[sourceOption->name()]) ) {
+            ret++;
         }
-        optionMapCopy.remove(sourceOptionSaneName);
+        optionMapCopy.remove(sourceOption->name());
     }
 
     // Priorize mode option
-    if (optionMapCopy.contains(modeOptionSaneName)) {
-        if ((opt = d->getOption(modeOptionSaneName)) != nullptr) {
-            if (opt->setValue(optionMapCopy[modeOptionSaneName])) {
-                ret++;
-            }
+    if (modeOption != nullptr && optionMapCopy.contains(modeOption->name())) {
+        if (modeOption->setValue(optionMapCopy[modeOption->name()])) {
+            ret++;
         }
-        optionMapCopy.remove(modeOptionSaneName);
+        optionMapCopy.remove(modeOption->name());
     }
 
     // Update remaining options
-    for (i = 0; i < d->m_optList.size(); i++) {
-        if (optionMapCopy.contains(d->m_optList.at(i)->name())) {
-            tmp = optionMapCopy[d->m_optList.at(i)->name()];
-            if (d->m_optList.at(i)->setValue(tmp)) {
-                ret++;
-            }
+    for (i = 0; i < d->m_optionsList.size(); i++) {
+        const auto it = optionMapCopy.find(d->m_optionsList.at(i)->name());
+        if (it != optionMapCopy.end() && d->m_optionsList.at(i)->setValue(it.value())) {
+            ret++;
         }
     }
     if ((d->m_splitGamChB) &&
@@ -817,34 +873,34 @@ bool KSaneWidget::setOptVal(const QString &option, const QString &value)
         return false;
     }
 
-    KSaneOption *opt;
-
-    if ((opt = d->getOption(option)) != nullptr) {
-        if (opt->setValue(value)) {
-            if ((d->m_splitGamChB) &&
-                    (d->m_optGamR) &&
-                    (d->m_optGamG) &&
-                    (d->m_optGamB) &&
-                    ((opt == d->m_optGamR) ||
-                     (opt == d->m_optGamG) ||
-                     (opt == d->m_optGamB))) {
-                // check if the current gamma values are identical. if they are identical,
-                // uncheck the "Separate color intensity tables" checkbox
-                QVariant redGamma = d->m_optGamR->value();
-                QVariant greenGamma = d->m_optGamG->value();
-                QVariant blueGamma = d->m_optGamB->value();
-                if ((redGamma == greenGamma) && (greenGamma == blueGamma)) {
-                    d->m_splitGamChB->setChecked(false);
-                    // set the values to the common gamma widget
-                    d->m_commonGamma->setValues(redGamma);
-                } else {
-                    d->m_splitGamChB->setChecked(true);
+    const auto optionsList = getOptionsList();
+    for (auto &writeOption : optionsList) {
+        if (writeOption->name() == option) {
+            if (writeOption->setValue(value)) {
+                if ((d->m_splitGamChB) &&
+                        (d->m_optGamR) &&
+                        (d->m_optGamG) &&
+                        (d->m_optGamB) &&
+                        ((writeOption == d->m_optGamR) ||
+                        (writeOption == d->m_optGamG) ||
+                        (writeOption == d->m_optGamB))) {
+                    // check if the current gamma values are identical. if they are identical,
+                    // uncheck the "Separate color intensity tables" checkbox
+                    QVariant redGamma = d->m_optGamR->value();
+                    QVariant greenGamma = d->m_optGamG->value();
+                    QVariant blueGamma = d->m_optGamB->value();
+                    if ((redGamma == greenGamma) && (greenGamma == blueGamma)) {
+                        d->m_splitGamChB->setChecked(false);
+                        // set the values to the common gamma widget
+                        d->m_commonGamma->setValues(redGamma);
+                    } else {
+                        d->m_splitGamChB->setChecked(true);
+                    }
                 }
+                return true;
             }
-            return true;
         }
     }
-
     return false;
 }
 
