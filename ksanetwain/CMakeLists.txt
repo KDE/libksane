@@ -11,7 +11,8 @@ set(ktwain_src
     twainiface.cpp
     ktwain_widget.cpp
     ../src/ksanewidget.h
-    ../src/ksaneoption.cpp
+    ../src/ksaneoption.h
+    ksaneoption.cpp
 )
 
 add_library(KF5Sane ${ktwain_src})
