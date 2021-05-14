@@ -79,12 +79,12 @@ add_definitions(
 
 # Subdirectories
 if (SANE_FOUND)
-    #add_subdirectory(src)
-    #if (BUILD_TESTING)
-        #add_subdirectory(autotests)
-        #add_subdirectory(tests)
-    #endif()
-#else ()
+    add_subdirectory(src)
+    if (BUILD_TESTING)
+        add_subdirectory(autotests)
+        add_subdirectory(tests)
+    endif()
+else ()
     add_subdirectory(ksanetwain)
 endif()
 
