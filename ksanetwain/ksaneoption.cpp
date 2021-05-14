@@ -13,7 +13,7 @@ namespace KSaneIface
 
 class KSaneOptionPrivate {
     
-}
+};
     
 KSaneOption::KSaneOption(QObject *parent) : QObject(parent), d(std::unique_ptr<KSaneOptionPrivate>(new KSaneOptionPrivate()))
 {
