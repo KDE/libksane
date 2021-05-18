@@ -1,16 +1,14 @@
-add_definitions(-DTRANSLATION_DOMAIN=\"libksane\")
+add_library(KF5Sane)
+add_library(KF5::Sane ALIAS KF5Sane)
+
+target_compile_definitions(KF5Sane PRIVATE -DTRANSLATION_DOMAIN=\"libksane\")
 
 if (KF5Wallet_FOUND)
-    add_definitions(-DHAVE_KF5WALLET)
-    set(WALLET_LIB KF5::Wallet)
+    target_compile_definitions(KF5Sane PRIVATE -DHAVE_KF5WALLET)
+    target_link_libraries(KF5Sane PRIVATE KF5::Wallet)
 endif()
 
-include_directories(${SANE_INCLUDE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/options
-    ${CMAKE_CURRENT_SOURCE_DIR}/widgets
-)
-
-set(ksane_SRCS
+target_sources(KF5Sane PRIVATE
     widgets/gammadisp.cpp
     widgets/labeledgamma.cpp
     widgets/labeledcheckbox.cpp
@@ -46,28 +44,31 @@ set(ksane_SRCS
     options/ksanepagesizeoption.cpp
 )
 
-ecm_qt_declare_logging_category(ksane_SRCS
+ecm_qt_declare_logging_category(KF5Sane
   HEADER ksane_debug.h
   IDENTIFIER KSANE_LOG
   CATEGORY_NAME org.kde.ksane
 )
 
-add_library(KF5Sane ${ksane_SRCS})
 generate_export_header(KF5Sane BASE_NAME KSane)
-add_library(KF5::Sane ALIAS KF5Sane)
 
-target_include_directories(KF5Sane INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR_KF5}/KSane>")
+target_include_directories(KF5Sane
+    INTERFACE
+        "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR_KF5}/KSane>"
+    PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/options
+        ${CMAKE_CURRENT_SOURCE_DIR}/widgets
+)
 
 target_link_libraries(KF5Sane
     PUBLIC
         Qt5::Widgets
     PRIVATE
-        ${SANE_LIBRARY}
+        Sane::Sane
 
         KF5::I18n
         KF5::WidgetsAddons
         KF5::TextWidgets
-        ${WALLET_LIB}
 )
 
 set_target_properties(KF5Sane
@@ -87,12 +88,10 @@ ecm_generate_headers(KSane_HEADERS
 
 # Install files
 
-set(ksane_ICONS
+ecm_install_icons(ICONS
   16-actions-black-white.png
   16-actions-color.png
   16-actions-gray-scale.png
-)
-ecm_install_icons(ICONS ${ksane_ICONS}
   DESTINATION ${KDE_INSTALL_ICONDIR})
 
 install(TARGETS KF5Sane

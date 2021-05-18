@@ -1,13 +1,13 @@
-INCLUDE_DIRECTORIES(
-    ${CMAKE_CURRENT_SOURCE_DIR}/../src
-    ${CMAKE_CURRENT_BINARY_DIR}
-)
+add_library(KF5Sane)
+add_library(KF5::Sane ALIAS KF5Sane)
+
+target_compile_definitions(KF5Sane PRIVATE -DTRANSLATION_DOMAIN=\"libksane\")
 
 IF( WIN32 )
-    ADD_DEFINITIONS( -DMAKE_KSANE_LIB )
+    target_compile_definitions(KF5Sane PRIVATE -DMAKE_KSANE_LIB )
 ENDIF( WIN32 )
 
-set(ktwain_src
+target_sources(KF5Sane PRIVATE
     twainiface.cpp
     ktwain_widget.cpp
     ../src/ksanewidget.h
@@ -15,11 +15,14 @@ set(ktwain_src
     ksaneoption.cpp
 )
 
-add_library(KF5Sane ${ktwain_src})
 generate_export_header(KF5Sane BASE_NAME KSane)
-add_library(KF5::Sane ALIAS KF5Sane)
 
-target_include_directories(KF5Sane INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR_KF5}/KSane>")
+target_include_directories(KF5Sane
+    INTERFACE
+        "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR_KF5}/KSane>"
+    PRIVATE
+        ${CMAKE_SOURCE_DIR}/src
+)
 
 target_link_libraries(KF5Sane
     PUBLIC
