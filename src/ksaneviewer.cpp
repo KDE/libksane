@@ -56,6 +56,9 @@ struct KSaneViewer::Private {
     bool multiSelectionEnabled = true;
 
     int wheelDelta = 0;
+
+    int currentImageWidth;
+    int currentImageHeight;
 };
 
 KSaneViewer::KSaneViewer(QImage *img, QWidget *parent) : QGraphicsView(parent), d(new Private)
@@ -69,14 +72,18 @@ KSaneViewer::KSaneViewer(QImage *img, QWidget *parent) : QGraphicsView(parent), 
     // Init the scene
     d->scene = new QGraphicsScene(this);
     const auto dpr = img->devicePixelRatio();
-    d->scene->setSceneRect(0, 0, img->width() / dpr, img->height() / dpr);
+
+    d->currentImageWidth = img->width();
+    d->currentImageHeight = img->height();
+
+    d->scene->setSceneRect(0, 0, d->currentImageWidth / dpr, d->currentImageHeight / dpr);
     setScene(d->scene);
 
     d->selection = new SelectionItem(QRectF());
     d->selection->setZValue(10);
     d->selection->setSaved(false);
-    d->selection->setMaxRight(img->width());
-    d->selection->setMaxBottom(img->height());
+    d->selection->setMaxRight(d->currentImageWidth);
+    d->selection->setMaxBottom(d->currentImageHeight);
     d->selection->setRect(d->scene->sceneRect());
     d->selection->setVisible(false);
 
@@ -141,6 +148,18 @@ KSaneViewer::~KSaneViewer()
 }
 
 // ------------------------------------------------------------------------
+int KSaneViewer::currentImageHeight() const
+{
+    return d->currentImageHeight;
+}
+
+// ------------------------------------------------------------------------
+int KSaneViewer::currentImageWidth() const
+{
+    return d->currentImageWidth;
+}
+
+// ------------------------------------------------------------------------
 void KSaneViewer::setQImage(QImage *img)
 {
     if (img == nullptr) {
@@ -154,9 +173,13 @@ void KSaneViewer::setQImage(QImage *img)
     resetTransform();
 
     const auto dpr = img->devicePixelRatio();
-    d->scene->setSceneRect(0, 0, img->width() / dpr, img->height() / dpr);
-    d->selection->setMaxRight(img->width());
-    d->selection->setMaxBottom(img->height());
+
+    d->currentImageWidth = img->width();
+    d->currentImageHeight = img->height();
+
+    d->scene->setSceneRect(0, 0, d->currentImageWidth / dpr, d->currentImageHeight / dpr);
+    d->selection->setMaxRight(d->currentImageWidth);
+    d->selection->setMaxBottom(d->currentImageHeight);
 
     d->selection->setDevicePixelRatio(dpr);
     d->hideTop->setDevicePixelRatio(dpr);

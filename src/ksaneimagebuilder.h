@@ -30,7 +30,6 @@ public:
     void start(const SANE_Parameters &params);
     void beginFrame(const SANE_Parameters &params);
     bool copyToImage(const SANE_Byte readData[], int read_bytes);
-    bool imageResized();
     void setDPI(int dpi);
 
 private:
@@ -46,9 +45,8 @@ private:
 
     QImage *m_image;
     int *m_dpi;
-
-    bool m_imageResized = false;
 };
+
 }
 
 #endif // KSANE_IMAGE_BUILDER_H

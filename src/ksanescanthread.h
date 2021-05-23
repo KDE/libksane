@@ -47,9 +47,6 @@ public:
     void setImageResolution(const QVariant &newValue);
     void cancelScan();
 
-    bool saneStartDone();
-    bool imageResized();
-
     ReadStatus frameStatus();
     SANE_Status saneStatus();
     
@@ -77,7 +74,6 @@ private:
     SANE_Parameters m_params;
     SANE_Status     m_saneStatus = SANE_STATUS_GOOD;
     ReadStatus      m_readStatus = ReadReady;
-    bool            m_saneStartDone = false;
     bool            m_invertColors = false;
     KSaneImageBuilder m_imageBuilder;
     QImage          m_image;

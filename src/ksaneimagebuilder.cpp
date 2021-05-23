@@ -65,7 +65,6 @@ void KSaneImageBuilder::start(const SANE_Parameters &params)
         m_image->setDotsPerMeterY(dpm);
     }
     m_image->fill(0xFFFFFFFF);
-    m_imageResized = false;
 }
 
 void KSaneImageBuilder::beginFrame(const SANE_Parameters &params)
@@ -252,20 +251,10 @@ bool KSaneImageBuilder::copyToImage(const SANE_Byte readData[], int read_bytes)
     return false;
 }
 
-bool KSaneImageBuilder::imageResized()
-{
-    if (m_imageResized) {
-        m_imageResized = false;
-        return true;
-    }
-    return false;
-}
-
 void KSaneImageBuilder::renewImage()
 {
     // resize the image
     *m_image = m_image->copy(0, 0, m_image->width(), m_image->height() + m_image->width());
-    m_imageResized = true;
 }
 
 void KSaneImageBuilder::incrementPixelData()

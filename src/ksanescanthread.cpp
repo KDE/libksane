@@ -79,12 +79,9 @@ void KSaneScanThread::run()
 {
     m_dataSize = 0;
     m_readStatus = ReadOngoing;
-    m_saneStartDone = false;
 
     // Start the scanning with sane_start
     m_saneStatus = sane_start(m_saneHandle);
-
-    m_saneStartDone = true;
 
     if (m_readStatus == ReadCancel) {
         return;
@@ -121,6 +118,8 @@ void KSaneScanThread::run()
     m_frameRead = 0;
     m_frame_t_count = 0;
 
+    Q_EMIT scanProgressUpdated(0);
+
     while (m_readStatus == ReadOngoing) {
         readData();
     }
@@ -141,7 +140,9 @@ void KSaneScanThread::updateScanProgress()
         bytesRead = m_frameRead;
     }
 
-    Q_EMIT scanProgressUpdated(static_cast<int>((static_cast<float>(bytesRead) * 100.0) / m_dataSize));
+    if (bytesRead > 0) {
+        Q_EMIT scanProgressUpdated(static_cast<int>((static_cast<float>(bytesRead) * 100.0) / m_dataSize));
+    }
 }
 
 void KSaneScanThread::finishProgress()
@@ -238,16 +239,6 @@ void KSaneScanThread::copyToScanData(int readBytes)
     } else {
         m_readStatus = ReadError;
     }
-}
-
-bool KSaneScanThread::saneStartDone()
-{
-    return m_saneStartDone;
-}
-
-bool KSaneScanThread::imageResized()
-{
-    return m_imageBuilder.imageResized();
 }
 
 }  // NameSpace KSaneIface

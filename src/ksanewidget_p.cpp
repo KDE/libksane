@@ -1351,23 +1351,22 @@ void KSaneWidgetPrivate::invertPreview()
 void KSaneWidgetPrivate::updateProgress(int progress)
 {
     if (m_isPreview) {
-        if (m_scanThread->saneStartDone()) {
-            if (!m_progressBar->isVisible() || m_scanThread->imageResized()) {
-                m_warmingUp->hide();
-                m_activityFrame->show();
-                // the image size might have changed
-                m_scanThread->lockScanImage();
-                m_previewViewer->setQImage(m_scanThread->scanImage());
-                m_previewViewer->zoom2Fit();
-                m_scanThread->unlockScanImage();
-            } else {
-                m_scanThread->lockScanImage();
-                m_previewViewer->updateImage();
-                m_scanThread->unlockScanImage();
-            }
+        if (!m_progressBar->isVisible() || m_scanThread->scanImage()->height() != m_previewViewer->currentImageHeight()
+            || m_scanThread->scanImage()->width() != m_previewViewer->currentImageWidth() ) {
+            m_warmingUp->hide();
+            m_activityFrame->show();
+            // the image size might have changed
+            m_scanThread->lockScanImage();
+            m_previewViewer->setQImage(m_scanThread->scanImage());
+            m_previewViewer->zoom2Fit();
+            m_scanThread->unlockScanImage();
+        } else {
+            m_scanThread->lockScanImage();
+            m_previewViewer->updateImage();
+            m_scanThread->unlockScanImage();
         }
     } else {
-        if (!m_progressBar->isVisible() && (m_scanThread->saneStartDone())) {
+        if (!m_progressBar->isVisible()) {
             m_warmingUp->hide();
             m_activityFrame->show();
         }

@@ -33,6 +33,9 @@ public:
 
     QSize sizeHint() const override;
 
+    int currentImageHeight() const;
+    int currentImageWidth() const;
+
 public Q_SLOTS:
 
     void setTLX(float ratio);
