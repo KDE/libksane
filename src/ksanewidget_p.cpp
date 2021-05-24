@@ -909,9 +909,8 @@ void KSaneWidgetPrivate::startPreviewScan()
     }
     m_scanOngoing = true;
 
-    SANE_Status status;
+    int targetPreviewDPI;
     float max_x, max_y;
-    float dpi;
 
     // store the current settings of parameters to be changed
     if (m_optDepth != nullptr) {
@@ -947,49 +946,41 @@ void KSaneWidgetPrivate::startPreviewScan()
         m_autoSelect = false;
     }
 
-    if (m_optRes != nullptr) {
-        if (m_previewDPI >= 25.0) {
-            m_optRes->setValue(m_previewDPI);
-            if ((m_optResY != nullptr) && (m_optRes->name() == QStringLiteral(SANE_NAME_SCAN_X_RESOLUTION))) {
-                m_optResY->setValue(m_previewDPI);
+    if (m_optRes != nullptr) {        
+        if (m_previewDPI < m_optRes->minimumValue().toFloat()) {
+            targetPreviewDPI = qMax(m_optRes->minimumValue().toFloat(), 25.0f);
+            if ((m_optBrX != nullptr) && (m_optBrY != nullptr)) {
+                if (m_optBrX->valueUnit() == KSaneOption::UnitMilliMeter) {
+                    targetPreviewDPI = 300 * 25.4 / (m_optBrX->value().toFloat());
+                    // always round to a multiple of 25
+                    int remainder = targetPreviewDPI % 25;
+                    targetPreviewDPI = targetPreviewDPI + 25 - remainder;
+                }
             }
         } else {
-            // set the resolution to minimumValue and increase if necessary
-            SANE_Parameters params;
-            dpi = m_optRes->minimumValue().toFloat();
-            do {
-                m_optRes->setValue(dpi);
-                if ((m_optResY != nullptr) && (m_optRes->name() == QStringLiteral(SANE_NAME_SCAN_X_RESOLUTION))) {
-                    m_optResY->setValue(dpi);
-                }
-                //check what image size we would get in a scan
-                status = sane_get_parameters(m_saneHandle, &params);
-                if (status != SANE_STATUS_GOOD) {
-                    qCDebug(KSANE_LOG) << "sane_get_parameters=" << sane_strstatus(status);
-                    previewScanDone();
-                    return;
-                }
-
-                if (dpi > 600) {
+            targetPreviewDPI = m_previewDPI;    
+        }
+        if (m_optRes->type() == KSaneOption::TypeValueList) {
+            const auto &values = m_optRes->valueList();
+            /* if there are discrete values, use the value which is equal or just below the specified preview DPI
+             * assumes an ordered list of DPI values */
+            for (int i = 0; i < values.count(); ++i) {
+                const auto &value = values.at(i);
+                if (value.toFloat() > m_previewDPI && i != 0) {
+                    targetPreviewDPI = values.at(i-1).toFloat();
                     break;
                 }
-
-                // Increase the dpi value
-                dpi += 25.0;
-            } while ((params.pixels_per_line < 300) || ((params.lines > 0) && (params.lines < 300)));
-
-            if (params.pixels_per_line == 0) {
-                // This is a security measure for broken backends
-                dpi = m_optRes->minimumValue().toFloat();
-                m_optRes->setValue(dpi);
-                qCDebug(KSANE_LOG) << "Setting minimum DPI value for a broken back-end";
             }
+        }
+        m_optRes->setValue(targetPreviewDPI);
+        if ((m_optResY != nullptr) && (m_optRes == m_optResX)) {
+            m_optResY->setValue(targetPreviewDPI);
         }
     }
 
     // set preview option to true if possible
     if (m_optPreview != nullptr) {
-        m_optPreview->setValue(SANE_TRUE);
+        m_optPreview->setValue(true);
     }
 
     // execute valReload if there is a pending value reload
