@@ -294,10 +294,19 @@ QString KSaneWidget::deviceModel() const
 
 QString KSaneWidget::vendor() const
 {
-    d->m_findDevThread->wait();
-    d->devListUpdated(); // this is just a wrapped if (m_vendor.isEmpty()) statement if the vendor is known
-    // devListUpdated here is to ensure that we do not come in between finished and the devListUpdated slot
-    return d->m_vendor;
+    const QString &vendor = deviceVendor();
+    if (!vendor.isEmpty()) {
+        return vendor;
+    }
+    
+    const QString &name = deviceName();
+    if (name.isEmpty()) {
+        return QString();
+    }
+    QEventLoop loop;
+    connect(this, &KSaneWidget::openedDeviceInfoUpdated, &loop, &QEventLoop::quit, Qt::QueuedConnection);
+    loop.exec();
+    return deviceVendor();
 }
 
 QString KSaneWidget::make() const
@@ -307,10 +316,19 @@ QString KSaneWidget::make() const
 
 QString KSaneWidget::model() const
 {
-    d->m_findDevThread->wait();
-    d->devListUpdated(); // this is just a wrapped if (m_vendor.isEmpty()) statement if the vendor is known
-    // devListUpdated here is to ensure that we do not come in between finished and the devListUpdated slot
-    return d->m_model;
+    const QString &model = deviceModel();
+    if (!model.isEmpty()) {
+        return model;
+    }
+    
+    const QString &name = deviceName();
+    if (name.isEmpty()) {
+        return QString();
+    }
+    QEventLoop loop;
+    connect(this, &KSaneWidget::openedDeviceInfoUpdated, &loop, &QEventLoop::quit, Qt::QueuedConnection);
+    loop.exec();
+    return deviceModel();
 }
 
 QString KSaneWidget::selectDevice(QWidget *parent)
