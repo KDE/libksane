@@ -58,37 +58,6 @@ public:
         ErrorGeneral,        /**< The error string should contain an error message. */
         Information          /**< There is some information to the user. */
     } ScanStatus;
-    
-    /** This enumeration is used to obtain a specific option with getOption(KSaneOptionName)
-     * or getOptionIndex(KSaneOptionName).
-     * Depending on the backend, not all options are available, nor this list is complete.
-     * For the remaining options, getOptionsList() must be used. */   
-    enum KSaneOptionName {
-        SourceOption,
-        ScanModeOption,
-        BitDepthOption,
-        ResolutionOption,
-        TopLeftXOption,
-        TopLeftYOption,
-        BottomRightXOption,
-        BottomRightYOption,
-        FilmTypeOption,
-        NegativeOption,
-        InvertColorOption,
-        PageSizeOption,
-        ThresholdOption,
-        XResolutionOption,
-        YResolutionOption,
-        PreviewOption,
-        WaitForButtonOption,
-        BrightnessOption,
-        ContrastOption,
-        GammaRedOption,
-        GammaGreenOption,
-        GammaBlueOption,
-        BlackLevelOption,
-        WhiteLevelOption,
-    };
 
     struct DeviceInfo {
         QString name;     /* unique device name */
@@ -232,24 +201,6 @@ public:
     * @note if the set value is not supported, the cloasest one is used
     * @note setting the value 0 means that the default calculated value should be used */
     void setPreviewResolution(float dpi);
-
-    /** This function returns all available options when a device is opened.
-     * @return list containing pointers to all KSaneOptions provided by the backend.
-     * Becomes invalid when closing a device. 
-     * The pointers must not be deleted by the client. */
-    QList<KSaneOption *> getOptionsList();
-    
-    /** This function returns a specific option. 
-     * @param optionEnum the enum specifying the option.
-     * @return pointer to the KSaneOption. Returns a nullptr in case the options
-     * is not available for the currently opened device. */  
-    KSaneOption *getOption(KSaneOptionName optionEnum);
-    
-    /** This function returns a specific option. 
-     * @param optionName the internal name of the option defined by SANE.
-     * @return pointer to the KSaneOption. Returns a nullptr in case the options
-     * is not available for the currently opened device. */  
-    KSaneOption *getOption(QString optionName); 
     
     /** This method reads the available parameters and their values and
      * returns them in a QMap (Name, value)

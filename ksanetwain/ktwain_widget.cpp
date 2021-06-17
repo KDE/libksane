@@ -189,16 +189,4 @@ void KSaneWidget::setSelection(QPointF lefttop, QPointF rightbottom)
 void KSaneWidget::setOptionsCollapsed(bool) {}
 void KSaneWidget::setScanButtonHidden(bool) {}
 void KSaneWidget::initGetDeviceList() const {}
-QList<KSaneOption *> KSaneWidget::getOptionsList()
-{
-    return QList<KSaneOption *>();
-}
-KSaneOption *KSaneWidget::getOption(KSaneOptionName optionEnum)
-{
-    return nullptr;
-}
-KSaneOption *KSaneWidget::getOption(QString optionName)
-{
-    return nullptr;
-}
 }  // NameSpace KSaneIface

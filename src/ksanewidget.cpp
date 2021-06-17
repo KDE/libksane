@@ -517,21 +517,6 @@ void KSaneWidget::setPreviewResolution(float dpi)
     d->m_previewDPI = dpi;
 }
 
-QList<KSaneOption *> KSaneWidget::getOptionsList()
-{
-    return d->m_ksaneCoreInterface->getOptionsList();
-}
-
-KSaneOption *KSaneWidget::getOption(KSaneWidget::KSaneOptionName optionEnum) 
-{
-    return d->m_ksaneCoreInterface->getOption(static_cast<KSaneCore::KSaneOptionName>(optionEnum));
-}
-
-KSaneOption *KSaneWidget::getOption(QString optionName) 
-{
-    return d->m_ksaneCoreInterface->getOption(optionName);
-}
-
 void KSaneWidget::getOptVals(QMap <QString, QString> &opts)
 {
     opts.clear();

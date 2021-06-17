@@ -11,8 +11,6 @@ target_sources(KF5Sane PRIVATE
     twainiface.cpp
     ktwain_widget.cpp
     ../src/ksanewidget.h
-    ../src/ksaneoption.h
-    ksaneoption.cpp
 )
 
 generate_export_header(KF5Sane BASE_NAME KSane)
