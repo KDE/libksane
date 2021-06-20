@@ -337,7 +337,12 @@ QString KSaneWidget::selectDevice(QWidget *parent)
 
 void KSaneWidget::initGetDeviceList() const
 {
-    d->m_findDevThread->start();
+    /* On some SANE backends, the handle becomes invalid when
+     * querying for new devices. Hence, this is only allowed when
+     * no device is currently opened. */
+    if (d->m_saneHandle == nullptr) {
+        d->m_findDevThread->start();
+    }
 }
 
 bool KSaneWidget::openDevice(const QString &deviceName)
