@@ -467,12 +467,12 @@ bool KSaneWidget::openDevice(const QString &deviceName)
     numSaneOptions = *reinterpret_cast<SANE_Word *>(data.data());
 
     // read the rest of the options
-    KSaneBaseOption *option;
-    KSaneBaseOption *m_optionTopLeftX;
-    KSaneBaseOption *m_optionTopLeftY;
-    KSaneBaseOption *m_optionBottomRightX;
-    KSaneBaseOption *m_optionBottomRightY;
-    KSaneBaseOption *m_optionResolution;
+    KSaneBaseOption *option = nullptr;
+    KSaneBaseOption *m_optionTopLeftX = nullptr;
+    KSaneBaseOption *m_optionTopLeftY = nullptr;
+    KSaneBaseOption *m_optionBottomRightX = nullptr;
+    KSaneBaseOption *m_optionBottomRightY = nullptr;
+    KSaneBaseOption *m_optionResolution = nullptr;
     for (i = 1; i < numSaneOptions; ++i) {
         switch (KSaneBaseOption::optionType(sane_get_option_descriptor(d->m_saneHandle, i))) {
         case KSaneOption::TypeDetectFail:
