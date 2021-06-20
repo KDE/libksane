@@ -57,7 +57,6 @@ void KSaneImageBuilder::start(const SANE_Parameters &params)
             pixelLines = m_params.pixels_per_line;
         }
         *m_image = QImage(m_params.pixels_per_line, pixelLines, imageFormat);
-        m_image->fill(0xFFFFFFFF);
         if (m_image->format() == QImage::Format_Mono) {
             m_image->setColorTable(QVector<QRgb>({0xFFFFFFFF,0xFF000000}));
         }
@@ -65,6 +64,7 @@ void KSaneImageBuilder::start(const SANE_Parameters &params)
         m_image->setDotsPerMeterX(dpm);
         m_image->setDotsPerMeterY(dpm);
     }
+    m_image->fill(0xFFFFFFFF);
     m_imageResized = false;
 }
 
