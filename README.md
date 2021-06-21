@@ -23,13 +23,15 @@ The library documentation is available on header files.
 
 ## Install
 
-In order to compile just use something like that:
+In order to compile, just use something like this:
 
 ```bash
 export VERBOSE=1
 export QTDIR=/usr/lib/qt5/
-export PATH=$QTDIR/bin:$PATH 
-cmake .
+export PATH=$QTDIR/bin:$PATH
+cd path/to/libksane
+mkdir build && cd build
+cmake ..
 make
 ```
 
@@ -37,8 +39,8 @@ Usual CMake options:
 
 | Option                | Description |
 | -------               | ----------- |
-| DCMAKE_INSTALL_PREFIX | decide where the program will be install on your computer.le |
-| DCMAKE_BUILD_TYPE     | decide which type of build you want. You can chose between Debug, Release, RelWithDebInfo and MinSizeRel. The default is RelWithDebInfo (-O2 -g). |
+| DCMAKE_INSTALL_PREFIX | decide where the program will be install on your computer. |
+| DCMAKE_BUILD_TYPE     | decide which type of build you want. You can choose between `Debug`, `Release`, `RelWithDebInfo` and `MinSizeRel`. The default is `RelWithDebInfo` (`-O2 -g`). |
 
 More details can be found at this url: https://community.kde.org/Guidelines_and_HOWTOs/CMake
 
