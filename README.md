@@ -16,9 +16,9 @@ The library documentation is available on header files.
 
 ## Dependencies
 
- - CMake          >= 3.0.0                 https://cmake.org
- - Qt             >= 5.7.0                 https://qt.io
- - KDE Frameworks >= 5.55.0                https://www.kde.org
+ - CMake          >= 3.11.0                https://cmake.org
+ - Qt             >= 5.14.0                https://qt.io
+ - KDE Frameworks >= 5.80.0                https://www.kde.org
  - libsane        >= 1.0.18                http://www.sane-project.org
 
 ## Install
