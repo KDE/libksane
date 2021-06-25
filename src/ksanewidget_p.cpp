@@ -500,11 +500,13 @@ void KSaneWidgetPrivate::createOptInterface()
     if ((m_optGamR != nullptr) && (m_optGamG != nullptr) && (m_optGamB != nullptr) 
         && (gammaR != nullptr) && (gammaG != nullptr) && (gammaB != nullptr)  ) {
         
-        m_commonGamma = new LabeledGamma(m_colorOpts, i18n(SANE_TITLE_GAMMA_VECTOR), gammaR->maxValue());
+        m_commonGamma = new LabeledGamma(m_colorOpts, i18n("Image intensity"), gammaR->maxValue());
 
         color_lay->addWidget(m_commonGamma);
 
-        m_commonGamma->setToolTip(i18n(SANE_DESC_GAMMA_VECTOR));
+        m_commonGamma->setToolTip(i18n("Gamma-correction table.  In color mode this option equally " \
+            "affects the red, green, and blue channels simultaneously (i.e., it is an " \
+            "intensity gamma table)."));
 
         connect(m_commonGamma, &LabeledGamma::valuesChanged, gammaR, &LabeledGamma::setValues);
         connect(m_commonGamma, &LabeledGamma::valuesChanged, gammaG, &LabeledGamma::setValues);
