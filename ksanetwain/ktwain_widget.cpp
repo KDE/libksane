@@ -12,7 +12,6 @@
  * ============================================================ */
 
 #include "ksanewidget.h"
-#include "ksaneoption.h"
 
 // Qt includes
 #include <QMap>

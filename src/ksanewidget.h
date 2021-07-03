@@ -21,7 +21,6 @@ namespace KSaneIface
 {
 
 class KSaneWidgetPrivate;
-class KSaneOption;
     
 /**
  * This class provides the widget containing the scan options and the preview.
