@@ -196,6 +196,9 @@ bool KSaneCore::closeDevice()
 
 void KSaneCore::startScan()
 {
+    if (!d->m_saneHandle) {
+        return;
+    }
     d->m_cancelMultiPageScan = false;
     // execute a pending value reload
     while (d->m_readValuesTimer.isActive()) {
@@ -208,6 +211,10 @@ void KSaneCore::startScan()
 
 void KSaneCore::stopScan()
 {
+    if (!d->m_saneHandle) {
+        return;
+    }
+    
     d->m_cancelMultiPageScan = true;
     if (d->m_scanThread->isRunning()) {
         d->m_scanThread->cancelScan();
@@ -216,17 +223,24 @@ void KSaneCore::stopScan()
 
 QImage *KSaneCore::scanImage() const
 {
-    return d->m_scanThread->scanImage();
+    if (d->m_saneHandle != nullptr) {
+        return d->m_scanThread->scanImage();
+    }
+    return nullptr;
 }
 
 void KSaneCore::lockScanImage()
 {
-    d->m_scanThread->lockScanImage();
+    if (d->m_saneHandle != nullptr) {
+        d->m_scanThread->lockScanImage();
+    }
 }
 
 void KSaneCore::unlockScanImage()
 {
-    d->m_scanThread->unlockScanImage();   
+    if (d->m_saneHandle != nullptr) {
+        d->m_scanThread->unlockScanImage();
+    }
 }
 
 QList<KSaneOption *> KSaneCore::getOptionsList()
