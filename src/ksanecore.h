@@ -101,8 +101,7 @@ public:
     };
 
     /**
-     * This constructor initializes the private class variables, but the widget is left empty.
-     * The options and the preview are added with the call to openDevice().
+     * This constructor initializes the private class variables.
      */
     KSaneCore(QObject *parent = nullptr);
 
@@ -114,7 +113,7 @@ public:
     /**
      * Get the list of available scanning devices. Connect to availableDevices()
      * which is fired once these devices are known.
-     * @return whether the devices list are reloaded or not.
+     * @return whether the devices list are being reloaded or not.
      */
     bool reloadDevicesList();
 
@@ -199,7 +198,7 @@ public:
     /**
      * Gives direct access to the QImage that is used to store the image
      * data retrieved from the scanner.
-     * Useful to display the an in-progress image while scanning.
+     * Useful to display an in-progress image while scanning.
      * When accessing the direct image pointer during a scan, the image
      * must be locked before accessing the image and unlocked afterwards
      * using the lockScanImage() and unlockScanImage() functions.
@@ -222,14 +221,14 @@ public:
 
 public Q_SLOTS:
     /**
-     * This method can be used to cancel a scan or prevent an automatic new scan.
+     * This method is used to cancel a scan or prevent an automatic new scan.
      */
     void stopScan();
 
     /**
-     * This method can be used to start a scan (if no GUI is needed).
+     * This method is used to start a scan.
      * @note libksane may return one or more images as a result of one invocation of this slot.
-     * If no more images are wanted scanCancel should be called in the slot handling the
+     * If no more images are wanted stopScan() should be called in the slot handling the
      * imageReady signal.
      */
     void startScan();
@@ -251,7 +250,6 @@ Q_SIGNALS:
 
     /**
      * This signal is emitted when the user is to be notified about something.
-     * @note If no slot is connected to this signal the message will be displayed in a KMessageBox.
      * @param type contains a ScanStatus code to identify the type of message (error/info/...).
      * @param strStatus If an error has occurred this string will contain an error message.
      * otherwise the string is empty.
@@ -260,15 +258,13 @@ Q_SIGNALS:
 
     /**
      * This signal is emitted for progress information during a scan.
-     * The GUI already has a progress bar, but if the GUI is hidden,
-     * this can be used to display a progress bar.
      * @param percent is the percentage of the scan progress (0-100).
      */
     void scanProgress(int percent);
 
     /**
      * This signal is emitted every time the device list is updated or
-     * after initGetDeviceList() is called.
+     * after reloadDevicesList() is called.
      * @param deviceList is a QList of KSaneCore::DeviceInfo that contain the
      * device name, model, vendor and type of the attached scanners.
      * @note The list is only a snapshot of the current available devices. Devices
