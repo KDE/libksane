@@ -20,7 +20,9 @@
 #include <QList>
 #include <QImage>
 
-/** This namespace collects all methods and classes in LibKSane. */
+/**
+ * This namespace collects all methods and classes in LibKSane.
+ */
 namespace KSaneIface
 {
 
@@ -36,14 +38,19 @@ class KSANE_EXPORT KSaneCore : public QObject
     friend class KSaneCorePrivate;
 
 public:
-    /** @note There might come more enumerations in the future. */
+    /**
+     * Enum defining the message level of the returned scan status string.
+     * @note There might come more enumerations in the future.
+     */
     enum KSaneScanStatus {
-        NoError,            // The scanning was finished successfully
+        NoError,            // The scanning has finished successfully
         ErrorGeneral,       // The error string should contain an error message.
         Information         // There is some information to the user.
     };
     
-    /** Enum determining whether the scanner opened correctly. */
+    /**
+     * Enum determining whether the scanner opened correctly.
+     */
     enum KSaneOpenStatus {
         OpeningSucceeded, // scanner opened successfully
         OpeningDenied, // access was denied, 
@@ -83,6 +90,9 @@ public:
         WhiteLevelOption,
     };
 
+    /*
+     * Struct describing scanner devices.
+     */
     struct DeviceInfo {
         QString name;     /* unique device name */
         QString vendor;   /* device vendor string */
@@ -96,7 +106,9 @@ public:
      */
     KSaneCore(QObject *parent = nullptr);
 
-    /** Standard destructor */
+    /**
+     * Standard destructor.
+     */
     ~KSaneCore();
 
     /**
