@@ -1,27 +1,16 @@
 TODO list of new features:
 
-* Cleanup the code for closing the device
-* Progressive final scan: scan can provide huge image especially in 16 bits color depth.
-Send image data to host application by block, not the whole image at once.
+# KSaneCore
+Implement reading multi-value options of SANE
+Pure Qt library option?
 
-
-
-# KSaneCore (most signals/slots from KSaneWidget)
-QList<KSaneOption*> options() const                                // handles to sane options
+# KSaneWidget
+Use KSaneCore + KSaneBasicOptions + KSaneSpecialOptions + KSanePreview to create a GUI like the current
 KSaneBasicOptions* createBasicOptions(QWidget *parent=0) const     // A widget with current "basic options"
 KSaneSpecialOptions* createSpecialOptions(QWidget *parent=0) const // A widget with the rest of the options
-void signalPreviewUpdated(QImage *img);
-
-KSaneCore never displays popups and always emits userMessage like signals for user information
-
-
-# KSaneOption
-virtual QWidget* createWidget(QWidget* parent=0) const; // Create a KSaneOptionWidget and connect it to the option
-QString saneName() const;                               // Technical name of the sane option
-QString title() const;                                  // Translated option title
-QString description() const;                            // Translated option description
-
 Cleanup public API
+-> enum xxx { }; for easier signal/slot handling
+float -> qreal
 
 # KSaneOptionWidget
 Remove label and custom label size code
@@ -35,15 +24,4 @@ bool loadOptions(const QList<KSaneOption*> &options)
 # KSanePreview
 Figure out how to minimize copying the image data to all possible preview widgets
 void "connectToCore"(KSaneCore*)                        // connect to previewUpdated(..), scanProgress(), ...
-
-# KSaneWidget
-Use KSaneCore + KSaneBasicOptions + KSaneSpecialOptions + KSanePreview to create a GUI like the current
-Forward userMessage signals if connected or popup a dialog
-
-
-#General cleanup:
--> enum xxx { }; for easier signal/slot handling
-float -> qreal
-
-# Pure Qt library option?
 
