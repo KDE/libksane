@@ -288,10 +288,10 @@ Q_SIGNALS:
      * This signal is emitted when the device info of the already opened scanner device
      * is updated and vendor() and model() return the corresponding names.
      * @param deviceName is the technical device name of the currently opened scanner.
-     * @param deivceVendor is the vendor of the currently opened scanner.
+     * @param deviceVendor is the vendor of the currently opened scanner.
      * @param deviceModel is the model name of the currently opened scanner.
      */
-    void openedDeviceInfoUpdated(const QString &deviceName, const QString &deivceVendor, const QString &deviceModel);
+    void openedDeviceInfoUpdated(const QString &deviceName, const QString &deviceVendor, const QString &deviceModel);
     
 private:
     std::unique_ptr<KSaneCorePrivate> d;
