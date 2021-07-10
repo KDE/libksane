@@ -285,7 +285,7 @@ QMap <QString, QString> KSaneCore::getOptionsMap()
 
 int KSaneCore::setOptionsMap(const QMap <QString, QString> &opts)
 {
-    if (d->m_scanThread->isRunning()) {
+    if (!d->m_saneHandle || d->m_scanThread->isRunning()) {
         return -1;
     }
 
