@@ -20,6 +20,8 @@ KSaneBoolOption::KSaneBoolOption(const SANE_Handle handle, const int index)
     : KSaneBaseOption(handle, index)
 {
     m_optionType = KSaneOption::TypeBool;
+    readOption();
+    readValue();
 }
 
 bool KSaneBoolOption::setValue(const QVariant &value)
