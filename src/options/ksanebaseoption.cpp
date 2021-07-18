@@ -22,7 +22,6 @@ KSaneBaseOption::KSaneBaseOption(const SANE_Handle handle, const int index)
     : QObject(), m_handle(handle), m_index(index)
 {
     readOption();
-    readValue();
 }
 
 KSaneBaseOption::~KSaneBaseOption()

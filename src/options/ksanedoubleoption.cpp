@@ -25,6 +25,8 @@ KSaneDoubleOption::KSaneDoubleOption(const SANE_Handle handle, const int index)
     : KSaneBaseOption(handle, index)
 {
     m_optionType = KSaneOption::TypeDouble;
+    readOption();
+    readValue();
 }
 
 void KSaneDoubleOption::readOption()
