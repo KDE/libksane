@@ -1043,11 +1043,11 @@ void KSaneWidgetPrivate::imageReady(const QImage &image)
             }
             case KSaneWidget::FormatRGB_8_C: {
                 for (int y = 0; y < image.height(); y++) {
-                    const uchar *line = image.scanLine(y);
+                    const QRgb *line = reinterpret_cast<const QRgb *>(image.scanLine(y));
                     for (int x = 0; x < image.width(); x++) {
-                        scanData.append(line[4 * x]);
-                        scanData.append(line[4 * x + 1]);
-                        scanData.append(line[4 * x + 2]);
+                        scanData.append(qRed(line[x]));
+                        scanData.append(qGreen(line[x]));
+                        scanData.append(qBlue(line[x]));
                     }
                 }
                 break;
