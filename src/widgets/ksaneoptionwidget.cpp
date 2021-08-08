@@ -10,7 +10,7 @@
 
 // KDE includes
 
-#include <klocalizedstring.h>
+#include <KLocalizedString>
 
 namespace KSaneIface
 {

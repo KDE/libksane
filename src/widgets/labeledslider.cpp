@@ -16,7 +16,7 @@
 
 // KDE includes
 
-#include <kpluralhandlingspinbox.h>
+#include <KPluralHandlingSpinBox>
 
 namespace KSaneIface
 {

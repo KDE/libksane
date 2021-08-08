@@ -38,7 +38,7 @@ public:
      */
     LabeledGamma(QWidget *parent, const QString &text, int max);
     
-    LabeledGamma(QWidget *parent, KSaneOption *option);
+    LabeledGamma(QWidget *parent, KSaneOption *option, QColor color = Qt::black);
     ~LabeledGamma();
 
     void setColor(const QColor &color);

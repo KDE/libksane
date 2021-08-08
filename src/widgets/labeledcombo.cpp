@@ -8,12 +8,11 @@
 #include "labeledcombo.h"
 
 #include <QLabel>
-
 #include <QComboBox>
 
 //KDE includes
 
-#include <klocalizedstring.h>
+#include <KLocalizedString>
 
 // Sane includes
 extern "C"
@@ -24,7 +23,7 @@ extern "C"
 
 namespace KSaneIface
 {
-    
+
 static const char tmp_binary[] = "Binary";
 
 LabeledCombo::LabeledCombo(QWidget *parent, const QString &ltext, const QStringList &list)

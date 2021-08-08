@@ -10,13 +10,6 @@
 
 #include "ksanedevicedialog.h"
 
-// Sane includes
-extern "C"
-{
-#include <sane/saneopts.h>
-#include <sane/sane.h>
-}
-
 #include <QScrollArea>
 #include <QLabel>
 #include <QDialogButtonBox>

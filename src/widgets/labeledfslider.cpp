@@ -11,7 +11,7 @@
 
 //KDE includes
 
-#include <klocalizedstring.h>
+#include <KLocalizedString>
 
 #define FLOAT_MULTIP 32768.0
 #define TO_DOUBLE(v) (static_cast<double>(v) / FLOAT_MULTIP)

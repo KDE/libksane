@@ -454,19 +454,19 @@ void KSaneWidgetPrivate::createOptInterface()
     LabeledGamma *gammaB = nullptr;
     if ((option = m_ksaneCoreInterface->getOption(KSaneCore::GammaRedOption)) != nullptr) {
         m_optGamR = option;
-        gammaR = new LabeledGamma(gamma_frm, option);
+        gammaR = new LabeledGamma(gamma_frm, option, Qt::red);
         gam_frm_l->addWidget(gammaR);
         m_handledOptions.insert(option->name());
     }
     if ((option = m_ksaneCoreInterface->getOption(KSaneCore::GammaGreenOption)) != nullptr) {
         m_optGamG = option;
-        gammaG = new LabeledGamma(gamma_frm, option);
+        gammaG = new LabeledGamma(gamma_frm, option, Qt::green);
         gam_frm_l->addWidget(gammaG);
         m_handledOptions.insert(option->name());
     }
     if ((option = m_ksaneCoreInterface->getOption(KSaneCore::GammaBlueOption)) != nullptr) {
         m_optGamB = option;
-        gammaB = new LabeledGamma(gamma_frm, option);
+        gammaB = new LabeledGamma(gamma_frm, option, Qt::blue);
         gam_frm_l->addWidget(gammaB);
         m_handledOptions.insert(option->name());
     }
