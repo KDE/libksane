@@ -904,15 +904,23 @@ void KSaneWidgetPrivate::startPreviewScan()
         }
         if (m_optRes->type() == KSaneOption::TypeValueList) {
             const auto &values = m_optRes->valueList();
-            /* if there are discrete values, use the value which is equal or just below the specified preview DPI
-             * assumes an ordered list of DPI values */
-            for (int i = 0; i < values.count(); ++i) {
-                const auto &value = values.at(i);
-                if (value.toFloat() > m_previewDPI && i != 0) {
-                    targetPreviewDPI = values.at(i-1).toFloat();
-                    break;
-                }
+            if (values.count() <= 0) {
+                qCWarning(KSANE_LOG) << "Resolution option is broken and has no entries";
+                return;
             }
+            /* if there are discrete values, try to find the one which fits best. */
+            int minIndex = 0;
+            int minDistance = abs(values.at(0).toInt() - m_previewDPI);
+            for (int i = 1; i < values.count(); ++i) {
+                int distance = abs(values.at(i).toInt() - m_previewDPI);
+                if (distance < minDistance) {
+                    minIndex = i;
+                    minDistance = distance;
+                }
+
+            }
+            targetPreviewDPI = values.at(minIndex).toInt();
+
         }
         m_optRes->setValue(targetPreviewDPI);
         if ((m_optResY != nullptr) && (m_optRes == m_optResX)) {
