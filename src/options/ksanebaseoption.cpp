@@ -192,6 +192,11 @@ QVariantList KSaneBaseOption::valueList() const
     return QVariantList();
 }
 
+QVariantList KSaneBaseOption::internalValueList() const
+{
+    return QVariantList();
+}
+
 KSaneOption::KSaneOptionUnit KSaneBaseOption::valueUnit() const
 {
     if (m_optDesc != nullptr) {

@@ -76,13 +76,6 @@ public Q_SLOTS:
      */
     void setCurrentIndex(int);
 
-    /**
-     * add an icon for a string in the combobox
-     * @param icon the icon to set.
-     * @param str the string for which the pixmap should be set.
-     */
-    bool setIcon(const QIcon &icon, const QString &str);
-
     void setValue(const QVariant &val);
     
 private Q_SLOTS:   

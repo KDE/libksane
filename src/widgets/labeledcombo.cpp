@@ -14,17 +14,8 @@
 
 #include <KLocalizedString>
 
-// Sane includes
-extern "C"
-{
-#include <sane/sane.h>
-#include <sane/saneopts.h>
-}
-
 namespace KSaneIface
 {
-
-static const char tmp_binary[] = "Binary";
 
 LabeledCombo::LabeledCombo(QWidget *parent, const QString &ltext, const QStringList &list)
     : KSaneOptionWidget(parent, ltext)
@@ -42,22 +33,29 @@ LabeledCombo::LabeledCombo(QWidget *parent, KSaneOption *option)
     connect(option, &KSaneOption::valueChanged, this, &LabeledCombo::setValue);
     clear();
     
-    const QVariantList list = option->valueList();
-    for (const auto &value : list) {
+    const QVariantList values = option->valueList();
+    const QVariantList internalValues = option->internalValueList();
+    for (int i = 0; i < values.count(); i++) {
+        const auto &value = values.at(i);
+        const auto &internalValue = internalValues.at(i);
         if (value.type() == static_cast<QVariant::Type>(QMetaType::Int)) {
-            addItem(getStringWithUnitForInteger(value.toInt()), value);
+            addItem(getStringWithUnitForInteger(value.toInt()), internalValue);
         } else if (value.type() == static_cast<QVariant::Type>(QMetaType::Float)) {
-            addItem(getStringWithUnitForFloat(value.toFloat()), value);
+            addItem(getStringWithUnitForFloat(value.toFloat()), internalValue);
         } else {
-            addItem(value.toString(), value);
+            addItem(value.toString(), internalValue);
+            if (internalValue == QStringLiteral("Color")) {
+                m_combo->setItemIcon(i, QIcon::fromTheme(QStringLiteral("color")));
+            }
+            if (internalValue == QStringLiteral("Gray")) {
+                m_combo->setItemIcon(i, QIcon::fromTheme(QStringLiteral("gray-scale")));
+            }
+            if (internalValue == QStringLiteral("Lineart") || internalValue == QStringLiteral("Binary")) {
+                m_combo->setItemIcon(i, QIcon::fromTheme(QStringLiteral("black-white")));
+            }
         }
     }
 
-    setIcon(QIcon::fromTheme(QStringLiteral("color")), QString::fromUtf8(SANE_VALUE_SCAN_MODE_COLOR));
-    setIcon(QIcon::fromTheme(QStringLiteral("gray-scale")), QString::fromUtf8(SANE_VALUE_SCAN_MODE_GRAY));
-    setIcon(QIcon::fromTheme(QStringLiteral("black-white")), QString::fromUtf8(SANE_VALUE_SCAN_MODE_LINEART));
-    // The epkowa/epson backend uses "Binary" which is the same as "Lineart"
-    setIcon(QIcon::fromTheme(QStringLiteral("black-white")), i18n(tmp_binary));
     QString currentText = option->value().toString();
 
     setCurrentText(currentText);
@@ -103,17 +101,6 @@ void LabeledCombo::setCurrentText(const QString &t)
 QString LabeledCombo::currentText() const
 {
     return m_combo->currentText();
-}
-
-bool LabeledCombo::setIcon(const QIcon &icon, const QString &str)
-{
-    for (int i = 0; i < m_combo->count(); ++i) {
-        if (m_combo->itemText(i) == str) {
-            m_combo->setItemIcon(i, icon);
-            return true;
-        }
-    }
-    return false;
 }
 
 void LabeledCombo::setCurrentIndex(int i)

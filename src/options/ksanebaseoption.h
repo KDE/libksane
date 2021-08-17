@@ -62,6 +62,7 @@ public:
     virtual QVariant stepValue() const;
     virtual QVariant value() const;
     virtual QVariantList valueList() const;
+    virtual QVariantList internalValueList() const;
     virtual KSaneOption::KSaneOptionUnit valueUnit() const;
     virtual int valueSize() const;
     virtual QString valueAsString() const;

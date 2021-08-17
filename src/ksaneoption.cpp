@@ -103,6 +103,15 @@ QVariantList KSaneOption::valueList() const
     }
 }
 
+QVariantList KSaneOption::internalValueList() const
+{
+    if (d->option != nullptr) {
+        return d->option->internalValueList();
+    } else {
+        return QVariantList();
+    }
+}
+
 QVariant KSaneOption::value() const
 {
     if (d->option != nullptr) {

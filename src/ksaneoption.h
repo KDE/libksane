@@ -121,10 +121,18 @@ public:
     QVariant stepValue() const;
     
     /** This function returns the list of possible values if the option
-     * is of type KSaneOptionType::values. 
+     * is of type KSaneOptionType::TypeValueList. The list may contain
+     * formatted or translated values.
      * @return a list with all possible values */
     QVariantList valueList() const;
-    
+
+    /** This function returns the list of possible values if the option
+     * is of type KSaneOptionType::TypeValueList. The list contains the raw
+     * internal values without any formatting or translation.
+     * @return a list with all possible internal values
+     * @since 21.12 */
+    QVariantList internalValueList() const;
+
     /** This function returns an enum specifying whether the values
      * of the option have a unit, e.g. mm, px, etc.
      * @return unit of value KSaneOptionUnit */

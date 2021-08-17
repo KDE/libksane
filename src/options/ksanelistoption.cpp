@@ -84,7 +84,37 @@ QVariantList KSaneListOption::valueList() const
         }
         break;
     default :
-        list << QStringLiteral("NOT HANDELED");
+        qCDebug(KSANE_LOG) << "can not handle type:" << m_optDesc->type;
+        break;
+    }
+    return list;
+}
+
+QVariantList KSaneListOption::internalValueList() const
+{
+    int i;
+    QVariantList list;
+
+    switch (m_optDesc->type) {
+    case SANE_TYPE_INT:
+        for (i = 1; i <= m_optDesc->constraint.word_list[0]; ++i) {
+            list << static_cast<int>(m_optDesc->constraint.word_list[i]);;
+        }
+        break;
+    case SANE_TYPE_FIXED:
+        for (i = 1; i <= m_optDesc->constraint.word_list[0]; ++i) {
+            list << SANE_UNFIX(m_optDesc->constraint.word_list[i]);
+        }
+        break;
+    case SANE_TYPE_STRING:
+        i = 0;
+        while (m_optDesc->constraint.string_list[i] != nullptr) {
+            list << QString::fromLatin1(m_optDesc->constraint.string_list[i]);
+            i++;
+        }
+        break;
+    default :
+        qCDebug(KSANE_LOG) << "can not handle type:" << m_optDesc->type;
         break;
     }
     return list;
