@@ -11,8 +11,6 @@
 
 #include "ksanebaseoption.h"
 
-#include <utility>
-
 namespace KSaneIface
 {
 
@@ -29,13 +27,12 @@ public:
     QVariant value() const override;
     QString valueAsString() const override;
     QVariantList valueList() const override;
-    
+
 public Q_SLOTS:
     bool setValue(const QVariant &value) override;
 
 private:
-    std::pair<QString, QString> getSaneComboString(unsigned char *data) const;
-    bool setValue(float value);
+    bool setValue(double value);
     bool setValue(const QString &value);
 
     QVariant       m_currentValue;

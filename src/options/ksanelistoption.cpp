@@ -10,7 +10,6 @@
 #include "ksanelistoption.h"
 
 #include <QVarLengthArray>
-#include <QLocale>
 
 #include <ksane_debug.h>
 
@@ -46,7 +45,7 @@ void KSaneListOption::readValue()
         newValue = static_cast<int>(toSANE_Word(data.data()));
         break;
     case SANE_TYPE_FIXED:
-        newValue = static_cast<float>(SANE_UNFIX(toSANE_Word(data.data())));
+        newValue = SANE_UNFIX(toSANE_Word(data.data()));
         break;
     case SANE_TYPE_STRING:
         newValue = sane_i18n(reinterpret_cast<char *>(data.data()));
@@ -74,7 +73,7 @@ QVariantList KSaneListOption::valueList() const
         break;
     case SANE_TYPE_FIXED:
         for (i = 1; i <= m_optDesc->constraint.word_list[0]; ++i) {
-            list << static_cast<float>(SANE_UNFIX(m_optDesc->constraint.word_list[i]));
+            list << SANE_UNFIX(m_optDesc->constraint.word_list[i]);
         }
         break;
     case SANE_TYPE_STRING:
@@ -97,7 +96,7 @@ bool KSaneListOption::setValue(const QVariant &value)
     if (static_cast<QMetaType::Type>(value.type()) == QMetaType::QString) {
         success = setValue(value.toString());
     } else {
-        success = setValue(value.toFloat());
+        success = setValue(value.toDouble());
     }
 
     return success;
@@ -109,7 +108,7 @@ QVariant KSaneListOption::minimumValue() const
     if (state() == KSaneOption::StateHidden) {
         return value;
     }
-    float fValueMin;
+    double dValueMin;
     int iValueMin;
     switch (m_optDesc->type) {
     case SANE_TYPE_INT:
@@ -120,11 +119,11 @@ QVariant KSaneListOption::minimumValue() const
         value = iValueMin;
         break;
     case SANE_TYPE_FIXED:
-        fValueMin = static_cast<float>(SANE_UNFIX(m_optDesc->constraint.word_list[1]));
+        dValueMin = SANE_UNFIX(m_optDesc->constraint.word_list[1]);
         for (int i = 2; i <= m_optDesc->constraint.word_list[0]; i++) {
-            fValueMin = qMin(static_cast<float>(SANE_UNFIX(m_optDesc->constraint.word_list[i])), fValueMin);
+            dValueMin = qMin(SANE_UNFIX(m_optDesc->constraint.word_list[i]), dValueMin);
         }
-        value = fValueMin;
+        value = dValueMin;
         break;
     default:
         qCDebug(KSANE_LOG) << "can not handle type:" << m_optDesc->type;
@@ -141,20 +140,20 @@ QVariant KSaneListOption::value() const
     return m_currentValue;
 }
 
-bool KSaneListOption::setValue(float value)
+bool KSaneListOption::setValue(double value)
 {
     unsigned char data[4];
-    float tmp;
-    float minDiff;
+    double tmp;
+    double minDiff;
     int i;
     int minIndex = 1;
 
     switch (m_optDesc->type) {
     case SANE_TYPE_INT:
-        tmp = static_cast<float>(m_optDesc->constraint.word_list[minIndex]);
+        tmp = static_cast<double>(m_optDesc->constraint.word_list[minIndex]);
         minDiff = qAbs(value - tmp);
         for (i = 2; i <= m_optDesc->constraint.word_list[0]; ++i) {
-            tmp = static_cast<float>(m_optDesc->constraint.word_list[i]);
+            tmp = static_cast<double>(m_optDesc->constraint.word_list[i]);
             if (qAbs(value - tmp) < minDiff) {
                 minDiff = qAbs(value - tmp);
                 minIndex = i;
@@ -165,10 +164,10 @@ bool KSaneListOption::setValue(float value)
         readValue();
         return (minDiff < 1.0);
     case SANE_TYPE_FIXED:
-        tmp = static_cast<float>(SANE_UNFIX(m_optDesc->constraint.word_list[minIndex]));
+        tmp = SANE_UNFIX(m_optDesc->constraint.word_list[minIndex]);
         minDiff = qAbs(value - tmp);
         for (i = 2; i <= m_optDesc->constraint.word_list[0]; ++i) {
-            tmp = static_cast<float>(SANE_UNFIX(m_optDesc->constraint.word_list[i]));
+            tmp = SANE_UNFIX(m_optDesc->constraint.word_list[i]);
             if (qAbs(value - tmp) < minDiff) {
                 minDiff = qAbs(value - tmp);
                 minIndex = i;
@@ -203,7 +202,7 @@ bool KSaneListOption::setValue(const QString &value)
     void* data_ptr = nullptr;
     SANE_Word fixed;
     int i;
-    float f;
+    double d;
     bool ok;
     QString tmp;
 
@@ -219,9 +218,9 @@ bool KSaneListOption::setValue(const QString &value)
 
         break;
     case SANE_TYPE_FIXED:
-        f = value.toFloat(&ok);
+        d = value.toDouble(&ok);
         if (ok) {
-            fixed = SANE_FIX(f);
+            fixed = SANE_FIX(d);
             fromSANE_Word(data, fixed);
             data_ptr = data; 
         } else {
