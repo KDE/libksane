@@ -161,6 +161,8 @@ KSaneCore::KSaneOpenStatus KSaneCorePrivate::loadDeviceOptions()
             optionResolution = option;
         }
         if (option->name() == QStringLiteral(SANE_NAME_SCAN_SOURCE)) {
+            // some scanners only have ADF and never update the source name
+            determineMultiPageScanning(option->value());
             connect(option, &KSaneBaseOption::valueChanged, this, &KSaneCorePrivate::determineMultiPageScanning);
         }
         if (option->name() == QStringLiteral("wait-for-button")) {
