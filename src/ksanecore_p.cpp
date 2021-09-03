@@ -259,7 +259,7 @@ void KSaneCorePrivate::setDefaultValues()
 
     // Try to get Color mode by default
     if ((option = q->getOption(KSaneCore::ScanModeOption)) != nullptr) {
-        option->setValue(i18n(SANE_VALUE_SCAN_MODE_COLOR));
+        option->setValue(sane_i18n(SANE_VALUE_SCAN_MODE_COLOR));
     }
 
     // Try to set 8 bit color
