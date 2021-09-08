@@ -126,6 +126,7 @@ KSaneWidget::KSaneWidget(QWidget *parent)
     d->m_scanBtn->setToolTip(i18n("Scan Final Image (%1)", scanShortcut->key().toString()));
     d->m_scanBtn->setText(i18nc("Final scan button text", "Scan"));
     d->m_scanBtn->setFocus(Qt::OtherFocusReason);
+    setFocusProxy(d->m_scanBtn);
     connect(d->m_scanBtn, &QToolButton::clicked, d, &KSaneWidgetPrivate::startFinalScan);
 
     d->m_btnFrame = new QWidget;
