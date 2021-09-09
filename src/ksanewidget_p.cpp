@@ -116,7 +116,7 @@ void KSaneWidgetPrivate::clearDeviceOptions()
     
     m_handledOptions.clear();
 
-    // remove the remaining layouts/widgets and read thread
+    // remove the remaining layouts/widgets
     delete m_basicOptsTab;
     m_basicOptsTab = nullptr;
 

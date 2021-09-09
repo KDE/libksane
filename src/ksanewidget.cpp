@@ -367,7 +367,7 @@ bool KSaneWidget::closeDevice()
     if (!result) {
         return false;
     }
- 
+    d->clearDeviceOptions();
     // disable the interface until a new device is opened.
     d->m_optsTabWidget->setDisabled(true);
     d->m_previewViewer->setDisabled(true);
