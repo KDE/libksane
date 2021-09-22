@@ -107,7 +107,6 @@ KSaneCore::KSaneOpenStatus KSaneCorePrivate::loadDeviceOptions()
     numSaneOptions = *reinterpret_cast<SANE_Word *>(data.data());
 
     // read the rest of the options
-    // read the rest of the options
     KSaneBaseOption *option = nullptr;
     KSaneBaseOption *optionTopLeftX = nullptr;
     KSaneBaseOption *optionTopLeftY = nullptr;
@@ -143,7 +142,6 @@ KSaneCore::KSaneOpenStatus KSaneCorePrivate::loadDeviceOptions()
             option = new KSaneActionOption(m_saneHandle, i);
             break;
         }
-
 
         if (option->name() == QStringLiteral(SANE_NAME_SCAN_TL_X)) {
             optionTopLeftX = option;
