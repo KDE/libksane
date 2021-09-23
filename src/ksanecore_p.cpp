@@ -204,9 +204,17 @@ KSaneCore::KSaneOpenStatus KSaneCorePrivate::loadDeviceOptions()
 
     // Create the scan thread
     m_scanThread = new KSaneScanThread(m_saneHandle);
-    connect(m_scanThread, &KSaneScanThread::finished, this, &KSaneCorePrivate::imageScanFinished);
+    
+    m_scanThread->setImageInverted(invertOption->value());
     connect(invertOption, &KSaneInvertOption::valueChanged, m_scanThread, &KSaneScanThread::setImageInverted);
+    
+    if (optionResolution != nullptr) {
+        m_scanThread->setImageResolution(optionResolution->value());    
+        connect(optionResolution, &KSaneBaseOption::valueChanged, m_scanThread, &KSaneScanThread::setImageResolution);
+    }
+    
     connect(m_scanThread, &KSaneScanThread::scanProgressUpdated, q, &KSaneCore::scanProgress);
+    connect(m_scanThread, &KSaneScanThread::finished, this, &KSaneCorePrivate::imageScanFinished);
 
     // try to set to default values
     setDefaultValues();
