@@ -21,10 +21,10 @@ KSaneScanThread::KSaneScanThread(SANE_Handle handle):
     QThread(), m_saneHandle(handle), m_imageBuilder(&m_image, &m_dpi)
 {
     m_emitProgressUpdateTimer.setSingleShot(false);
-    m_emitProgressUpdateTimer.setInterval(300);
+    m_emitProgressUpdateTimer.setInterval(500);
     connect(&m_emitProgressUpdateTimer, &QTimer::timeout, this, &KSaneScanThread::updateScanProgress);
     connect(this, &QThread::started, &m_emitProgressUpdateTimer, QOverload<>::of(&QTimer::start));
-    connect(this, &QThread::finished, this, &KSaneScanThread::finishProgress);
+    connect(this, &QThread::finished,  &m_emitProgressUpdateTimer, &QTimer::stop);
 }
 
 void KSaneScanThread::setImageInverted(const QVariant &newValue)
@@ -143,12 +143,6 @@ void KSaneScanThread::updateScanProgress()
     if (bytesRead > 0) {
         Q_EMIT scanProgressUpdated(static_cast<int>((static_cast<float>(bytesRead) * 100.0) / m_dataSize));
     }
-}
-
-void KSaneScanThread::finishProgress()
-{
-    m_emitProgressUpdateTimer.stop();
-    Q_EMIT scanProgressUpdated(100);
 }
 
 void KSaneScanThread::readData()

@@ -61,7 +61,6 @@ Q_SIGNALS:
 private:
     void readData();
     void updateScanProgress();
-    void finishProgress();
     void copyToScanData(int readBytes);
      
     SANE_Byte       m_readData[SCAN_READ_CHUNK_SIZE];

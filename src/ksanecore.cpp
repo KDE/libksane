@@ -206,6 +206,7 @@ void KSaneCore::startScan()
         d->reloadValues();
     }
     d->m_optionPollTimer.stop();
+    Q_EMIT scanProgress(-1);
     d->m_scanThread->start();
 }
 

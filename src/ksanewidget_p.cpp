@@ -941,7 +941,6 @@ void KSaneWidgetPrivate::startPreviewScan()
 
     setBusy(true);
 
-    m_progressBar->setValue(0);
     m_isPreview = true;
     m_cancelMultiScan = false;
     m_ksaneCoreInterface->startScan();
@@ -1164,12 +1163,10 @@ void KSaneWidgetPrivate::setBusy(bool busy)
         m_warmingUp->show();
         m_activityFrame->hide();
         m_btnFrame->hide();
-        Q_EMIT q->scanProgress(0);
     } else {
         m_warmingUp->hide();
         m_activityFrame->hide();
         m_btnFrame->show();
-        Q_EMIT q->scanProgress(100);
     }
 
     m_optsTabWidget->setDisabled(busy);

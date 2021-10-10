@@ -259,6 +259,7 @@ Q_SIGNALS:
     /**
      * This signal is emitted for progress information during a scan.
      * @param percent is the percentage of the scan progress (0-100).
+     * A negative value indicates that a scan is being prepared.
      */
     void scanProgress(int percent);
 

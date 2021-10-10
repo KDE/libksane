@@ -309,11 +309,13 @@ void KSaneCorePrivate::pollPollOptions()
 
 void KSaneCorePrivate::imageScanFinished()
 {
+    Q_EMIT q->scanProgress(100);
     if (m_scanThread->frameStatus() == KSaneScanThread::ReadReady) {
         Q_EMIT q->scannedImageReady(*m_scanThread->scanImage());
         // now check if we should have automatic ADF batch scanning
         if (m_executeMultiPageScanning && !m_cancelMultiPageScan) {
             // in batch mode only one area can be scanned per page
+            Q_EMIT q->scanProgress(-1);
             m_scanThread->start();
             return;
         }
@@ -321,6 +323,7 @@ void KSaneCorePrivate::imageScanFinished()
         // Check if we have a "wait for button" batch scanning
         if (m_waitForExternalButton) {
             qCDebug(KSANE_LOG) << "waiting for external button press to start next scan";
+            Q_EMIT q->scanProgress(-1);
             m_scanThread->start();
             return;
         }
