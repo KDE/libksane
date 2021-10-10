@@ -28,6 +28,8 @@
 #include "ksaneintegeroption.h"
 #include "ksaneinvertoption.h"
 #include "ksanepagesizeoption.h"
+#include "ksanebatchmodeoption.h"
+#include "ksanebatchdelayoption.h"
 
 namespace KSaneIface
 {
@@ -57,7 +59,9 @@ static const QHash<QString, KSaneCore::KSaneOptionName> stringEnumTranslation = 
     { QStringLiteral(SANE_NAME_GAMMA_VECTOR_G), KSaneCore::GammaGreenOption },
     { QStringLiteral(SANE_NAME_GAMMA_VECTOR_B), KSaneCore::GammaBlueOption },
     { QStringLiteral(SANE_NAME_BLACK_LEVEL), KSaneCore::BlackLevelOption },
-    { QStringLiteral(SANE_NAME_WHITE_LEVEL), KSaneCore::WhiteLevelOption }, };
+    { QStringLiteral(SANE_NAME_WHITE_LEVEL), KSaneCore::WhiteLevelOption },
+    { BatchModeOptionName, KSaneCore::BatchModeOption },
+    { BatchDelayOptionName, KSaneCore::BatchDelayOption }, };
     
 KSaneCorePrivate::KSaneCorePrivate(KSaneCore *parent):
     q(parent)
@@ -71,6 +75,9 @@ KSaneCorePrivate::KSaneCorePrivate(KSaneCore *parent):
     m_auth = KSaneAuth::getInstance();
     m_optionPollTimer.setInterval(100);
     connect(&m_optionPollTimer, &QTimer::timeout, this, &KSaneCorePrivate::pollPollOptions);
+
+    m_batchModeTimer.setInterval(1000);
+    connect(&m_batchModeTimer, &QTimer::timeout, this, &KSaneCorePrivate::batchModeTimerUpdate);
 }
 
 KSaneCore::KSaneOpenStatus KSaneCorePrivate::loadDeviceOptions() 
@@ -188,17 +195,28 @@ KSaneCore::KSaneOpenStatus KSaneCorePrivate::loadDeviceOptions()
         }
     }
 
-    // add extra option for inverting image colors
-    KSaneBaseOption *invertOption = new KSaneInvertOption();
-    m_optionsList.append(invertOption);
-    m_externalOptionsList.append(new KSaneInternalOption(invertOption));
-    m_optionsLocation.insert(KSaneCore::InvertColorOption, m_optionsList.size() - 1);  
     // add extra option for selecting specific page sizes
     KSaneBaseOption *pageSizeOption = new KSanePageSizeOption(optionTopLeftX, optionTopLeftY,
                             optionBottomRightX, optionBottomRightY, optionResolution);
     m_optionsList.append(pageSizeOption);
     m_externalOptionsList.append(new KSaneInternalOption(pageSizeOption));
-    m_optionsLocation.insert(KSaneCore::PageSizeOption, m_optionsList.size() - 1);  
+    m_optionsLocation.insert(KSaneCore::PageSizeOption, m_optionsList.size() - 1);
+
+    // add extra option for batch mode scanning with a delay
+    m_batchMode = new KSaneBatchModeOption();
+    m_optionsList.append(m_batchMode);
+    m_externalOptionsList.append(new KSaneInternalOption(m_batchMode));
+    m_optionsLocation.insert(KSaneCore::BatchModeOption, m_optionsList.size() - 1);
+    m_batchModeDelay = new KSaneBatchDelayOption();
+    m_optionsList.append(m_batchModeDelay);
+    m_externalOptionsList.append(new KSaneInternalOption(m_batchModeDelay));
+    m_optionsLocation.insert(KSaneCore::BatchDelayOption, m_optionsList.size() - 1);
+
+    // add extra option for inverting image colors
+    KSaneBaseOption *invertOption = new KSaneInvertOption();
+    m_optionsList.append(invertOption);
+    m_externalOptionsList.append(new KSaneInternalOption(invertOption));
+    m_optionsLocation.insert(KSaneCore::InvertColorOption, m_optionsList.size() - 1);
 
     // NOTICE The Pixma network backend behaves badly. polling a value will result in 1 second
     // sleeps for every poll. The problem has been reported, but no easy/quick fix was available and
@@ -332,7 +350,14 @@ void KSaneCorePrivate::imageScanFinished()
             m_scanThread->start();
             return;
         }
-
+        // check if we should have timed batch scanning
+        if (m_batchMode->value().toBool() && !m_cancelMultiPageScan) {
+            // in batch mode only one area can be scanned per page
+            m_batchModeCounter = 0;
+            batchModeTimerUpdate();
+            m_batchModeTimer.start();
+            return;
+        }
         // Check if we have a "wait for button" batch scanning
         if (m_waitForExternalButton) {
             qCDebug(KSANE_LOG) << "waiting for external button press to start next scan";
@@ -390,6 +415,20 @@ void KSaneCorePrivate::determineMultiPageScanning(const QVariant &value)
 void KSaneCorePrivate::setWaitForExternalButton(const QVariant &value)
 {
     m_waitForExternalButton = value.toBool();
+}
+
+void KSaneCorePrivate::batchModeTimerUpdate()
+{
+    const int delay = m_batchModeDelay->value().toInt();
+    Q_EMIT q->batchModeCountDown(delay - m_batchModeCounter);
+    if (m_batchModeCounter >= delay) {
+        m_batchModeCounter = 0;
+        if (m_scanThread!= nullptr) {
+            m_scanThread->start();
+        }
+        m_batchModeTimer.stop();
+    }
+    m_batchModeCounter++;
 }
 
 }  // NameSpace KSaneIface

@@ -56,6 +56,9 @@ LabeledFSlider::LabeledFSlider(QWidget *parent, KSaneOption *option)
     case KSaneOption::UnitMicroSecond:
         unitSuffix = i18nc("Double numbers. SpinBox parameter unit (Microseconds)", " µs");
         break;
+    case KSaneOption::UnitSecond:
+        unitSuffix = i18nc("SpinBox parameter unit (seconds)", " s");
+        break;
     default: 
         unitSuffix = QString();
         break;

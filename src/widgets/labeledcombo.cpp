@@ -170,6 +170,9 @@ QString LabeledCombo::getStringWithUnitForInteger(int iValue) const
     case KSaneOption::UnitMicroSecond:
         return i18nc("Parameter and Unit (Microseconds)", "%1 µs", iValue);
         break;
+    case KSaneOption::UnitSecond:
+        return i18nc("Parameter and Unit (seconds)", "%1 s", iValue);
+        break;
     default:
         return i18n("%1", iValue);
         break;
@@ -197,6 +200,9 @@ QString LabeledCombo::getStringWithUnitForFloat(float fValue) const
         break;
     case KSaneOption::UnitMicroSecond:
         return i18nc("Parameter and Unit (Microseconds)", "%1 µs", fValue);
+        break;
+    case KSaneOption::UnitSecond:
+        return i18nc("Parameter and Unit (seconds)", "%1 s", fValue);
         break;
     default:
         return i18n("%1", fValue);

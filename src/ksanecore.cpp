@@ -220,6 +220,11 @@ void KSaneCore::stopScan()
     if (d->m_scanThread->isRunning()) {
         d->m_scanThread->cancelScan();
     }
+    if (d->m_batchModeTimer.isActive()) {
+        d->m_batchModeTimer.stop();
+        Q_EMIT batchModeCountDown(0);
+        Q_EMIT scanFinished(KSaneScanStatus::NoError, i18n("Scanning stopped by user."));
+    }
 }
 
 QImage *KSaneCore::scanImage() const

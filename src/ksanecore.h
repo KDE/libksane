@@ -88,6 +88,8 @@ public:
         GammaBlueOption,
         BlackLevelOption,
         WhiteLevelOption,
+        BatchModeOption,
+        BatchDelayOption,
     };
 
     /*
@@ -293,6 +295,12 @@ Q_SIGNALS:
      * @param deviceModel is the model name of the currently opened scanner.
      */
     void openedDeviceInfoUpdated(const QString &deviceName, const QString &deviceVendor, const QString &deviceModel);
+
+    /**
+     * This signal is emitted for the count down when in batch mode.
+     * @param remainingSeconds are the remaining seconds until the next scan starts.
+     */
+    void batchModeCountDown(int remainingSeconds);
     
 private:
     std::unique_ptr<KSaneCorePrivate> d;

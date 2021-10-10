@@ -46,6 +46,7 @@ KSaneWidget::KSaneWidget(QWidget *parent)
     connect(d->m_ksaneCoreInterface, &KSaneCore::scanFinished, d, &KSaneWidgetPrivate::scanDone);
     connect(d->m_ksaneCoreInterface, &KSaneCore::userMessage, d, &KSaneWidgetPrivate::alertUser);
     connect(d->m_ksaneCoreInterface, &KSaneCore::scanProgress, d, &KSaneWidgetPrivate::updateProgress);
+    connect(d->m_ksaneCoreInterface, &KSaneCore::batchModeCountDown, d, &KSaneWidgetPrivate::updateCountDown);
     connect(d->m_ksaneCoreInterface, &KSaneCore::availableDevices, d, &KSaneWidgetPrivate::signalDevListUpdate);
     connect(d->m_ksaneCoreInterface, &KSaneCore::buttonPressed, this, &KSaneWidget::buttonPressed);
     connect(d->m_ksaneCoreInterface, &KSaneCore::openedDeviceInfoUpdated, this, &KSaneWidget::openedDeviceInfoUpdated);
@@ -61,8 +62,13 @@ KSaneWidget::KSaneWidget(QWidget *parent)
     d->m_warmingUp->setAlignment(Qt::AlignCenter);
     d->m_warmingUp->setAutoFillBackground(true);
     d->m_warmingUp->setBackgroundRole(QPalette::Highlight);
-    //d->m_warmingUp->setForegroundRole(QPalette::HighlightedText);
     d->m_warmingUp->hide();
+
+    d->m_countDown = new QLabel;
+    d->m_countDown->setAlignment(Qt::AlignCenter);
+    d->m_countDown->setAutoFillBackground(true);
+    d->m_countDown->setBackgroundRole(QPalette::Highlight);
+    d->m_countDown->hide();
 
     d->m_progressBar = new QProgressBar;
     d->m_progressBar->setMaximum(100);
@@ -152,12 +158,14 @@ KSaneWidget::KSaneWidget(QWidget *parent)
     d->m_btnFrame->setMinimumHeight(minHeight);
     d->m_activityFrame->setMinimumHeight(minHeight);
     d->m_warmingUp->setMinimumHeight(minHeight);
+    d->m_countDown->setMinimumHeight(minHeight);
 
     d->m_previewFrame = new QWidget;
     QVBoxLayout *preview_layout = new QVBoxLayout(d->m_previewFrame);
     preview_layout->setContentsMargins(0, 0, 0, 0);
     preview_layout->addWidget(d->m_previewViewer, 100);
     preview_layout->addWidget(d->m_warmingUp, 0);
+    preview_layout->addWidget(d->m_countDown, 0);
     preview_layout->addWidget(d->m_activityFrame, 0);
     preview_layout->addWidget(d->m_btnFrame, 0);
 

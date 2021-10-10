@@ -1208,9 +1208,11 @@ void KSaneWidgetPrivate::updateProgress(int progress)
     if (progress < 0 && !m_warmingUp->isVisible()) {
         m_warmingUp->show();
         m_activityFrame->hide();
+        m_countDown->hide();
     } else {
         m_warmingUp->hide();
         m_activityFrame->show();
+        m_countDown->hide();
     }
     if (m_isPreview) {
         // the image size might have changed
@@ -1232,6 +1234,16 @@ void KSaneWidgetPrivate::updateProgress(int progress)
 
     m_progressBar->setValue(progress);
     Q_EMIT q->scanProgress(progress);
+}
+
+void KSaneWidgetPrivate::updateCountDown(int remainingSeconds)
+{
+    m_countDown->setText(i18n("Next scan starts in %1 s.", remainingSeconds));
+    if (remainingSeconds > 0 && !m_countDown->isVisible()) {
+        m_countDown->show();
+        m_warmingUp->hide();
+        m_activityFrame->hide();
+    }
 }
 
 void KSaneWidgetPrivate::alertUser(KSaneCore::KSaneScanStatus status, const QString &strStatus)

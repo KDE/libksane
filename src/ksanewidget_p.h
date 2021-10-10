@@ -71,6 +71,7 @@ public Q_SLOTS:
     void previewScanDone(KSaneCore::KSaneScanStatus status, const QString &strStatus);
     void oneFinalScanDone(KSaneCore::KSaneScanStatus status, const QString &strStatus);
     void updateProgress(int progress);
+    void updateCountDown(int remainingSeconds);
     void handleSelection(float tl_x, float tl_y, float br_x, float br_y);
     void signalDevListUpdate(const QList<KSaneCore::DeviceInfo> &deviceList);
     void imageReady(const QImage &image);
@@ -130,6 +131,7 @@ public:
 
     QWidget            *m_activityFrame;
     QLabel             *m_warmingUp;
+    QLabel             *m_countDown;
     QProgressBar       *m_progressBar;
     QPushButton        *m_cancelBtn;
 

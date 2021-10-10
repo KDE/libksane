@@ -53,6 +53,7 @@ private Q_SLOTS:
     void determineMultiPageScanning(const QVariant &value);
     void setWaitForExternalButton(const QVariant &value);
     void pollPollOptions();
+    void batchModeTimerUpdate();
 
 public:
 
@@ -86,6 +87,11 @@ public:
     bool m_cancelMultiPageScan = false;
     // next scanning will start with a hardware button press
     bool m_waitForExternalButton = false;    
+    // batch mode options
+    KSaneBaseOption *m_batchMode;
+    KSaneBaseOption *m_batchModeDelay;
+    QTimer m_batchModeTimer;
+    int m_batchModeCounter = 0;
 };
 
 }  // NameSpace KSaneIface

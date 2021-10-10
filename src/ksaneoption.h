@@ -56,7 +56,8 @@ public:
         UnitMilliMeter,
         UnitDPI,
         UnitPercent,
-        UnitMicroSecond
+        UnitMicroSecond,
+        UnitSecond
     } KSaneOptionUnit;
     
     Q_ENUM(KSaneOptionUnit);

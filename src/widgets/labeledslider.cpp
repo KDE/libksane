@@ -58,6 +58,9 @@ LabeledSlider::LabeledSlider(QWidget *parent, KSaneOption *option)
     case KSaneOption::UnitMicroSecond:
         unitSuffix = ki18ncp("SpinBox parameter unit (Microseconds)", " µs", " µs");
         break;
+    case KSaneOption::UnitSecond:
+        unitSuffix = ki18ncp("SpinBox parameter unit (seconds)", " s", " s");
+        break;
     default: 
         unitSuffix = KLocalizedString();
         break;

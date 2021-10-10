@@ -43,6 +43,8 @@ target_sources(KF5Sane PRIVATE
     options/ksanelistoption.cpp
     options/ksaneinvertoption.cpp
     options/ksanepagesizeoption.cpp
+    options/ksanebatchmodeoption.cpp
+    options/ksanebatchdelayoption.cpp
 )
 
 ecm_qt_declare_logging_category(KF5Sane
