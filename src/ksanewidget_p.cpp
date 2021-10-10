@@ -1160,13 +1160,11 @@ void KSaneWidgetPrivate::oneFinalScanDone(KSaneCore::KSaneScanStatus status, con
 void KSaneWidgetPrivate::setBusy(bool busy)
 {
     if (busy) {
-        m_warmingUp->show();
-        m_activityFrame->hide();
         m_btnFrame->hide();
-    } else {
-        m_warmingUp->hide();
         m_activityFrame->hide();
+    } else {
         m_btnFrame->show();
+        m_activityFrame->hide();
     }
 
     m_optsTabWidget->setDisabled(busy);
@@ -1207,12 +1205,18 @@ void KSaneWidgetPrivate::invertPreview()
 
 void KSaneWidgetPrivate::updateProgress(int progress)
 {
+    if (progress < 0 && !m_warmingUp->isVisible()) {
+        m_warmingUp->show();
+        m_activityFrame->hide();
+    } else {
+        m_warmingUp->hide();
+        m_activityFrame->show();
+    }
     if (m_isPreview) {
-        if (!m_progressBar->isVisible() || m_ksaneCoreInterface->scanImage()->height() != m_previewViewer->currentImageHeight()
+        // the image size might have changed
+        if (m_ksaneCoreInterface->scanImage()->height() != m_previewViewer->currentImageHeight()
             || m_ksaneCoreInterface->scanImage()->width() != m_previewViewer->currentImageWidth() ) {
-            m_warmingUp->hide();
-            m_activityFrame->show();
-            // the image size might have changed
+
             m_ksaneCoreInterface->lockScanImage();
             m_previewViewer->setQImage(m_ksaneCoreInterface->scanImage());
             m_previewViewer->zoom2Fit();
@@ -1223,10 +1227,6 @@ void KSaneWidgetPrivate::updateProgress(int progress)
             m_ksaneCoreInterface->unlockScanImage();
         }
     } else {
-        if (!m_progressBar->isVisible()) {
-            m_warmingUp->hide();
-            m_activityFrame->show();
-        }
         m_previewViewer->setHighlightShown(progress);
     }
 
