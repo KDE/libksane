@@ -69,6 +69,7 @@ public:
     QList<KSaneBaseOption *> m_optionsPollList;
     QTimer m_readValuesTimer;
     QTimer m_optionPollTimer;
+    bool m_optionPollingNaughtylisted = false;
     
     QString m_saneUserName;
     QString m_sanePassword;

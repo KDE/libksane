@@ -13,6 +13,7 @@
 
 #include <QImage>
 #include <QList>
+#include <QRegularExpression>
 
 #include <ksane_debug.h>
 
@@ -168,7 +169,7 @@ KSaneCore::KSaneOpenStatus KSaneCorePrivate::loadDeviceOptions()
         if (option->name() == QStringLiteral("wait-for-button")) {
             connect(option, &KSaneBaseOption::valueChanged, this, &KSaneCorePrivate::setWaitForExternalButton);
         }
-        
+
         m_optionsList.append(option);
         m_externalOptionsList.append(new KSaneInternalOption(option));
         connect(option, &KSaneBaseOption::optionsNeedReload, this, &KSaneCorePrivate::reloadOptions);
@@ -186,7 +187,7 @@ KSaneCore::KSaneOpenStatus KSaneCorePrivate::loadDeviceOptions()
             m_optionsLocation.insert(it.value(), i - 1);
         }
     }
-    
+
     // add extra option for inverting image colors
     KSaneBaseOption *invertOption = new KSaneInvertOption();
     m_optionsList.append(invertOption);
@@ -198,23 +199,33 @@ KSaneCore::KSaneOpenStatus KSaneCorePrivate::loadDeviceOptions()
     m_optionsList.append(pageSizeOption);
     m_externalOptionsList.append(new KSaneInternalOption(pageSizeOption));
     m_optionsLocation.insert(KSaneCore::PageSizeOption, m_optionsList.size() - 1);  
-  
+
+    // NOTICE The Pixma network backend behaves badly. polling a value will result in 1 second
+    // sleeps for every poll. The problem has been reported, but no easy/quick fix was available and
+    // the bug has been there for multiple years. Since this destroys the usability of the backend totally,
+    // we simply put the backend on the naughty list and disable the option polling.
+    static QRegularExpression pixmaNetworkBackend(QStringLiteral("pixma.*\\d+\\.\\d+\\.\\d+\\.\\d+"));
+    m_optionPollingNaughtylisted = false;
+    if (pixmaNetworkBackend.match(m_devName).hasMatch()) {
+        m_optionPollingNaughtylisted = true;
+    }
+
     // start polling the poll options
-    if (m_optionsPollList.size() > 0) {
+    if (m_optionsPollList.size() > 0 && !m_optionPollingNaughtylisted) {
         m_optionPollTimer.start();
     }
 
     // Create the scan thread
     m_scanThread = new KSaneScanThread(m_saneHandle);
-    
+
     m_scanThread->setImageInverted(invertOption->value());
     connect(invertOption, &KSaneInvertOption::valueChanged, m_scanThread, &KSaneScanThread::setImageInverted);
-    
+
     if (optionResolution != nullptr) {
         m_scanThread->setImageResolution(optionResolution->value());    
         connect(optionResolution, &KSaneBaseOption::valueChanged, m_scanThread, &KSaneScanThread::setImageResolution);
     }
-    
+
     connect(m_scanThread, &KSaneScanThread::scanProgressUpdated, q, &KSaneCore::scanProgress);
     connect(m_scanThread, &KSaneScanThread::finished, this, &KSaneCorePrivate::imageScanFinished);
 
@@ -230,7 +241,7 @@ void KSaneCorePrivate::clearDeviceOptions()
         delete m_optionsList.takeFirst();
         delete m_externalOptionsList.takeFirst();
     }
-    
+
     m_optionsLocation.clear();
     m_optionsPollList.clear();
     m_optionPollTimer.stop();
@@ -359,7 +370,7 @@ void KSaneCorePrivate::imageScanFinished()
 void KSaneCorePrivate::scanIsFinished(KSaneCore::KSaneScanStatus status, const QString &message) 
 {
     sane_cancel(m_saneHandle);
-    if (m_optionsPollList.size() > 0) {
+    if (m_optionsPollList.size() > 0 && !m_optionPollingNaughtylisted) {
         m_optionPollTimer.start();
     }
 
