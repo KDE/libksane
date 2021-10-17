@@ -20,8 +20,6 @@ KSaneListOption::KSaneListOption(const SANE_Handle handle, const int index)
     : KSaneBaseOption(handle, index)
 {
     m_optionType = KSaneOption::TypeValueList;
-    readOption();
-    readValue();
 }
 
 void KSaneListOption::readValue()

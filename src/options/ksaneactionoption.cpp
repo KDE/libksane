@@ -18,8 +18,6 @@ KSaneActionOption::KSaneActionOption(const SANE_Handle handle, const int index)
     : KSaneBaseOption(handle, index)
 {
     m_optionType = KSaneOption::TypeAction;
-    readOption();
-    readValue();
 }
 
 bool KSaneActionOption::setValue(const QVariant &)

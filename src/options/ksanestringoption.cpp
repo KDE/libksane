@@ -20,8 +20,6 @@ KSaneStringOption::KSaneStringOption(const SANE_Handle handle, const int index)
     : KSaneBaseOption(handle, index)
 {
     m_optionType = KSaneOption::TypeString;
-    readOption();
-    readValue();
 }
 
 bool KSaneStringOption::setValue(const QVariant &val)

@@ -20,7 +20,7 @@ KSaneInternalOption::KSaneInternalOption(KSaneBaseOption *option, QObject *paren
     d->option = option;
     connect(d->option, &KSaneBaseOption::optionReloaded, this, &KSaneOption::optionReloaded);
     connect(d->option, &KSaneBaseOption::valueChanged, this, &KSaneOption::valueChanged);
-    connect(d->option, &KSaneBaseOption::destroyed, [=]() { d->option = nullptr; } );
+    connect(d->option, &KSaneBaseOption::destroyed, this, [=]() { d->option = nullptr; } );
 }
 
 }  // NameSpace KSaneIface

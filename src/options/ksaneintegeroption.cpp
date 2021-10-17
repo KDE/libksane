@@ -21,8 +21,6 @@ KSaneIntegerOption::KSaneIntegerOption(const SANE_Handle handle, const int index
     : KSaneBaseOption(handle, index)
 {
     m_optionType = KSaneOption::TypeInteger;
-    readOption();
-    readValue();
 }
 
 void KSaneIntegerOption::readValue()

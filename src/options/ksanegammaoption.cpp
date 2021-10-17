@@ -22,8 +22,6 @@ KSaneGammaOption::KSaneGammaOption(const SANE_Handle handle, const int index)
     : KSaneBaseOption(handle, index)
 {
     m_optionType = KSaneOption::TypeGamma;
-    readOption();
-    readValue();
 }
 
 bool KSaneGammaOption::setValue(const QVariant &value)

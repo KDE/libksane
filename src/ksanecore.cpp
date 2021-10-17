@@ -292,7 +292,6 @@ int KSaneCore::setOptionsMap(const QMap <QString, QString> &opts)
 
     QMap <QString, QString> optionMapCopy = opts;
 
-    QString tmp;
     int i;
     int ret = 0;
 

@@ -142,6 +142,8 @@ KSaneCore::KSaneOpenStatus KSaneCorePrivate::loadDeviceOptions()
             option = new KSaneActionOption(m_saneHandle, i);
             break;
         }
+        option->readOption();
+        option->readValue();
 
         if (option->name() == QStringLiteral(SANE_NAME_SCAN_TL_X)) {
             optionTopLeftX = option;
@@ -175,7 +177,7 @@ KSaneCore::KSaneOpenStatus KSaneCorePrivate::loadDeviceOptions()
         if (option->needsPolling()) {
             m_optionsPollList.append(option);
             if (option->type() == KSaneOption::TypeBool) {
-                connect( option, &KSaneBaseOption::valueChanged,
+                connect(option, &KSaneBaseOption::valueChanged, this,
                     [=]( const QVariant &newValue ) { Q_EMIT q->buttonPressed(option->name(), option->title(), newValue.toBool()); } );
             }
         }
