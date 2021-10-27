@@ -39,7 +39,7 @@ public:
     KSaneOptionWidget(QWidget *parent, const QString &labelText);
 
     KSaneOptionWidget(QWidget *parent, KSaneOption *option);
-    ~KSaneOptionWidget();
+    ~KSaneOptionWidget() override;
 
     void setLabelText(const QString &text);
 

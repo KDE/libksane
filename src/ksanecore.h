@@ -108,7 +108,7 @@ public:
     /**
      * Standard destructor.
      */
-    ~KSaneCore();
+    ~KSaneCore() override;
 
     /**
      * Get the list of available scanning devices. Connect to availableDevices()

@@ -46,7 +46,7 @@ public:
                    double min, double max, double step);
 
     LabeledFSlider(QWidget *parent, KSaneOption *option);
-    ~LabeledFSlider();
+    ~LabeledFSlider() override;
 
     /**
      * \return the slider value.

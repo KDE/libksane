@@ -24,7 +24,7 @@ class FindSaneDevicesThread : public QThread
 
 public:
     static FindSaneDevicesThread *getInstance();
-    ~FindSaneDevicesThread();
+    ~FindSaneDevicesThread() override;
     void run() override;
 
     const QList<KSaneCore::DeviceInfo> devicesList() const;

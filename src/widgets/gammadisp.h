@@ -37,7 +37,7 @@ public:
     * \param maxValue the maximum value
     */
     GammaDisp(QWidget *parent, int *brightness, int *contrast, int *gamma, int maxValue);
-    ~GammaDisp() {}
+    ~GammaDisp() override {}
 
     QSize sizeHint() const override;
     QSize minimumSizeHint() const override;

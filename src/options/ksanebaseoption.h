@@ -44,7 +44,7 @@ public:
 
     KSaneBaseOption();
     KSaneBaseOption(const SANE_Handle handle, const int index);
-    ~KSaneBaseOption();
+    ~KSaneBaseOption() override;
     static KSaneOption::KSaneOptionType optionType(const SANE_Option_Descriptor *optDesc);
 
     bool needsPolling() const;

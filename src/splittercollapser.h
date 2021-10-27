@@ -29,7 +29,7 @@ class SplitterCollapser : public QToolButton
     Q_OBJECT
 public:
     SplitterCollapser(QSplitter *, QWidget *widget);
-    ~SplitterCollapser();
+    ~SplitterCollapser() override;
 
     QSize sizeHint() const override;
 

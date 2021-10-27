@@ -70,7 +70,7 @@ public:
     KSaneWidget(QWidget *parent = nullptr);
 
     /** Standard destructor */
-    ~KSaneWidget();
+    ~KSaneWidget() override;
 
     /** This helper method displays a dialog for selecting a scanner. The libsane
      * device name of the selected scanner device is returned. */

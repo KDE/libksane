@@ -23,7 +23,7 @@ class KSaneViewer : public QGraphicsView
     Q_OBJECT
 public:
     explicit KSaneViewer(QImage *img, QWidget *parent = nullptr);
-    ~KSaneViewer();
+    ~KSaneViewer() override;
 
     void setQImage(QImage *img);
     void updateImage();

@@ -37,7 +37,7 @@ class KSaneDeviceDialog : public QDialog
 
 public:
     KSaneDeviceDialog(QWidget *parent = nullptr);
-    ~KSaneDeviceDialog();
+    ~KSaneDeviceDialog() override;
 
     QString getSelectedName() const;
     void setDefault(const QString &);

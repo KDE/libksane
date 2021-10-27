@@ -48,7 +48,7 @@ public:
                   int min, int max, int st);
 
     LabeledSlider(QWidget *parent, KSaneOption *option);
-    ~LabeledSlider();
+    ~LabeledSlider() override;
 
     int value() const;
 

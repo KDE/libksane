@@ -39,7 +39,7 @@ public:
      */
     LabeledEntry(QWidget *parent, const QString &text);
     LabeledEntry(QWidget *parent, KSaneOption *option);
-    ~LabeledEntry();
+    ~LabeledEntry() override;
     void setText(const QString &text);
 
 private Q_SLOTS:

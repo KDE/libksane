@@ -35,7 +35,7 @@ public:
     } Intersects;
 
     explicit SelectionItem(const QRectF &rect);
-    ~SelectionItem();
+    ~SelectionItem() override;
 
     void setMaxRight(qreal maxRight);
     void setMaxBottom(qreal maxBottom);

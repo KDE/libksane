@@ -38,7 +38,7 @@ public:
      */
     KSaneButton(QWidget *parent, const QString &text);
     KSaneButton(QWidget *parent, KSaneOption *option);
-    ~KSaneButton();
+    ~KSaneButton() override;
 
 Q_SIGNALS:
     void clicked(const QVariant &value);

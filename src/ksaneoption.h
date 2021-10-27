@@ -72,7 +72,7 @@ public:
     Q_ENUM(KSaneOptionState);
     
     KSaneOption(QObject *parent = nullptr);
-    ~KSaneOption();
+    ~KSaneOption() override;
     
     /** This function returns the internal name of the option
      * @return the internal name */
