@@ -325,13 +325,13 @@ void KSaneWidgetPrivate::createOptInterface()
     m_basicOptsTab = new QWidget;
     m_basicScrollA->setWidget(m_basicOptsTab);
 
-    QVBoxLayout *basic_layout = new QVBoxLayout(m_basicOptsTab);
+    QVBoxLayout *basicLayout = new QVBoxLayout(m_basicOptsTab);
     KSaneOption *option = m_ksaneCoreInterface->getOption(KSaneCore::SourceOption);
     // Scan Source
     if (option != nullptr) {
         m_optSource = option;
         KSaneOptionWidget *source = createOptionWidget(m_basicOptsTab, option);
-        basic_layout->addWidget(source);
+        basicLayout->addWidget(source);
         connect(m_optSource, &KSaneOption::valueChanged, this, &KSaneWidgetPrivate::checkInvert, Qt::QueuedConnection);
         connect(m_optSource, &KSaneOption::valueChanged, this, [this]() {
             m_previewViewer->setMultiselectionEnabled(!scanSourceADF());
@@ -342,35 +342,35 @@ void KSaneWidgetPrivate::createOptInterface()
     if ((option = m_ksaneCoreInterface->getOption(KSaneCore::FilmTypeOption)) != nullptr) {
         m_optFilmType = option;
         KSaneOptionWidget *film = createOptionWidget(m_basicOptsTab, option);
-        basic_layout->addWidget(film);
+        basicLayout->addWidget(film);
         connect(m_optFilmType, &KSaneOption::valueChanged, this, &KSaneWidgetPrivate::checkInvert, Qt::QueuedConnection);
     } else if ((option = m_ksaneCoreInterface->getOption(KSaneCore::NegativeOption)) != nullptr) {
         m_optNegative = option;
         KSaneOptionWidget *negative = createOptionWidget(m_basicOptsTab, option);
-        basic_layout->addWidget(negative);
+        basicLayout->addWidget(negative);
     }
     // Scan mode
     if ((option = m_ksaneCoreInterface->getOption(KSaneCore::ScanModeOption)) != nullptr) {
         m_optMode = option;
         KSaneOptionWidget *mode = createOptionWidget(m_basicOptsTab, option);
-        basic_layout->addWidget(mode);
+        basicLayout->addWidget(mode);
     }
     // Bitdepth
     if ((option = m_ksaneCoreInterface->getOption(KSaneCore::BitDepthOption)) != nullptr) {
         m_optDepth = option;
         KSaneOptionWidget *bitDepth = createOptionWidget(m_basicOptsTab, option);
-        basic_layout->addWidget(bitDepth);
+        basicLayout->addWidget(bitDepth);
     }
     // Threshold
     if ((option = m_ksaneCoreInterface->getOption(KSaneCore::ThresholdOption)) != nullptr) {
         KSaneOptionWidget *threshold = createOptionWidget(m_basicOptsTab, option);
-        basic_layout->addWidget(threshold);
+        basicLayout->addWidget(threshold);
     }
     // Resolution
     if ((option = m_ksaneCoreInterface->getOption(KSaneCore::ResolutionOption)) != nullptr) {
         m_optRes = option;
         KSaneOptionWidget *resolution = createOptionWidget(m_basicOptsTab, option);
-        basic_layout->addWidget(resolution);
+        basicLayout->addWidget(resolution);
     }
     // These two next resolution options are a bit tricky.
     if ((option = m_ksaneCoreInterface->getOption(KSaneCore::XResolutionOption)) != nullptr) {
@@ -379,12 +379,12 @@ void KSaneWidgetPrivate::createOptInterface()
             m_optRes = m_optResX;
         }
         KSaneOptionWidget *optResX = createOptionWidget(m_basicOptsTab, option);
-        basic_layout->addWidget(optResX);
+        basicLayout->addWidget(optResX);
     }
     if ((option = m_ksaneCoreInterface->getOption(KSaneCore::YResolutionOption)) != nullptr) {
         m_optResY = option;
         KSaneOptionWidget *optResY = createOptionWidget(m_basicOptsTab, option);
-        basic_layout->addWidget(optResY);
+        basicLayout->addWidget(optResY);
     }
 
     // save a pointer to the preview option if possible
@@ -428,25 +428,63 @@ void KSaneWidgetPrivate::createOptInterface()
         m_handledOptions.insert(option->name());
     }
 
+    // Add our own size options
+    m_scanareaPapersize = new LabeledCombo(m_basicOptsTab, i18n("Scan Area Size"));
+    connect(m_scanareaPapersize, &LabeledCombo::activated, this, &KSaneWidgetPrivate::setPageSize);
+    basicLayout->addWidget(m_scanareaPapersize);
+
+    static QLocale locale;
+    QString unitSuffix = locale.measurementSystem() == QLocale::MetricSystem ? i18n(" mm") : i18n(" inch");
+
+    m_scanareaWidth = new LabeledFSlider(m_basicOptsTab, i18n("Width"), 0.0f, 500.0f, 0.1f);
+    m_scanareaWidth->setSuffix(unitSuffix);
+    connect(m_scanareaWidth, &LabeledFSlider::valueChanged, this, &KSaneWidgetPrivate::updateScanSelection);
+    basicLayout->addWidget(m_scanareaWidth);
+
+    m_scanareaHeight = new LabeledFSlider(m_basicOptsTab, i18n("Height"), 0.0f, 500.0f, 0.1f);
+    m_scanareaHeight->setSuffix(unitSuffix);
+    connect(m_scanareaHeight, &LabeledFSlider::valueChanged, this, &KSaneWidgetPrivate::updateScanSelection);
+    basicLayout->addWidget(m_scanareaHeight);
+
+    m_scanareaX = new LabeledFSlider(m_basicOptsTab, i18n("X Offset"), 0.0f, 500.0f, 0.1f);
+    m_scanareaX->setSuffix(unitSuffix);
+    connect(m_scanareaX, &LabeledFSlider::valueChanged, this, &KSaneWidgetPrivate::updateScanSelection);
+    basicLayout->addWidget(m_scanareaX);
+
+    m_scanareaY = new LabeledFSlider(m_basicOptsTab, i18n("Y Offset"), 0.0f, 500.0f, 0.1f);
+    m_scanareaY->setSuffix(unitSuffix);
+    connect(m_scanareaY, &LabeledFSlider::valueChanged, this, &KSaneWidgetPrivate::updateScanSelection);
+    basicLayout->addWidget(m_scanareaY);
+
+    // add a stretch to the end to keep the parameters at the top
+    basicLayout->addStretch();
+
+    // more advanced options
+    m_advancedOptsTab = new QWidget;
+    m_advancedScrollA->setWidget(m_advancedOptsTab);
+
+    QVBoxLayout *advancedLayout = new QVBoxLayout(m_advancedOptsTab);
+
     // Color Options Frame
-    m_colorOpts = new QWidget(m_basicOptsTab);
-    basic_layout->addWidget(m_colorOpts);
-    QVBoxLayout *color_lay = new QVBoxLayout(m_colorOpts);
-    color_lay->setContentsMargins(0, 0, 0, 0);
+    m_colorOpts = new QWidget(m_advancedOptsTab);
+    advancedLayout->addWidget(m_colorOpts);
+    QVBoxLayout *colorLayout = new QVBoxLayout(m_colorOpts);
+    colorLayout->setContentsMargins(0, 0, 0, 0);
 
     // Add Color correction to the color "frame"
     if ((option = m_ksaneCoreInterface->getOption(KSaneCore::BrightnessOption)) != nullptr) {
-        KSaneOptionWidget *brightness = createOptionWidget(m_basicOptsTab, option);
-        color_lay->addWidget(brightness);
+        KSaneOptionWidget *brightness = createOptionWidget(m_advancedOptsTab, option);
+        colorLayout->addWidget(brightness);
     }
+
     if ((option = m_ksaneCoreInterface->getOption(KSaneCore::ContrastOption)) != nullptr) {
-        KSaneOptionWidget *contrast = createOptionWidget(m_basicOptsTab, option);
-        color_lay->addWidget(contrast);
+        KSaneOptionWidget *contrast = createOptionWidget(m_advancedOptsTab, option);
+        colorLayout->addWidget(contrast);
     }
 
     // Add gamma tables to the color "frame"
     QWidget *gamma_frm = new QWidget(m_colorOpts);
-    color_lay->addWidget(gamma_frm);
+    colorLayout->addWidget(gamma_frm);
     QVBoxLayout *gam_frm_l = new QVBoxLayout(gamma_frm);
     gam_frm_l->setContentsMargins(0, 0, 0, 0);
     LabeledGamma *gammaR = nullptr;
@@ -476,9 +514,9 @@ void KSaneWidgetPrivate::createOptInterface()
         
         m_commonGamma = new LabeledGamma(m_colorOpts, i18n("Image intensity"), gammaR->maxValue());
 
-        color_lay->addWidget(m_commonGamma);
+        colorLayout->addWidget(m_commonGamma);
 
-        m_commonGamma->setToolTip(i18n("Gamma-correction table.  In color mode this option equally " \
+        m_commonGamma->setToolTip(i18n("Gamma-correction table. In color mode this option equally " \
             "affects the red, green, and blue channels simultaneously (i.e., it is an " \
             "intensity gamma table)."));
 
@@ -487,7 +525,7 @@ void KSaneWidgetPrivate::createOptInterface()
         connect(m_commonGamma, &LabeledGamma::valuesChanged, gammaB, &LabeledGamma::setValues);
 
         m_splitGamChB = new LabeledCheckbox(m_colorOpts, i18n("Separate color intensity tables"));
-        color_lay->addWidget(m_splitGamChB);
+        colorLayout->addWidget(m_splitGamChB);
 
         connect(m_splitGamChB, &LabeledCheckbox::toggled, gamma_frm, &QWidget::setVisible);
         connect(m_splitGamChB, &LabeledCheckbox::toggled, m_commonGamma, &LabeledGamma::setHidden);
@@ -497,56 +535,37 @@ void KSaneWidgetPrivate::createOptInterface()
 
     if ((option = m_ksaneCoreInterface->getOption(KSaneCore::BlackLevelOption)) != nullptr) {
         KSaneOptionWidget *blackLevel = createOptionWidget(m_colorOpts, option);
-        color_lay->addWidget(blackLevel);
+        colorLayout->addWidget(blackLevel);
     }
+
     if ((option = m_ksaneCoreInterface->getOption(KSaneCore::WhiteLevelOption)) != nullptr) {
         KSaneOptionWidget *blackLevel = createOptionWidget(m_colorOpts, option);
-        color_lay->addWidget(blackLevel);
+        colorLayout->addWidget(blackLevel);
     }
-    
+
     if ((option = m_ksaneCoreInterface->getOption(KSaneCore::InvertColorOption)) != nullptr) {
         m_optInvert = option;
         KSaneOptionWidget *invertColor = createOptionWidget(m_colorOpts, option);
-        color_lay->addWidget(invertColor);
+        colorLayout->addWidget(invertColor);
         connect(m_optInvert, &KSaneOption::valueChanged, this, &KSaneWidgetPrivate::invertPreview);
     }
 
-    // Add our own size options
-    m_scanareaPapersize = new LabeledCombo(m_basicOptsTab, i18n("Scan Area Size"));
-    connect(m_scanareaPapersize, &LabeledCombo::activated, this, &KSaneWidgetPrivate::setPageSize);
-    basic_layout->addWidget(m_scanareaPapersize);
+    if ((option = m_ksaneCoreInterface->getOption(KSaneCore::BatchModeOption)) != nullptr) {
+        KSaneOptionWidget *batchMode = createOptionWidget(m_advancedOptsTab, option);
+        colorLayout->addWidget(batchMode);
+    }
 
-    static QLocale locale;
-    QString unitSuffix = locale.measurementSystem() == QLocale::MetricSystem ? i18n(" mm") : i18n(" inch");
-
-    m_scanareaWidth = new LabeledFSlider(m_basicOptsTab, i18n("Width"), 0.0f, 500.0f, 0.1f);
-    m_scanareaWidth->setSuffix(unitSuffix);
-    connect(m_scanareaWidth, &LabeledFSlider::valueChanged, this, &KSaneWidgetPrivate::updateScanSelection);
-    basic_layout->addWidget(m_scanareaWidth);
-
-    m_scanareaHeight = new LabeledFSlider(m_basicOptsTab, i18n("Height"), 0.0f, 500.0f, 0.1f);
-    m_scanareaHeight->setSuffix(unitSuffix);
-    connect(m_scanareaHeight, &LabeledFSlider::valueChanged, this, &KSaneWidgetPrivate::updateScanSelection);
-    basic_layout->addWidget(m_scanareaHeight);
-
-    m_scanareaX = new LabeledFSlider(m_basicOptsTab, i18n("X Offset"), 0.0f, 500.0f, 0.1f);
-    m_scanareaX->setSuffix(unitSuffix);
-    connect(m_scanareaX, &LabeledFSlider::valueChanged, this, &KSaneWidgetPrivate::updateScanSelection);
-    basic_layout->addWidget(m_scanareaX);
-
-    m_scanareaY = new LabeledFSlider(m_basicOptsTab, i18n("Y Offset"), 0.0f, 500.0f, 0.1f);
-    m_scanareaY->setSuffix(unitSuffix);
-    connect(m_scanareaY, &LabeledFSlider::valueChanged, this, &KSaneWidgetPrivate::updateScanSelection);
-    basic_layout->addWidget(m_scanareaY);
-
-    // add a stretch to the end to keep the parameters at the top
-    basic_layout->addStretch();
+    if ((option = m_ksaneCoreInterface->getOption(KSaneCore::BatchDelayOption)) != nullptr) {
+        KSaneOptionWidget *batchDelay = createOptionWidget(m_advancedOptsTab, option);
+        colorLayout->addWidget(batchDelay);
+    }
+    advancedLayout->addStretch();
 
     // Remaining (un known) options go to the "Other Options"
     m_otherOptsTab = new QWidget;
     m_otherScrollA->setWidget(m_otherOptsTab);
 
-    QVBoxLayout *other_layout = new QVBoxLayout(m_otherOptsTab);
+    QVBoxLayout *otherLayout = new QVBoxLayout(m_otherOptsTab);
 
     const auto optionsList = m_ksaneCoreInterface->getOptionsList();
     // add the remaining parameters
@@ -557,47 +576,47 @@ void KSaneWidgetPrivate::createOptInterface()
         if (option->type() != KSaneOption::TypeDetectFail) {
             KSaneOptionWidget *widget = createOptionWidget(m_otherOptsTab, option);
             if (widget != nullptr) {
-                other_layout->addWidget(widget);
+                otherLayout->addWidget(widget);
             }
         }
     }
 
     // add a stretch to the end to keep the parameters at the top
-    other_layout->addStretch();
+    otherLayout->addStretch();
 
     // calculate label widths
     int labelWidth = 0;
     KSaneOptionWidget *tmpOption;
     // Basic Options
-    for (int i = 0; i < basic_layout->count(); ++i) {
-        if (basic_layout->itemAt(i) && basic_layout->itemAt(i)->widget()) {
-            tmpOption = qobject_cast<KSaneOptionWidget *>(basic_layout->itemAt(i)->widget());
+    for (int i = 0; i < basicLayout->count(); ++i) {
+        if (basicLayout->itemAt(i) && basicLayout->itemAt(i)->widget()) {
+            tmpOption = qobject_cast<KSaneOptionWidget *>(basicLayout->itemAt(i)->widget());
             if (tmpOption) {
                 labelWidth = qMax(labelWidth, tmpOption->labelWidthHint());
             }
         }
     }
     // Color Options
-    for (int i = 0; i < color_lay->count(); ++i) {
-        if (color_lay->itemAt(i) && color_lay->itemAt(i)->widget()) {
-            tmpOption = qobject_cast<KSaneOptionWidget *>(color_lay->itemAt(i)->widget());
+    for (int i = 0; i < colorLayout->count(); ++i) {
+        if (colorLayout->itemAt(i) && colorLayout->itemAt(i)->widget()) {
+            tmpOption = qobject_cast<KSaneOptionWidget *>(colorLayout->itemAt(i)->widget());
             if (tmpOption) {
                 labelWidth = qMax(labelWidth, tmpOption->labelWidthHint());
             }
         }
     }
     // Set label widths
-    for (int i = 0; i < basic_layout->count(); ++i) {
-        if (basic_layout->itemAt(i) && basic_layout->itemAt(i)->widget()) {
-            tmpOption = qobject_cast<KSaneOptionWidget *>(basic_layout->itemAt(i)->widget());
+    for (int i = 0; i < basicLayout->count(); ++i) {
+        if (basicLayout->itemAt(i) && basicLayout->itemAt(i)->widget()) {
+            tmpOption = qobject_cast<KSaneOptionWidget *>(basicLayout->itemAt(i)->widget());
             if (tmpOption) {
                 tmpOption->setLabelWidth(labelWidth);
             }
         }
     }
-    for (int i = 0; i < color_lay->count(); ++i) {
-        if (color_lay->itemAt(i) && color_lay->itemAt(i)->widget()) {
-            tmpOption = qobject_cast<KSaneOptionWidget *>(color_lay->itemAt(i)->widget());
+    for (int i = 0; i < colorLayout->count(); ++i) {
+        if (colorLayout->itemAt(i) && colorLayout->itemAt(i)->widget()) {
+            tmpOption = qobject_cast<KSaneOptionWidget *>(colorLayout->itemAt(i)->widget());
             if (tmpOption) {
                 tmpOption->setLabelWidth(labelWidth);
             }
@@ -605,17 +624,17 @@ void KSaneWidgetPrivate::createOptInterface()
     }
     // Other Options
     labelWidth = 0;
-    for (int i = 0; i < other_layout->count(); ++i) {
-        if (other_layout->itemAt(i) && other_layout->itemAt(i)->widget()) {
-            tmpOption = qobject_cast<KSaneOptionWidget *>(other_layout->itemAt(i)->widget());
+    for (int i = 0; i < otherLayout->count(); ++i) {
+        if (otherLayout->itemAt(i) && otherLayout->itemAt(i)->widget()) {
+            tmpOption = qobject_cast<KSaneOptionWidget *>(otherLayout->itemAt(i)->widget());
             if (tmpOption) {
                 labelWidth = qMax(labelWidth, tmpOption->labelWidthHint());
             }
         }
     }
-    for (int i = 0; i < other_layout->count(); ++i) {
-        if (other_layout->itemAt(i) && other_layout->itemAt(i)->widget()) {
-            tmpOption = qobject_cast<KSaneOptionWidget *>(other_layout->itemAt(i)->widget());
+    for (int i = 0; i < otherLayout->count(); ++i) {
+        if (otherLayout->itemAt(i) && otherLayout->itemAt(i)->widget()) {
+            tmpOption = qobject_cast<KSaneOptionWidget *>(otherLayout->itemAt(i)->widget());
             if (tmpOption) {
                 tmpOption->setLabelWidth(labelWidth);
             }

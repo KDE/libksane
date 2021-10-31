@@ -104,6 +104,8 @@ public:
     QScrollArea        *m_basicScrollA;
     QWidget            *m_basicOptsTab;
     QWidget            *m_colorOpts;
+    QScrollArea        *m_advancedScrollA;
+    QWidget            *m_advancedOptsTab;
     QScrollArea        *m_otherScrollA;
     QWidget            *m_otherOptsTab;
 

@@ -178,6 +178,12 @@ KSaneWidget::KSaneWidget(QWidget *parent)
     d->m_basicScrollA->setFrameShape(QFrame::NoFrame);
     d->m_optsTabWidget->addTab(d->m_basicScrollA, i18n("Basic Options"));
 
+    // Add the advanced options tab
+    d->m_advancedScrollA = new QScrollArea();
+    d->m_advancedScrollA->setWidgetResizable(true);
+    d->m_advancedScrollA->setFrameShape(QFrame::NoFrame);
+    d->m_optsTabWidget->addTab(d->m_advancedScrollA, i18n("Advanced Options"));
+
     // Add the other options tab
     d->m_otherScrollA = new QScrollArea;
     d->m_otherScrollA->setWidgetResizable(true);
