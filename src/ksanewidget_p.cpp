@@ -1180,7 +1180,7 @@ void KSaneWidgetPrivate::setBusy(bool busy)
 {
     if (busy) {
         m_btnFrame->hide();
-        m_activityFrame->hide();
+        m_activityFrame->show();
     } else {
         m_btnFrame->show();
         m_activityFrame->hide();
@@ -1226,11 +1226,11 @@ void KSaneWidgetPrivate::updateProgress(int progress)
 {
     if (progress < 0 && !m_warmingUp->isVisible()) {
         m_warmingUp->show();
-        m_activityFrame->hide();
+        m_progressBar->hide();
         m_countDown->hide();
     } else {
         m_warmingUp->hide();
-        m_activityFrame->show();
+        m_progressBar->show();
         m_countDown->hide();
     }
     if (m_isPreview) {
@@ -1261,7 +1261,7 @@ void KSaneWidgetPrivate::updateCountDown(int remainingSeconds)
     if (remainingSeconds > 0 && !m_countDown->isVisible()) {
         m_countDown->show();
         m_warmingUp->hide();
-        m_activityFrame->hide();
+        m_progressBar->hide();
     }
 }
 

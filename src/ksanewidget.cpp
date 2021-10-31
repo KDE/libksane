@@ -60,20 +60,16 @@ KSaneWidget::KSaneWidget(QWidget *parent)
     d->m_warmingUp = new QLabel;
     d->m_warmingUp->setText(i18n("Waiting for the scan to start."));
     d->m_warmingUp->setAlignment(Qt::AlignCenter);
-    d->m_warmingUp->setAutoFillBackground(true);
-    d->m_warmingUp->setBackgroundRole(QPalette::Highlight);
     d->m_warmingUp->hide();
 
     d->m_countDown = new QLabel;
     d->m_countDown->setAlignment(Qt::AlignCenter);
-    d->m_countDown->setAutoFillBackground(true);
-    d->m_countDown->setBackgroundRole(QPalette::Highlight);
     d->m_countDown->hide();
 
     d->m_progressBar = new QProgressBar;
     d->m_progressBar->setMaximum(100);
 
-    d->m_cancelBtn   = new QPushButton;
+    d->m_cancelBtn = new QPushButton;
     d->m_cancelBtn->setIcon(QIcon::fromTheme(QStringLiteral("process-stop")));
     d->m_cancelBtn->setToolTip(i18n("Cancel current scan operation"));
     connect(d->m_cancelBtn, &QPushButton::clicked, this, &KSaneWidget::scanCancel);
@@ -82,6 +78,8 @@ KSaneWidget::KSaneWidget(QWidget *parent)
     QHBoxLayout *progress_lay = new QHBoxLayout(d->m_activityFrame);
     progress_lay->setContentsMargins(0, 0, 0, 0);
     progress_lay->addWidget(d->m_progressBar, 100);
+    progress_lay->addWidget(d->m_warmingUp, 100);
+    progress_lay->addWidget(d->m_countDown, 100);
     progress_lay->addWidget(d->m_cancelBtn, 0);
     d->m_activityFrame->hide();
 
@@ -152,9 +150,6 @@ KSaneWidget::KSaneWidget(QWidget *parent)
     if (d->m_activityFrame->sizeHint().height() > minHeight) {
         minHeight = d->m_activityFrame->sizeHint().height();
     }
-    if (d->m_warmingUp->sizeHint().height() > minHeight) {
-        minHeight = d->m_warmingUp->sizeHint().height();
-    }
     d->m_btnFrame->setMinimumHeight(minHeight);
     d->m_activityFrame->setMinimumHeight(minHeight);
     d->m_warmingUp->setMinimumHeight(minHeight);
@@ -164,8 +159,6 @@ KSaneWidget::KSaneWidget(QWidget *parent)
     QVBoxLayout *preview_layout = new QVBoxLayout(d->m_previewFrame);
     preview_layout->setContentsMargins(0, 0, 0, 0);
     preview_layout->addWidget(d->m_previewViewer, 100);
-    preview_layout->addWidget(d->m_warmingUp, 0);
-    preview_layout->addWidget(d->m_countDown, 0);
     preview_layout->addWidget(d->m_activityFrame, 0);
     preview_layout->addWidget(d->m_btnFrame, 0);
 
