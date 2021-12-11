@@ -79,6 +79,7 @@ void KSaneScanThread::run()
 {
     m_dataSize = 0;
     m_readStatus = ReadOngoing;
+    m_announceFirstRead = true;
 
     // Start the scanning with sane_start
     m_saneStatus = sane_start(m_saneHandle);
@@ -118,8 +119,6 @@ void KSaneScanThread::run()
     m_frameRead = 0;
     m_frame_t_count = 0;
 
-    Q_EMIT scanProgressUpdated(0);
-
     while (m_readStatus == ReadOngoing) {
         readData();
     }
@@ -149,6 +148,11 @@ void KSaneScanThread::readData()
 {
     SANE_Int readBytes = 0;
     m_saneStatus = sane_read(m_saneHandle, m_readData, SCAN_READ_CHUNK_SIZE, &readBytes);
+
+    if (readBytes > 0 && m_announceFirstRead) {
+        Q_EMIT scanProgressUpdated(0);
+        m_announceFirstRead = false;
+    }
 
     switch (m_saneStatus) {
     case SANE_STATUS_GOOD:
