@@ -73,6 +73,7 @@ private:
     SANE_Parameters m_params;
     SANE_Status     m_saneStatus = SANE_STATUS_GOOD;
     ReadStatus      m_readStatus = ReadReady;
+    bool            m_announceFirstRead = true;
     bool            m_invertColors = false;
     KSaneImageBuilder m_imageBuilder;
     QImage          m_image;
