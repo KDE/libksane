@@ -1,11 +1,9 @@
-/* ============================================================
- *
+/*
  * SPDX-FileCopyrightText: 2007-2011 Kare Sars <kare.sars@iki .fi>
  * SPDX-FileCopyrightText: 2014 Gregor Mitsch : port to KDE5 frameworks
  *
  * SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
- *
- * ============================================================ */
+ */
 
 #include "labeledslider.h"
 // Qt includes

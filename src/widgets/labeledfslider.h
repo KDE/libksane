@@ -1,10 +1,8 @@
-/* ============================================================
- *
+/*
  * SPDX-FileCopyrightText: 2007-2011 Kare Sars <kare.sars@iki .fi>
  *
  * SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
- *
- * ============================================================ */
+ */
 
 #ifndef LABELED_FSLIDER_H
 #define LABELED_FSLIDER_H

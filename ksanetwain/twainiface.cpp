@@ -1,17 +1,10 @@
-/* ============================================================
- *
- * This file is a part of kdegraphics
- *
- * Date        : 2009-05-12
- * Description : Twain interface
- *
+/*
  * SPDX-FileCopyrightText: 2002-2003 Stephan Stapel <stephan dot stapel at web dot de>
  * SPDX-FileCopyrightText: 2008-2009 Gilles Caulier <caulier dot gilles at gmail dot com>
  * SPDX-FileCopyrightText: 2009, 2017 Kare Sars <kare dot sars at iki dot fi>
  *
  * SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
- *
- * ============================================================ */
+ */
 
 // I renamed the class to KSaneWidgetPrivate to remove
 // the need for a wrapper class with this name. (Kare)

@@ -1,15 +1,8 @@
-/* ============================================================
- *
- * This file is part of the KDE project
- *
- * Date        : 2009-05-11
- * Description : Sane interface for KDE
- *
+/*
  * SPDX-FileCopyrightText: 2009, 2017 Kare Sars <kare dot sars at iki dot fi>
  *
  * SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
- *
- * ============================================================ */
+ */
 
 #include "ksanewidget.h"
 

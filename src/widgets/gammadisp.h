@@ -1,10 +1,8 @@
-/* ============================================================
- *
+/*
  * SPDX-FileCopyrightText: 2007-2008 Kare Sars <kare.sars@iki .fi>
  *
  * SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
- *
- * ============================================================ */
+ */
 
 #ifndef GAMMA_DISP_H
 #define GAMMA_DISP_H

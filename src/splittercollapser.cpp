@@ -1,12 +1,10 @@
-/* ============================================================
-*
-* SPDX-FileCopyrightText: 2009 Aurélien Gâteau <agateau@kde.org>
-* SPDX-FileCopyrightText: 2009 Kåre Sårs <kare.sars@iki.fi>
-* SPDX-FileCopyrightText: 2014 Gregor Mitsch : port to KDE5 frameworks
-*
-* SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
-*
-* ============================================================ */
+/*
+ * SPDX-FileCopyrightText: 2009 Aurélien Gâteau <agateau@kde.org>
+ * SPDX-FileCopyrightText: 2009 Kåre Sårs <kare.sars@iki.fi>
+ * SPDX-FileCopyrightText: 2014 Gregor Mitsch : port to KDE5 frameworks
+ *
+ * SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
+ */
 
 #include "splittercollapser.h"
 

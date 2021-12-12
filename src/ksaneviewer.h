@@ -1,10 +1,8 @@
-/* ============================================================
-*
-* SPDX-FileCopyrightText: 2008 Kare Sars <kare dot sars at iki dot fi>
-*
-* SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
-*
-* ============================================================ */
+/*
+ * SPDX-FileCopyrightText: 2008 Kare Sars <kare dot sars at iki dot fi>
+ *
+ * SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
+ */
 
 #ifndef KSANE_VIEWER_H
 #define KSANE_VIEWER_H

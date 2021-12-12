@@ -1,17 +1,10 @@
-/* ============================================================
- *
- * This file is part of the KDE project
- *
- * Date        : 2007-09-13
- * Description : Sane interface for KDE
- *
+/*
  * SPDX-FileCopyrightText: 2007-2010 Kare Sars <kare dot sars at iki dot fi>
  * SPDX-FileCopyrightText: 2009 Grzegorz Kurtyka <grzegorz dot kurtyka at gmail dot com>
  * SPDX-FileCopyrightText: 2014 Gregor Mitsch : port to KDE5 frameworks
  *
  * SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
- *
- * ============================================================ */
+ */
 
 #ifndef KSANE_DEVICE_DIALOG_H
 #define KSANE_DEVICE_DIALOG_H

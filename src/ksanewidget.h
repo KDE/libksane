@@ -1,13 +1,11 @@
-/* ============================================================
- *
+/*
  * SPDX-FileCopyrightText: 2007-2010 Kare Sars <kare dot sars at iki dot fi>
  * SPDX-FileCopyrightText: 2007 Gilles Caulier <caulier dot gilles at gmail dot com>
  * SPDX-FileCopyrightText: 2014 Gregor Mitsch : port to KDE5 frameworks
  * SPDX-FileCopyrightText: 2021 Alexander Stippich <a.stippich@gmx.net>
  *
  * SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
- *
- * ============================================================ */
+ */
 
 #ifndef KSANE_H
 #define KSANE_H
