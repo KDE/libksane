@@ -24,9 +24,9 @@
 #include <QIcon>
 #include <QShortcut>
 
-#include <kpassworddialog.h>
+#include <KPasswordDialog>
 #ifdef HAVE_KF5WALLET
-#include <kwallet.h>
+#include <KWallet>
 #endif
 
 #include <KLocalizedString>
@@ -40,15 +40,15 @@ namespace KSaneIface
 KSaneWidget::KSaneWidget(QWidget *parent)
     : QWidget(parent), d(new KSaneWidgetPrivate(this))
 {
-    d->m_ksaneCoreInterface = new KSaneCore();
+    d->m_ksaneCoreInterface = new KSane::CoreInterface();
 
-    connect(d->m_ksaneCoreInterface, &KSaneCore::scannedImageReady, d, &KSaneWidgetPrivate::imageReady);
-    connect(d->m_ksaneCoreInterface, &KSaneCore::scanFinished, d, &KSaneWidgetPrivate::scanDone);
-    connect(d->m_ksaneCoreInterface, &KSaneCore::userMessage, d, &KSaneWidgetPrivate::alertUser);
-    connect(d->m_ksaneCoreInterface, &KSaneCore::scanProgress, d, &KSaneWidgetPrivate::updateProgress);
-    connect(d->m_ksaneCoreInterface, &KSaneCore::batchModeCountDown, d, &KSaneWidgetPrivate::updateCountDown);
-    connect(d->m_ksaneCoreInterface, &KSaneCore::availableDevices, d, &KSaneWidgetPrivate::signalDevListUpdate);
-    connect(d->m_ksaneCoreInterface, &KSaneCore::buttonPressed, this, &KSaneWidget::buttonPressed);
+    connect(d->m_ksaneCoreInterface, &KSane::CoreInterface::scannedImageReady, d, &KSaneWidgetPrivate::imageReady);
+    connect(d->m_ksaneCoreInterface, &KSane::CoreInterface::scanFinished, d, &KSaneWidgetPrivate::scanDone);
+    connect(d->m_ksaneCoreInterface, &KSane::CoreInterface::userMessage, d, &KSaneWidgetPrivate::alertUser);
+    connect(d->m_ksaneCoreInterface, &KSane::CoreInterface::scanProgress, d, &KSaneWidgetPrivate::updateProgress);
+    connect(d->m_ksaneCoreInterface, &KSane::CoreInterface::batchModeCountDown, d, &KSaneWidgetPrivate::updateCountDown);
+    connect(d->m_ksaneCoreInterface, &KSane::CoreInterface::availableDevices, d, &KSaneWidgetPrivate::signalDevListUpdate);
+    connect(d->m_ksaneCoreInterface, &KSane::CoreInterface::buttonPressed, this, &KSaneWidget::buttonPressed);
 
     // Create the static UI
     // create the preview
@@ -265,8 +265,8 @@ QString KSaneWidget::selectDevice(QWidget *parent)
 {
     QString selected_name;
     QPointer<KSaneDeviceDialog> sel = new KSaneDeviceDialog(parent);
-    connect(d->m_ksaneCoreInterface, &KSaneCore::availableDevices, sel, &KSaneDeviceDialog::updateDevicesList);
-    connect(sel, &KSaneDeviceDialog::requestReloadList, d->m_ksaneCoreInterface, &KSaneCore::reloadDevicesList);
+    connect(d->m_ksaneCoreInterface, &KSane::CoreInterface::availableDevices, sel, &KSaneDeviceDialog::updateDevicesList);
+    connect(sel, &KSaneDeviceDialog::requestReloadList, d->m_ksaneCoreInterface, &KSane::CoreInterface::reloadDevicesList);
 
     d->m_ksaneCoreInterface->reloadDevicesList();
 
@@ -292,15 +292,15 @@ bool KSaneWidget::openDevice(const QString &deviceName)
     QString                        myFolderName = QStringLiteral("ksane");
     QMap<QString, QString>         wallet_entry;
 
-    KSaneCore::KSaneOpenStatus status = d->m_ksaneCoreInterface->openDevice(deviceName);
-    if (status == KSaneCore::OpeningFailed) {
+    KSane::CoreInterface::OpenStatus status = d->m_ksaneCoreInterface->openDevice(deviceName);
+    if (status == KSane::CoreInterface::OpeningFailed) {
         return false;
     }
 
     bool password_dialog_ok = true;
 
     // prepare wallet for authentication and create password dialog
-    if (status == KSaneCore::OpeningDenied) {
+    if (status == KSane::CoreInterface::OpeningDenied) {
 #ifdef HAVE_KF5WALLET
         saneWallet = KWallet::Wallet::openWallet(KWallet::Wallet::LocalWallet(), winId());
 
@@ -327,7 +327,7 @@ bool KSaneWidget::openDevice(const QString &deviceName)
 
     // sane_open failed due to insufficient authorization
     // retry opening device with user provided data assisted with kwallet records
-    while (status == KSaneCore::OpeningDenied) {
+    while (status == KSane::CoreInterface::OpeningDenied) {
 
         password_dialog_ok = dlg->exec();
         if (!password_dialog_ok) {
@@ -340,7 +340,7 @@ bool KSaneWidget::openDevice(const QString &deviceName)
 
 #ifdef HAVE_KF5WALLET
         // store password in wallet on successful authentication
-        if (dlg->keepPassword() && status != KSaneCore::OpeningDenied) {
+        if (dlg->keepPassword() && status != KSane::CoreInterface::OpeningDenied) {
             QMap<QString, QString> entry;
             entry[QStringLiteral("username")] = dlg->username();
             entry[QStringLiteral("password")] = dlg->password();
@@ -483,7 +483,7 @@ QImage KSaneWidget::toQImage(const QByteArray &data,
 {
 
     if ((format == FormatRGB_16_C) || (format == FormatGrayScale16)) {
-        d->alertUser(KSaneCore::ErrorGeneral, i18n("The image data contained 16 bits per color, "
+        d->alertUser(KSane::CoreInterface::ErrorGeneral, i18n("The image data contained 16 bits per color, "
                      "but the color depth has been truncated to 8 bits per color."));
     }
     return toQImageSilent(data, width, height, bytes_per_line, format);
@@ -644,7 +644,7 @@ float KSaneWidget::scanAreaWidth()
 {
     float result = 0.0;
     if (d->m_optBrX) {
-        if (d->m_optBrX->valueUnit() == KSaneOption::UnitPixel) {
+        if (d->m_optBrX->valueUnit() == KSane::CoreOption::UnitPixel) {
             result = d->m_optBrX->maximumValue().toFloat();
             float dpi = currentDPI();
             if (dpi < 1) {
@@ -652,7 +652,7 @@ float KSaneWidget::scanAreaWidth()
                 dpi = 1.0;
             }
             result = result / dpi / 25.4;
-        } else if (d->m_optBrX->valueUnit() == KSaneOption::UnitMilliMeter) {
+        } else if (d->m_optBrX->valueUnit() == KSane::CoreOption::UnitMilliMeter) {
             result = d->m_optBrX->maximumValue().toFloat();
         }
     }
@@ -663,7 +663,7 @@ float KSaneWidget::scanAreaHeight()
 {
     float result = 0.0;
     if (d->m_optBrY) {
-        if (d->m_optBrY->valueUnit() == KSaneOption::UnitPixel) {
+        if (d->m_optBrY->valueUnit() == KSane::CoreOption::UnitPixel) {
             result = d->m_optBrY->maximumValue().toFloat();
             float dpi = currentDPI();
             if (dpi < 1) {
@@ -671,7 +671,7 @@ float KSaneWidget::scanAreaHeight()
                 dpi = 1.0;
             }
             result = result / dpi / 25.4;
-        } else if (d->m_optBrY->valueUnit() == KSaneOption::UnitMilliMeter) {
+        } else if (d->m_optBrY->valueUnit() == KSane::CoreOption::UnitMilliMeter) {
             result = d->m_optBrY->maximumValue().toFloat();
         }
     }

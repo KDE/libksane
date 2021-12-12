@@ -27,7 +27,7 @@ LabeledFSlider::LabeledFSlider(QWidget *parent, const QString &ltext,
     initFSlider(min, max, step);
 }
 
-LabeledFSlider::LabeledFSlider(QWidget *parent, KSaneOption *option)
+LabeledFSlider::LabeledFSlider(QWidget *parent, KSane::CoreOption *option)
     : KSaneOptionWidget(parent, option)
 {
     double maxValue = option->maximumValue().toDouble();
@@ -36,27 +36,27 @@ LabeledFSlider::LabeledFSlider(QWidget *parent, KSaneOption *option)
     initFSlider(minValue, maxValue , stepValue);
 
     QString unitSuffix;
-    KSaneOption::KSaneOptionUnit unit = option->valueUnit();
+    KSane::CoreOption::OptionUnit unit = option->valueUnit();
     switch (unit) {
-    case KSaneOption::UnitPixel:
+    case KSane::CoreOption::UnitPixel:
         unitSuffix = i18nc("Double numbers. SpinBox parameter unit", " Pixels");
         break;
-    case KSaneOption::UnitBit:
+    case KSane::CoreOption::UnitBit:
         unitSuffix = i18nc("Double numbers. SpinBox parameter unit", " Bits");
         break;
-    case KSaneOption::UnitMilliMeter:
+    case KSane::CoreOption::UnitMilliMeter:
         unitSuffix = i18nc("Double numbers. SpinBox parameter unit (Millimeter)", " mm");
         break;
-    case KSaneOption::UnitDPI:
+    case KSane::CoreOption::UnitDPI:
         unitSuffix = i18nc("Double numbers. SpinBox parameter unit (Dots Per Inch)", " DPI");
         break;
-    case KSaneOption::UnitPercent:
+    case KSane::CoreOption::UnitPercent:
         unitSuffix = i18nc("Double numbers. SpinBox parameter unit (Percentage)", " %");
         break;
-    case KSaneOption::UnitMicroSecond:
+    case KSane::CoreOption::UnitMicroSecond:
         unitSuffix = i18nc("Double numbers. SpinBox parameter unit (Microseconds)", " µs");
         break;
-    case KSaneOption::UnitSecond:
+    case KSane::CoreOption::UnitSecond:
         unitSuffix = i18nc("SpinBox parameter unit (seconds), float", " s");
         break;
     default:
@@ -67,8 +67,8 @@ LabeledFSlider::LabeledFSlider(QWidget *parent, KSaneOption *option)
 
     setLabelText(option->title());
     setToolTip(option->description());
-    connect(this, &LabeledFSlider::valueChanged, option, &KSaneOption::setValue);
-    connect(option, &KSaneOption::valueChanged, this, &LabeledFSlider::setValue);
+    connect(this, &LabeledFSlider::valueChanged, option, &KSane::CoreOption::setValue);
+    connect(option, &KSane::CoreOption::valueChanged, this, &LabeledFSlider::setValue);
     double value = option->value().toDouble();
     setValue(value);
 }

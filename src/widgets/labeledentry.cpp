@@ -31,14 +31,14 @@ LabeledEntry::LabeledEntry(QWidget *parent, const QString &ltext)
     initEntry();
 }
 
-LabeledEntry::LabeledEntry(QWidget *parent, KSaneOption *option)
+LabeledEntry::LabeledEntry(QWidget *parent, KSane::CoreOption *option)
     : KSaneOptionWidget(parent, option)
 {
     initEntry();
     setToolTip(option->description());
     setLabelText(option->title());
-    connect(this, &LabeledEntry::entryEdited, option, &KSaneOption::setValue);
-    connect(option, &KSaneOption::valueChanged, this, &LabeledEntry::setValue);
+    connect(this, &LabeledEntry::entryEdited, option, &KSane::CoreOption::setValue);
+    connect(option, &KSane::CoreOption::valueChanged, this, &LabeledEntry::setValue);
     QString value = option->value().toString();
     m_entry->setText(value);
 }

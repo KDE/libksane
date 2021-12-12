@@ -85,7 +85,7 @@ void KSaneDeviceDialog::reloadDevicesList()
     m_gbDevices->layout()->itemAt(0)->widget()->hide();  // explanation
     m_btnReloadDevices->setEnabled(false);
 
-    Q_EMIT requestReloadList();
+    Q_EMIT requestReloadList(KSane::CoreInterface::AllDevices);
 }
 
 void KSaneDeviceDialog::setAvailable(bool isAvailable)
@@ -111,7 +111,7 @@ QString KSaneDeviceDialog::getSelectedName() const
     return QString();
 }
 
-void KSaneDeviceDialog::updateDevicesList(const QList<KSaneCore::DeviceInfo> &list)
+void KSaneDeviceDialog::updateDevicesList(const QList<KSane::DeviceInformation*> &list)
 {
     qDeleteAll(m_btnGroupDevices->buttons());
 
@@ -132,15 +132,15 @@ void KSaneDeviceDialog::updateDevicesList(const QList<KSaneCore::DeviceInfo> &li
 
     for (int i = 0; i < list.size(); ++i) {
         QRadioButton *b = new QRadioButton(this);
-        b->setObjectName(list[i].name);
-        b->setToolTip(list[i].name);
+        b->setObjectName(list.at(i)->name());
+        b->setToolTip(list.at(i)->name());
         b->setText(QStringLiteral("%1 : %2\n%3")
-                   .arg(list[i].vendor, list[i].model, list[i].name));
+                   .arg(list.at(i)->vendor(), list.at(i)->model(), list.at(i)->name()));
 
         m_btnLayout->addWidget(b);
         m_btnGroupDevices->addButton(b);
         connect(b, &QRadioButton::clicked, this, &KSaneDeviceDialog::setAvailable);
-        if ((i == 0) || (list.at(i).name == m_selectedDevice)) {
+        if ((i == 0) || (list.at(i)->name() == m_selectedDevice)) {
             b->setChecked(true);
             setAvailable(true);
         }

@@ -14,7 +14,7 @@
 #include <QLabel>
 #include <QGridLayout>
 
-#include "ksaneoption.h"
+#include <CoreOption>
 
 namespace KSaneIface
 {
@@ -38,7 +38,7 @@ public:
      */
     KSaneOptionWidget(QWidget *parent, const QString &labelText);
 
-    KSaneOptionWidget(QWidget *parent, KSaneOption *option);
+    KSaneOptionWidget(QWidget *parent, KSane::CoreOption *option);
     ~KSaneOptionWidget() override;
 
     void setLabelText(const QString &text);
@@ -54,9 +54,7 @@ protected:
 
     QLabel      *m_label;
     QGridLayout *m_layout;
-    KSaneOption *m_option = nullptr;
-
-
+    KSane::CoreOption *m_option = nullptr;
 };
 
 }  // NameSpace KSaneIface

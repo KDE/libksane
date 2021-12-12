@@ -1,9 +1,5 @@
 TODO list of new features:
 
-# KSaneCore
-Implement reading multi-value options of SANE
-Pure Qt library option?
-
 # KSaneWidget
 Use KSaneCore + KSaneBasicOptions + KSaneSpecialOptions + KSanePreview to create a GUI like the current
 KSaneBasicOptions* createBasicOptions(QWidget *parent=0) const     // A widget with current "basic options"

@@ -16,8 +16,6 @@
 #ifndef KSANE_DEVICE_DIALOG_H
 #define KSANE_DEVICE_DIALOG_H
 
-#include "ksanecore.h"
-
 #include <QGroupBox>
 #include <QStringList>
 #include <QButtonGroup>
@@ -27,6 +25,8 @@
 #include <QPushButton>
 #include <QBoxLayout>
 #include <QDialog>
+
+#include <CoreInterface>
 
 namespace KSaneIface
 {
@@ -43,11 +43,11 @@ public:
     void setDefault(const QString &);
 
 public Q_SLOTS:
-    void updateDevicesList(const QList<KSaneCore::DeviceInfo> &list);
+    void updateDevicesList(const QList<KSane::DeviceInformation*> &list);
     void reloadDevicesList();
 
 Q_SIGNALS:
-    void requestReloadList();
+    void requestReloadList(const KSane::CoreInterface::DeviceType type);
 
 private Q_SLOTS:
     void setAvailable(bool avail);

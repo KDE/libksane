@@ -4,6 +4,7 @@
 Dependencies:
 - 'on': ['@all']
   'require':
+    'libraries/ksanecore': '@same'
     'frameworks/extra-cmake-modules': '@stable'
     'frameworks/ki18n': '@stable'
     'frameworks/kwidgetsaddons': '@stable'

@@ -23,12 +23,12 @@ KSaneOptionWidget::KSaneOptionWidget(QWidget *parent, const QString &labelText)
     initWidget();
 }
 
-KSaneOptionWidget::KSaneOptionWidget(QWidget *parent, KSaneOption *option)
+KSaneOptionWidget::KSaneOptionWidget(QWidget *parent, KSane::CoreOption *option)
     : QWidget(parent)
 {
     m_option = option;
     m_label = new QLabel;
-    connect(option, &KSaneOption::optionReloaded, this, &KSaneOptionWidget::updateVisibility);
+    connect(option, &KSane::CoreOption::optionReloaded, this, &KSaneOptionWidget::updateVisibility);
     initWidget();
 }
 
@@ -52,11 +52,11 @@ void KSaneOptionWidget::updateVisibility()
         return;
     }
 
-    if (m_option->state() == KSaneOption::StateHidden) {
+    if (m_option->state() == KSane::CoreOption::StateHidden) {
         hide();
     } else {
         show();
-        setEnabled(m_option->state() == KSaneOption::StateActive);
+        setEnabled(m_option->state() == KSane::CoreOption::StateActive);
     }
 }
 

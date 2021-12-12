@@ -122,16 +122,16 @@ void KSaneWidgetPrivate::clearDeviceOptions()
     m_otherOptsTab = nullptr;
 }
 
-void KSaneWidgetPrivate::signalDevListUpdate(const QList<KSaneCore::DeviceInfo> &deviceList)
+void KSaneWidgetPrivate::signalDevListUpdate(const QList<KSane::DeviceInformation*> &deviceList)
 {
     QList<KSaneWidget::DeviceInfo> list;
     list.reserve(deviceList.count());
     for (const auto &device : deviceList) {
         KSaneWidget::DeviceInfo newDevice;
-        newDevice.model = device.model;
-        newDevice.vendor = device.vendor;
-        newDevice.name = device.name;
-        newDevice.type = device.type;
+        newDevice.model = device->model();
+        newDevice.vendor = device->vendor();
+        newDevice.name = device->name();
+        newDevice.type = device->type();
         list << newDevice;
     }
     Q_EMIT q->availableDevices(list);
@@ -229,10 +229,10 @@ float KSaneWidgetPrivate::ratioToDispUnitX(float ratio)
 
     float result = ratioToScanAreaX(ratio);
 
-    if (m_optBrX->valueUnit() == KSaneOption::UnitMilliMeter) {
+    if (m_optBrX->valueUnit() == KSane::CoreOption::UnitMilliMeter) {
         return mmToDispUnit(result);
     }
-    else if (m_optBrX->valueUnit() == KSaneOption::UnitPixel && m_optRes) {
+    else if (m_optBrX->valueUnit() == KSane::CoreOption::UnitPixel && m_optRes) {
         // get current DPI
         float dpi = m_optRes->value().toFloat();
         if (dpi > 1) {
@@ -252,10 +252,10 @@ float KSaneWidgetPrivate::ratioToDispUnitY(float ratio)
 
     float result = ratioToScanAreaY(ratio);
 
-    if (m_optBrY->valueUnit() == KSaneOption::UnitMilliMeter) {
+    if (m_optBrY->valueUnit() == KSane::CoreOption::UnitMilliMeter) {
         return mmToDispUnit(result);
     }
-    else if (m_optBrY->valueUnit() == KSaneOption::UnitPixel && m_optRes) {
+    else if (m_optBrY->valueUnit() == KSane::CoreOption::UnitPixel && m_optRes) {
         // get current DPI
         float dpi = m_optRes->value().toFloat();
         if (dpi > 1) {
@@ -285,29 +285,29 @@ float KSaneWidgetPrivate::dispUnitToRatioY(float value)
     return value / valueMax;
 }
 
-KSaneOptionWidget *KSaneWidgetPrivate::createOptionWidget(QWidget *parent, KSaneOption *option)
+KSaneOptionWidget *KSaneWidgetPrivate::createOptionWidget(QWidget *parent, KSane::CoreOption *option)
 {
     KSaneOptionWidget *widget = nullptr;
     switch (option->type()) {
-        case KSaneOption::TypeBool:
+        case KSane::CoreOption::TypeBool:
             widget = new LabeledCheckbox(parent, option);
             break;
-        case KSaneOption::TypeInteger:
+        case KSane::CoreOption::TypeInteger:
             widget = new LabeledSlider(parent, option);
             break;
-        case KSaneOption::TypeDouble:
+        case KSane::CoreOption::TypeDouble:
             widget = new LabeledFSlider(parent, option);
             break;
-        case KSaneOption::TypeValueList:
+        case KSane::CoreOption::TypeValueList:
             widget = new LabeledCombo(parent, option);
             break;
-        case KSaneOption::TypeString:
+        case KSane::CoreOption::TypeString:
             widget = new LabeledEntry(parent, option);
             break;
-        case KSaneOption::TypeGamma:
+        case KSane::CoreOption::TypeGamma:
             widget = new LabeledGamma(parent, option);
             break;
-        case KSaneOption::TypeAction:
+        case KSane::CoreOption::TypeAction:
             widget = new KSaneButton(parent, option);
             break;
         default:
@@ -324,54 +324,54 @@ void KSaneWidgetPrivate::createOptInterface()
     m_basicScrollA->setWidget(m_basicOptsTab);
 
     QVBoxLayout *basicLayout = new QVBoxLayout(m_basicOptsTab);
-    KSaneOption *option = m_ksaneCoreInterface->getOption(KSaneCore::SourceOption);
+    KSane::CoreOption *option = m_ksaneCoreInterface->getOption(KSane::CoreInterface::SourceOption);
     // Scan Source
     if (option != nullptr) {
         m_optSource = option;
         KSaneOptionWidget *source = createOptionWidget(m_basicOptsTab, option);
         basicLayout->addWidget(source);
-        connect(m_optSource, &KSaneOption::valueChanged, this, &KSaneWidgetPrivate::checkInvert, Qt::QueuedConnection);
-        connect(m_optSource, &KSaneOption::valueChanged, this, [this]() {
+        connect(m_optSource, &KSane::CoreOption::valueChanged, this, &KSaneWidgetPrivate::checkInvert, Qt::QueuedConnection);
+        connect(m_optSource, &KSane::CoreOption::valueChanged, this, [this]() {
             m_previewViewer->setMultiselectionEnabled(!scanSourceADF());
         });
     }
 
     // film-type (note: No translation)
-    if ((option = m_ksaneCoreInterface->getOption(KSaneCore::FilmTypeOption)) != nullptr) {
+    if ((option = m_ksaneCoreInterface->getOption(KSane::CoreInterface::FilmTypeOption)) != nullptr) {
         m_optFilmType = option;
         KSaneOptionWidget *film = createOptionWidget(m_basicOptsTab, option);
         basicLayout->addWidget(film);
-        connect(m_optFilmType, &KSaneOption::valueChanged, this, &KSaneWidgetPrivate::checkInvert, Qt::QueuedConnection);
-    } else if ((option = m_ksaneCoreInterface->getOption(KSaneCore::NegativeOption)) != nullptr) {
+        connect(m_optFilmType, &KSane::CoreOption::valueChanged, this, &KSaneWidgetPrivate::checkInvert, Qt::QueuedConnection);
+    } else if ((option = m_ksaneCoreInterface->getOption(KSane::CoreInterface::NegativeOption)) != nullptr) {
         m_optNegative = option;
         KSaneOptionWidget *negative = createOptionWidget(m_basicOptsTab, option);
         basicLayout->addWidget(negative);
     }
     // Scan mode
-    if ((option = m_ksaneCoreInterface->getOption(KSaneCore::ScanModeOption)) != nullptr) {
+    if ((option = m_ksaneCoreInterface->getOption(KSane::CoreInterface::ScanModeOption)) != nullptr) {
         m_optMode = option;
         KSaneOptionWidget *mode = createOptionWidget(m_basicOptsTab, option);
         basicLayout->addWidget(mode);
     }
     // Bitdepth
-    if ((option = m_ksaneCoreInterface->getOption(KSaneCore::BitDepthOption)) != nullptr) {
+    if ((option = m_ksaneCoreInterface->getOption(KSane::CoreInterface::BitDepthOption)) != nullptr) {
         m_optDepth = option;
         KSaneOptionWidget *bitDepth = createOptionWidget(m_basicOptsTab, option);
         basicLayout->addWidget(bitDepth);
     }
     // Threshold
-    if ((option = m_ksaneCoreInterface->getOption(KSaneCore::ThresholdOption)) != nullptr) {
+    if ((option = m_ksaneCoreInterface->getOption(KSane::CoreInterface::ThresholdOption)) != nullptr) {
         KSaneOptionWidget *threshold = createOptionWidget(m_basicOptsTab, option);
         basicLayout->addWidget(threshold);
     }
     // Resolution
-    if ((option = m_ksaneCoreInterface->getOption(KSaneCore::ResolutionOption)) != nullptr) {
+    if ((option = m_ksaneCoreInterface->getOption(KSane::CoreInterface::ResolutionOption)) != nullptr) {
         m_optRes = option;
         KSaneOptionWidget *resolution = createOptionWidget(m_basicOptsTab, option);
         basicLayout->addWidget(resolution);
     }
     // These two next resolution options are a bit tricky.
-    if ((option = m_ksaneCoreInterface->getOption(KSaneCore::XResolutionOption)) != nullptr) {
+    if ((option = m_ksaneCoreInterface->getOption(KSane::CoreInterface::XResolutionOption)) != nullptr) {
         m_optResX = option;
         if (!m_optRes) {
             m_optRes = m_optResX;
@@ -379,50 +379,50 @@ void KSaneWidgetPrivate::createOptInterface()
         KSaneOptionWidget *optResX = createOptionWidget(m_basicOptsTab, option);
         basicLayout->addWidget(optResX);
     }
-    if ((option = m_ksaneCoreInterface->getOption(KSaneCore::YResolutionOption)) != nullptr) {
+    if ((option = m_ksaneCoreInterface->getOption(KSane::CoreInterface::YResolutionOption)) != nullptr) {
         m_optResY = option;
         KSaneOptionWidget *optResY = createOptionWidget(m_basicOptsTab, option);
         basicLayout->addWidget(optResY);
     }
 
     // save a pointer to the preview option if possible
-    if ((option = m_ksaneCoreInterface->getOption(KSaneCore::PreviewOption)) != nullptr) {
+    if ((option = m_ksaneCoreInterface->getOption(KSane::CoreInterface::PreviewOption)) != nullptr) {
         m_optPreview = option;
         m_handledOptions.insert(option->name());
     }
 
     // save a pointer to the "wait-for-button" option if possible (Note: No translation)
-    if ((option = m_ksaneCoreInterface->getOption(KSaneCore::WaitForButtonOption)) != nullptr) {
+    if ((option = m_ksaneCoreInterface->getOption(KSane::CoreInterface::WaitForButtonOption)) != nullptr) {
         m_optWaitForBtn = option;
         m_handledOptions.insert(option->name());
     }
 
     // scan area (Do not add the widgets)
-    if ((option = m_ksaneCoreInterface->getOption(KSaneCore::TopLeftXOption)) != nullptr) {
+    if ((option = m_ksaneCoreInterface->getOption(KSane::CoreInterface::TopLeftXOption)) != nullptr) {
         m_optTlX = option;
-        connect(option, &KSaneOption::valueChanged, this, &KSaneWidgetPrivate::setTLX);
+        connect(option, &KSane::CoreOption::valueChanged, this, &KSaneWidgetPrivate::setTLX);
         m_handledOptions.insert(option->name());
-        connect(option, &KSaneOption::optionReloaded, this, &KSaneWidgetPrivate::updatePreviewViewer);
+        connect(option, &KSane::CoreOption::optionReloaded, this, &KSaneWidgetPrivate::updatePreviewViewer);
     }
-    if ((option = m_ksaneCoreInterface->getOption(KSaneCore::TopLeftYOption)) != nullptr) {
+    if ((option = m_ksaneCoreInterface->getOption(KSane::CoreInterface::TopLeftYOption)) != nullptr) {
         m_optTlY = option;
-        connect(option, &KSaneOption::valueChanged, this, &KSaneWidgetPrivate::setTLY);
+        connect(option, &KSane::CoreOption::valueChanged, this, &KSaneWidgetPrivate::setTLY);
         m_handledOptions.insert(option->name());
-        connect(option, &KSaneOption::optionReloaded, this, &KSaneWidgetPrivate::updatePreviewViewer);
+        connect(option, &KSane::CoreOption::optionReloaded, this, &KSaneWidgetPrivate::updatePreviewViewer);
     }
-    if ((option = m_ksaneCoreInterface->getOption(KSaneCore::BottomRightXOption)) != nullptr) {
+    if ((option = m_ksaneCoreInterface->getOption(KSane::CoreInterface::BottomRightXOption)) != nullptr) {
         m_optBrX = option;
-        connect(option, &KSaneOption::valueChanged, this, &KSaneWidgetPrivate::setBRX);
+        connect(option, &KSane::CoreOption::valueChanged, this, &KSaneWidgetPrivate::setBRX);
         m_handledOptions.insert(option->name());
-        connect(option, &KSaneOption::optionReloaded, this, &KSaneWidgetPrivate::updatePreviewViewer);
+        connect(option, &KSane::CoreOption::optionReloaded, this, &KSaneWidgetPrivate::updatePreviewViewer);
     }
-    if ((option = m_ksaneCoreInterface->getOption(KSaneCore::BottomRightYOption)) != nullptr) {
+    if ((option = m_ksaneCoreInterface->getOption(KSane::CoreInterface::BottomRightYOption)) != nullptr) {
         m_optBrY = option;
-        connect(option, &KSaneOption::valueChanged, this, &KSaneWidgetPrivate::setBRY);
+        connect(option, &KSane::CoreOption::valueChanged, this, &KSaneWidgetPrivate::setBRY);
         m_handledOptions.insert(option->name());
-        connect(option, &KSaneOption::optionReloaded, this, &KSaneWidgetPrivate::updatePreviewViewer);
+        connect(option, &KSane::CoreOption::optionReloaded, this, &KSaneWidgetPrivate::updatePreviewViewer);
     }
-    if ((option = m_ksaneCoreInterface->getOption(KSaneCore::PageSizeOption)) != nullptr) {
+    if ((option = m_ksaneCoreInterface->getOption(KSane::CoreInterface::PageSizeOption)) != nullptr) {
         m_handledOptions.insert(option->name());
     }
 
@@ -470,12 +470,12 @@ void KSaneWidgetPrivate::createOptInterface()
     colorLayout->setContentsMargins(0, 0, 0, 0);
 
     // Add Color correction to the color "frame"
-    if ((option = m_ksaneCoreInterface->getOption(KSaneCore::BrightnessOption)) != nullptr) {
+    if ((option = m_ksaneCoreInterface->getOption(KSane::CoreInterface::BrightnessOption)) != nullptr) {
         KSaneOptionWidget *brightness = createOptionWidget(m_advancedOptsTab, option);
         colorLayout->addWidget(brightness);
     }
 
-    if ((option = m_ksaneCoreInterface->getOption(KSaneCore::ContrastOption)) != nullptr) {
+    if ((option = m_ksaneCoreInterface->getOption(KSane::CoreInterface::ContrastOption)) != nullptr) {
         KSaneOptionWidget *contrast = createOptionWidget(m_advancedOptsTab, option);
         colorLayout->addWidget(contrast);
     }
@@ -488,19 +488,19 @@ void KSaneWidgetPrivate::createOptInterface()
     LabeledGamma *gammaR = nullptr;
     LabeledGamma *gammaG = nullptr;
     LabeledGamma *gammaB = nullptr;
-    if ((option = m_ksaneCoreInterface->getOption(KSaneCore::GammaRedOption)) != nullptr) {
+    if ((option = m_ksaneCoreInterface->getOption(KSane::CoreInterface::GammaRedOption)) != nullptr) {
         m_optGamR = option;
         gammaR = new LabeledGamma(gamma_frm, option, Qt::red);
         gam_frm_l->addWidget(gammaR);
         m_handledOptions.insert(option->name());
     }
-    if ((option = m_ksaneCoreInterface->getOption(KSaneCore::GammaGreenOption)) != nullptr) {
+    if ((option = m_ksaneCoreInterface->getOption(KSane::CoreInterface::GammaGreenOption)) != nullptr) {
         m_optGamG = option;
         gammaG = new LabeledGamma(gamma_frm, option, Qt::green);
         gam_frm_l->addWidget(gammaG);
         m_handledOptions.insert(option->name());
     }
-    if ((option = m_ksaneCoreInterface->getOption(KSaneCore::GammaBlueOption)) != nullptr) {
+    if ((option = m_ksaneCoreInterface->getOption(KSane::CoreInterface::GammaBlueOption)) != nullptr) {
         m_optGamB = option;
         gammaB = new LabeledGamma(gamma_frm, option, Qt::blue);
         gam_frm_l->addWidget(gammaB);
@@ -531,29 +531,29 @@ void KSaneWidgetPrivate::createOptInterface()
         gamma_frm->hide();
     }
 
-    if ((option = m_ksaneCoreInterface->getOption(KSaneCore::BlackLevelOption)) != nullptr) {
+    if ((option = m_ksaneCoreInterface->getOption(KSane::CoreInterface::BlackLevelOption)) != nullptr) {
         KSaneOptionWidget *blackLevel = createOptionWidget(m_colorOpts, option);
         colorLayout->addWidget(blackLevel);
     }
 
-    if ((option = m_ksaneCoreInterface->getOption(KSaneCore::WhiteLevelOption)) != nullptr) {
+    if ((option = m_ksaneCoreInterface->getOption(KSane::CoreInterface::WhiteLevelOption)) != nullptr) {
         KSaneOptionWidget *blackLevel = createOptionWidget(m_colorOpts, option);
         colorLayout->addWidget(blackLevel);
     }
 
-    if ((option = m_ksaneCoreInterface->getOption(KSaneCore::InvertColorOption)) != nullptr) {
+    if ((option = m_ksaneCoreInterface->getOption(KSane::CoreInterface::InvertColorOption)) != nullptr) {
         m_optInvert = option;
         KSaneOptionWidget *invertColor = createOptionWidget(m_colorOpts, option);
         colorLayout->addWidget(invertColor);
-        connect(m_optInvert, &KSaneOption::valueChanged, this, &KSaneWidgetPrivate::invertPreview);
+        connect(m_optInvert, &KSane::CoreOption::valueChanged, this, &KSaneWidgetPrivate::invertPreview);
     }
 
-    if ((option = m_ksaneCoreInterface->getOption(KSaneCore::BatchModeOption)) != nullptr) {
+    if ((option = m_ksaneCoreInterface->getOption(KSane::CoreInterface::BatchModeOption)) != nullptr) {
         KSaneOptionWidget *batchMode = createOptionWidget(m_advancedOptsTab, option);
         colorLayout->addWidget(batchMode);
     }
 
-    if ((option = m_ksaneCoreInterface->getOption(KSaneCore::BatchDelayOption)) != nullptr) {
+    if ((option = m_ksaneCoreInterface->getOption(KSane::CoreInterface::BatchDelayOption)) != nullptr) {
         KSaneOptionWidget *batchDelay = createOptionWidget(m_advancedOptsTab, option);
         colorLayout->addWidget(batchDelay);
     }
@@ -571,7 +571,7 @@ void KSaneWidgetPrivate::createOptInterface()
         if (m_handledOptions.find(option->name()) != m_handledOptions.end()) {
             continue;
         }
-        if (option->type() != KSaneOption::TypeDetectFail) {
+        if (option->type() != KSane::CoreOption::TypeDetectFail) {
             KSaneOptionWidget *widget = createOptionWidget(m_otherOptsTab, option);
             if (widget != nullptr) {
                 otherLayout->addWidget(widget);
@@ -652,8 +652,8 @@ void KSaneWidgetPrivate::updateCommonGamma()
 {
     // Gamma table special case
     if (m_optGamR && m_optGamG && m_optGamB) {
-        m_commonGamma->setHidden(m_optGamR->state() == KSaneOption::StateHidden);
-        m_splitGamChB->setHidden(m_optGamR->state() == KSaneOption::StateHidden);
+        m_commonGamma->setHidden(m_optGamR->state() == KSane::CoreOption::StateHidden);
+        m_splitGamChB->setHidden(m_optGamR->state() == KSane::CoreOption::StateHidden);
     }
 }
 
@@ -909,7 +909,7 @@ void KSaneWidgetPrivate::startPreviewScan()
         if (m_previewDPI < m_optRes->minimumValue().toFloat()) {
             targetPreviewDPI = qMax(m_optRes->minimumValue().toFloat(), 25.0f);
             if ((m_optBrX != nullptr) && (m_optBrY != nullptr)) {
-                if (m_optBrX->valueUnit() == KSaneOption::UnitMilliMeter) {
+                if (m_optBrX->valueUnit() == KSane::CoreOption::UnitMilliMeter) {
                     targetPreviewDPI = 300 * 25.4 / (m_optBrX->value().toFloat());
                     // always round to a multiple of 25
                     int remainder = targetPreviewDPI % 25;
@@ -919,7 +919,7 @@ void KSaneWidgetPrivate::startPreviewScan()
         } else {
             targetPreviewDPI = m_previewDPI;
         }
-        if (m_optRes->type() == KSaneOption::TypeValueList) {
+        if (m_optRes->type() == KSane::CoreOption::TypeValueList) {
             const auto &values = m_optRes->valueList();
             if (values.count() <= 0) {
                 qCWarning(KSANE_LOG) << "Resolution option is broken and has no entries";
@@ -963,7 +963,7 @@ void KSaneWidgetPrivate::startPreviewScan()
     m_ksaneCoreInterface->startScan();
 }
 
-void KSaneWidgetPrivate::previewScanDone(KSaneCore::KSaneScanStatus status, const QString &strStatus)
+void KSaneWidgetPrivate::previewScanDone(KSane::CoreInterface::ScanStatus status, const QString &strStatus)
 {
     // restore the original settings of the changed parameters
     if (m_optDepth != nullptr) {
@@ -986,7 +986,7 @@ void KSaneWidgetPrivate::previewScanDone(KSaneCore::KSaneScanStatus status, cons
     m_previewViewer->setQImage(&m_previewImg);
     m_previewViewer->zoom2Fit();
 
-    if (status != KSaneCore::ErrorGeneral && m_autoSelect) {
+    if (status != KSane::CoreInterface::ErrorGeneral && m_autoSelect) {
         m_previewViewer->findSelections();
     }
 
@@ -1113,7 +1113,7 @@ bool KSaneWidgetPrivate::scanSourceADF()
     source.contains(QStringLiteral("Duplex"));
 }
 
-void KSaneWidgetPrivate::scanDone(KSaneCore::KSaneScanStatus status, const QString &strStatus)
+void KSaneWidgetPrivate::scanDone(KSane::CoreInterface::ScanStatus status, const QString &strStatus)
 {
     if (m_isPreview) {
         previewScanDone(status, strStatus);
@@ -1122,7 +1122,7 @@ void KSaneWidgetPrivate::scanDone(KSaneCore::KSaneScanStatus status, const QStri
     }
 }
 
-void KSaneWidgetPrivate::oneFinalScanDone(KSaneCore::KSaneScanStatus status, const QString &strStatus)
+void KSaneWidgetPrivate::oneFinalScanDone(KSane::CoreInterface::ScanStatus status, const QString &strStatus)
 {
     // check if we have multiple selections.
     if (m_previewViewer->selListSize() > m_selIndex) {
@@ -1152,13 +1152,13 @@ void KSaneWidgetPrivate::oneFinalScanDone(KSaneCore::KSaneScanStatus status, con
         }
     } else {
         switch (status) {
-            case KSaneCore::NoError:
+            case KSane::CoreInterface::NoError:
                 Q_EMIT q->scanDone(KSaneWidget::NoError, QString());
                 break;
-            case KSaneCore::Information:
+            case KSane::CoreInterface::Information:
                 Q_EMIT q->scanDone(KSaneWidget::Information, strStatus);
                 break;
-            case KSaneCore::ErrorGeneral:
+            case KSane::CoreInterface::ErrorGeneral:
                 Q_EMIT q->scanDone(KSaneWidget::ErrorGeneral, strStatus);
                 break;
         }
@@ -1259,11 +1259,11 @@ void KSaneWidgetPrivate::updateCountDown(int remainingSeconds)
     }
 }
 
-void KSaneWidgetPrivate::alertUser(KSaneCore::KSaneScanStatus status, const QString &strStatus)
+void KSaneWidgetPrivate::alertUser(KSane::CoreInterface::ScanStatus status, const QString &strStatus)
 {
     if (!q->isSignalConnected(QMetaMethod::fromSignal(&KSaneWidget::userMessage))) {
         switch (status) {
-        case KSaneCore::ErrorGeneral:
+        case KSane::CoreInterface::ErrorGeneral:
             QMessageBox::critical(nullptr, i18nc("@title:window", "General Error"), strStatus);
             break;
         default:
@@ -1272,13 +1272,13 @@ void KSaneWidgetPrivate::alertUser(KSaneCore::KSaneScanStatus status, const QStr
         }
     } else {
         switch (status) {
-        case KSaneCore::NoError:
+        case KSane::CoreInterface::NoError:
             Q_EMIT q->userMessage(KSaneWidget::NoError, QString());
             break;
-        case KSaneCore::Information:
+        case KSane::CoreInterface::Information:
             Q_EMIT q->userMessage(KSaneWidget::Information, strStatus);
             break;
-        case KSaneCore::ErrorGeneral:
+        case KSane::CoreInterface::ErrorGeneral:
             Q_EMIT q->userMessage(KSaneWidget::ErrorGeneral, strStatus);
             break;
         }

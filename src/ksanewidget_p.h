@@ -22,7 +22,9 @@
 #include <QToolButton>
 #include <QSet>
 
-#include "ksanecore.h"
+#include <CoreInterface>
+#include <CoreOption>
+
 #include "ksanewidget.h"
 #include "ksaneoptionwidget.h"
 #include "ksaneviewer.h"
@@ -49,7 +51,7 @@ public:
     void createOptInterface();
     void updatePreviewSize();
     void setBusy(bool busy);
-    KSaneOptionWidget *createOptionWidget(QWidget *parent, KSaneOption *option);
+    KSaneOptionWidget *createOptionWidget(QWidget *parent, KSane::CoreOption *option);
     KSaneWidget::ImageFormat getImgFormat(const QImage &image);
 
     float ratioToScanAreaX(float ratio);
@@ -67,13 +69,13 @@ public:
 public Q_SLOTS:
     void startFinalScan();
     void startPreviewScan();
-    void scanDone(KSaneCore::KSaneScanStatus status, const QString &strStatus);
-    void previewScanDone(KSaneCore::KSaneScanStatus status, const QString &strStatus);
-    void oneFinalScanDone(KSaneCore::KSaneScanStatus status, const QString &strStatus);
+    void scanDone(KSane::CoreInterface::ScanStatus status, const QString &strStatus);
+    void previewScanDone(KSane::CoreInterface::ScanStatus status, const QString &strStatus);
+    void oneFinalScanDone(KSane::CoreInterface::ScanStatus status, const QString &strStatus);
     void updateProgress(int progress);
     void updateCountDown(int remainingSeconds);
     void handleSelection(float tl_x, float tl_y, float br_x, float br_y);
-    void signalDevListUpdate(const QList<KSaneCore::DeviceInfo> &deviceList);
+    void signalDevListUpdate(const QList<KSane::DeviceInformation*> &deviceList);
     void imageReady(const QImage &image);
 
 private Q_SLOTS:
@@ -94,10 +96,10 @@ private Q_SLOTS:
     void updatePreviewViewer();
 
 public:
-    void alertUser(KSaneCore::KSaneScanStatus status, const QString &strStatus);
+    void alertUser(KSane::CoreInterface::ScanStatus status, const QString &strStatus);
 
 public:
-    KSaneCore          *m_ksaneCoreInterface;
+    KSane::CoreInterface   *m_ksaneCoreInterface;
 
     // backend independent
     QTabWidget         *m_optsTabWidget;
@@ -139,26 +141,26 @@ public:
 
     // Option variables
     QSet<QString>            m_handledOptions;
-    KSaneOption        *m_optSource;
-    KSaneOption        *m_optNegative;
-    KSaneOption        *m_optFilmType;
-    KSaneOption        *m_optMode;
-    KSaneOption        *m_optDepth;
-    KSaneOption        *m_optRes;
-    KSaneOption        *m_optResX;
-    KSaneOption        *m_optResY;
-    KSaneOption        *m_optTlX;
-    KSaneOption        *m_optTlY;
-    KSaneOption        *m_optBrX;
-    KSaneOption        *m_optBrY;
-    KSaneOption        *m_optPreview;
-    KSaneOption        *m_optGamR;
-    KSaneOption        *m_optGamG;
-    KSaneOption        *m_optGamB;
-    KSaneOption        *m_optInvert;
+    KSane::CoreOption        *m_optSource;
+    KSane::CoreOption        *m_optNegative;
+    KSane::CoreOption        *m_optFilmType;
+    KSane::CoreOption        *m_optMode;
+    KSane::CoreOption        *m_optDepth;
+    KSane::CoreOption        *m_optRes;
+    KSane::CoreOption        *m_optResX;
+    KSane::CoreOption        *m_optResY;
+    KSane::CoreOption        *m_optTlX;
+    KSane::CoreOption        *m_optTlY;
+    KSane::CoreOption        *m_optBrX;
+    KSane::CoreOption        *m_optBrY;
+    KSane::CoreOption        *m_optPreview;
+    KSane::CoreOption        *m_optGamR;
+    KSane::CoreOption        *m_optGamG;
+    KSane::CoreOption        *m_optGamB;
+    KSane::CoreOption        *m_optInvert;
     LabeledCheckbox    *m_splitGamChB;
     LabeledGamma       *m_commonGamma;
-    KSaneOption        *m_optWaitForBtn;
+    KSane::CoreOption        *m_optWaitForBtn;
 
     // preview variables
     float               m_previewWidth;

@@ -23,14 +23,14 @@ LabeledCombo::LabeledCombo(QWidget *parent, const QString &ltext, const QStringL
     initCombo(list);
 }
 
-LabeledCombo::LabeledCombo(QWidget *parent, KSaneOption *option)
+LabeledCombo::LabeledCombo(QWidget *parent, KSane::CoreOption *option)
     : KSaneOptionWidget(parent, option)
 {
     initCombo(QStringList());
     setLabelText(option->title());
     setToolTip(option->description());
-    connect(this, &LabeledCombo::valueChanged, option, &KSaneOption::setValue);
-    connect(option, &KSaneOption::valueChanged, this, &LabeledCombo::setValue);
+    connect(this, &LabeledCombo::valueChanged, option, &KSane::CoreOption::setValue);
+    connect(option, &KSane::CoreOption::valueChanged, this, &LabeledCombo::setValue);
     clear();
 
     const QVariantList values = option->valueList();
@@ -152,25 +152,25 @@ QString LabeledCombo::getStringWithUnitForInteger(int iValue) const
 {
     switch (m_option->valueUnit()) {
 
-    case KSaneOption::UnitPixel:
+    case KSane::CoreOption::UnitPixel:
         return i18ncp("Parameter and Unit", "%1 Pixel", "%1 Pixels", iValue);
         break;
-    case KSaneOption::UnitBit:
+    case KSane::CoreOption::UnitBit:
         return i18ncp("Parameter and Unit", "%1 Bit", "%1 Bits", iValue);
         break;
-    case KSaneOption::UnitMilliMeter:
+    case KSane::CoreOption::UnitMilliMeter:
         return i18nc("Parameter and Unit (Millimeter)", "%1 mm", iValue);
         break;
-    case KSaneOption::UnitDPI:
+    case KSane::CoreOption::UnitDPI:
         return i18nc("Parameter and Unit (Dots Per Inch)", "%1 DPI", iValue);
         break;
-    case KSaneOption::UnitPercent:
+    case KSane::CoreOption::UnitPercent:
         return i18nc("Parameter and Unit (Percentage)", "%1 %", iValue);
         break;
-    case KSaneOption::UnitMicroSecond:
+    case KSane::CoreOption::UnitMicroSecond:
         return i18nc("Parameter and Unit (Microseconds)", "%1 µs", iValue);
         break;
-    case KSaneOption::UnitSecond:
+    case KSane::CoreOption::UnitSecond:
         return i18nc("Parameter and Unit (seconds)", "%1 s", iValue);
         break;
     default:
@@ -183,25 +183,25 @@ QString LabeledCombo::getStringWithUnitForFloat(float fValue) const
 {
     switch (m_option->valueUnit()) {
 
-    case KSaneOption::UnitPixel:
+    case KSane::CoreOption::UnitPixel:
         return i18ncp("Parameter and Unit", "%1 Pixel", "%1 Pixels", static_cast<int>(fValue));
         break;
-    case KSaneOption::UnitBit:
+    case KSane::CoreOption::UnitBit:
         return i18ncp("Parameter and Unit", "%1 Bit", "%1 Bits", static_cast<int>(fValue));
         break;
-    case KSaneOption::UnitMilliMeter:
+    case KSane::CoreOption::UnitMilliMeter:
         return i18nc("Parameter and Unit (Millimeter)", "%1 mm", fValue);
         break;
-    case KSaneOption::UnitDPI:
+    case KSane::CoreOption::UnitDPI:
         return i18nc("Parameter and Unit (Dots Per Inch)", "%1 DPI", fValue);
         break;
-    case KSaneOption::UnitPercent:
+    case KSane::CoreOption::UnitPercent:
         return i18nc("Parameter and Unit (Percentage)", "%1 %", fValue);
         break;
-    case KSaneOption::UnitMicroSecond:
+    case KSane::CoreOption::UnitMicroSecond:
         return i18nc("Parameter and Unit (Microseconds)", "%1 µs", fValue);
         break;
-    case KSaneOption::UnitSecond:
+    case KSane::CoreOption::UnitSecond:
         return i18nc("Parameter and Unit (seconds)", "%1 s", fValue);
         break;
     default:

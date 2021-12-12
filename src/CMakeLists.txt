@@ -1,5 +1,6 @@
 add_library(KF5Sane)
 add_library(KF5::Sane ALIAS KF5Sane)
+add_library(KF5::SaneWidget ALIAS KF5Sane)
 
 target_compile_definitions(KF5Sane PRIVATE -DTRANSLATION_DOMAIN=\"libksane\")
 
@@ -22,29 +23,9 @@ target_sources(KF5Sane PRIVATE
     selectionitem.cpp
     hiderectitem.cpp
     ksanedevicedialog.cpp
-    ksanefinddevicesthread.cpp
     ksanewidget.cpp
-    ksanescanthread.cpp
-    ksaneimagebuilder.cpp
     ksanewidget_p.cpp
     splittercollapser.cpp
-    ksanecore.cpp
-    ksanecore_p.cpp
-    ksaneauth.cpp
-    ksaneoption.cpp
-    ksaneinternaloption.cpp
-    options/ksanebaseoption.cpp
-    options/ksaneactionoption.cpp
-    options/ksanebooloption.cpp
-    options/ksanestringoption.cpp
-    options/ksanegammaoption.cpp
-    options/ksaneintegeroption.cpp
-    options/ksanedoubleoption.cpp
-    options/ksanelistoption.cpp
-    options/ksaneinvertoption.cpp
-    options/ksanepagesizeoption.cpp
-    options/ksanebatchmodeoption.cpp
-    options/ksanebatchdelayoption.cpp
 )
 
 ecm_qt_declare_logging_category(KF5Sane
@@ -59,19 +40,19 @@ target_include_directories(KF5Sane
     INTERFACE
         "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR_KF}/KSane>"
     PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/options
         ${CMAKE_CURRENT_SOURCE_DIR}/widgets
 )
 
 target_link_libraries(KF5Sane
     PUBLIC
+        Qt${QT_MAJOR_VERSION}::Core
+        Qt${QT_MAJOR_VERSION}::Gui
         Qt${QT_MAJOR_VERSION}::Widgets
     PRIVATE
-        Sane::Sane
-
         KF5::I18n
         KF5::WidgetsAddons
         KF5::TextWidgets
+        KSane::Core
 )
 
 set_target_properties(KF5Sane
@@ -80,12 +61,9 @@ set_target_properties(KF5Sane
   EXPORT_NAME "Sane"
 )
 
-
 ecm_generate_headers(KSane_HEADERS
     HEADER_NAMES
         KSaneWidget
-        KSaneCore
-        KSaneOption
     REQUIRED_HEADERS KSane_HEADERS
     RELATIVE "../src/"
 )

@@ -59,12 +59,15 @@ if (NOT WIN32)
     )
 
     # Check if sane API is available.
-    find_package(Sane REQUIRED)
-    message(STATUS "SANE_FOUND:       ${SANE_FOUND}")
-    message(STATUS "SANE_INCLUDE_DIR: ${SANE_INCLUDE_DIR}")
-    message(STATUS "SANE_LIBRARY:     ${SANE_LIBRARY}")
-    # macro_log_feature(SANE_FOUND "SANE development toolkit" "Scanner Access Now Easy (SANE) development package" "http://www.sane-project.org" TRUE "" "Needed by libksane")
-endif (NOT WIN32)
+    find_package(KSaneCore "${RELEASE_SERVICE_VERSION_MAJOR}.${RELEASE_SERVICE_VERSION_MINOR}" REQUIRED)
+    add_subdirectory(src)
+    if (BUILD_TESTING)
+        add_subdirectory(autotests)
+        add_subdirectory(tests)
+    endif()
+else ()
+    add_subdirectory(ksanetwain)
+endif()
 
 add_definitions(
     -DQT_NO_CAST_TO_ASCII
@@ -82,17 +85,6 @@ add_definitions(
     -DKF_DISABLE_DEPRECATED_BEFORE_AND_AT=0x055800
     -DKF_DEPRECATED_WARNINGS_SINCE=0x060000
 )
-
-# Subdirectories
-if (SANE_FOUND)
-    add_subdirectory(src)
-    if (BUILD_TESTING)
-        add_subdirectory(autotests)
-        add_subdirectory(tests)
-    endif()
-else ()
-    add_subdirectory(ksanetwain)
-endif()
 
 # Create a Config.cmake and a ConfigVersion.cmake file and install them
 set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KF5Sane")

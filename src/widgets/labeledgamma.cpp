@@ -9,11 +9,11 @@
 
 // Local includes
 #include "labeledgamma.h"
-#include "ksaneoption.h"
 
 #include <QGroupBox>
 
 #include <KLocalizedString>
+#include <CoreOption>
 
 namespace KSaneIface
 {
@@ -24,14 +24,14 @@ LabeledGamma::LabeledGamma(QWidget *parent, const QString &text, int max)
     initGamma(text, max);
 }
 
-LabeledGamma::LabeledGamma(QWidget *parent, KSaneOption *option, QColor color)
+LabeledGamma::LabeledGamma(QWidget *parent, KSane::CoreOption *option, QColor color)
     : KSaneOptionWidget(parent, option)
 {
 
     int max = option->maximumValue().toInt();
     initGamma(option->title(), max);
-    connect(this, &LabeledGamma::valuesChanged, option, &KSaneOption::setValue);
-    connect(option, &KSaneOption::valueChanged, this, &LabeledGamma::setValues);
+    connect(this, &LabeledGamma::valuesChanged, option, &KSane::CoreOption::setValue);
+    connect(option, &KSane::CoreOption::valueChanged, this, &LabeledGamma::setValues);
     setColor(color);
     setToolTip(option->description());
 }

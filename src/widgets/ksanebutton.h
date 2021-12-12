@@ -37,7 +37,7 @@ public:
      * \param text is the text describing the checkbox.
      */
     KSaneButton(QWidget *parent, const QString &text);
-    KSaneButton(QWidget *parent, KSaneOption *option);
+    KSaneButton(QWidget *parent, KSane::CoreOption *option);
     ~KSaneButton() override;
 
 Q_SIGNALS:

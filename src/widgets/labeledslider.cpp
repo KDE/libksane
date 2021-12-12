@@ -8,7 +8,6 @@
  * ============================================================ */
 
 #include "labeledslider.h"
-#include "ksaneoption.h"
 // Qt includes
 
 #include <QLabel>
@@ -17,6 +16,7 @@
 // KDE includes
 
 #include <KPluralHandlingSpinBox>
+#include <CoreOption>
 
 namespace KSaneIface
 {
@@ -27,7 +27,7 @@ LabeledSlider::LabeledSlider(QWidget *parent, const QString &ltext,
     initSlider(min, max, ste);
 }
 
-LabeledSlider::LabeledSlider(QWidget *parent, KSaneOption *option)
+LabeledSlider::LabeledSlider(QWidget *parent, KSane::CoreOption *option)
     : KSaneOptionWidget(parent, option)
 {
     int maxValue = option->maximumValue().toInt();
@@ -37,28 +37,28 @@ LabeledSlider::LabeledSlider(QWidget *parent, KSaneOption *option)
     initSlider(minValue, maxValue, stepValue);
 
     KLocalizedString unitSuffix;
-    KSaneOption::KSaneOptionUnit unit = option->valueUnit();
+    KSane::CoreOption::OptionUnit unit = option->valueUnit();
     switch (unit) {
 
-    case KSaneOption::UnitPixel:
+    case KSane::CoreOption::UnitPixel:
         unitSuffix = ki18ncp("SpinBox parameter unit", " Pixel", " Pixels");
         break;
-    case KSaneOption::UnitBit:
+    case KSane::CoreOption::UnitBit:
         unitSuffix = ki18ncp("SpinBox parameter unit", " Bit", " Bits");
         break;
-    case KSaneOption::UnitMilliMeter:
+    case KSane::CoreOption::UnitMilliMeter:
         unitSuffix = ki18ncp("SpinBox parameter unit (Millimeter)", " mm", " mm");
         break;
-    case KSaneOption::UnitDPI:
+    case KSane::CoreOption::UnitDPI:
         unitSuffix = ki18ncp("SpinBox parameter unit (Dots Per Inch)", " DPI", " DPI");
         break;
-    case KSaneOption::UnitPercent:
+    case KSane::CoreOption::UnitPercent:
         unitSuffix = ki18ncp("SpinBox parameter unit (Percentage)", " %", " %");
         break;
-    case KSaneOption::UnitMicroSecond:
+    case KSane::CoreOption::UnitMicroSecond:
         unitSuffix = ki18ncp("SpinBox parameter unit (Microseconds)", " µs", " µs");
         break;
-    case KSaneOption::UnitSecond:
+    case KSane::CoreOption::UnitSecond:
         unitSuffix = ki18ncp("SpinBox parameter unit (seconds)", " s", " s");
         break;
     default:
@@ -69,8 +69,8 @@ LabeledSlider::LabeledSlider(QWidget *parent, KSaneOption *option)
     setSuffix(unitSuffix);
     setLabelText(option->title());
     setToolTip(option->description());
-    connect(this, &LabeledSlider::valueChanged, option, &KSaneOption::setValue);
-    connect(option, &KSaneOption::valueChanged, this, &LabeledSlider::setValue);
+    connect(this, &LabeledSlider::valueChanged, option, &KSane::CoreOption::setValue);
+    connect(option, &KSane::CoreOption::valueChanged, this, &LabeledSlider::setValue);
     int value = option->value().toInt();
     setValue(value);
 }
