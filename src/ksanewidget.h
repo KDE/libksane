@@ -16,7 +16,6 @@
 
 #include <QWidget>
 
-/** This namespace collects all methods and classes in LibKSane. */
 namespace KSaneIface
 {
 
@@ -80,7 +79,7 @@ public:
      * Get the list of available scanning devices. Connect to availableDevices()
      * which is fired once these devices are known.
      */
-    void initGetDeviceList() const;
+    KSANE_DEPRECATED void initGetDeviceList() const;
 
     /** This method opens the specified scanner device and adds the scan options to the
      * KSane widget.
@@ -179,7 +178,7 @@ public:
     * @note This function should be called from the slot connected
     * to the imageReady signal. The connection should not be queued.
     * @return the resolution used for scanning or 0.0 on failure. */
-    float currentDPI();
+    KSANE_DEPRECATED float currentDPI();
 
     /** This method returns the scan area's width in mm
     * @return Width of the scannable area in mm */
@@ -190,32 +189,44 @@ public:
     float scanAreaHeight();
 
     /** This method sets the selection according to the given points
-    * @note The points are defined with respect to the scan areas top-left corner in mm
-    * @param topLeft Upper left corner of the selection (in mm)
-    * @param bottomRight Lower right corner of the selection (in mm) */
+     * @note The points are defined with respect to the scan areas top-left corner in mm
+     * @param topLeft Upper left corner of the selection (in mm)
+     * @param bottomRight Lower right corner of the selection (in mm) */
     void setSelection(QPointF topLeft, QPointF bottomRight);
 
     /** This function is used to set the preferred resolution for scanning the preview.
-    * @param dpi is the wanted scan resolution for the preview
-    * @note if the set value is not supported, the cloasest one is used
-    * @note setting the value 0 means that the default calculated value should be used */
+     * @param dpi is the wanted scan resolution for the preview
+     * @note if the set value is not supported, the cloasest one is used
+     * @note setting the value 0 means that the default calculated value should be used */
     void setPreviewResolution(float dpi);
 
     /** This method reads the available parameters and their values and
      * returns them in a QMap (Name, value)
      * @param opts is a QMap with the parameter names and values. */
-    void getOptVals(QMap <QString, QString> &opts);
+    void getOptionValues(QMap <QString, QString> &options);
+
+    /** @deprecated since 22.04
+     * @see use getOptionValues(QMap <QString, QString> &options) */
+    KSANE_DEPRECATED void getOptVals(QMap <QString, QString> &opts);
 
     /** This method can be used to write many parameter values at once.
      * @param opts is a QMap with the parameter names and values.
      * @return This function returns the number of successful writes
      * or -1 if scanning is in progress. */
+    int setOptionValues(const QMap <QString, QString> &options);
+
+    /** @deprecated since 22.04
+     * @see use setOptionValues(const QMap <QString, QString> &options) */
     int setOptVals(const QMap <QString, QString> &opts);
 
     /** This function reads one parameter value into a string.
      * @param optname is the name of the parameter to read.
      * @param value is the string representation of the value.
      * @return this function returns true if the read was successful. */
+    bool getOptionValue(const QString &option, QString &value);
+
+    /** @deprecated since 22.04
+     * @see use getOptionValue(const QString &option, QString &value) */
     bool getOptVal(const QString &optname, QString &value);
 
     /** This function writes one parameter value into a string.
@@ -223,15 +234,19 @@ public:
      * @param value is the string representation of the value.
      * @return this function returns true if the write was successful and
      * false if it was unsuccessful or scanning is in progress. */
+    bool setOptionValue(const QString &option, const QString &value);
+
+    /** @deprecated since 22.04
+     * @see use setOptionValue(const QString &option, const QString &value) */
     bool setOptVal(const QString &optname, const QString &value);
 
     /** This function sets the label on the final scan button
     * @param scanLabel is the new label for the button. */
-    void setScanButtonText(const QString &scanLabel);
+    KSANE_DEPRECATED void setScanButtonText(const QString &scanLabel);
 
     /** This function sets the label on the preview button
     * @param previewLabel is the new label for the button. */
-    void setPreviewButtonText(const QString &previewLabel);
+    KSANE_DEPRECATED void setPreviewButtonText(const QString &previewLabel);
 
     /** This function can be used to enable/disable automatic selections on previews.
     * The default state is enabled.
@@ -240,21 +255,29 @@ public:
 
     /** This function is used to programatically collapse/restore the options.
     * @param collapse defines the state to set. */
-    void setOptionsCollapsed(bool collapse);
+    KSANE_DEPRECATED void setOptionsCollapsed(bool collapse);
 
     /** This function is used hide/show the final scan button.
     * @param hidden defines the state to set. */
-    void setScanButtonHidden(bool hidden);
+    KSANE_DEPRECATED void setScanButtonHidden(bool hidden);
 
 public Q_SLOTS:
     /** This method can be used to cancel a scan or prevent an automatic new scan. */
-    void scanCancel();
+    void cancelScan();
+
+    /** @deprecated since 22.04
+     * @see use cancelScan() */
+    KSANE_DEPRECATED void scanCancel();
 
     /** This method can be used to start a scan (if no GUI is needed).
     * @note libksane may return one or more images as a result of one invocation of this slot.
-    * If no more images are wanted scanCancel should be called in the slot handling the
+    * If no more images are wanted cancelScan should be called in the slot handling the
     * imageReady signal. */
-    void scanFinal();
+    void startScan();
+
+    /** @deprecated since 22.04
+     * @see use startScan() */
+    KSANE_DEPRECATED void scanFinal();
 
     /** This method can be used to start a preview scan. */
     void startPreviewScan();

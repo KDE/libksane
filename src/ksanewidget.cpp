@@ -71,7 +71,7 @@ KSaneWidget::KSaneWidget(QWidget *parent)
     d->m_cancelBtn = new QPushButton;
     d->m_cancelBtn->setIcon(QIcon::fromTheme(QStringLiteral("process-stop")));
     d->m_cancelBtn->setToolTip(i18n("Cancel current scan operation"));
-    connect(d->m_cancelBtn, &QPushButton::clicked, this, &KSaneWidget::scanCancel);
+    connect(d->m_cancelBtn, &QPushButton::clicked, this, &KSaneWidget::cancelScan);
 
     d->m_activityFrame = new QWidget;
     QHBoxLayout *progress_lay = new QHBoxLayout(d->m_activityFrame);
@@ -489,7 +489,7 @@ QImage KSaneWidget::toQImage(const QByteArray &data,
     return toQImageSilent(data, width, height, bytes_per_line, format);
 }
 
-void KSaneWidget::scanFinal()
+void KSaneWidget::startScan()
 {
     if (d->m_btnFrame->isEnabled()) {
         d->m_cancelMultiScan = false;
@@ -498,6 +498,11 @@ void KSaneWidget::scanFinal()
         // if the button frame is disabled, there is no open device to scan from
         Q_EMIT scanDone(KSaneWidget::ErrorGeneral, QString());
     }
+}
+
+void KSaneWidget::scanFinal()
+{
+    startScan();
 }
 
 void KSaneWidget::startPreviewScan()
@@ -511,10 +516,15 @@ void KSaneWidget::startPreviewScan()
     }
 }
 
-void KSaneWidget::scanCancel()
+void KSaneWidget::cancelScan()
 {
     d->m_cancelMultiScan = true;
     d->m_ksaneCoreInterface->stopScan();
+}
+
+void KSaneWidget::scanCancel()
+{
+    cancelScan();
 }
 
 void KSaneWidget::setPreviewResolution(float dpi)
@@ -522,18 +532,23 @@ void KSaneWidget::setPreviewResolution(float dpi)
     d->m_previewDPI = dpi;
 }
 
-void KSaneWidget::getOptVals(QMap <QString, QString> &opts)
+void KSaneWidget::getOptionValues(QMap <QString, QString> &opts)
 {
     opts.clear();
     opts = d->m_ksaneCoreInterface->getOptionsMap();
 }
 
-bool KSaneWidget::getOptVal(const QString &optname, QString &value)
+void KSaneWidget::getOptVals(QMap <QString, QString> &opts)
+{
+    getOptionValues(opts);
+}
+
+bool KSaneWidget::getOptionValue(const QString &option, QString &value)
 {
     const auto optionsMap = d->m_ksaneCoreInterface->getOptionsMap();
     auto it = optionsMap.constBegin();
     while (it != optionsMap.constEnd()) {
-        if(it.key() == optname) {
+        if(it.key() == option) {
             value = it.value();
             return !value.isEmpty();
         }
@@ -542,11 +557,16 @@ bool KSaneWidget::getOptVal(const QString &optname, QString &value)
     return false;
 }
 
-int KSaneWidget::setOptVals(const QMap <QString, QString> &opts)
+bool KSaneWidget::getOptVal(const QString &optname, QString &value)
+{
+    return getOptionValue(optname, value);
+}
+
+int KSaneWidget::setOptionValues(const QMap <QString, QString> &options)
 {
     int ret = 0;
 
-    ret = d->m_ksaneCoreInterface->setOptionsMap(opts);
+    ret = d->m_ksaneCoreInterface->setOptionsMap(options);
 
     if ((d->m_splitGamChB) &&
             (d->m_optGamR) &&
@@ -569,7 +589,12 @@ int KSaneWidget::setOptVals(const QMap <QString, QString> &opts)
     return ret;
 }
 
-bool KSaneWidget::setOptVal(const QString &option, const QString &value)
+int KSaneWidget::setOptVals(const QMap <QString, QString> &opts)
+{
+    return setOptionValues(opts);
+}
+
+bool KSaneWidget::setOptionValue(const QString &option, const QString &value)
 {
     if (d->m_scanOngoing) {
         return false;
@@ -604,6 +629,11 @@ bool KSaneWidget::setOptVal(const QString &option, const QString &value)
         }
     }
     return false;
+}
+
+bool KSaneWidget::setOptVal(const QString &option, const QString &value)
+{
+    return setOptionValue(option, value);
 }
 
 void KSaneWidget::setScanButtonText(const QString &scanLabel)
@@ -646,7 +676,10 @@ float KSaneWidget::scanAreaWidth()
     if (d->m_optBrX) {
         if (d->m_optBrX->valueUnit() == KSane::CoreOption::UnitPixel) {
             result = d->m_optBrX->maximumValue().toFloat();
-            float dpi = currentDPI();
+            float dpi = 0;
+            if (d->m_optRes) {
+                dpi = d->m_optRes->value().toFloat();
+            }
             if (dpi < 1) {
                 qCDebug(KSANE_LOG) << "Broken DPI value";
                 dpi = 1.0;
@@ -665,7 +698,10 @@ float KSaneWidget::scanAreaHeight()
     if (d->m_optBrY) {
         if (d->m_optBrY->valueUnit() == KSane::CoreOption::UnitPixel) {
             result = d->m_optBrY->maximumValue().toFloat();
-            float dpi = currentDPI();
+            float dpi = 0;
+            if (d->m_optRes) {
+                dpi = d->m_optRes->value().toFloat();
+            }
             if (dpi < 1) {
                 qCDebug(KSANE_LOG) << "Broken DPI value";
                 dpi = 1.0;
