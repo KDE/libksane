@@ -49,7 +49,6 @@ KSaneWidget::KSaneWidget(QWidget *parent)
     connect(d->m_ksaneCoreInterface, &KSaneCore::batchModeCountDown, d, &KSaneWidgetPrivate::updateCountDown);
     connect(d->m_ksaneCoreInterface, &KSaneCore::availableDevices, d, &KSaneWidgetPrivate::signalDevListUpdate);
     connect(d->m_ksaneCoreInterface, &KSaneCore::buttonPressed, this, &KSaneWidget::buttonPressed);
-    connect(d->m_ksaneCoreInterface, &KSaneCore::openedDeviceInfoUpdated, this, &KSaneWidget::openedDeviceInfoUpdated);
     
     // Create the static UI
     // create the preview
