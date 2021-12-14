@@ -323,8 +323,7 @@ Q_SIGNALS:
     void buttonPressed(const QString &optionName, const QString &optionLabel, bool pressed);
     
     /**
-     * This Signal is emitted when the device info of the already opened scanner device
-     * is updated and vendor() and model() return the corresponding names.
+     * This signal is not emitted anymore.
      */
     void openedDeviceInfoUpdated(const QString &deviceName, const QString &deivceVendor, const QString &deviceModel);
 

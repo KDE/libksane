@@ -114,7 +114,10 @@ public:
 
     /**
      * Get the list of available scanning devices. Connect to availableDevices()
-     * which is fired once these devices are known.
+     * which is fired once these devices are known. While the querying is done in a
+     * separate thread and thus not blocking the application, the application must
+     * ensure that no other action accessing the scanner device (settings options etc.)
+     * is performed during this period.
      * @return whether the devices list are being reloaded or not.
      */
     bool reloadDevicesList();
@@ -145,16 +148,22 @@ public:
 
     /**
      * This method returns the internal device name of the currently opened scanner.
+     * @note Due to limitations of the SANE API, this will function will return an empty string
+     * if reloadDevicesList() has not been called before.
      */
     QString deviceName() const;
     
     /**
-     * This method returns the vendor name of the currently opened scanner. 
+     * This method returns the vendor name of the currently opened scanner.
+     * @note Due to limitations of the SANE API, this will function will return an empty string
+     * if reloadDevicesList() has not been called before.
      */
     QString deviceVendor() const;  
     
     /**
      * This method returns the model of the currently opened scanner.
+     * @note Due to limitations of the SANE API, this will function will return an empty string
+     * if reloadDevicesList() has not been called before.
      */
     QString deviceModel() const;
 
@@ -288,11 +297,7 @@ Q_SIGNALS:
     void buttonPressed(const QString &optionName, const QString &optionLabel, bool pressed);
     
     /**
-     * This signal is emitted when the device info of the already opened scanner device
-     * is updated and vendor() and model() return the corresponding names.
-     * @param deviceName is the technical device name of the currently opened scanner.
-     * @param deviceVendor is the vendor of the currently opened scanner.
-     * @param deviceModel is the model name of the currently opened scanner.
+     * This signal is not emitted anymore.
      */
     void openedDeviceInfoUpdated(const QString &deviceName, const QString &deviceVendor, const QString &deviceModel);
 

@@ -52,9 +52,6 @@ KSaneCore::KSaneCore(QObject *parent)
     }
     s_objectMutex->unlock();
 
-    // read the device list to get a list of vendor and model info
-    d->m_findDevThread->start();
-
     d->m_readValuesTimer.setSingleShot(true);
     connect(&d->m_readValuesTimer, &QTimer::timeout, d.get(), &KSaneCorePrivate::reloadValues);
 }

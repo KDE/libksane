@@ -267,7 +267,6 @@ void KSaneCorePrivate::clearDeviceOptions()
     m_devName.clear();
     m_model.clear();
     m_vendor.clear();
-    Q_EMIT q->openedDeviceInfoUpdated(m_devName, m_vendor, m_model);
 }
 
 void KSaneCorePrivate::devicesListUpdated()
@@ -278,7 +277,6 @@ void KSaneCorePrivate::devicesListUpdated()
             if (device.name == m_devName) {
                 m_vendor    = device.vendor;
                 m_model     = device.model;
-                Q_EMIT q->openedDeviceInfoUpdated(m_devName, m_vendor, m_model);
                 break;
             }
         }
