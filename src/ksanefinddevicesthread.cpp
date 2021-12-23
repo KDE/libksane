@@ -29,7 +29,11 @@ Q_GLOBAL_STATIC(QMutex, s_mutexsane)
 
 FindSaneDevicesThread *FindSaneDevicesThread::getInstance()
 {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    QMutexLocker<QMutex> locker(s_mutexsane);
+#else
     QMutexLocker locker(s_mutexsane);
+#endif
 
     if (s_instancesane == nullptr) {
         s_instancesane = new FindSaneDevicesThread();
@@ -44,7 +48,11 @@ FindSaneDevicesThread::FindSaneDevicesThread() : QThread(nullptr)
 
 FindSaneDevicesThread::~FindSaneDevicesThread()
 {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    QMutexLocker<QMutex> locker(s_mutexsane);
+#else
     QMutexLocker locker(s_mutexsane);
+#endif
     wait();
 }
 

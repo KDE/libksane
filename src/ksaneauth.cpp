@@ -34,7 +34,11 @@ struct KSaneAuth::Private {
 
 KSaneAuth *KSaneAuth::getInstance()
 {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    QMutexLocker<QMutex> locker(s_mutex);
+#else
     QMutexLocker locker(s_mutex);
+#endif
 
     if (s_instance == nullptr) {
         s_instance = new KSaneAuth();
@@ -46,7 +50,11 @@ KSaneAuth::KSaneAuth() : d(new Private) {}
 
 KSaneAuth::~KSaneAuth()
 {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    QMutexLocker<QMutex> locker(s_mutex);
+#else
     QMutexLocker locker(s_mutex);
+#endif
     d->authList.clear();
     delete d;
 }

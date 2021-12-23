@@ -29,7 +29,11 @@ bool KSaneStringOption::setValue(const QVariant &val)
     }
     QString text = val.toString();
     QString tmp;
+#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
+    tmp += QStringView(text).left(m_optDesc->size);
+#else
     tmp += text.leftRef(m_optDesc->size);
+#endif
     if (tmp != text) {
         writeData(tmp.toLatin1().data());
         Q_EMIT valueChanged(tmp);

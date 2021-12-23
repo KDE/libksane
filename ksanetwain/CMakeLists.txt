@@ -24,7 +24,7 @@ target_include_directories(KF5Sane
 
 target_link_libraries(KF5Sane
     PUBLIC
-        Qt5::Widgets
+        Qt${QT_MAJOR_VERSION}::Widgets
     PRIVATE
         KF5::I18n
 )

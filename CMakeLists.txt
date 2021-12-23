@@ -13,7 +13,7 @@ message(STATUS "Starting CMake configuration for: libksane")
 
 # ECM setup (Extended Cmake Modules)
 include(FeatureSummary)
-set(KF5_VERSION "5.85.0")
+set(KF5_VERSION "5.89.0")
 find_package(ECM ${KF5_VERSION} REQUIRED NO_MODULE)
 set_package_properties(ECM PROPERTIES TYPE REQUIRED DESCRIPTION "Extra CMake Modules." URL "https://commits.kde.org/extra-cmake-modules")
 # ECM setup2 and include find same cmake module (copied from /usr/share/kde4/apps/cmake/modules/FindSane.cmake)
@@ -43,7 +43,7 @@ ecm_setup_version(
 # Dependencies
 set(REQUIRED_QT_VERSION "5.15.0")
 # Required Qt5 components to build this framework
-find_package(Qt5 ${REQUIRED_QT_VERSION} NO_MODULE REQUIRED Core Widgets)
+find_package(Qt${QT_MAJOR_VERSION} ${REQUIRED_QT_VERSION} NO_MODULE REQUIRED Core Widgets)
 
 # Required KF5 frameworks
 find_package(KF5I18n ${KF5_VERSION} REQUIRED)
@@ -119,7 +119,7 @@ install(EXPORT
 
 install(FILES
   "${CMAKE_CURRENT_BINARY_DIR}/ksane_version.h"
-  DESTINATION "${KDE_INSTALL_INCLUDEDIR_KF5}"
+  DESTINATION "${KDE_INSTALL_INCLUDEDIR_KF}"
   COMPONENT Devel
 )
 

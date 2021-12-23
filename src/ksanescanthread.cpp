@@ -12,6 +12,7 @@
 
 #include <QMutexLocker>
 
+#include <QVariant>
 #include <ksane_debug.h>
 
 namespace KSaneIface

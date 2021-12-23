@@ -57,7 +57,7 @@ generate_export_header(KF5Sane BASE_NAME KSane)
 
 target_include_directories(KF5Sane
     INTERFACE
-        "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR_KF5}/KSane>"
+        "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR_KF}/KSane>"
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/options
         ${CMAKE_CURRENT_SOURCE_DIR}/widgets
@@ -65,7 +65,7 @@ target_include_directories(KF5Sane
 
 target_link_libraries(KF5Sane
     PUBLIC
-        Qt5::Widgets
+        Qt${QT_MAJOR_VERSION}::Widgets
     PRIVATE
         Sane::Sane
 
@@ -106,6 +106,6 @@ install(TARGETS KF5Sane
 install(FILES
   ${CMAKE_CURRENT_BINARY_DIR}/ksane_export.h
   ${KSane_HEADERS}
-  DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/KSane
+  DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF}/KSane
   COMPONENT Devel
 )
