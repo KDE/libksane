@@ -12,13 +12,11 @@
 #include "ksanecore_p.h"
 
 #include <QImage>
-#include <QList>
 #include <QRegularExpression>
 
 #include <ksane_debug.h>
 
 #include "ksaneinternaloption.h"
-#include "ksanebaseoption.h"
 #include "ksaneactionoption.h"
 #include "ksanebooloption.h"
 #include "ksanelistoption.h"

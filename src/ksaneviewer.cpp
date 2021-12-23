@@ -15,7 +15,6 @@
 #include <QGraphicsPixmapItem>
 #include <QGraphicsScene>
 #include <QGraphicsRectItem>
-#include <QWheelEvent>
 #include <QScrollBar>
 #include <QAction>
 #include <QList>

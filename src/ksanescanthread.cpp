@@ -11,7 +11,6 @@
 #include "ksanescanthread.h"
 
 #include <QMutexLocker>
-#include <QImage>
 
 #include <ksane_debug.h>
 

@@ -10,14 +10,12 @@
  * ============================================================ */
 
 #include "ksanewidget_p.h"
-#include "ksanecore.h"
 
 #include <QImage>
 #include <QScrollArea>
 #include <QScrollBar>
 #include <QList>
 #include <QLabel>
-#include <QPushButton>
 #include <QMessageBox>
 #include <QMetaMethod>
 #include <QPageSize>

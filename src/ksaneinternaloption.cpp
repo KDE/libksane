@@ -9,7 +9,6 @@
 
 #include "ksaneinternaloption.h"
 #include "ksaneoption_p.h"
-#include "ksanebaseoption.h"
 
 
 namespace KSaneIface
