@@ -986,9 +986,7 @@ void KSaneWidgetPrivate::previewScanDone(KSaneCore::KSaneScanStatus status, cons
     m_previewViewer->setQImage(&m_previewImg);
     m_previewViewer->zoom2Fit();
 
-    if (status == KSaneCore::ErrorGeneral) {
-        alertUser(status, strStatus);
-    } else if (m_autoSelect) {
+    if (status != KSaneCore::ErrorGeneral && m_autoSelect) {
         m_previewViewer->findSelections();
     }
 
@@ -1159,11 +1157,9 @@ void KSaneWidgetPrivate::oneFinalScanDone(KSaneCore::KSaneScanStatus status, con
                 break;
             case KSaneCore::Information:
                 Q_EMIT q->scanDone(KSaneWidget::Information, strStatus);
-                alertUser(KSaneCore::Information, strStatus);
                 break;
             case KSaneCore::ErrorGeneral:
                 Q_EMIT q->scanDone(KSaneWidget::ErrorGeneral, strStatus);
-                alertUser(KSaneCore::ErrorGeneral, strStatus);  
                 break;
         }
     }
