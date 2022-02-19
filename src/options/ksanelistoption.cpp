@@ -259,7 +259,10 @@ bool KSaneListOption::setValue(const QString &value)
     case SANE_TYPE_STRING:
         i = 0;
         while (m_optDesc->constraint.string_list[i] != nullptr) {
-            tmp = sane_i18n(m_optDesc->constraint.string_list[i]);
+            tmp = QString::fromLatin1(m_optDesc->constraint.string_list[i]);
+            if (value != tmp) {
+                tmp = sane_i18n(m_optDesc->constraint.string_list[i]);
+            }
             if (value == tmp) {
                 data_ptr = (void *)m_optDesc->constraint.string_list[i];
                 break;
