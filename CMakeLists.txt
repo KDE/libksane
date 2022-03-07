@@ -6,7 +6,7 @@ set(RELEASE_SERVICE_VERSION_MINOR "03")
 set(RELEASE_SERVICE_VERSION_MICRO "70")
 set(RELEASE_SERVICE_VERSION "${RELEASE_SERVICE_VERSION_MAJOR}.${RELEASE_SERVICE_VERSION_MINOR}.${RELEASE_SERVICE_VERSION_MICRO}")
 
-project(KSane)
+project(KSane VERSION ${RELEASE_SERVICE_VERSION})
 
 message(STATUS "-------------------------------------------")
 message(STATUS "Starting CMake configuration for: libksane")
