@@ -283,4 +283,33 @@ bool KSaneListOption::setValue(const QString &value)
     return true;
 }
 
+KSaneOption::KSaneOptionState KSaneListOption::state() const
+{
+    int optionsCount = 0;
+
+    switch (m_optDesc->type) {
+
+    case SANE_TYPE_INT:
+    case SANE_TYPE_FIXED:
+        optionsCount = m_optDesc->constraint.word_list[0];
+        break;
+
+    case SANE_TYPE_STRING:
+        while (m_optDesc->constraint.string_list[optionsCount] != nullptr) {
+            optionsCount++;
+        }
+        break;
+
+    default :
+        qCDebug(KSANE_LOG) << "can not handle type:" << m_optDesc->type;
+        break;
+    }
+
+    if (optionsCount <= 1) {
+        return KSaneOption::StateHidden;
+    } else {
+        return KSaneBaseOption::state();
+    }
+}
+
 }  // NameSpace KSaneIface
