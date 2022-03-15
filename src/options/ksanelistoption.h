@@ -28,6 +28,7 @@ public:
     QString valueAsString() const override;
     QVariantList valueList() const override;
     QVariantList internalValueList() const override;
+    KSaneOption::KSaneOptionState state() const override;
 
 public Q_SLOTS:
     bool setValue(const QVariant &value) override;
