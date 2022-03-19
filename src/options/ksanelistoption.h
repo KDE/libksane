@@ -33,11 +33,15 @@ public:
 public Q_SLOTS:
     bool setValue(const QVariant &value) override;
 
+private Q_SLOTS:
+    void countOptions();
+
 private:
     bool setValue(double value);
     bool setValue(const QString &value);
 
-    QVariant       m_currentValue;
+    QVariant m_currentValue;
+    int m_optionsCount = 0;
 };
 
 }  // NameSpace KSaneIface
