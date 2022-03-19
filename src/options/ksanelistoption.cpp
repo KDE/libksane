@@ -20,11 +20,12 @@ KSaneListOption::KSaneListOption(const SANE_Handle handle, const int index)
     : KSaneBaseOption(handle, index)
 {
     m_optionType = KSaneOption::TypeValueList;
+    connect(this, &KSaneBaseOption::optionReloaded, this, &KSaneListOption::countOptions);
 }
 
 void KSaneListOption::readValue()
 {
-    if (state() == KSaneOption::StateHidden) {
+    if (KSaneBaseOption::state() == KSaneOption::StateHidden) {
         return;
     }
 
@@ -133,7 +134,7 @@ bool KSaneListOption::setValue(const QVariant &value)
 QVariant KSaneListOption::minimumValue() const
 {
     QVariant value;
-    if (state() == KSaneOption::StateHidden) {
+    if (KSaneBaseOption::state() == KSaneOption::StateHidden) {
         return value;
     }
     double dValueMin;
@@ -162,7 +163,7 @@ QVariant KSaneListOption::minimumValue() const
 
 QVariant KSaneListOption::value() const
 {
-    if (state() == KSaneOption::StateHidden) {
+    if (KSaneBaseOption::state() == KSaneOption::StateHidden) {
         return QVariant();
     }
     return m_currentValue;
@@ -214,7 +215,7 @@ bool KSaneListOption::setValue(double value)
 
 QString KSaneListOption::valueAsString() const
 {
-    if (state() == KSaneOption::StateHidden) {
+    if (KSaneBaseOption::state() == KSaneOption::StateHidden) {
         return QString();
     }
     return m_currentValue.toString();
@@ -222,7 +223,7 @@ QString KSaneListOption::valueAsString() const
 
 bool KSaneListOption::setValue(const QString &value)
 {
-    if (state() == KSaneOption::StateHidden) {
+    if (KSaneBaseOption::state() == KSaneOption::StateHidden) {
         return false;
     }
 
@@ -283,20 +284,20 @@ bool KSaneListOption::setValue(const QString &value)
     return true;
 }
 
-KSaneOption::KSaneOptionState KSaneListOption::state() const
+void KSaneListOption::countOptions()
 {
-    int optionsCount = 0;
+    m_optionsCount = 0;
 
     switch (m_optDesc->type) {
 
     case SANE_TYPE_INT:
     case SANE_TYPE_FIXED:
-        optionsCount = m_optDesc->constraint.word_list[0];
+        m_optionsCount = m_optDesc->constraint.word_list[0];
         break;
 
     case SANE_TYPE_STRING:
-        while (m_optDesc->constraint.string_list[optionsCount] != nullptr) {
-            optionsCount++;
+        while (m_optDesc->constraint.string_list[m_optionsCount] != nullptr) {
+            m_optionsCount++;
         }
         break;
 
@@ -304,8 +305,11 @@ KSaneOption::KSaneOptionState KSaneListOption::state() const
         qCDebug(KSANE_LOG) << "can not handle type:" << m_optDesc->type;
         break;
     }
+}
 
-    if (optionsCount <= 1) {
+KSaneOption::KSaneOptionState KSaneListOption::state() const
+{
+    if (m_optionsCount <= 1) {
         return KSaneOption::StateHidden;
     } else {
         return KSaneBaseOption::state();
