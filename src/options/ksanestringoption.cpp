@@ -64,7 +64,7 @@ void KSaneStringOption::readValue()
 QVariant KSaneStringOption::value() const
 {
     return QVariant(m_string);
-}  
+}
 
 int KSaneStringOption::valueSize() const
 {

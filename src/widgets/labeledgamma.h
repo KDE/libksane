@@ -37,12 +37,12 @@ public:
      * \param max is the maximum gamma-table-value
      */
     LabeledGamma(QWidget *parent, const QString &text, int max);
-    
+
     LabeledGamma(QWidget *parent, KSaneOption *option, QColor color = Qt::black);
     ~LabeledGamma() override;
 
     void setColor(const QColor &color);
-    
+
     int maxValue();
 
     bool getValues(int &brightness, int &contrast, int &gamma);
@@ -55,10 +55,10 @@ Q_SIGNALS:
 
 private Q_SLOTS:
     void emitNewValues();
-    
+
 private:
     void initGamma(QString text, int max);
-    
+
     LabeledSlider *m_brightSlider;
     LabeledSlider *m_contrastSlider;
     LabeledSlider *m_gammaSlider;
@@ -67,7 +67,7 @@ private:
     int     m_contrast = 0;
     int     m_gamma = 0;
     int     m_maxValue;
-    
+
     GammaDisp  *m_gammaDisplay;
 };
 

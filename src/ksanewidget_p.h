@@ -75,7 +75,7 @@ public Q_SLOTS:
     void handleSelection(float tl_x, float tl_y, float br_x, float br_y);
     void signalDevListUpdate(const QList<KSaneCore::DeviceInfo> &deviceList);
     void imageReady(const QImage &image);
-    
+
 private Q_SLOTS:
 
     void setTLX(const QVariant &x);
@@ -89,16 +89,16 @@ private Q_SLOTS:
     void updateScanSelection();
     void setPossibleScanSizes();
     void setPageSize(int index);
-    
+
     void updateCommonGamma();
     void updatePreviewViewer();
-    
+
 public:
     void alertUser(KSaneCore::KSaneScanStatus status, const QString &strStatus);
 
 public:
     KSaneCore          *m_ksaneCoreInterface;
-    
+
     // backend independent
     QTabWidget         *m_optsTabWidget;
     QScrollArea        *m_basicScrollA;
@@ -167,7 +167,7 @@ public:
     QImage              m_previewImg;
     bool                m_isPreview;
     bool                m_autoSelect;
-    
+
     bool                m_cancelMultiScan = false;
     bool                m_scanOngoing = false;
     int                 m_selIndex;

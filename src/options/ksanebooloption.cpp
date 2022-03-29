@@ -27,9 +27,9 @@ bool KSaneBoolOption::setValue(const QVariant &value)
     if (state() == KSaneOption::StateHidden) {
         return false;
     }
-    
+
     bool toggled = value.toBool();
-    
+
     if (m_checked != toggled) {
         unsigned char data[4];
 

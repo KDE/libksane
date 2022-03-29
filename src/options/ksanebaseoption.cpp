@@ -230,7 +230,7 @@ bool KSaneBaseOption::setValue(const QVariant &)
 {
     return false;
 }
- 
+
 bool KSaneBaseOption::storeCurrentData()
 {
     SANE_Status status;

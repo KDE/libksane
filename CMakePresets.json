@@ -151,13 +151,13 @@
         }
     ],
     "testPresets": [
-    { 
+    {
       "name": "dev",
       "configurePreset": "dev",
       "output": {"outputOnFailure": true},
       "execution": {"noTestsAction": "error", "stopOnFailure": false}
     },
-    { 
+    {
       "name": "asan",
       "configurePreset": "asan",
       "output": {"outputOnFailure": true},

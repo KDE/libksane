@@ -24,9 +24,9 @@ KSanePageSizeOption::KSanePageSizeOption(KSaneBaseOption *optionTopLeftX, KSaneB
                         KSaneBaseOption *optionBottomRightX, KSaneBaseOption *optionBottomRightY,
                         KSaneBaseOption *optionResolution) : KSaneBaseOption()
 {
-    if (optionTopLeftX == nullptr || optionTopLeftY == nullptr || 
+    if (optionTopLeftX == nullptr || optionTopLeftY == nullptr ||
         optionBottomRightX == nullptr || optionBottomRightY == nullptr) {
-        
+
         m_optionType = KSaneOption::TypeDetectFail;
         return;
     }
@@ -41,7 +41,7 @@ KSanePageSizeOption::KSanePageSizeOption(KSaneBaseOption *optionTopLeftX, KSaneB
     m_optionBottomRightX = optionBottomRightX;
     m_optionBottomRightY = optionBottomRightY;
     m_optionResolution = optionResolution;
-    
+
     const QList<QPageSize::PageSizeId> possibleSizesList = {
         QPageSize::A3,
         QPageSize::A4,
@@ -65,13 +65,13 @@ KSanePageSizeOption::KSanePageSizeOption(KSaneBaseOption *optionTopLeftX, KSaneB
         QPageSize::JisB5,
         QPageSize::JisB6,
     };
-    
+
     m_availableSizesList << QPageSize::size(QPageSize::Custom, QPageSize::Millimeter);
     m_availableSizesListNames << QPageSize::name(QPageSize::Custom);
-    
-    double maxScannerWidth = ensureMilliMeter(m_optionBottomRightX, m_optionBottomRightX->maximumValue().toDouble());  
+
+    double maxScannerWidth = ensureMilliMeter(m_optionBottomRightX, m_optionBottomRightX->maximumValue().toDouble());
     double maxScannerHeight = ensureMilliMeter(m_optionBottomRightY, m_optionBottomRightY->maximumValue().toDouble());
-    
+
     // Add portrait page sizes
     for (const auto sizeCode : possibleSizesList) {
         QSizeF size = QPageSize::size(sizeCode, QPageSize::Millimeter);
@@ -101,11 +101,11 @@ KSanePageSizeOption::KSanePageSizeOption(KSaneBaseOption *optionTopLeftX, KSaneB
 
     // Set custom as current
     m_currentIndex = 0;
-    if (m_availableSizesList.count() > 1) { 
+    if (m_availableSizesList.count() > 1) {
         m_state = KSaneOption::StateActive;
     } else {
         m_state = KSaneOption::StateHidden;
-    }    
+    }
     m_optionType = KSaneOption::TypeValueList;
 }
 
@@ -120,7 +120,7 @@ bool KSanePageSizeOption::setValue(const QVariant &value)
             QString sizeEntry = m_availableSizesListNames.at(i).toString();
             if (sizeEntry == newValue) {
                 m_currentIndex = i;
-                
+
                 if (i != 0) {
                     const auto size = m_availableSizesList.at(i);
                     m_optionTopLeftX->setValue(0);
@@ -132,7 +132,7 @@ bool KSanePageSizeOption::setValue(const QVariant &value)
                 return true;
             }
         }
-    } 
+    }
     return false;
 }
 
@@ -146,12 +146,12 @@ QVariant KSanePageSizeOption::value() const
 }
 
 QString KSanePageSizeOption::valueAsString() const
-{   
+{
     if (m_currentIndex >= 0 && m_currentIndex < m_availableSizesListNames.size()) {
         return m_availableSizesListNames.at(m_currentIndex).toString();
     } else {
         return QString();
-    }    
+    }
 }
 
 QVariantList KSanePageSizeOption::valueList() const
@@ -181,7 +181,7 @@ QString KSanePageSizeOption::description() const
 
 void KSanePageSizeOption::optionTopLeftXUpdated()
 {
-    if (m_currentIndex > 0 && m_currentIndex < m_availableSizesList.size() 
+    if (m_currentIndex > 0 && m_currentIndex < m_availableSizesList.size()
         && m_optionTopLeftY->value().toDouble() != 0 ) {
         m_currentIndex = 0;
         Q_EMIT valueChanged(QPageSize::name(QPageSize::Custom));
@@ -190,7 +190,7 @@ void KSanePageSizeOption::optionTopLeftXUpdated()
 
 void KSanePageSizeOption::optionTopLeftYUpdated()
 {
-    if (m_currentIndex > 0 && m_currentIndex < m_availableSizesList.size() 
+    if (m_currentIndex > 0 && m_currentIndex < m_availableSizesList.size()
         && m_optionTopLeftY->value().toDouble() != 0 ) {
         m_currentIndex = 0;
         Q_EMIT valueChanged(QPageSize::name(QPageSize::Custom));
@@ -198,8 +198,8 @@ void KSanePageSizeOption::optionTopLeftYUpdated()
 }
 
 void KSanePageSizeOption::optionBottomRightXUpdated()
-{  
-    if (m_currentIndex > 0 && m_currentIndex < m_availableSizesList.size() 
+{
+    if (m_currentIndex > 0 && m_currentIndex < m_availableSizesList.size()
         && ensureMilliMeter(m_optionBottomRightX, m_optionBottomRightX->value().toDouble())!= m_availableSizesList.at(m_currentIndex).width() ) {
         m_currentIndex = 0;
         Q_EMIT valueChanged(QPageSize::name(QPageSize::Custom));
@@ -207,15 +207,15 @@ void KSanePageSizeOption::optionBottomRightXUpdated()
 }
 
 void KSanePageSizeOption::optionBottomRightYUpdated()
-{   
-    if (m_currentIndex > 0 && m_currentIndex < m_availableSizesList.size() 
+{
+    if (m_currentIndex > 0 && m_currentIndex < m_availableSizesList.size()
         && ensureMilliMeter(m_optionBottomRightY, m_optionBottomRightY->value().toDouble()) != m_availableSizesList.at(m_currentIndex).height() ) {
         m_currentIndex = 0;
         Q_EMIT valueChanged(QPageSize::name(QPageSize::Custom));
     }
 }
 
-double KSanePageSizeOption::ensureMilliMeter(KSaneBaseOption *option, double value) 
+double KSanePageSizeOption::ensureMilliMeter(KSaneBaseOption *option, double value)
 {
     // convert if necessary with current DPI if available
     if (option->valueUnit() == KSaneOption::UnitPixel &&  m_optionResolution != nullptr) {

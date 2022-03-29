@@ -16,8 +16,8 @@
 namespace KSaneIface
 {
 
-static const QString PageSizeOptionName = QStringLiteral("KSane::PageSize");    
-    
+static const QString PageSizeOptionName = QStringLiteral("KSane::PageSize");
+
 class KSanePageSizeOption : public KSaneBaseOption
 {
     Q_OBJECT
@@ -29,7 +29,7 @@ public:
 
     QVariant value() const override;
     QString valueAsString() const override;
-    
+
     KSaneOption::KSaneOptionState state() const override;
     QString name() const override;
     QString title() const override;
@@ -44,10 +44,10 @@ private Q_SLOTS:
     void optionTopLeftYUpdated();
     void optionBottomRightXUpdated();
     void optionBottomRightYUpdated();
-        
-private:  
+
+private:
     double ensureMilliMeter(KSaneBaseOption *option, double value);
-    
+
     KSaneBaseOption *m_optionTopLeftX;
     KSaneBaseOption *m_optionTopLeftY;
     KSaneBaseOption *m_optionBottomRightX;
@@ -57,7 +57,7 @@ private:
     KSaneOption::KSaneOptionState m_state = KSaneOption::StateDisabled;
     QVariantList m_availableSizesListNames;
     QList<QSizeF> m_availableSizesList;
-};  
+};
 
 }  // NameSpace KSaneIface
 

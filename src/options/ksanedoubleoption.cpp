@@ -37,7 +37,7 @@ void KSaneDoubleOption::readOption()
         if (step < MIN_FIXED_STEP) {
             step = MIN_FIXED_STEP;
         }
-    } 
+    }
     m_minChange = step;
 }
 
@@ -111,7 +111,7 @@ QVariant KSaneDoubleOption::stepValue() const
     if (m_optDesc->constraint_type == SANE_CONSTRAINT_RANGE) {
         value = SANE_UNFIX(m_optDesc->constraint.range->quant);
         /* work around broken backends, the step value must never be zero
-         * assume a minimum step value of 0.1 */    
+         * assume a minimum step value of 0.1 */
         if (value == 0) {
             value = 0.1;
         }
@@ -136,5 +136,5 @@ QString KSaneDoubleOption::valueAsString() const
     }
     return QString::number(m_value, 'F', 6);
 }
-    
+
 }  // NameSpace KSaneIface

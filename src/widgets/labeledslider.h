@@ -60,8 +60,8 @@ public Q_SLOTS:
     void setStep(int);
     /** Set the unit */
     void setSuffix(const KLocalizedString &text);
-    
-    
+
+
 
 private Q_SLOTS:
 

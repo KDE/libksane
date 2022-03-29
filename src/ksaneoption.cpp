@@ -59,7 +59,7 @@ QString KSaneOption::description() const
 }
 
 KSaneOption::KSaneOptionType KSaneOption::type() const
-{  
+{
     if (d->option != nullptr) {
         return d->option->type();
     } else {
@@ -68,7 +68,7 @@ KSaneOption::KSaneOptionType KSaneOption::type() const
 }
 
 QVariant KSaneOption::minimumValue() const
-{  
+{
     if (d->option != nullptr) {
         return d->option->minimumValue();
     } else {
@@ -95,7 +95,7 @@ QVariant KSaneOption::stepValue() const
 }
 
 QVariantList KSaneOption::valueList() const
-{ 
+{
     if (d->option != nullptr) {
         return d->option->valueList();
     } else {
@@ -122,7 +122,7 @@ QVariant KSaneOption::value() const
 }
 
 KSaneOption::KSaneOptionUnit KSaneOption::valueUnit() const
-{   
+{
     if (d->option != nullptr) {
         return d->option->valueUnit();
     } else {
@@ -140,14 +140,14 @@ int KSaneOption::valueSize() const
 }
 
 bool KSaneOption::setValue(const QVariant &value)
-{    
+{
     if (d->option != nullptr) {
         return d->option->setValue(value);
     } else {
         return false;
     }
 }
- 
+
 bool KSaneOption::storeCurrentData()
 {
     if (d->option != nullptr) {

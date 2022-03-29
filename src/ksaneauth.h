@@ -21,7 +21,7 @@ extern "C"
 
 namespace KSaneIface
 {
-    
+
 /**
  * Sane authentication helpers.
  */

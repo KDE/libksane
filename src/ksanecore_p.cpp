@@ -31,7 +31,7 @@
 
 namespace KSaneIface
 {
-    
+
 static const QHash<QString, KSaneCore::KSaneOptionName> stringEnumTranslation = {
     { QStringLiteral(SANE_NAME_SCAN_SOURCE), KSaneCore::SourceOption },
     { QStringLiteral(SANE_NAME_SCAN_MODE), KSaneCore::ScanModeOption },
@@ -60,7 +60,7 @@ static const QHash<QString, KSaneCore::KSaneOptionName> stringEnumTranslation = 
     { QStringLiteral(SANE_NAME_WHITE_LEVEL), KSaneCore::WhiteLevelOption },
     { BatchModeOptionName, KSaneCore::BatchModeOption },
     { BatchDelayOptionName, KSaneCore::BatchDelayOption }, };
-    
+
 KSaneCorePrivate::KSaneCorePrivate(KSaneCore *parent):
     q(parent)
 {
@@ -78,7 +78,7 @@ KSaneCorePrivate::KSaneCorePrivate(KSaneCore *parent):
     connect(&m_batchModeTimer, &QTimer::timeout, this, &KSaneCorePrivate::batchModeTimerUpdate);
 }
 
-KSaneCore::KSaneOpenStatus KSaneCorePrivate::loadDeviceOptions() 
+KSaneCore::KSaneOpenStatus KSaneCorePrivate::loadDeviceOptions()
 {
     const SANE_Option_Descriptor  *optDesc;
     SANE_Status                    status;
@@ -238,7 +238,7 @@ KSaneCore::KSaneOpenStatus KSaneCorePrivate::loadDeviceOptions()
     connect(invertOption, &KSaneInvertOption::valueChanged, m_scanThread, &KSaneScanThread::setImageInverted);
 
     if (optionResolution != nullptr) {
-        m_scanThread->setImageResolution(optionResolution->value());    
+        m_scanThread->setImageResolution(optionResolution->value());
         connect(optionResolution, &KSaneBaseOption::valueChanged, m_scanThread, &KSaneScanThread::setImageResolution);
     }
 
@@ -388,7 +388,7 @@ void KSaneCorePrivate::imageScanFinished()
     }
 }
 
-void KSaneCorePrivate::scanIsFinished(KSaneCore::KSaneScanStatus status, const QString &message) 
+void KSaneCorePrivate::scanIsFinished(KSaneCore::KSaneScanStatus status, const QString &message)
 {
     sane_cancel(m_saneHandle);
     if (m_optionsPollList.size() > 0 && !m_optionPollingNaughtylisted) {
@@ -403,7 +403,7 @@ void KSaneCorePrivate::determineMultiPageScanning(const QVariant &value)
     const QString sourceString = value.toString();
 
     m_executeMultiPageScanning = sourceString.contains(QStringLiteral("Automatic Document Feeder")) ||
-    sourceString.contains(sane_i18n("Automatic Document Feeder")) || 
+    sourceString.contains(sane_i18n("Automatic Document Feeder")) ||
     sourceString.contains(QStringLiteral("ADF")) ||
     sourceString.contains(QStringLiteral("Duplex"));
 }

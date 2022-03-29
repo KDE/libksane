@@ -4,7 +4,7 @@
  * SPDX-FileCopyrightText: 2007 Gilles Caulier <caulier dot gilles at gmail dot com>
  * SPDX-FileCopyrightText: 2014 Gregor Mitsch : port to KDE5 frameworks
  * SPDX-FileCopyrightText: 2021 Alexander Stippich <a.stippich@gmx.net>
- * 
+ *
  * SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
  *
  * ============================================================ */
@@ -28,7 +28,7 @@ namespace KSaneIface
 
 class KSaneCorePrivate;
 class KSaneOption;
-    
+
 /**
  * This class provides the core interface for accessing the scan controls and options.
  */
@@ -47,21 +47,21 @@ public:
         ErrorGeneral,       // The error string should contain an error message.
         Information         // There is some information to the user.
     };
-    
+
     /**
      * Enum determining whether the scanner opened correctly.
      */
     enum KSaneOpenStatus {
         OpeningSucceeded, // scanner opened successfully
-        OpeningDenied, // access was denied, 
+        OpeningDenied, // access was denied,
         OpeningFailed, // opening the scanner failed for unknown reasons
-    };  
-    
-    /** 
+    };
+
+    /**
      * This enumeration is used to obtain a specific option with getOption(KSaneOptionName).
      * Depending on the backend, not all options are available, nor this list is complete.
-     * For the remaining options, getOptionsList() must be used. 
-     */   
+     * For the remaining options, getOptionsList() must be used.
+     */
     enum KSaneOptionName {
         SourceOption,
         ScanModeOption,
@@ -129,7 +129,7 @@ public:
      * @return the status of the opening action.
      */
     KSaneOpenStatus openDevice(const QString &deviceName);
-    
+
     /**
      * This method opens the specified scanner device with a specified username and password.
      * Adds the scan options to the options list.
@@ -152,14 +152,14 @@ public:
      * if reloadDevicesList() has not been called before.
      */
     QString deviceName() const;
-    
+
     /**
      * This method returns the vendor name of the currently opened scanner.
      * @note Due to limitations of the SANE API, this will function will return an empty string
      * if reloadDevicesList() has not been called before.
      */
-    QString deviceVendor() const;  
-    
+    QString deviceVendor() const;
+
     /**
      * This method returns the model of the currently opened scanner.
      * @note Due to limitations of the SANE API, this will function will return an empty string
@@ -170,27 +170,27 @@ public:
     /**
      * This function returns all available options when a device is opened.
      * @return list containing pointers to all KSaneOptions provided by the backend.
-     * Becomes invalid when closing a device. 
+     * Becomes invalid when closing a device.
      * The pointers must not be deleted by the client.
      */
     QList<KSaneOption *> getOptionsList();
-    
+
     /**
-     * This function returns a specific option. 
+     * This function returns a specific option.
      * @param optionEnum the enum specifying the option.
      * @return pointer to the KSaneOption. Returns a nullptr in case the options
      * is not available for the currently opened device.
-     */  
+     */
     KSaneOption *getOption(KSaneOptionName optionEnum);
-    
+
     /**
-     * This function returns a specific option. 
+     * This function returns a specific option.
      * @param optionName the internal name of the option defined by SANE.
      * @return pointer to the KSaneOption. Returns a nullptr in case the options
      * is not available for the currently opened device.
-     */  
-    KSaneOption *getOption(QString optionName); 
-    
+     */
+    KSaneOption *getOption(QString optionName);
+
     /**
      * This method reads the available parameters and their values and
      * returns them in a QMap (Name, value)
@@ -205,7 +205,7 @@ public:
      * or -1 if scanning is in progress.
      */
     int setOptionsMap(const QMap <QString, QString> &opts);
-    
+
     /**
      * Gives direct access to the QImage that is used to store the image
      * data retrieved from the scanner.
@@ -216,13 +216,13 @@ public:
      * @return pointer for direct access of the QImage data.
      */
     QImage *scanImage() const;
-    
+
     /**
      * Locks the mutex protecting the QImage pointer of scanImage() from
      * concurrent access during scanning.
      */
     void lockScanImage();
-    
+
     /**
      * Unlocks the mutex protecting the QImage pointer of scanImage() from
      * concurrent access during scanning. The scanning progress will blocked
@@ -295,7 +295,7 @@ Q_SIGNALS:
      * buttons also differ from backend to backend.
      */
     void buttonPressed(const QString &optionName, const QString &optionLabel, bool pressed);
-    
+
     /**
      * This signal is not emitted anymore.
      */
@@ -306,7 +306,7 @@ Q_SIGNALS:
      * @param remainingSeconds are the remaining seconds until the next scan starts.
      */
     void batchModeCountDown(int remainingSeconds);
-    
+
 private:
     std::unique_ptr<KSaneCorePrivate> d;
 };

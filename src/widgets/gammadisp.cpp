@@ -71,7 +71,7 @@ void GammaDisp::paintEvent(QPaintEvent *)
 
     double xPrevious = 0;
     double xNext = 0;
-    
+
     // gamma is zero for first one, start with contrast
     xPrevious = (contrast * (xPrevious - halfMax)) + halfMax;
     // apply brightness + rounding
@@ -90,7 +90,7 @@ void GammaDisp::paintEvent(QPaintEvent *)
         xNext = (contrast * (xNext - halfMax)) + halfMax;
         // apply brightness + rounding
         xNext += brightness + 0.5;
-        
+
         // ensure correct value
         if (xNext > max) {
             xNext = max;
@@ -98,7 +98,7 @@ void GammaDisp::paintEvent(QPaintEvent *)
         if (xNext < 0) {
             xNext = 0;
         }
-        
+
         p1.setX(i * xscale);
         p1.setY(size().height() - 1 - (xPrevious * yscale));
 

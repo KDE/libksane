@@ -6,7 +6,7 @@
  * SPDX-FileCopyrightText: 2007-2008 Gilles Caulier <caulier dot gilles at gmail dot com>
  * SPDX-FileCopyrightText: 2014 Gregor Mitsch : port to KDE5 frameworks
  * SPDX-FileCopyrightText: 2021 Alexander Stippich <a.stippich@gmx.net>
- * 
+ *
  * SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
  *
  * ============================================================ */
@@ -41,7 +41,7 @@ KSaneWidget::KSaneWidget(QWidget *parent)
     : QWidget(parent), d(new KSaneWidgetPrivate(this))
 {
     d->m_ksaneCoreInterface = new KSaneCore();
-    
+
     connect(d->m_ksaneCoreInterface, &KSaneCore::scannedImageReady, d, &KSaneWidgetPrivate::imageReady);
     connect(d->m_ksaneCoreInterface, &KSaneCore::scanFinished, d, &KSaneWidgetPrivate::scanDone);
     connect(d->m_ksaneCoreInterface, &KSaneCore::userMessage, d, &KSaneWidgetPrivate::alertUser);
@@ -49,7 +49,7 @@ KSaneWidget::KSaneWidget(QWidget *parent)
     connect(d->m_ksaneCoreInterface, &KSaneCore::batchModeCountDown, d, &KSaneWidgetPrivate::updateCountDown);
     connect(d->m_ksaneCoreInterface, &KSaneCore::availableDevices, d, &KSaneWidgetPrivate::signalDevListUpdate);
     connect(d->m_ksaneCoreInterface, &KSaneCore::buttonPressed, this, &KSaneWidget::buttonPressed);
-    
+
     // Create the static UI
     // create the preview
     d->m_previewViewer = new KSaneViewer(&(d->m_previewImg), this);
@@ -228,7 +228,7 @@ QString KSaneWidget::vendor() const
     if (!vendor.isEmpty()) {
         return vendor;
     }
-    
+
     const QString &name = d->m_ksaneCoreInterface->deviceName();
     if (name.isEmpty()) {
         return QString();
@@ -250,7 +250,7 @@ QString KSaneWidget::model() const
     if (!model.isEmpty()) {
         return model;
     }
-    
+
     const QString &name = d->m_ksaneCoreInterface->deviceName();
     if (name.isEmpty()) {
         return QString();
@@ -267,7 +267,7 @@ QString KSaneWidget::selectDevice(QWidget *parent)
     QPointer<KSaneDeviceDialog> sel = new KSaneDeviceDialog(parent);
     connect(d->m_ksaneCoreInterface, &KSaneCore::availableDevices, sel, &KSaneDeviceDialog::updateDevicesList);
     connect(sel, &KSaneDeviceDialog::requestReloadList, d->m_ksaneCoreInterface, &KSaneCore::reloadDevicesList);
-    
+
     d->m_ksaneCoreInterface->reloadDevicesList();
 
     if (sel->exec() == QDialog::Accepted) {
@@ -334,7 +334,7 @@ bool KSaneWidget::openDevice(const QString &deviceName)
             delete dlg;
             return false; //the user canceled
         }
-        
+
         // add/update the device user-name and password for authentication
         status = d->m_ksaneCoreInterface->openRestrictedDevice(deviceName, dlg->username(), dlg->password());
 
@@ -537,7 +537,7 @@ bool KSaneWidget::getOptVal(const QString &optname, QString &value)
             value = it.value();
             return !value.isEmpty();
         }
-        it++;        
+        it++;
     }
     return false;
 }
@@ -547,7 +547,7 @@ int KSaneWidget::setOptVals(const QMap <QString, QString> &opts)
     int ret = 0;
 
     ret = d->m_ksaneCoreInterface->setOptionsMap(opts);
-    
+
     if ((d->m_splitGamChB) &&
             (d->m_optGamR) &&
             (d->m_optGamG) &&

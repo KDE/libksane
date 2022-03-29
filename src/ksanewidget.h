@@ -4,7 +4,7 @@
  * SPDX-FileCopyrightText: 2007 Gilles Caulier <caulier dot gilles at gmail dot com>
  * SPDX-FileCopyrightText: 2014 Gregor Mitsch : port to KDE5 frameworks
  * SPDX-FileCopyrightText: 2021 Alexander Stippich <a.stippich@gmx.net>
- * 
+ *
  * SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
  *
  * ============================================================ */
@@ -21,7 +21,7 @@ namespace KSaneIface
 {
 
 class KSaneWidgetPrivate;
-    
+
 /**
  * This class provides the widget containing the scan options and the preview.
  * @author Kare Sars <kare.sars@iki.fi>
@@ -157,20 +157,20 @@ public:
 
     /** This method returns the internal device name of the currently opened scanner. */
     QString deviceName() const;
-    
+
     /** This method returns the vendor name of the currently opened scanner. */
-    QString deviceVendor() const;  
-    
+    QString deviceVendor() const;
+
     /** This method returns the model of the currently opened scanner. */
     QString deviceModel() const;
-    
+
     /** This method returns the vendor name of the currently opened scanner
      * and blocks until the vendor name is available. */
     KSANE_DEPRECATED QString vendor() const;
-    
+
     /** same as vendor() */
     KSANE_DEPRECATED QString make() const;
-    /** This method returns the model of the currently opened scanner 
+    /** This method returns the model of the currently opened scanner
      * and blocks until the model name is available. */
     KSANE_DEPRECATED QString model() const;
 
@@ -200,7 +200,7 @@ public:
     * @note if the set value is not supported, the cloasest one is used
     * @note setting the value 0 means that the default calculated value should be used */
     void setPreviewResolution(float dpi);
-    
+
     /** This method reads the available parameters and their values and
      * returns them in a QMap (Name, value)
      * @param opts is a QMap with the parameter names and values. */
@@ -321,7 +321,7 @@ Q_SIGNALS:
      * buttons also differ from backend to backend.
      */
     void buttonPressed(const QString &optionName, const QString &optionLabel, bool pressed);
-    
+
     /**
      * This signal is not emitted anymore.
      */

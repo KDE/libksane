@@ -240,7 +240,7 @@ bool KSaneListOption::setValue(const QString &value)
         i = value.toInt(&ok);
         if (ok) {
             fromSANE_Word(data, i);
-            data_ptr = data;  
+            data_ptr = data;
         } else {
             return false;
         }
@@ -251,7 +251,7 @@ bool KSaneListOption::setValue(const QString &value)
         if (ok) {
             fixed = SANE_FIX(d);
             fromSANE_Word(data, fixed);
-            data_ptr = data; 
+            data_ptr = data;
         } else {
             return false;
         }

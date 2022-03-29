@@ -29,7 +29,7 @@ bool KSaneGammaOption::setValue(const QVariant &value)
     if (state() == KSaneOption::StateHidden) {
         return false;
     }
-    
+
     if (static_cast<QMetaType::Type>(value.type()) == QMetaType::QString) {
         const QString stringValue = value.toString();
         QStringList gammaValues;
@@ -79,7 +79,7 @@ bool KSaneGammaOption::setValue(const QVariant &value)
 void KSaneGammaOption::readOption()
 {
     KSaneBaseOption::readOption();
-    
+
     if (m_optDesc) {
         int size = m_optDesc->size / sizeof(SANE_Word);
         m_gammaTable.resize(size);
@@ -128,7 +128,7 @@ QString KSaneGammaOption::valueAsString() const
 }
 
 void KSaneGammaOption::calculateGTwriteData()
-{   
+{
     double maxValue = m_optDesc->constraint.range->max;
     double gamma    = 100.0 / m_gamma;
     double contrast = (200.0 / (100.0 - m_contrast)) - 1;

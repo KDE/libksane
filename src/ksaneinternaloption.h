@@ -24,7 +24,7 @@ public:
     KSaneInternalOption(KSaneBaseOption *option, QObject *parent = nullptr);
 
 };
-    
+
 }  // NameSpace KSaneIface
 
 #endif // KSANE_INTERNAL_OPTION_H

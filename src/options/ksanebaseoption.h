@@ -77,9 +77,9 @@ Q_SIGNALS:
     void valueChanged(const QVariant &value);
 
 public Q_SLOTS:
-    
-    virtual bool setValue(const QVariant &value); 
-    
+
+    virtual bool setValue(const QVariant &value);
+
 protected:
 
     static SANE_Word toSANE_Word(unsigned char *data);

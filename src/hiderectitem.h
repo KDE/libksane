@@ -13,7 +13,7 @@
 
 namespace KSaneIface
 {
-    
+
 /**
  * QGraphicsItem for hiding rects in the image viewer.
  */

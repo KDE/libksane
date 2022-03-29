@@ -45,7 +45,7 @@ public:
 public Q_SLOTS:
     void updateDevicesList(const QList<KSaneCore::DeviceInfo> &list);
     void reloadDevicesList();
-    
+
 Q_SIGNALS:
     void requestReloadList();
 

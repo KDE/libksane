@@ -111,7 +111,7 @@ void KSaneWidgetPrivate::clearDeviceOptions()
     m_optPreview    = nullptr;
     m_optWaitForBtn = nullptr;
     m_scanOngoing   = false;
-    
+
     m_handledOptions.clear();
 
     // remove the remaining layouts/widgets
@@ -507,9 +507,9 @@ void KSaneWidgetPrivate::createOptInterface()
         m_handledOptions.insert(option->name());
     }
 
-    if ((m_optGamR != nullptr) && (m_optGamG != nullptr) && (m_optGamB != nullptr) 
+    if ((m_optGamR != nullptr) && (m_optGamG != nullptr) && (m_optGamB != nullptr)
         && (gammaR != nullptr) && (gammaG != nullptr) && (gammaB != nullptr)  ) {
-        
+
         m_commonGamma = new LabeledGamma(m_colorOpts, i18n("Image intensity"), gammaR->maxValue());
 
         colorLayout->addWidget(m_commonGamma);
@@ -774,7 +774,7 @@ void KSaneWidgetPrivate::setBRY(const QVariant &y)
 
     float ratio = scanAreaToRatioY(fbry);
     m_previewViewer->setBRY(ratio);
-    
+
     if (!m_optTlY) {
         return;
     }
@@ -905,7 +905,7 @@ void KSaneWidgetPrivate::startPreviewScan()
         m_autoSelect = false;
     }
 
-    if (m_optRes != nullptr) {        
+    if (m_optRes != nullptr) {
         if (m_previewDPI < m_optRes->minimumValue().toFloat()) {
             targetPreviewDPI = qMax(m_optRes->minimumValue().toFloat(), 25.0f);
             if ((m_optBrX != nullptr) && (m_optBrY != nullptr)) {
@@ -917,7 +917,7 @@ void KSaneWidgetPrivate::startPreviewScan()
                 }
             }
         } else {
-            targetPreviewDPI = m_previewDPI;    
+            targetPreviewDPI = m_previewDPI;
         }
         if (m_optRes->type() == KSaneOption::TypeValueList) {
             const auto &values = m_optRes->valueList();

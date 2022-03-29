@@ -3,7 +3,7 @@
  * SPDX-FileCopyrightText: 2009 Kare Sars <kare dot sars at iki dot fi>
  * SPDX-FileCopyrightText: 2014 Gregor Mitsch : port to KDE5 frameworks
  * SPDX-FileCopyrightText: 2021 Alexander Stippich <a.stippich@gmx.net>
- * 
+ *
  * SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
  *
  * ============================================================ */
@@ -49,20 +49,20 @@ public:
 
     ReadStatus frameStatus();
     SANE_Status saneStatus();
-    
+
     void lockScanImage();
     QImage *scanImage();
     void unlockScanImage();
 
 Q_SIGNALS:
-    
+
     void scanProgressUpdated(int progress);
 
 private:
     void readData();
     void updateScanProgress();
     void copyToScanData(int readBytes);
-     
+
     SANE_Byte       m_readData[SCAN_READ_CHUNK_SIZE];
     SANE_Handle     m_saneHandle;
     int             m_frameSize = 0;
@@ -78,7 +78,7 @@ private:
     KSaneImageBuilder m_imageBuilder;
     QImage          m_image;
     QMutex          m_imageMutex;
-    
+
     QTimer          m_emitProgressUpdateTimer;
 };
 }

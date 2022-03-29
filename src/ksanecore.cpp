@@ -6,7 +6,7 @@
  * SPDX-FileCopyrightText: 2007-2008 Gilles Caulier <caulier dot gilles at gmail dot com>
  * SPDX-FileCopyrightText: 2014 Gregor Mitsch : port to KDE5 frameworks
  * SPDX-FileCopyrightText: 2021 Alexander Stippich <a.stippich@gmx.net>
- * 
+ *
  * SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
  *
  * ============================================================ */
@@ -121,7 +121,7 @@ KSaneCore::KSaneOpenStatus KSaneCore::openDevice(const QString &deviceName)
     if (status == SANE_STATUS_ACCESS_DENIED) {
         return KSaneOpenStatus::OpeningDenied;
     }
- 
+
     if (status != SANE_STATUS_GOOD) {
         qCDebug(KSANE_LOG) << "sane_open(\"" << deviceName << "\", &handle) failed! status = " << sane_strstatus(status);
         d->m_devName.clear();
@@ -146,10 +146,10 @@ KSaneCore::KSaneOpenStatus KSaneCore::openRestrictedDevice(const QString &device
     }
     // save the device name
     d->m_devName = deviceName;
-    
+
     // add/update the device user-name and password for authentication
     d->m_auth->setDeviceAuth(d->m_devName, userName, password);
-    
+
     // Try to open the device
     status = sane_open(deviceName.toLatin1().constData(), &d->m_saneHandle);
 
@@ -163,7 +163,7 @@ KSaneCore::KSaneOpenStatus KSaneCore::openRestrictedDevice(const QString &device
         d->m_devName.clear();
         return KSaneOpenStatus::OpeningFailed;
     }
-    
+
     return d->loadDeviceOptions();
 }
 
@@ -173,7 +173,7 @@ bool KSaneCore::closeDevice()
         return false;
     }
     stopScan();
-    
+
     disconnect(d->m_scanThread);
     if (d->m_scanThread->isRunning()) {
         connect(d->m_scanThread, &QThread::finished, d->m_scanThread, &QThread::deleteLater);
@@ -182,7 +182,7 @@ bool KSaneCore::closeDevice()
         d->m_scanThread->deleteLater();
     }
     d->m_scanThread = nullptr;
-    
+
     d->m_auth->clearDeviceAuth(d->m_devName);
     sane_close(d->m_saneHandle);
     d->m_saneHandle = nullptr;
@@ -212,7 +212,7 @@ void KSaneCore::stopScan()
     if (!d->m_saneHandle) {
         return;
     }
-    
+
     d->m_cancelMultiPageScan = true;
     if (d->m_scanThread->isRunning()) {
         d->m_scanThread->cancelScan();
@@ -251,7 +251,7 @@ QList<KSaneOption *> KSaneCore::getOptionsList()
     return d->m_externalOptionsList;
 }
 
-KSaneOption *KSaneCore::getOption(KSaneCore::KSaneOptionName optionEnum) 
+KSaneOption *KSaneCore::getOption(KSaneCore::KSaneOptionName optionEnum)
 {
     auto it = d->m_optionsLocation.find(optionEnum);
     if (it != d->m_optionsLocation.end()) {
@@ -260,7 +260,7 @@ KSaneOption *KSaneCore::getOption(KSaneCore::KSaneOptionName optionEnum)
     return nullptr;
 }
 
-KSaneOption *KSaneCore::getOption(QString optionName) 
+KSaneOption *KSaneCore::getOption(QString optionName)
 {
     for (const auto &option : qAsConst(d->m_externalOptionsList)) {
         if (option->name() == optionName) {
@@ -299,7 +299,7 @@ int KSaneCore::setOptionsMap(const QMap <QString, QString> &opts)
 
     KSaneOption *sourceOption = getOption(SourceOption);
     KSaneOption *modeOption = getOption(ScanModeOption);
-    
+
     // Priorize source option
     if (sourceOption != nullptr && optionMapCopy.contains(sourceOption->name())) {
         if (sourceOption->setValue(optionMapCopy[sourceOption->name()]) ) {

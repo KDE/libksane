@@ -25,7 +25,7 @@ LabeledSlider::LabeledSlider(QWidget *parent, const QString &ltext,
     : KSaneOptionWidget(parent, ltext)
 {
     initSlider(min, max, ste);
-}        
+}
 
 LabeledSlider::LabeledSlider(QWidget *parent, KSaneOption *option)
     : KSaneOptionWidget(parent, option)
@@ -35,7 +35,7 @@ LabeledSlider::LabeledSlider(QWidget *parent, KSaneOption *option)
     int stepValue = option->stepValue().toInt();
 
     initSlider(minValue, maxValue, stepValue);
-    
+
     KLocalizedString unitSuffix;
     KSaneOption::KSaneOptionUnit unit = option->valueUnit();
     switch (unit) {
@@ -61,11 +61,11 @@ LabeledSlider::LabeledSlider(QWidget *parent, KSaneOption *option)
     case KSaneOption::UnitSecond:
         unitSuffix = ki18ncp("SpinBox parameter unit (seconds)", " s", " s");
         break;
-    default: 
+    default:
         unitSuffix = KLocalizedString();
         break;
     }
-    
+
     setSuffix(unitSuffix);
     setLabelText(option->title());
     setToolTip(option->description());
@@ -111,7 +111,7 @@ void LabeledSlider::initSlider(int minValue, int maxValue, int stepValue)
     m_layout->addWidget(m_slider, 0, 2);
     m_layout->addWidget(m_spinb, 0, 1);
     m_layout->setColumnStretch(1, 0);
-    m_layout->setColumnStretch(2, 50); 
+    m_layout->setColumnStretch(2, 50);
 }
 
 void LabeledSlider::setSuffix(const KLocalizedString &text)

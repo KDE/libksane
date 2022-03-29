@@ -34,23 +34,23 @@ LabeledFSlider::LabeledFSlider(QWidget *parent, KSaneOption *option)
     double minValue = option->minimumValue().toDouble();
     double stepValue = option->stepValue().toDouble();
     initFSlider(minValue, maxValue , stepValue);
-    
+
     QString unitSuffix;
     KSaneOption::KSaneOptionUnit unit = option->valueUnit();
     switch (unit) {
-    case KSaneOption::UnitPixel: 
+    case KSaneOption::UnitPixel:
         unitSuffix = i18nc("Double numbers. SpinBox parameter unit", " Pixels");
         break;
     case KSaneOption::UnitBit:
         unitSuffix = i18nc("Double numbers. SpinBox parameter unit", " Bits");
         break;
-    case KSaneOption::UnitMilliMeter: 
+    case KSaneOption::UnitMilliMeter:
         unitSuffix = i18nc("Double numbers. SpinBox parameter unit (Millimeter)", " mm");
         break;
-    case KSaneOption::UnitDPI:  
+    case KSaneOption::UnitDPI:
         unitSuffix = i18nc("Double numbers. SpinBox parameter unit (Dots Per Inch)", " DPI");
         break;
-    case KSaneOption::UnitPercent: 
+    case KSaneOption::UnitPercent:
         unitSuffix = i18nc("Double numbers. SpinBox parameter unit (Percentage)", " %");
         break;
     case KSaneOption::UnitMicroSecond:
@@ -59,12 +59,12 @@ LabeledFSlider::LabeledFSlider(QWidget *parent, KSaneOption *option)
     case KSaneOption::UnitSecond:
         unitSuffix = i18nc("SpinBox parameter unit (seconds), float", " s");
         break;
-    default: 
+    default:
         unitSuffix = QString();
         break;
     }
     setSuffix(unitSuffix);
-    
+
     setLabelText(option->title());
     setToolTip(option->description());
     connect(this, &LabeledFSlider::valueChanged, option, &KSaneOption::setValue);

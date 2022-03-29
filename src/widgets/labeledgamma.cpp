@@ -59,7 +59,7 @@ void LabeledGamma::initGamma(QString text, int max)
     m_brightSlider->setLabelWidth(labelMax);
     m_contrastSlider->setLabelWidth(labelMax);
     m_gammaSlider->setLabelWidth(labelMax);
-    
+
     m_maxValue = max;
 
     m_gammaDisplay = new GammaDisp(this, &m_brightness, &m_contrast, &m_gamma, max);
@@ -78,7 +78,7 @@ void LabeledGamma::initGamma(QString text, int max)
     connect(m_brightSlider, &LabeledSlider::valueChanged, this, &LabeledGamma::emitNewValues);
     connect(m_contrastSlider, &LabeledSlider::valueChanged, this, &LabeledGamma::emitNewValues);
     connect(m_gammaSlider, &LabeledSlider::valueChanged, this, &LabeledGamma::emitNewValues);
-    
+
     emitNewValues();
 }
 
@@ -100,20 +100,20 @@ void LabeledGamma::setValues(const QVariant &values)
         m_brightSlider->blockSignals(true);
         m_contrastSlider->blockSignals(true);
         m_gammaSlider->blockSignals(true);
-        
+
         m_brightness = copy.at(0).toInt();
         m_contrast = copy.at(1).toInt();
         m_gamma = copy.at(2).toInt();
-        
+
         m_brightSlider->setValue(m_brightness);
         m_contrastSlider->setValue(m_contrast);
         m_gammaSlider->setValue(m_gamma);
 
         emitNewValues();
-        
+
         m_brightSlider->blockSignals(false);
         m_contrastSlider->blockSignals(false);
-        m_gammaSlider->blockSignals(false); 
+        m_gammaSlider->blockSignals(false);
     }
 }
 
@@ -123,9 +123,9 @@ void LabeledGamma::emitNewValues()
     m_contrast = m_contrastSlider->value();
     m_gamma = m_gammaSlider->value();
     QVariantList values = { m_brightness, m_contrast, m_gamma };
-    
+
     m_gammaDisplay->update();
-    Q_EMIT valuesChanged(QVariant::fromValue(values));  
+    Q_EMIT valuesChanged(QVariant::fromValue(values));
 }
 
 bool LabeledGamma::getValues(int &brightness, int &contrast, int &gamma)

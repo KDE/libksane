@@ -45,18 +45,18 @@ public:
 
     int labelWidthHint();
     void setLabelWidth(int labelWidth);
-    
+
 protected Q_SLOTS:
-    void updateVisibility(); 
-    
+    void updateVisibility();
+
 protected:
     void initWidget();
-   
+
     QLabel      *m_label;
     QGridLayout *m_layout;
     KSaneOption *m_option = nullptr;
-    
-    
+
+
 };
 
 }  // NameSpace KSaneIface

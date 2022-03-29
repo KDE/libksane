@@ -32,7 +32,7 @@ LabeledCombo::LabeledCombo(QWidget *parent, KSaneOption *option)
     connect(this, &LabeledCombo::valueChanged, option, &KSaneOption::setValue);
     connect(option, &KSaneOption::valueChanged, this, &LabeledCombo::setValue);
     clear();
-    
+
     const QVariantList values = option->valueList();
     const QVariantList internalValues = option->internalValueList();
     for (int i = 0; i < values.count(); i++) {
@@ -65,17 +65,17 @@ void LabeledCombo::initCombo(const QStringList &list)
 {
     m_combo  = new QComboBox(this);
     m_combo->addItems(list);
-    
+
     m_label->setBuddy(m_combo);
 
     connect(m_combo, QOverload<int>::of(&QComboBox::activated), this, &LabeledCombo::emitChangedValue);
     connect(m_combo, QOverload<int>::of(&QComboBox::activated), this, &LabeledCombo::activated);
-    
+
     m_layout->addWidget(m_combo, 0, 1);
     m_layout->addWidget(new QWidget(this), 0, 2);
     m_layout->setColumnStretch(1, 0);
     m_layout->setColumnStretch(2, 50);
-    setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Fixed); 
+    setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Fixed);
 }
 
 void LabeledCombo::addItems(const QStringList &list)
@@ -123,7 +123,7 @@ void LabeledCombo::clear()
     m_combo->clear();
 }
 
-void LabeledCombo::emitChangedValue(int) 
+void LabeledCombo::emitChangedValue(int)
 {
     Q_EMIT valueChanged(m_combo->currentData());
 }
