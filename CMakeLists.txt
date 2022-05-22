@@ -123,6 +123,8 @@ install(FILES
   COMPONENT Devel
 )
 
+ki18n_install(po)
+
 # =======================================================
 
 # To prevent warnings from M$ compiler
