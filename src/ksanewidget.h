@@ -76,6 +76,7 @@ public:
     /**
      * Get the list of available scanning devices. Connect to availableDevices()
      * which is fired once these devices are known.
+     * @deprecated since 22.08, manually calling is not needed anymore
      */
     KSANE_DEPRECATED void initGetDeviceList() const;
 
@@ -175,7 +176,9 @@ public:
     * in dots per inch.
     * @note This function should be called from the slot connected
     * to the imageReady signal. The connection should not be queued.
-    * @return the resolution used for scanning or 0.0 on failure. */
+    * @return the resolution used for scanning or 0.0 on failure.
+    * @deprecated since 22.08, only required when not using the QImage based signal
+    * for retrieving the scanned data and using the deprecated toQImageSilent members */
     KSANE_DEPRECATED float currentDPI();
 
     /** This method returns the scan area's width in mm
