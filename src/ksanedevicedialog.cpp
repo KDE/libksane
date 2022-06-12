@@ -83,7 +83,7 @@ void KSaneDeviceDialog::reloadDevicesList()
     m_gbDevices->layout()->itemAt(0)->widget()->hide();  // explanation
     m_btnReloadDevices->setEnabled(false);
 
-    Q_EMIT requestReloadList(KSane::CoreInterface::AllDevices);
+    Q_EMIT requestReloadList(KSaneCore::Interface::AllDevices);
 }
 
 void KSaneDeviceDialog::setAvailable(bool isAvailable)
@@ -109,7 +109,7 @@ QString KSaneDeviceDialog::getSelectedName() const
     return QString();
 }
 
-void KSaneDeviceDialog::updateDevicesList(const QList<KSane::DeviceInformation*> &list)
+void KSaneDeviceDialog::updateDevicesList(const QList<KSaneCore::DeviceInformation*> &list)
 {
     qDeleteAll(m_btnGroupDevices->buttons());
 

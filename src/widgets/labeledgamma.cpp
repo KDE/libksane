@@ -11,7 +11,7 @@
 #include <QGroupBox>
 
 #include <KLocalizedString>
-#include <CoreOption>
+#include <Option>
 
 namespace KSaneIface
 {
@@ -22,14 +22,14 @@ LabeledGamma::LabeledGamma(QWidget *parent, const QString &text, int max)
     initGamma(text, max);
 }
 
-LabeledGamma::LabeledGamma(QWidget *parent, KSane::CoreOption *option, QColor color)
+LabeledGamma::LabeledGamma(QWidget *parent, KSaneCore::Option *option, QColor color)
     : KSaneOptionWidget(parent, option)
 {
 
     int max = option->maximumValue().toInt();
     initGamma(option->title(), max);
-    connect(this, &LabeledGamma::valuesChanged, option, &KSane::CoreOption::setValue);
-    connect(option, &KSane::CoreOption::valueChanged, this, &LabeledGamma::setValues);
+    connect(this, &LabeledGamma::valuesChanged, option, &KSaneCore::Option::setValue);
+    connect(option, &KSaneCore::Option::valueChanged, this, &LabeledGamma::setValues);
     setColor(color);
     setToolTip(option->description());
 }

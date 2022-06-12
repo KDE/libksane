@@ -15,13 +15,13 @@ LabeledCheckbox::LabeledCheckbox(QWidget *parent, const QString &ltext)
     initCheckBox(ltext);
 }
 
-LabeledCheckbox::LabeledCheckbox(QWidget *parent, KSane::CoreOption *option)
+LabeledCheckbox::LabeledCheckbox(QWidget *parent, KSaneCore::Option *option)
     : KSaneOptionWidget(parent, option)
 {
     initCheckBox(option->title());
     setToolTip(option->description());
-    connect(this, &LabeledCheckbox::toggled, option, &KSane::CoreOption::setValue);
-    connect(option, &KSane::CoreOption::valueChanged, this, &LabeledCheckbox::setValue);
+    connect(this, &LabeledCheckbox::toggled, option, &KSaneCore::Option::setValue);
+    connect(option, &KSaneCore::Option::valueChanged, this, &LabeledCheckbox::setValue);
 }
 
 LabeledCheckbox::~LabeledCheckbox()

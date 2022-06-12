@@ -37,7 +37,7 @@ public:
      */
     LabeledCheckbox(QWidget *parent, const QString &text);
 
-    LabeledCheckbox(QWidget *parent, KSane::CoreOption *option);
+    LabeledCheckbox(QWidget *parent, KSaneCore::Option *option);
     ~LabeledCheckbox() override;
     void setChecked(bool);
     bool isChecked();

@@ -15,12 +15,12 @@ KSaneButton::KSaneButton(QWidget *parent, const QString &ltext)
     initButton(ltext);
 }
 
-KSaneButton::KSaneButton(QWidget *parent, KSane::CoreOption *option)
+KSaneButton::KSaneButton(QWidget *parent, KSaneCore::Option *option)
     : KSaneOptionWidget(parent, option)
 {
     initButton(option->title());
     setToolTip(option->description());
-    connect(this, &KSaneButton::clicked, option, &KSane::CoreOption::setValue);
+    connect(this, &KSaneButton::clicked, option, &KSaneCore::Option::setValue);
 }
 
 KSaneButton::~KSaneButton()

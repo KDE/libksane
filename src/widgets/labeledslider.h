@@ -45,7 +45,7 @@ public:
     LabeledSlider(QWidget *parent, const QString &text,
                   int min, int max, int st);
 
-    LabeledSlider(QWidget *parent, KSane::CoreOption *option);
+    LabeledSlider(QWidget *parent, KSaneCore::Option *option);
     ~LabeledSlider() override;
 
     int value() const;

@@ -43,7 +43,7 @@ public:
     LabeledFSlider(QWidget *parent, const QString &text,
                    double min, double max, double step);
 
-    LabeledFSlider(QWidget *parent, KSane::CoreOption *option);
+    LabeledFSlider(QWidget *parent, KSaneCore::Option *option);
     ~LabeledFSlider() override;
 
     /**

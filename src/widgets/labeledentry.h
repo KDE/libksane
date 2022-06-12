@@ -36,7 +36,7 @@ public:
      * \param text is the text describing the entry.
      */
     LabeledEntry(QWidget *parent, const QString &text);
-    LabeledEntry(QWidget *parent, KSane::CoreOption *option);
+    LabeledEntry(QWidget *parent, KSaneCore::Option *option);
     ~LabeledEntry() override;
     void setText(const QString &text);
 

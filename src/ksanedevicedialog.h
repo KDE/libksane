@@ -19,7 +19,7 @@
 #include <QBoxLayout>
 #include <QDialog>
 
-#include <CoreInterface>
+#include <Interface>
 
 namespace KSaneIface
 {
@@ -36,11 +36,11 @@ public:
     void setDefault(const QString &);
 
 public Q_SLOTS:
-    void updateDevicesList(const QList<KSane::DeviceInformation*> &list);
+    void updateDevicesList(const QList<KSaneCore::DeviceInformation*> &list);
     void reloadDevicesList();
 
 Q_SIGNALS:
-    void requestReloadList(const KSane::CoreInterface::DeviceType type);
+    void requestReloadList(const KSaneCore::Interface::DeviceType type);
 
 private Q_SLOTS:
     void setAvailable(bool avail);

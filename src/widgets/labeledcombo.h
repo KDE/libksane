@@ -32,7 +32,7 @@ public:
      */
     LabeledCombo(QWidget *parent, const QString &label, const QStringList &list = QStringList());
 
-    LabeledCombo(QWidget *parent, KSane::CoreOption *option);
+    LabeledCombo(QWidget *parent, KSaneCore::Option *option);
 
     /** This function forwards the request to the QComboBox equivalent */
     QVariant currentData(int role = Qt::UserRole) const;
