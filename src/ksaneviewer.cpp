@@ -56,14 +56,14 @@ struct KSaneViewer::Private {
 
     int currentImageWidth;
     int currentImageHeight;
+
+    QGraphicsPolygonItem * border;
 };
 
 KSaneViewer::KSaneViewer(QImage *img, QWidget *parent) : QGraphicsView(parent), d(new Private)
 {
     d->img = img;
 
-    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
     setMouseTracking(true);
 
     // Init the scene
@@ -98,6 +98,10 @@ KSaneViewer::KSaneViewer(QImage *img, QWidget *parent) : QGraphicsView(parent), 
     d->scene->addItem(d->hideBottom);
     d->scene->addItem(d->hideArea);
 
+    QPolygonF polygon(QRectF(QPointF(0,0),QSizeF(d->currentImageWidth, d->currentImageHeight)));
+    QPen pen(Qt::gray, 0, Qt::SolidLine, Qt::FlatCap, Qt::MiterJoin);
+    d->border = d->scene->addPolygon(polygon, pen);
+
     d->change = SelectionItem::None;
     d->selectionList.clear();
 
@@ -123,16 +127,19 @@ KSaneViewer::KSaneViewer(QImage *img, QWidget *parent) : QGraphicsView(parent), 
     addAction(d->zoom2FitAction);
     addAction(d->clrSelAction);
     setContextMenuPolicy(Qt::ActionsContextMenu);
+
+    setFrameShape(QFrame::NoFrame);
 }
 
 // ------------------------------------------------------------------------
 void KSaneViewer::drawBackground(QPainter *painter, const QRectF &rect)
 {
-    painter->fillRect(rect, QColor(0x70, 0x70, 0x70));
+    painter->fillRect(rect, QWidget::palette().color(QPalette::Window));
     QRectF r = rect & sceneRect();
     const qreal dpr = d->img->devicePixelRatio();
     QRectF srcRect = QRectF(r.topLeft() * dpr, r.size() * dpr);
     painter->drawImage(r, *d->img, srcRect);
+    d->border->setPolygon(QPolygonF(QRectF(QPointF(0,0),QSizeF(d->currentImageWidth, d->currentImageHeight))));
 }
 
 // ------------------------------------------------------------------------
