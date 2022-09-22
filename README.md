@@ -17,7 +17,7 @@ The library documentation is available on header files.
 ## Dependencies
 
  - CMake          >= 3.16.0                https://cmake.org
- - Qt             >= 5.15.0                https://qt.io
+ - Qt             >= 5.15.2                https://qt.io
  - KDE Frameworks >= 5.90.0                https://www.kde.org
  - KSaneCore      from same KDE Gear       https://invent.kde.org/libraries/ksanecore
 
