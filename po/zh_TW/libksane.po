@@ -1,0 +1,601 @@
+# translation of libksane.po to Chinese Traditional
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Frank Weng (a.k.a. Franklin) <franklin at goodhorse dot idv dot tw>, 2008, 2009, 2010.
+# Franklin Weng <franklin@goodhorse.idv.tw>, 2011, 2012.
+# Jeff Huang <s8321414@gmail.com>, 2016.
+# pan93412 <pan93412@gmail.com>, 2020.
+msgid ""
+msgstr ""
+"Project-Id-Version: libksane\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-06-13 00:54+0000\n"
+"PO-Revision-Date: 2020-05-15 00:08+0800\n"
+"Last-Translator: Yi-Jyun Pan <pan93412@gmail.com>\n"
+"Language-Team: Chinese <zh-l10n@lists.linux.org.tw>\n"
+"Language: zh_TW\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"dot tw>\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Lokalize 20.04.0\n"
+
+#: ../ksanetwain/ktwain_widget.cpp:29
+#, kde-format
+msgid "Open scan dialog"
+msgstr "開啟掃描對話框"
+
+#: i18n-hplip.cpp:3
+#, kde-format
+msgid "None"
+msgstr "無"
+
+#: i18n-hplip.cpp:4
+#, kde-format
+msgid "MH"
+msgstr "MH"
+
+#: i18n-hplip.cpp:5
+#, kde-format
+msgid "MR"
+msgstr "MR"
+
+#: i18n-hplip.cpp:6
+#, kde-format
+msgid "MMR"
+msgstr "MMR"
+
+#: i18n-hplip.cpp:7
+#, kde-format
+msgid "JPEG"
+msgstr "JPEG"
+
+#: i18n-hplip.cpp:8
+#, kde-format
+msgid "Auto"
+msgstr "自動"
+
+#: i18n-hplip.cpp:9
+#, kde-format
+msgid "Flatbed"
+msgstr "Flatbed"
+
+#: i18n-hplip.cpp:10
+#, kde-format
+msgid "ADF"
+msgstr "自動送入文件（ADF）"
+
+#: i18n-hplip.cpp:11
+#, kde-format
+msgid "Advanced"
+msgstr "進階"
+
+#: i18n-hplip.cpp:12
+#, kde-format
+msgid "Compression"
+msgstr "壓縮"
+
+#: i18n-hplip.cpp:13
+#, kde-format
+msgid ""
+"Selects the scanner compression method for faster scans, possibly at the "
+"expense of image quality."
+msgstr "請選擇快速掃描時的壓縮方法。快速掃描可能會讓掃描品質較差。"
+
+#: i18n-hplip.cpp:15
+#, kde-format
+msgid "JPEG compression factor"
+msgstr "JPEG 壓縮參數"
+
+#: i18n-hplip.cpp:16
+#, kde-format
+msgid ""
+"Sets the scanner JPEG compression factor. Larger numbers mean better "
+"compression, and smaller numbers mean better image quality."
+msgstr ""
+"設定掃描器使用 JPEG 壓縮時的參數。數值越大表示壓縮比越高，但也表示品質越差。"
+
+#: i18n-hplip.cpp:19
+#, kde-format
+msgid "Batch scan"
+msgstr "批次掃描"
+
+#: i18n-hplip.cpp:20
+#, kde-format
+msgid "Enables continuous scanning with automatic document feeder (ADF)."
+msgstr "開啟使用自動送入文件（automatic document feeder，ADF）功能。"
+
+#: i18n-hplip.cpp:21
+#, kde-format
+msgid "Duplex"
+msgstr "雙工"
+
+#: i18n-hplip.cpp:22
+#, kde-format
+msgid "Enables scanning on both sides of the page."
+msgstr "開啟掃描雙面的模式。"
+
+#: i18n-hplip.cpp:23
+#, kde-format
+msgid "Geometry"
+msgstr "位置"
+
+#: i18n-hplip.cpp:24
+#, kde-format
+msgid "Length measurement"
+msgstr "長度測量"
+
+#: i18n-hplip.cpp:25
+#, kde-format
+msgid ""
+"Selects how the scanned image length is measured and reported, which is "
+"impossible to know in advance for scrollfed scans."
+msgstr "選擇掃描的影像長度如何測量與回報，因為在掃描前無法先知道。"
+
+#: i18n-hplip.cpp:27
+#, kde-format
+msgid "Unknown"
+msgstr "未知"
+
+#: i18n-hplip.cpp:28
+#, kde-format
+msgid "Unlimited"
+msgstr "沒有限制"
+
+#: i18n-hplip.cpp:29
+#, kde-format
+msgid "Approximate"
+msgstr "估計"
+
+#: i18n-hplip.cpp:30
+#, kde-format
+msgid "Padded"
+msgstr "補白"
+
+#: i18n-hplip.cpp:31
+#, kde-format
+msgid "Exact"
+msgstr "精準"
+
+#: i18n-hplip.cpp:32
+#, kde-format
+msgid "???"
+msgstr "???"
+
+#: ksanedevicedialog.cpp:36
+#, kde-format
+msgid ""
+"<html>The SANE (Scanner Access Now Easy) system could not find any device."
+"<br>Check that the scanner is plugged in and turned on<br>or check your "
+"systems scanner setup.<br>For details about SANE see the <a href='http://www."
+"sane-project.org/'>SANE homepage</a>.</html>"
+msgstr ""
+"<html>SANE (Scanner Access Now Easy) 系統找不到任何裝置。<br/>請檢查掃描器是"
+"否已插入，並且開關已打開。<br/>或是檢查您系統的掃描器設定。<br/>關於 SANE 的"
+"詳情，請參考<a href='http://www.sane-project.org/'>SANE 首頁</a>。</html>"
+
+#: ksanedevicedialog.cpp:58
+#, kde-format
+msgid "Reload devices list"
+msgstr "重新載入裝置清單"
+
+#: ksanedevicedialog.cpp:82
+#, kde-format
+msgid "Looking for devices. Please wait."
+msgstr "尋找裝置中。請稍候。"
+
+#: ksanedevicedialog.cpp:117
+#, kde-format
+msgid "Sorry. No devices found."
+msgstr "抱歉，找不到裝置。"
+
+#: ksanedevicedialog.cpp:127
+#, kde-format
+msgid "Found devices:"
+msgstr "找到的裝置："
+
+#: ksaneviewer.cpp:105 ksanewidget.cpp:86
+#, kde-format
+msgid "Zoom In"
+msgstr "放大"
+
+#: ksaneviewer.cpp:108 ksanewidget.cpp:92
+#, kde-format
+msgid "Zoom Out"
+msgstr "縮小"
+
+#: ksaneviewer.cpp:111 ksanewidget.cpp:98
+#, kde-format
+msgid "Zoom to Selection"
+msgstr "縮放到選取區"
+
+#: ksaneviewer.cpp:114 ksanewidget.cpp:104
+#, kde-format
+msgid "Zoom to Fit"
+msgstr "縮放以符合"
+
+#: ksaneviewer.cpp:117 ksanewidget.cpp:110
+#, kde-format
+msgid "Clear Selections"
+msgstr "清除選取區"
+
+#: ksanewidget.cpp:58
+#, kde-format
+msgid "Waiting for the scan to start."
+msgstr "等待掃描開始。"
+
+#: ksanewidget.cpp:71
+#, kde-format
+msgid "Cancel current scan operation"
+msgstr "取消目前的掃描動作"
+
+#: ksanewidget.cpp:121
+#, kde-format
+msgid "Scan Preview Image (%1)"
+msgstr "掃描預覽影像 (%1)"
+
+#: ksanewidget.cpp:122
+#, kde-format
+msgctxt "Preview button text"
+msgid "Preview"
+msgstr "預覽"
+
+#: ksanewidget.cpp:127
+#, kde-format
+msgid "Scan Final Image (%1)"
+msgstr "掃描完成影像 (%1)"
+
+#: ksanewidget.cpp:128
+#, kde-format
+msgctxt "Final scan button text"
+msgid "Scan"
+msgstr "掃描"
+
+#: ksanewidget.cpp:169
+#, kde-format
+msgid "Basic Options"
+msgstr "基本選項"
+
+#: ksanewidget.cpp:175
+#, fuzzy, kde-format
+#| msgid "Basic Options"
+msgid "Advanced Options"
+msgstr "基本選項"
+
+#: ksanewidget.cpp:181
+#, kde-format
+msgid "Scanner Specific Options"
+msgstr "掃描器指定選項"
+
+#: ksanewidget.cpp:322
+#, kde-format
+msgid "Authentication required for resource: %1"
+msgstr "此資源需要認證：%1"
+
+#: ksanewidget.cpp:484
+#, kde-format
+msgid ""
+"The image data contained 16 bits per color, but the color depth has been "
+"truncated to 8 bits per color."
+msgstr "影像資料中每個顏色包含了 16 位元，但是顏色深度卻被切到 8 位元。"
+
+#: ksanewidget_p.cpp:428
+#, kde-format
+msgid "Scan Area Size"
+msgstr "掃描區域大小"
+
+#: ksanewidget_p.cpp:433
+#, kde-format
+msgid " mm"
+msgstr " 毫米"
+
+#: ksanewidget_p.cpp:433
+#, kde-format
+msgid " inch"
+msgstr " 英寸"
+
+#: ksanewidget_p.cpp:435
+#, kde-format
+msgid "Width"
+msgstr "寬度"
+
+#: ksanewidget_p.cpp:440
+#, kde-format
+msgid "Height"
+msgstr "長度"
+
+#: ksanewidget_p.cpp:445
+#, kde-format
+msgid "X Offset"
+msgstr "X 位移"
+
+#: ksanewidget_p.cpp:450
+#, kde-format
+msgid "Y Offset"
+msgstr "Y 位移"
+
+#: ksanewidget_p.cpp:511
+#, kde-format
+msgid "Image intensity"
+msgstr ""
+
+#: ksanewidget_p.cpp:515
+#, kde-format
+msgid ""
+"Gamma-correction table. In color mode this option equally affects the red, "
+"green, and blue channels simultaneously (i.e., it is an intensity gamma "
+"table)."
+msgstr ""
+
+#: ksanewidget_p.cpp:523
+#, kde-format
+msgid "Separate color intensity tables"
+msgstr "分離顏色強度表格"
+
+#: ksanewidget_p.cpp:1203
+#, kde-format
+msgctxt "This is compared to the option string returned by sane"
+msgid "Transparency"
+msgstr "透明度"
+
+#: ksanewidget_p.cpp:1205
+#, kde-format
+msgctxt "This is compared to the option string returned by sane"
+msgid "Negative"
+msgstr "負"
+
+#: ksanewidget_p.cpp:1252
+#, kde-format
+msgid "Next scan starts in %1 s."
+msgstr ""
+
+#: ksanewidget_p.cpp:1265
+#, kde-format
+msgctxt "@title:window"
+msgid "General Error"
+msgstr "一般錯誤"
+
+#: ksanewidget_p.cpp:1268
+#, kde-format
+msgctxt "@title:window"
+msgid "Information"
+msgstr "資訊"
+
+#: ksanewidget_p.cpp:1350
+#, kde-format
+msgid "Custom"
+msgstr "自訂"
+
+#: ksanewidget_p.cpp:1375
+#, kde-format
+msgctxt "Page size landscape"
+msgid " Landscape"
+msgstr " 橫向"
+
+#: widgets/ksaneoptionwidget.cpp:66
+#, kde-format
+msgctxt "Label for a scanner option"
+msgid "%1:"
+msgstr "%1："
+
+#: widgets/labeledcombo.cpp:155 widgets/labeledcombo.cpp:186
+#, kde-format
+msgctxt "Parameter and Unit"
+msgid "%1 Pixel"
+msgid_plural "%1 Pixels"
+msgstr[0] "%1 像素"
+
+#: widgets/labeledcombo.cpp:158 widgets/labeledcombo.cpp:189
+#, kde-format
+msgctxt "Parameter and Unit"
+msgid "%1 Bit"
+msgid_plural "%1 Bits"
+msgstr[0] "%1 位元"
+
+#: widgets/labeledcombo.cpp:161 widgets/labeledcombo.cpp:192
+#, kde-format
+msgctxt "Parameter and Unit (Millimeter)"
+msgid "%1 mm"
+msgstr "%1 毫米"
+
+#: widgets/labeledcombo.cpp:164 widgets/labeledcombo.cpp:195
+#, kde-format
+msgctxt "Parameter and Unit (Dots Per Inch)"
+msgid "%1 DPI"
+msgstr "%1 DPI"
+
+#: widgets/labeledcombo.cpp:167 widgets/labeledcombo.cpp:198
+#, kde-format
+msgctxt "Parameter and Unit (Percentage)"
+msgid "%1 %"
+msgstr "%1 %"
+
+#: widgets/labeledcombo.cpp:170 widgets/labeledcombo.cpp:201
+#, kde-format
+msgctxt "Parameter and Unit (Microseconds)"
+msgid "%1 µs"
+msgstr "%1 微秒"
+
+#: widgets/labeledcombo.cpp:173 widgets/labeledcombo.cpp:204
+#, kde-format
+msgctxt "Parameter and Unit (seconds)"
+msgid "%1 s"
+msgstr ""
+
+#: widgets/labeledcombo.cpp:176 widgets/labeledcombo.cpp:207
+#, fuzzy, kde-format
+#| msgctxt "Label for a scanner option"
+#| msgid "%1:"
+msgid "%1"
+msgstr "%1："
+
+#: widgets/labeledentry.cpp:52
+#, kde-format
+msgctxt "Label for button to reset text in a KLineEdit"
+msgid "Reset"
+msgstr "重置"
+
+#: widgets/labeledentry.cpp:54
+#, kde-format
+msgctxt "Label for button to write text in a KLineEdit to sane"
+msgid "Set"
+msgstr "設定"
+
+#: widgets/labeledfslider.cpp:40
+#, kde-format
+msgctxt "Double numbers. SpinBox parameter unit"
+msgid " Pixels"
+msgstr " 像素"
+
+#: widgets/labeledfslider.cpp:43
+#, kde-format
+msgctxt "Double numbers. SpinBox parameter unit"
+msgid " Bits"
+msgstr " 位元"
+
+#: widgets/labeledfslider.cpp:46
+#, kde-format
+msgctxt "Double numbers. SpinBox parameter unit (Millimeter)"
+msgid " mm"
+msgstr " mm"
+
+#: widgets/labeledfslider.cpp:49
+#, kde-format
+msgctxt "Double numbers. SpinBox parameter unit (Dots Per Inch)"
+msgid " DPI"
+msgstr " DPI"
+
+#: widgets/labeledfslider.cpp:52
+#, kde-format
+msgctxt "Double numbers. SpinBox parameter unit (Percentage)"
+msgid " %"
+msgstr " %"
+
+#: widgets/labeledfslider.cpp:55
+#, kde-format
+msgctxt "Double numbers. SpinBox parameter unit (Microseconds)"
+msgid " µs"
+msgstr " 微秒"
+
+#: widgets/labeledfslider.cpp:58
+#, fuzzy, kde-format
+#| msgctxt "Double numbers. SpinBox parameter unit (Microseconds)"
+#| msgid " µs"
+msgctxt "SpinBox parameter unit (seconds), float"
+msgid " s"
+msgstr " 微秒"
+
+#: widgets/labeledgamma.cpp:43
+#, kde-format
+msgid "Brightness"
+msgstr "亮度"
+
+#: widgets/labeledgamma.cpp:46
+#, kde-format
+msgid "Contrast"
+msgstr "對比"
+
+#: widgets/labeledgamma.cpp:49
+#, kde-format
+msgid "Gamma"
+msgstr "Gamma"
+
+#: widgets/labeledslider.cpp:42
+#, kde-format
+msgctxt "SpinBox parameter unit"
+msgid " Pixel"
+msgid_plural " Pixels"
+msgstr[0] " 像素"
+
+#: widgets/labeledslider.cpp:45
+#, kde-format
+msgctxt "SpinBox parameter unit"
+msgid " Bit"
+msgid_plural " Bits"
+msgstr[0] " 位元"
+
+#: widgets/labeledslider.cpp:48
+#, fuzzy, kde-format
+#| msgctxt "SpinBox parameter unit (Millimeter)"
+#| msgid " mm"
+msgctxt "SpinBox parameter unit (Millimeter)"
+msgid " mm"
+msgid_plural " mm"
+msgstr[0] " mm"
+
+#: widgets/labeledslider.cpp:51
+#, fuzzy, kde-format
+#| msgctxt "SpinBox parameter unit (Dots Per Inch)"
+#| msgid " DPI"
+msgctxt "SpinBox parameter unit (Dots Per Inch)"
+msgid " DPI"
+msgid_plural " DPI"
+msgstr[0] " DPI"
+
+#: widgets/labeledslider.cpp:54
+#, fuzzy, kde-format
+#| msgctxt "SpinBox parameter unit (Percentage)"
+#| msgid " %"
+msgctxt "SpinBox parameter unit (Percentage)"
+msgid " %"
+msgid_plural " %"
+msgstr[0] " %"
+
+#: widgets/labeledslider.cpp:57
+#, fuzzy, kde-format
+#| msgctxt "SpinBox parameter unit (Microseconds)"
+#| msgid " µs"
+msgctxt "SpinBox parameter unit (Microseconds)"
+msgid " µs"
+msgid_plural " µs"
+msgstr[0] " 微秒"
+
+#: widgets/labeledslider.cpp:60
+#, fuzzy, kde-format
+#| msgctxt "Double numbers. SpinBox parameter unit (Microseconds)"
+#| msgid " µs"
+msgctxt "SpinBox parameter unit (seconds)"
+msgid " s"
+msgid_plural " s"
+msgstr[0] " 微秒"
+
+#~ msgid "Invert colors"
+#~ msgstr "反轉顏色"
+
+#, fuzzy
+#~| msgctxt "Page size landscape"
+#~| msgid " Landscape"
+#~ msgctxt "Page size landscape"
+#~ msgid "Landscape %1"
+#~ msgstr " 橫向"
+
+#, fuzzy
+#~| msgid "Scan Area Size"
+#~ msgid "Scan area size"
+#~ msgstr "掃描區域大小"
+
+#~ msgid "%1 Pixel"
+#~ msgid_plural "%1 Pixels"
+#~ msgstr[0] "%1 像素"
+
+#~ msgid "%1 Bit"
+#~ msgid_plural "%1 Bits"
+#~ msgstr[0] "%1 位元"
+
+#~ msgid "%1 mm"
+#~ msgid_plural "%1 mm"
+#~ msgstr[0] "%1 mm"
+
+#~ msgid "%1 DPI"
+#~ msgid_plural "%1 DPI"
+#~ msgstr[0] "%1 DPI"
+
+#~ msgid "%1 %"
+#~ msgid_plural "%1 %"
+#~ msgstr[0] "%1 %"
+
+#~ msgid "%1 µs"
+#~ msgid_plural "%1 µs"
+#~ msgstr[0] "%1 微秒"

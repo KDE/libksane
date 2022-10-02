@@ -1,0 +1,755 @@
+# Irish translation of libksane
+# Copyright (C) 2009 This_file_is_part_of_KDE
+# This file is distributed under the same license as the libksane package.
+# Kevin Scannell <kscanne@gmail.com>, 2009.
+msgid ""
+msgstr ""
+"Project-Id-Version: extragear-libs/libksane.po\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-06-13 00:54+0000\n"
+"PO-Revision-Date: 2007-09-18 05:53-0500\n"
+"Last-Translator: Kevin Scannell <kscanne@gmail.com>\n"
+"Language-Team: Irish <gaeilge-gnulinux@lists.sourceforge.net>\n"
+"Language: ga\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=5; plural=n==1 ? 0 : n==2 ? 1 : n<7 ? 2 : n < 11 ? "
+"3 : 4\n"
+
+#: ../ksanetwain/ktwain_widget.cpp:29
+#, kde-format
+msgid "Open scan dialog"
+msgstr "Oscail an dialóg scanta"
+
+#: i18n-hplip.cpp:3
+#, kde-format
+msgid "None"
+msgstr "Neamhní"
+
+#: i18n-hplip.cpp:4
+#, kde-format
+msgid "MH"
+msgstr "MH"
+
+#: i18n-hplip.cpp:5
+#, kde-format
+msgid "MR"
+msgstr "MR"
+
+#: i18n-hplip.cpp:6
+#, kde-format
+msgid "MMR"
+msgstr "MMR"
+
+#: i18n-hplip.cpp:7
+#, kde-format
+msgid "JPEG"
+msgstr "JPEG"
+
+#: i18n-hplip.cpp:8
+#, kde-format
+msgid "Auto"
+msgstr "Uathoibríoch"
+
+#: i18n-hplip.cpp:9
+#, kde-format
+msgid "Flatbed"
+msgstr "Plánach"
+
+#: i18n-hplip.cpp:10
+#, kde-format
+msgid "ADF"
+msgstr "ADF"
+
+#: i18n-hplip.cpp:11
+#, kde-format
+msgid "Advanced"
+msgstr "Casta"
+
+#: i18n-hplip.cpp:12
+#, kde-format
+msgid "Compression"
+msgstr "Comhbhrú"
+
+#: i18n-hplip.cpp:13
+#, kde-format
+msgid ""
+"Selects the scanner compression method for faster scans, possibly at the "
+"expense of image quality."
+msgstr ""
+
+#: i18n-hplip.cpp:15
+#, kde-format
+msgid "JPEG compression factor"
+msgstr "Fachtóir comhbhrúite JPEG"
+
+#: i18n-hplip.cpp:16
+#, kde-format
+msgid ""
+"Sets the scanner JPEG compression factor. Larger numbers mean better "
+"compression, and smaller numbers mean better image quality."
+msgstr ""
+
+#: i18n-hplip.cpp:19
+#, kde-format
+msgid "Batch scan"
+msgstr ""
+
+#: i18n-hplip.cpp:20
+#, kde-format
+msgid "Enables continuous scanning with automatic document feeder (ADF)."
+msgstr ""
+
+#: i18n-hplip.cpp:21
+#, kde-format
+msgid "Duplex"
+msgstr "Déphléacsach"
+
+#: i18n-hplip.cpp:22
+#, kde-format
+msgid "Enables scanning on both sides of the page."
+msgstr ""
+
+#: i18n-hplip.cpp:23
+#, kde-format
+msgid "Geometry"
+msgstr "Céimseata"
+
+#: i18n-hplip.cpp:24
+#, kde-format
+msgid "Length measurement"
+msgstr "Tomhas faid"
+
+#: i18n-hplip.cpp:25
+#, kde-format
+msgid ""
+"Selects how the scanned image length is measured and reported, which is "
+"impossible to know in advance for scrollfed scans."
+msgstr ""
+
+#: i18n-hplip.cpp:27
+#, kde-format
+msgid "Unknown"
+msgstr "Anaithnid"
+
+#: i18n-hplip.cpp:28
+#, kde-format
+msgid "Unlimited"
+msgstr "Gan Teorainn"
+
+#: i18n-hplip.cpp:29
+#, kde-format
+msgid "Approximate"
+msgstr "Measta"
+
+#: i18n-hplip.cpp:30
+#, kde-format
+msgid "Padded"
+msgstr "Stuáilte"
+
+#: i18n-hplip.cpp:31
+#, kde-format
+msgid "Exact"
+msgstr "Beacht"
+
+#: i18n-hplip.cpp:32
+#, kde-format
+msgid "???"
+msgstr "???"
+
+#: ksanedevicedialog.cpp:36
+#, kde-format
+msgid ""
+"<html>The SANE (Scanner Access Now Easy) system could not find any device."
+"<br>Check that the scanner is plugged in and turned on<br>or check your "
+"systems scanner setup.<br>For details about SANE see the <a href='http://www."
+"sane-project.org/'>SANE homepage</a>.</html>"
+msgstr ""
+
+#: ksanedevicedialog.cpp:58
+#, kde-format
+msgid "Reload devices list"
+msgstr "Athluchtaigh liosta na ngléasanna"
+
+#: ksanedevicedialog.cpp:82
+#, kde-format
+msgid "Looking for devices. Please wait."
+msgstr "Gléasanna á lorg. Fan go fóill."
+
+#: ksanedevicedialog.cpp:117
+#, kde-format
+msgid "Sorry. No devices found."
+msgstr "Tá brón orm. Níor aimsíodh aon ghléasanna."
+
+#: ksanedevicedialog.cpp:127
+#, kde-format
+msgid "Found devices:"
+msgstr "Gléasanna a aimsíodh:"
+
+#: ksaneviewer.cpp:105 ksanewidget.cpp:86
+#, kde-format
+msgid "Zoom In"
+msgstr "Súmáil Isteach"
+
+#: ksaneviewer.cpp:108 ksanewidget.cpp:92
+#, kde-format
+msgid "Zoom Out"
+msgstr "Súmáil Amach"
+
+#: ksaneviewer.cpp:111 ksanewidget.cpp:98
+#, kde-format
+msgid "Zoom to Selection"
+msgstr "Súmáil go dtí an Roghnúchán"
+
+#: ksaneviewer.cpp:114 ksanewidget.cpp:104
+#, kde-format
+msgid "Zoom to Fit"
+msgstr "Cuir in Oiriúint"
+
+#: ksaneviewer.cpp:117 ksanewidget.cpp:110
+#, kde-format
+msgid "Clear Selections"
+msgstr "Glan na Roghnúcháin"
+
+#: ksanewidget.cpp:58
+#, kde-format
+msgid "Waiting for the scan to start."
+msgstr "Ag feitheamh leis an scanadh."
+
+#: ksanewidget.cpp:71
+#, kde-format
+msgid "Cancel current scan operation"
+msgstr "Cealaigh an oibríocht reatha scanta"
+
+#: ksanewidget.cpp:121
+#, fuzzy, kde-format
+#| msgid "Scan Preview Image"
+msgid "Scan Preview Image (%1)"
+msgstr "Scan Réamhamharc"
+
+#: ksanewidget.cpp:122
+#, kde-format
+msgctxt "Preview button text"
+msgid "Preview"
+msgstr "Réamhamharc"
+
+#: ksanewidget.cpp:127
+#, fuzzy, kde-format
+#| msgid "Scan Final Image"
+msgid "Scan Final Image (%1)"
+msgstr "Scan an Íomhá Chríochnaithe"
+
+#: ksanewidget.cpp:128
+#, kde-format
+msgctxt "Final scan button text"
+msgid "Scan"
+msgstr "Scan"
+
+#: ksanewidget.cpp:169
+#, kde-format
+msgid "Basic Options"
+msgstr "Bunroghanna"
+
+#: ksanewidget.cpp:175
+#, fuzzy, kde-format
+#| msgid "Basic Options"
+msgid "Advanced Options"
+msgstr "Bunroghanna"
+
+#: ksanewidget.cpp:181
+#, kde-format
+msgid "Scanner Specific Options"
+msgstr "Roghanna Sainiúil don Scanóir"
+
+#: ksanewidget.cpp:322
+#, kde-format
+msgid "Authentication required for resource: %1"
+msgstr "Fíordheimhniú de dhíth ar acmhainn: %1"
+
+#: ksanewidget.cpp:484
+#, kde-format
+msgid ""
+"The image data contained 16 bits per color, but the color depth has been "
+"truncated to 8 bits per color."
+msgstr ""
+"Tá 16 giotán in aghaidh an datha sna sonraí íomhá, ach teascadh na sonraí "
+"íomhá go dtí 8 ngiotán in aghaidh an datha."
+
+#: ksanewidget_p.cpp:428
+#, kde-format
+msgid "Scan Area Size"
+msgstr ""
+
+#: ksanewidget_p.cpp:433
+#, fuzzy, kde-format
+#| msgctxt "SpinBox parameter unit (Millimeter)"
+#| msgid " mm"
+msgid " mm"
+msgstr " mm"
+
+#: ksanewidget_p.cpp:433
+#, kde-format
+msgid " inch"
+msgstr ""
+
+#: ksanewidget_p.cpp:435
+#, kde-format
+msgid "Width"
+msgstr ""
+
+#: ksanewidget_p.cpp:440
+#, kde-format
+msgid "Height"
+msgstr ""
+
+#: ksanewidget_p.cpp:445
+#, kde-format
+msgid "X Offset"
+msgstr ""
+
+#: ksanewidget_p.cpp:450
+#, kde-format
+msgid "Y Offset"
+msgstr ""
+
+#: ksanewidget_p.cpp:511
+#, kde-format
+msgid "Image intensity"
+msgstr ""
+
+#: ksanewidget_p.cpp:515
+#, kde-format
+msgid ""
+"Gamma-correction table. In color mode this option equally affects the red, "
+"green, and blue channels simultaneously (i.e., it is an intensity gamma "
+"table)."
+msgstr ""
+
+# verb?
+#: ksanewidget_p.cpp:523
+#, kde-format
+msgid "Separate color intensity tables"
+msgstr "Dealaigh táblaí déine datha"
+
+#: ksanewidget_p.cpp:1203
+#, kde-format
+msgctxt "This is compared to the option string returned by sane"
+msgid "Transparency"
+msgstr "Trédhearcacht"
+
+#: ksanewidget_p.cpp:1205
+#, kde-format
+msgctxt "This is compared to the option string returned by sane"
+msgid "Negative"
+msgstr "Diúltach"
+
+#: ksanewidget_p.cpp:1252
+#, kde-format
+msgid "Next scan starts in %1 s."
+msgstr ""
+
+#: ksanewidget_p.cpp:1265
+#, kde-format
+msgctxt "@title:window"
+msgid "General Error"
+msgstr ""
+
+#: ksanewidget_p.cpp:1268
+#, kde-format
+msgctxt "@title:window"
+msgid "Information"
+msgstr ""
+
+#: ksanewidget_p.cpp:1350
+#, kde-format
+msgid "Custom"
+msgstr ""
+
+#: ksanewidget_p.cpp:1375
+#, kde-format
+msgctxt "Page size landscape"
+msgid " Landscape"
+msgstr ""
+
+#: widgets/ksaneoptionwidget.cpp:66
+#, kde-format
+msgctxt "Label for a scanner option"
+msgid "%1:"
+msgstr "%1:"
+
+#: widgets/labeledcombo.cpp:155 widgets/labeledcombo.cpp:186
+#, kde-format
+msgctxt "Parameter and Unit"
+msgid "%1 Pixel"
+msgid_plural "%1 Pixels"
+msgstr[0] "%1 Phicteilín"
+msgstr[1] "%1 Phicteilín"
+msgstr[2] "%1 Phicteilín"
+msgstr[3] "%1 bPicteilín"
+msgstr[4] "%1 Picteilín"
+
+#: widgets/labeledcombo.cpp:158 widgets/labeledcombo.cpp:189
+#, kde-format
+msgctxt "Parameter and Unit"
+msgid "%1 Bit"
+msgid_plural "%1 Bits"
+msgstr[0] "%1 Ghiotán"
+msgstr[1] "%1 Ghiotán"
+msgstr[2] "%1 Ghiotán"
+msgstr[3] "%1 nGiotán"
+msgstr[4] "%1 Giotán"
+
+#: widgets/labeledcombo.cpp:161 widgets/labeledcombo.cpp:192
+#, kde-format
+msgctxt "Parameter and Unit (Millimeter)"
+msgid "%1 mm"
+msgstr "%1 mm"
+
+#: widgets/labeledcombo.cpp:164 widgets/labeledcombo.cpp:195
+#, kde-format
+msgctxt "Parameter and Unit (Dots Per Inch)"
+msgid "%1 DPI"
+msgstr "%1 PSO"
+
+#: widgets/labeledcombo.cpp:167 widgets/labeledcombo.cpp:198
+#, kde-format
+msgctxt "Parameter and Unit (Percentage)"
+msgid "%1 %"
+msgstr "%1 %"
+
+#: widgets/labeledcombo.cpp:170 widgets/labeledcombo.cpp:201
+#, kde-format
+msgctxt "Parameter and Unit (Microseconds)"
+msgid "%1 µs"
+msgstr "%1 µs"
+
+#: widgets/labeledcombo.cpp:173 widgets/labeledcombo.cpp:204
+#, kde-format
+msgctxt "Parameter and Unit (seconds)"
+msgid "%1 s"
+msgstr ""
+
+#: widgets/labeledcombo.cpp:176 widgets/labeledcombo.cpp:207
+#, fuzzy, kde-format
+#| msgctxt "Label for a scanner option"
+#| msgid "%1:"
+msgid "%1"
+msgstr "%1:"
+
+#: widgets/labeledentry.cpp:52
+#, kde-format
+msgctxt "Label for button to reset text in a KLineEdit"
+msgid "Reset"
+msgstr "Athshocraigh"
+
+#: widgets/labeledentry.cpp:54
+#, kde-format
+msgctxt "Label for button to write text in a KLineEdit to sane"
+msgid "Set"
+msgstr "Socraigh"
+
+#: widgets/labeledfslider.cpp:40
+#, kde-format
+msgctxt "Double numbers. SpinBox parameter unit"
+msgid " Pixels"
+msgstr " Picteilín"
+
+#: widgets/labeledfslider.cpp:43
+#, kde-format
+msgctxt "Double numbers. SpinBox parameter unit"
+msgid " Bits"
+msgstr " Giotán"
+
+#: widgets/labeledfslider.cpp:46
+#, kde-format
+msgctxt "Double numbers. SpinBox parameter unit (Millimeter)"
+msgid " mm"
+msgstr " mm"
+
+#: widgets/labeledfslider.cpp:49
+#, kde-format
+msgctxt "Double numbers. SpinBox parameter unit (Dots Per Inch)"
+msgid " DPI"
+msgstr " PSO"
+
+#: widgets/labeledfslider.cpp:52
+#, kde-format
+msgctxt "Double numbers. SpinBox parameter unit (Percentage)"
+msgid " %"
+msgstr " %"
+
+#: widgets/labeledfslider.cpp:55
+#, kde-format
+msgctxt "Double numbers. SpinBox parameter unit (Microseconds)"
+msgid " µs"
+msgstr " µs"
+
+#: widgets/labeledfslider.cpp:58
+#, fuzzy, kde-format
+#| msgctxt "Double numbers. SpinBox parameter unit (Microseconds)"
+#| msgid " µs"
+msgctxt "SpinBox parameter unit (seconds), float"
+msgid " s"
+msgstr " µs"
+
+#: widgets/labeledgamma.cpp:43
+#, kde-format
+msgid "Brightness"
+msgstr "Gile"
+
+#: widgets/labeledgamma.cpp:46
+#, kde-format
+msgid "Contrast"
+msgstr "Codarsnacht"
+
+#: widgets/labeledgamma.cpp:49
+#, kde-format
+msgid "Gamma"
+msgstr "Gáma"
+
+#: widgets/labeledslider.cpp:42
+#, kde-format
+msgctxt "SpinBox parameter unit"
+msgid " Pixel"
+msgid_plural " Pixels"
+msgstr[0] " Phicteilín"
+msgstr[1] " Phicteilín"
+msgstr[2] " Phicteilín"
+msgstr[3] " bPicteilín"
+msgstr[4] " Picteilín"
+
+#: widgets/labeledslider.cpp:45
+#, kde-format
+msgctxt "SpinBox parameter unit"
+msgid " Bit"
+msgid_plural " Bits"
+msgstr[0] " Ghiotán"
+msgstr[1] " Ghiotán"
+msgstr[2] " Ghiotán"
+msgstr[3] " nGiotán"
+msgstr[4] " Giotán"
+
+#: widgets/labeledslider.cpp:48
+#, fuzzy, kde-format
+#| msgctxt "SpinBox parameter unit (Millimeter)"
+#| msgid " mm"
+msgctxt "SpinBox parameter unit (Millimeter)"
+msgid " mm"
+msgid_plural " mm"
+msgstr[0] " mm"
+msgstr[1] " mm"
+msgstr[2] " mm"
+msgstr[3] " mm"
+msgstr[4] " mm"
+
+#: widgets/labeledslider.cpp:51
+#, fuzzy, kde-format
+#| msgctxt "SpinBox parameter unit (Dots Per Inch)"
+#| msgid " DPI"
+msgctxt "SpinBox parameter unit (Dots Per Inch)"
+msgid " DPI"
+msgid_plural " DPI"
+msgstr[0] " PSO"
+msgstr[1] " PSO"
+msgstr[2] " PSO"
+msgstr[3] " PSO"
+msgstr[4] " PSO"
+
+#: widgets/labeledslider.cpp:54
+#, fuzzy, kde-format
+#| msgctxt "SpinBox parameter unit (Percentage)"
+#| msgid " %"
+msgctxt "SpinBox parameter unit (Percentage)"
+msgid " %"
+msgid_plural " %"
+msgstr[0] " %"
+msgstr[1] " %"
+msgstr[2] " %"
+msgstr[3] " %"
+msgstr[4] " %"
+
+#: widgets/labeledslider.cpp:57
+#, fuzzy, kde-format
+#| msgctxt "SpinBox parameter unit (Microseconds)"
+#| msgid " µs"
+msgctxt "SpinBox parameter unit (Microseconds)"
+msgid " µs"
+msgid_plural " µs"
+msgstr[0] " µs"
+msgstr[1] " µs"
+msgstr[2] " µs"
+msgstr[3] " µs"
+msgstr[4] " µs"
+
+#: widgets/labeledslider.cpp:60
+#, fuzzy, kde-format
+#| msgctxt "Double numbers. SpinBox parameter unit (Microseconds)"
+#| msgid " µs"
+msgctxt "SpinBox parameter unit (seconds)"
+msgid " s"
+msgid_plural " s"
+msgstr[0] " µs"
+msgstr[1] " µs"
+msgstr[2] " µs"
+msgstr[3] " µs"
+msgstr[4] " µs"
+
+#~ msgid "Invert colors"
+#~ msgstr "Inbhéartaigh dathanna"
+
+#~ msgid "%1 Pixel"
+#~ msgid_plural "%1 Pixels"
+#~ msgstr[0] "%1 Phicteilín"
+#~ msgstr[1] "%1 Phicteilín"
+#~ msgstr[2] "%1 Phicteilín"
+#~ msgstr[3] "%1 bPicteilín"
+#~ msgstr[4] "%1 Picteilín"
+
+#~ msgid "%1 Bit"
+#~ msgid_plural "%1 Bits"
+#~ msgstr[0] "%1 Ghiotán"
+#~ msgstr[1] "%1 Ghiotán"
+#~ msgstr[2] "%1 Ghiotán"
+#~ msgstr[3] "%1 nGiotán"
+#~ msgstr[4] "%1 Giotán"
+
+#~ msgid "%1 mm"
+#~ msgid_plural "%1 mm"
+#~ msgstr[0] "%1 mm"
+#~ msgstr[1] "%1 mm"
+#~ msgstr[2] "%1 mm"
+#~ msgstr[3] "%1 mm"
+#~ msgstr[4] "%1 mm"
+
+#~ msgid "%1 DPI"
+#~ msgid_plural "%1 DPI"
+#~ msgstr[0] "%1 PSO"
+#~ msgstr[1] "%1 PSO"
+#~ msgstr[2] "%1 PSO"
+#~ msgstr[3] "%1 PSO"
+#~ msgstr[4] "%1 PSO"
+
+#~ msgid "%1 %"
+#~ msgid_plural "%1 %"
+#~ msgstr[0] "%1 %"
+#~ msgstr[1] "%1 %"
+#~ msgstr[2] "%1 %"
+#~ msgstr[3] "%1 %"
+#~ msgstr[4] "%1 %"
+
+#~ msgid "%1 usec"
+#~ msgid_plural "%1 usec"
+#~ msgstr[0] "%1 usec"
+#~ msgstr[1] "%1 usec"
+#~ msgstr[2] "%1 usec"
+#~ msgstr[3] "%1 usec"
+#~ msgstr[4] "%1 usec"
+
+#~ msgctxt "Parameter and Unit"
+#~ msgid "%1 mm"
+#~ msgstr "%1 mm"
+
+#~ msgctxt "Parameter and Unit"
+#~ msgid "%1 DPI"
+#~ msgstr "%1 PSO"
+
+#~ msgctxt "Parameter and Unit"
+#~ msgid "%1 %"
+#~ msgstr "%1 %"
+
+#~ msgctxt "Parameter and Unit"
+#~ msgid "%1 usec"
+#~ msgid_plural "%1 usec"
+#~ msgstr[0] "%1 usec"
+#~ msgstr[1] "%1 usec"
+#~ msgstr[2] "%1 usec"
+#~ msgstr[3] "%1 usec"
+#~ msgstr[4] "%1 usec"
+
+#~ msgctxt "SpinBox parameter unit"
+#~ msgid " usec"
+#~ msgid_plural " usecs"
+#~ msgstr[0] " usec"
+#~ msgstr[1] " usec"
+#~ msgstr[2] " usec"
+#~ msgstr[3] " usec"
+#~ msgstr[4] " usec"
+
+#~ msgctxt "Double numbers. SpinBox parameter unit"
+#~ msgid " mm"
+#~ msgstr " mm"
+
+#~ msgctxt "Double numbers. SpinBox parameter unit"
+#~ msgid " DPI"
+#~ msgstr " PSO"
+
+#~ msgctxt "Double numbers. SpinBox parameter unit"
+#~ msgid " %"
+#~ msgstr " %"
+
+#~ msgctxt "Double numbers. SpinBox parameter unit"
+#~ msgid " usec"
+#~ msgstr " usec"
+
+#~ msgid "Other Options"
+#~ msgstr "Roghanna Eile"
+
+#~ msgid "The image format is not (yet?) supported by libksane."
+#~ msgstr "Ní thacaíonn libksane leis an bhformáid íomhá seo (fós?)."
+
+#~ msgid "The lamp is warming up."
+#~ msgstr "Tá an lampa ag téamh."
+
+#~ msgctxt "Parameter and Unit"
+#~ msgid "%1 Pixels"
+#~ msgstr "%1 Picteilín"
+
+#~ msgctxt "Parameter and Unit"
+#~ msgid "%1 Bits"
+#~ msgstr "%1 Giotán"
+
+#~ msgid "No scanner device has been found."
+#~ msgstr "Níor aimsíodh gléas scanta."
+
+#~ msgid "Select Scanner"
+#~ msgstr "Roghnaigh Scanóir"
+
+#~ msgid "Scanning Failed!"
+#~ msgstr "Theip ar Scanadh!"
+
+#~ msgid "Zoom out preview image"
+#~ msgstr "Súmáil an réamhamharc amach"
+
+#~ msgid "Zoom to fit preview image"
+#~ msgstr "Súmáil chun an réamhamharc a oiriúnú"
+
+#~ msgid "Scan preview image from device"
+#~ msgstr "Scan réamhamharc ón ghléas"
+
+# source says "same as Lineart"?
+#~ msgid "Binary"
+#~ msgstr "Dénártha"
+
+# not a verb -see source
+#~ msgid "Tester"
+#~ msgstr "Tástálaí"
+
+#~ msgid "Model"
+#~ msgstr "Samhail"
+
+# not a verb -see source
+#~ msgid "Test Scanner"
+#~ msgstr "Scanóir Tástála"
+
+#~ msgid "Debug"
+#~ msgstr "Dífhabhtaigh"
+
+#~ msgid "OK"
+#~ msgstr "OK"
+
+#~ msgid "Cancel"
+#~ msgstr "Cealaigh"
+
+#~ msgid "Option Level"
+#~ msgstr "Leibhéal Rogha"

@@ -1,0 +1,748 @@
+# Translation of libksane.po to Ukrainian
+# Copyright (C) 2008-2021 This_file_is_part_of_KDE
+# This file is distributed under the license LGPL version 2.1 or
+# version 3 or later versions approved by the membership of KDE e.V.
+#
+# Ivan Petrouchtchak <fr.ivan@ukrainian-orthodox.org>, 2008.
+# Yuri Chornoivan <yurchor@ukr.net>, 2008, 2009, 2010, 2011, 2012, 2015, 2020, 2021.
+msgid ""
+msgstr ""
+"Project-Id-Version: libksane\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-06-13 00:54+0000\n"
+"PO-Revision-Date: 2021-11-04 11:28+0200\n"
+"Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
+"Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
+"Language: uk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=n==1 ? 3 : n%10==1 && n%100!=11 ? 0 : n"
+"%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Lokalize 20.12.0\n"
+
+#: ../ksanetwain/ktwain_widget.cpp:29
+#, kde-format
+msgid "Open scan dialog"
+msgstr "Відкрити діалогове вікно сканування"
+
+#: i18n-hplip.cpp:3
+#, kde-format
+msgid "None"
+msgstr "Немає"
+
+#: i18n-hplip.cpp:4
+#, kde-format
+msgid "MH"
+msgstr "MH"
+
+#: i18n-hplip.cpp:5
+#, kde-format
+msgid "MR"
+msgstr "MR"
+
+#: i18n-hplip.cpp:6
+#, kde-format
+msgid "MMR"
+msgstr "MMR"
+
+#: i18n-hplip.cpp:7
+#, kde-format
+msgid "JPEG"
+msgstr "JPEG"
+
+#: i18n-hplip.cpp:8
+#, kde-format
+msgid "Auto"
+msgstr "Автоматично"
+
+#: i18n-hplip.cpp:9
+#, kde-format
+msgid "Flatbed"
+msgstr "Планшетний"
+
+#: i18n-hplip.cpp:10
+#, kde-format
+msgid "ADF"
+msgstr "АПД"
+
+#: i18n-hplip.cpp:11
+#, kde-format
+msgid "Advanced"
+msgstr "Додатково"
+
+#: i18n-hplip.cpp:12
+#, kde-format
+msgid "Compression"
+msgstr "Стиснення"
+
+#: i18n-hplip.cpp:13
+#, kde-format
+msgid ""
+"Selects the scanner compression method for faster scans, possibly at the "
+"expense of image quality."
+msgstr ""
+"Визначає метод стискання зображень сканером, щоб пришвидшує сканування або "
+"може призвести до погіршення якості зображення."
+
+#: i18n-hplip.cpp:15
+#, kde-format
+msgid "JPEG compression factor"
+msgstr "Коефіцієнт стискання JPEG"
+
+#: i18n-hplip.cpp:16
+#, kde-format
+msgid ""
+"Sets the scanner JPEG compression factor. Larger numbers mean better "
+"compression, and smaller numbers mean better image quality."
+msgstr ""
+"Визначає коефіцієнт стискання зображень JPEG сканером. Більші значення "
+"покращуватимуть рівень стискання, менші ж призведуть до кращої якості "
+"зображень."
+
+#: i18n-hplip.cpp:19
+#, kde-format
+msgid "Batch scan"
+msgstr "Пакетне сканування"
+
+#: i18n-hplip.cpp:20
+#, kde-format
+msgid "Enables continuous scanning with automatic document feeder (ADF)."
+msgstr "Вмикає неперервне сканування з автоматичною подачею документів (АПД)."
+
+#: i18n-hplip.cpp:21
+#, kde-format
+msgid "Duplex"
+msgstr "Двосторонній"
+
+#: i18n-hplip.cpp:22
+#, kde-format
+msgid "Enables scanning on both sides of the page."
+msgstr "Вмикає сканування обох боків сторінки."
+
+#: i18n-hplip.cpp:23
+#, kde-format
+msgid "Geometry"
+msgstr "Позиція і розміри"
+
+#: i18n-hplip.cpp:24
+#, kde-format
+msgid "Length measurement"
+msgstr "Виміри довжини"
+
+#: i18n-hplip.cpp:25
+#, kde-format
+msgid ""
+"Selects how the scanned image length is measured and reported, which is "
+"impossible to know in advance for scrollfed scans."
+msgstr ""
+"Оберіть спосіб виміру і повідомлення про довжину зображення, яку не зможе "
+"визначити програма, якщо сканується поверхня згортка."
+
+#: i18n-hplip.cpp:27
+#, kde-format
+msgid "Unknown"
+msgstr "Невідомий"
+
+#: i18n-hplip.cpp:28
+#, kde-format
+msgid "Unlimited"
+msgstr "Без обмеження"
+
+#: i18n-hplip.cpp:29
+#, kde-format
+msgid "Approximate"
+msgstr "Наблизити"
+
+#: i18n-hplip.cpp:30
+#, kde-format
+msgid "Padded"
+msgstr "Додавання"
+
+#: i18n-hplip.cpp:31
+#, kde-format
+msgid "Exact"
+msgstr "Точно"
+
+#: i18n-hplip.cpp:32
+#, kde-format
+msgid "???"
+msgstr "???"
+
+#: ksanedevicedialog.cpp:36
+#, kde-format
+msgid ""
+"<html>The SANE (Scanner Access Now Easy) system could not find any device."
+"<br>Check that the scanner is plugged in and turned on<br>or check your "
+"systems scanner setup.<br>For details about SANE see the <a href='http://www."
+"sane-project.org/'>SANE homepage</a>.</html>"
+msgstr ""
+"<html>Системі SANE (Scanner Access Now Easy) не вдалося знайти жодного "
+"пристрою.<br>Перевірте, чи увімкнено сканер та чи з’єднано його з "
+"комп’ютером,<br>також перевірте, чи правильно налаштовано комп’ютер."
+"<br>Докладніше про SANE можна дізнатися з <a href='http://www.sane-project."
+"org/'>домашньої сторінки SANE</a>.</html>"
+
+#: ksanedevicedialog.cpp:58
+#, kde-format
+msgid "Reload devices list"
+msgstr "Перезавантажити список пристроїв"
+
+#: ksanedevicedialog.cpp:82
+#, kde-format
+msgid "Looking for devices. Please wait."
+msgstr "Пошук пристроїв. Зачекайте, будь ласка."
+
+#: ksanedevicedialog.cpp:117
+#, kde-format
+msgid "Sorry. No devices found."
+msgstr "Вибачте, не знайдено жодного пристрою."
+
+#: ksanedevicedialog.cpp:127
+#, kde-format
+msgid "Found devices:"
+msgstr "Знайдено пристрої:"
+
+#: ksaneviewer.cpp:105 ksanewidget.cpp:86
+#, kde-format
+msgid "Zoom In"
+msgstr "Збільшити"
+
+#: ksaneviewer.cpp:108 ksanewidget.cpp:92
+#, kde-format
+msgid "Zoom Out"
+msgstr "Зменшити"
+
+#: ksaneviewer.cpp:111 ksanewidget.cpp:98
+#, kde-format
+msgid "Zoom to Selection"
+msgstr "Збільшити вибрану область"
+
+#: ksaneviewer.cpp:114 ksanewidget.cpp:104
+#, kde-format
+msgid "Zoom to Fit"
+msgstr "Підібрати розмір"
+
+#: ksaneviewer.cpp:117 ksanewidget.cpp:110
+#, kde-format
+msgid "Clear Selections"
+msgstr "Зняти позначки вибору"
+
+#: ksanewidget.cpp:58
+#, kde-format
+msgid "Waiting for the scan to start."
+msgstr "Очікування на початок сканування."
+
+#: ksanewidget.cpp:71
+#, kde-format
+msgid "Cancel current scan operation"
+msgstr "Скасувати поточну дію сканування"
+
+#: ksanewidget.cpp:121
+#, kde-format
+msgid "Scan Preview Image (%1)"
+msgstr "Сканувати тестове зображення (%1)"
+
+#: ksanewidget.cpp:122
+#, kde-format
+msgctxt "Preview button text"
+msgid "Preview"
+msgstr "Перегляд"
+
+#: ksanewidget.cpp:127
+#, kde-format
+msgid "Scan Final Image (%1)"
+msgstr "Сканувати остаточне зображення (%1)"
+
+#: ksanewidget.cpp:128
+#, kde-format
+msgctxt "Final scan button text"
+msgid "Scan"
+msgstr "Сканувати"
+
+#: ksanewidget.cpp:169
+#, kde-format
+msgid "Basic Options"
+msgstr "Основні параметри"
+
+#: ksanewidget.cpp:175
+#, kde-format
+msgid "Advanced Options"
+msgstr "Додаткові параметри"
+
+#: ksanewidget.cpp:181
+#, kde-format
+msgid "Scanner Specific Options"
+msgstr "Специфічні параметри сканера"
+
+#: ksanewidget.cpp:322
+#, kde-format
+msgid "Authentication required for resource: %1"
+msgstr "Для ресурсу %1 потрібно пройти розпізнавання"
+
+#: ksanewidget.cpp:484
+#, kde-format
+msgid ""
+"The image data contained 16 bits per color, but the color depth has been "
+"truncated to 8 bits per color."
+msgstr ""
+"Дані зображення передано з 16 бітами на колір, але глибину кольору буде "
+"обрізано до 8 бітів на колір."
+
+#: ksanewidget_p.cpp:428
+#, kde-format
+msgid "Scan Area Size"
+msgstr "Розмір області сканування"
+
+#: ksanewidget_p.cpp:433
+#, kde-format
+msgid " mm"
+msgstr " мм"
+
+#: ksanewidget_p.cpp:433
+#, kde-format
+msgid " inch"
+msgstr "дюйм"
+
+#: ksanewidget_p.cpp:435
+#, kde-format
+msgid "Width"
+msgstr "Ширина"
+
+#: ksanewidget_p.cpp:440
+#, kde-format
+msgid "Height"
+msgstr "Висота"
+
+#: ksanewidget_p.cpp:445
+#, kde-format
+msgid "X Offset"
+msgstr "Зміщення за X"
+
+#: ksanewidget_p.cpp:450
+#, kde-format
+msgid "Y Offset"
+msgstr "Зміщення за Y"
+
+#: ksanewidget_p.cpp:511
+#, kde-format
+msgid "Image intensity"
+msgstr "Інтенсивність зображення"
+
+#: ksanewidget_p.cpp:515
+#, kde-format
+msgid ""
+"Gamma-correction table. In color mode this option equally affects the red, "
+"green, and blue channels simultaneously (i.e., it is an intensity gamma "
+"table)."
+msgstr ""
+"Таблиця виправлення гами. В кольоровому режимі цей параметр одночасно змінює "
+"параметри червоного, зеленого та синього каналів (тобто є таблицею "
+"інтенсивності гами)."
+
+#: ksanewidget_p.cpp:523
+#, kde-format
+msgid "Separate color intensity tables"
+msgstr "Розділити таблиці інтенсивності кольорів"
+
+#: ksanewidget_p.cpp:1203
+#, kde-format
+msgctxt "This is compared to the option string returned by sane"
+msgid "Transparency"
+msgstr "Прозорість"
+
+#: ksanewidget_p.cpp:1205
+#, kde-format
+msgctxt "This is compared to the option string returned by sane"
+msgid "Negative"
+msgstr "Негатив"
+
+#: ksanewidget_p.cpp:1252
+#, kde-format
+msgid "Next scan starts in %1 s."
+msgstr "Наступне сканування почнеться за %1 с."
+
+#: ksanewidget_p.cpp:1265
+#, kde-format
+msgctxt "@title:window"
+msgid "General Error"
+msgstr "Загальна помилка"
+
+#: ksanewidget_p.cpp:1268
+#, kde-format
+msgctxt "@title:window"
+msgid "Information"
+msgstr "Інформація"
+
+#: ksanewidget_p.cpp:1350
+#, kde-format
+msgid "Custom"
+msgstr "Нетипове"
+
+#: ksanewidget_p.cpp:1375
+#, kde-format
+msgctxt "Page size landscape"
+msgid " Landscape"
+msgstr " Альбомна"
+
+#: widgets/ksaneoptionwidget.cpp:66
+#, kde-format
+msgctxt "Label for a scanner option"
+msgid "%1:"
+msgstr "%1:"
+
+#: widgets/labeledcombo.cpp:155 widgets/labeledcombo.cpp:186
+#, kde-format
+msgctxt "Parameter and Unit"
+msgid "%1 Pixel"
+msgid_plural "%1 Pixels"
+msgstr[0] "%1 піксель"
+msgstr[1] "%1 пікселі"
+msgstr[2] "%1 пікселів"
+msgstr[3] "%1 піксель"
+
+#: widgets/labeledcombo.cpp:158 widgets/labeledcombo.cpp:189
+#, kde-format
+msgctxt "Parameter and Unit"
+msgid "%1 Bit"
+msgid_plural "%1 Bits"
+msgstr[0] "%1 біт"
+msgstr[1] "%1 біти"
+msgstr[2] "%1 бітів"
+msgstr[3] "%1 біт"
+
+#: widgets/labeledcombo.cpp:161 widgets/labeledcombo.cpp:192
+#, kde-format
+msgctxt "Parameter and Unit (Millimeter)"
+msgid "%1 mm"
+msgstr "%1 мм"
+
+#: widgets/labeledcombo.cpp:164 widgets/labeledcombo.cpp:195
+#, kde-format
+msgctxt "Parameter and Unit (Dots Per Inch)"
+msgid "%1 DPI"
+msgstr "%1 т/д"
+
+#: widgets/labeledcombo.cpp:167 widgets/labeledcombo.cpp:198
+#, kde-format
+msgctxt "Parameter and Unit (Percentage)"
+msgid "%1 %"
+msgstr "%1%"
+
+#: widgets/labeledcombo.cpp:170 widgets/labeledcombo.cpp:201
+#, kde-format
+msgctxt "Parameter and Unit (Microseconds)"
+msgid "%1 µs"
+msgstr "%1 мкс"
+
+#: widgets/labeledcombo.cpp:173 widgets/labeledcombo.cpp:204
+#, kde-format
+msgctxt "Parameter and Unit (seconds)"
+msgid "%1 s"
+msgstr "%1 с"
+
+#: widgets/labeledcombo.cpp:176 widgets/labeledcombo.cpp:207
+#, kde-format
+msgid "%1"
+msgstr "%1"
+
+#: widgets/labeledentry.cpp:52
+#, kde-format
+msgctxt "Label for button to reset text in a KLineEdit"
+msgid "Reset"
+msgstr "Відновити"
+
+#: widgets/labeledentry.cpp:54
+#, kde-format
+msgctxt "Label for button to write text in a KLineEdit to sane"
+msgid "Set"
+msgstr "Встановити"
+
+#: widgets/labeledfslider.cpp:40
+#, kde-format
+msgctxt "Double numbers. SpinBox parameter unit"
+msgid " Pixels"
+msgstr " пікселі"
+
+#: widgets/labeledfslider.cpp:43
+#, kde-format
+msgctxt "Double numbers. SpinBox parameter unit"
+msgid " Bits"
+msgstr " біти"
+
+#: widgets/labeledfslider.cpp:46
+#, kde-format
+msgctxt "Double numbers. SpinBox parameter unit (Millimeter)"
+msgid " mm"
+msgstr " мм"
+
+#: widgets/labeledfslider.cpp:49
+#, kde-format
+msgctxt "Double numbers. SpinBox parameter unit (Dots Per Inch)"
+msgid " DPI"
+msgstr " т/д"
+
+#: widgets/labeledfslider.cpp:52
+#, kde-format
+msgctxt "Double numbers. SpinBox parameter unit (Percentage)"
+msgid " %"
+msgstr "%"
+
+#: widgets/labeledfslider.cpp:55
+#, kde-format
+msgctxt "Double numbers. SpinBox parameter unit (Microseconds)"
+msgid " µs"
+msgstr " мкс"
+
+#: widgets/labeledfslider.cpp:58
+#, kde-format
+msgctxt "SpinBox parameter unit (seconds), float"
+msgid " s"
+msgstr " с"
+
+#: widgets/labeledgamma.cpp:43
+#, kde-format
+msgid "Brightness"
+msgstr "Яскравість"
+
+#: widgets/labeledgamma.cpp:46
+#, kde-format
+msgid "Contrast"
+msgstr "Контрастність"
+
+#: widgets/labeledgamma.cpp:49
+#, kde-format
+msgid "Gamma"
+msgstr "Гама"
+
+#: widgets/labeledslider.cpp:42
+#, kde-format
+msgctxt "SpinBox parameter unit"
+msgid " Pixel"
+msgid_plural " Pixels"
+msgstr[0] " піксель"
+msgstr[1] " пікселі"
+msgstr[2] " пікселів"
+msgstr[3] " піксель"
+
+#: widgets/labeledslider.cpp:45
+#, kde-format
+msgctxt "SpinBox parameter unit"
+msgid " Bit"
+msgid_plural " Bits"
+msgstr[0] " біт"
+msgstr[1] " біти"
+msgstr[2] " бітів"
+msgstr[3] " біт"
+
+#: widgets/labeledslider.cpp:48
+#, kde-format
+msgctxt "SpinBox parameter unit (Millimeter)"
+msgid " mm"
+msgid_plural " mm"
+msgstr[0] " мм"
+msgstr[1] " мм"
+msgstr[2] " мм"
+msgstr[3] " мм"
+
+#: widgets/labeledslider.cpp:51
+#, kde-format
+msgctxt "SpinBox parameter unit (Dots Per Inch)"
+msgid " DPI"
+msgid_plural " DPI"
+msgstr[0] " т/д"
+msgstr[1] " т/д"
+msgstr[2] " т/д"
+msgstr[3] " т/д"
+
+#: widgets/labeledslider.cpp:54
+#, kde-format
+msgctxt "SpinBox parameter unit (Percentage)"
+msgid " %"
+msgid_plural " %"
+msgstr[0] "%"
+msgstr[1] "%"
+msgstr[2] "%"
+msgstr[3] "%"
+
+#: widgets/labeledslider.cpp:57
+#, kde-format
+msgctxt "SpinBox parameter unit (Microseconds)"
+msgid " µs"
+msgid_plural " µs"
+msgstr[0] " мкс"
+msgstr[1] " мкс"
+msgstr[2] " мкс"
+msgstr[3] " мкс"
+
+#: widgets/labeledslider.cpp:60
+#, kde-format
+msgctxt "SpinBox parameter unit (seconds)"
+msgid " s"
+msgid_plural " s"
+msgstr[0] " с"
+msgstr[1] " с"
+msgstr[2] " с"
+msgstr[3] " с"
+
+#~ msgid "Scanning stopped by user."
+#~ msgstr "Сканування припинено користувачем."
+
+#~ msgid "Batch mode time delay"
+#~ msgstr "Затримка у пакетному режимі"
+
+#~ msgid "Specify the time delay between each scan when batch mode is enabled."
+#~ msgstr ""
+#~ "Вкажіть часову затримку між послідовними скануваннями, якщо увімкнено "
+#~ "пакетний режим."
+
+#~ msgid "Batch mode with time delay"
+#~ msgstr "Пакетний режим із часовою затримкою"
+
+#~ msgid ""
+#~ "Enables batch mode scanning. Continues scanning after a delay until "
+#~ "canceled."
+#~ msgstr ""
+#~ "Вмикає пакетний режим сканування. Сканування продовжуватиметься із "
+#~ "проміжною затримкою, аж доки процес не буде припинено."
+
+#~ msgid "Invert colors"
+#~ msgstr "Інвертувати кольори"
+
+#~ msgid "Invert the colors of the scanned image."
+#~ msgstr "Інвертувати кольори сканованого зображення."
+
+#~ msgctxt "Page size landscape"
+#~ msgid "Landscape %1"
+#~ msgstr "Альбомна %1"
+
+#~ msgid "Scan area size"
+#~ msgstr "Розмір області сканування"
+
+#~ msgid "Select a predefined page size for the scanning area."
+#~ msgstr ""
+#~ "Виберіть попередньо визначений розмір сторінки для області сканування."
+
+#~ msgid "%1 Pixel"
+#~ msgid_plural "%1 Pixels"
+#~ msgstr[0] "%1 піксель"
+#~ msgstr[1] "%1 пікселі"
+#~ msgstr[2] "%1 пікселів"
+#~ msgstr[3] "%1 піксель"
+
+#~ msgid "%1 Bit"
+#~ msgid_plural "%1 Bits"
+#~ msgstr[0] "%1 біт"
+#~ msgstr[1] "%1 біти"
+#~ msgstr[2] "%1 бітів"
+#~ msgstr[3] "%1 біт"
+
+#~ msgid "%1 mm"
+#~ msgid_plural "%1 mm"
+#~ msgstr[0] "%1 мм"
+#~ msgstr[1] "%1 мм"
+#~ msgstr[2] "%1 мм"
+#~ msgstr[3] "%1 мм"
+
+#~ msgid "%1 DPI"
+#~ msgid_plural "%1 DPI"
+#~ msgstr[0] "%1 т/дюйм"
+#~ msgstr[1] "%1 т/дюйм"
+#~ msgstr[2] "%1 т/дюйм"
+#~ msgstr[3] "%1 т/дюйм"
+
+#~ msgid "%1 %"
+#~ msgid_plural "%1 %"
+#~ msgstr[0] "%1 %"
+#~ msgstr[1] "%1 %"
+#~ msgstr[2] "%1 %"
+#~ msgstr[3] "%1 %"
+
+#~ msgid "%1 µs"
+#~ msgid_plural "%1 µs"
+#~ msgstr[0] "%1 мкс"
+#~ msgstr[1] "%1 мкс"
+#~ msgstr[2] "%1 мкс"
+#~ msgstr[3] "%1 мкс"
+
+#~ msgid "%1 usec"
+#~ msgid_plural "%1 usec"
+#~ msgstr[0] "%1 мкс"
+#~ msgstr[1] "%1 мкс"
+#~ msgstr[2] "%1 мкс"
+#~ msgstr[3] "%1 мкс"
+
+#~ msgctxt "Parameter and Unit"
+#~ msgid "%1 mm"
+#~ msgstr "%1 мм"
+
+#~ msgctxt "Parameter and Unit"
+#~ msgid "%1 DPI"
+#~ msgstr "%1 т/дюйм"
+
+#~ msgctxt "Parameter and Unit"
+#~ msgid "%1 %"
+#~ msgstr "%1 %"
+
+#~ msgctxt "Parameter and Unit"
+#~ msgid "%1 usec"
+#~ msgid_plural "%1 usec"
+#~ msgstr[0] "%1 мкс"
+#~ msgstr[1] "%1 мкс"
+#~ msgstr[2] "%1 мкс"
+#~ msgstr[3] "%1 мкс"
+
+#~ msgctxt "SpinBox parameter unit"
+#~ msgid " usec"
+#~ msgid_plural " usecs"
+#~ msgstr[0] " мкс"
+#~ msgstr[1] " мкс"
+#~ msgstr[2] " мкс"
+#~ msgstr[3] " мкс"
+
+#~ msgctxt "Double numbers. SpinBox parameter unit"
+#~ msgid " mm"
+#~ msgstr " мм"
+
+#~ msgctxt "Double numbers. SpinBox parameter unit"
+#~ msgid " DPI"
+#~ msgstr " т/д"
+
+#~ msgctxt "Double numbers. SpinBox parameter unit"
+#~ msgid " %"
+#~ msgstr " %"
+
+#~ msgctxt "Double numbers. SpinBox parameter unit"
+#~ msgid " usec"
+#~ msgstr " мкс"
+
+#~ msgctxt "Reset"
+#~ msgid "Label for button to reset text in a KLineEdit"
+#~ msgstr "Мітка кнопки, яка відновлює текст у KLineEdit"
+
+#~ msgctxt "Set"
+#~ msgid "Label for button to write text in a KLineEdit to sane"
+#~ msgstr "Мітка для кнопки запису тексту з KLineEdit до sane"
+
+#~ msgid "Other Options"
+#~ msgstr "Інші параметри"
+
+#~ msgid "The image format is not (yet?) supported by libksane."
+#~ msgstr "Формат зображення (ще?) не підтримується libksane."
+
+#~ msgid "The lamp is warming up."
+#~ msgstr "Розігрів лампи."
+
+#~ msgctxt "Parameter and Unit"
+#~ msgid "%1 Pixels"
+#~ msgstr "%1 пікселів"
+
+#~ msgctxt "Parameter and Unit"
+#~ msgid "%1 Bits"
+#~ msgstr "%1 бітів"
+
+#~ msgid "No scanner device has been found."
+#~ msgstr "Не знайдено жодного сканера."
+
+#~ msgid "Select Scanner"
+#~ msgstr "Виберіть сканер"

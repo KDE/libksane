@@ -1,0 +1,548 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR This file is copyright:
+# This file is distributed under the same license as the libksane package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: libksane\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-06-13 00:54+0000\n"
+"PO-Revision-Date: 2022-09-27 08:12+0200\n"
+"Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
+"Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
+"Language: ka\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.1.1\n"
+
+#: ../ksanetwain/ktwain_widget.cpp:29
+#, kde-format
+msgid "Open scan dialog"
+msgstr "სკანერის ფანჯრის გახსნა"
+
+#: i18n-hplip.cpp:3
+#, kde-format
+msgid "None"
+msgstr "არაფერი"
+
+#: i18n-hplip.cpp:4
+#, kde-format
+msgid "MH"
+msgstr "MH"
+
+#: i18n-hplip.cpp:5
+#, kde-format
+msgid "MR"
+msgstr "MR"
+
+#: i18n-hplip.cpp:6
+#, kde-format
+msgid "MMR"
+msgstr "MMR"
+
+#: i18n-hplip.cpp:7
+#, kde-format
+msgid "JPEG"
+msgstr "JPEG"
+
+#: i18n-hplip.cpp:8
+#, kde-format
+msgid "Auto"
+msgstr "ავტომატური"
+
+#: i18n-hplip.cpp:9
+#, kde-format
+msgid "Flatbed"
+msgstr ""
+
+#: i18n-hplip.cpp:10
+#, kde-format
+msgid "ADF"
+msgstr "ADF"
+
+#: i18n-hplip.cpp:11
+#, kde-format
+msgid "Advanced"
+msgstr "დამატებითი"
+
+#: i18n-hplip.cpp:12
+#, kde-format
+msgid "Compression"
+msgstr "შეკუმშვა"
+
+#: i18n-hplip.cpp:13
+#, kde-format
+msgid ""
+"Selects the scanner compression method for faster scans, possibly at the "
+"expense of image quality."
+msgstr ""
+
+#: i18n-hplip.cpp:15
+#, kde-format
+msgid "JPEG compression factor"
+msgstr "JPEG შეკუმშვის ფაქტორი"
+
+#: i18n-hplip.cpp:16
+#, kde-format
+msgid ""
+"Sets the scanner JPEG compression factor. Larger numbers mean better "
+"compression, and smaller numbers mean better image quality."
+msgstr ""
+
+#: i18n-hplip.cpp:19
+#, kde-format
+msgid "Batch scan"
+msgstr "ჯგუფური სკანირება"
+
+#: i18n-hplip.cpp:20
+#, kde-format
+msgid "Enables continuous scanning with automatic document feeder (ADF)."
+msgstr "უწყვეტი სკანირების ჩართვა დოკუმენტის ავტომატური მიმწოდებლით (ADF)."
+
+#: i18n-hplip.cpp:21
+#, kde-format
+msgid "Duplex"
+msgstr "დუპლექსი"
+
+#: i18n-hplip.cpp:22
+#, kde-format
+msgid "Enables scanning on both sides of the page."
+msgstr "გვერდის ორივე მხრის სკანირების ჩართვა."
+
+#: i18n-hplip.cpp:23
+#, kde-format
+msgid "Geometry"
+msgstr "გეომეტრია"
+
+#: i18n-hplip.cpp:24
+#, kde-format
+msgid "Length measurement"
+msgstr "სიგრძის საზომი ერთეული"
+
+#: i18n-hplip.cpp:25
+#, kde-format
+msgid ""
+"Selects how the scanned image length is measured and reported, which is "
+"impossible to know in advance for scrollfed scans."
+msgstr ""
+
+#: i18n-hplip.cpp:27
+#, kde-format
+msgid "Unknown"
+msgstr "უცნობი"
+
+#: i18n-hplip.cpp:28
+#, kde-format
+msgid "Unlimited"
+msgstr "შეუზღუდავი"
+
+#: i18n-hplip.cpp:29
+#, kde-format
+msgid "Approximate"
+msgstr "დაახლოებით"
+
+#: i18n-hplip.cpp:30
+#, kde-format
+msgid "Padded"
+msgstr ""
+
+#: i18n-hplip.cpp:31
+#, kde-format
+msgid "Exact"
+msgstr "ზუსტი"
+
+#: i18n-hplip.cpp:32
+#, kde-format
+msgid "???"
+msgstr "???"
+
+#: ksanedevicedialog.cpp:36
+#, kde-format
+msgid ""
+"<html>The SANE (Scanner Access Now Easy) system could not find any device."
+"<br>Check that the scanner is plugged in and turned on<br>or check your "
+"systems scanner setup.<br>For details about SANE see the <a href='http://www."
+"sane-project.org/'>SANE homepage</a>.</html>"
+msgstr ""
+
+#: ksanedevicedialog.cpp:58
+#, kde-format
+msgid "Reload devices list"
+msgstr "მოწყობილობების სიის განახლება"
+
+#: ksanedevicedialog.cpp:82
+#, kde-format
+msgid "Looking for devices. Please wait."
+msgstr "მოწყობილობების ძებნა. გთხოვთ, მოითმინოთ."
+
+#: ksanedevicedialog.cpp:117
+#, kde-format
+msgid "Sorry. No devices found."
+msgstr "მოწყობილობები ნაპოვნი არაა."
+
+#: ksanedevicedialog.cpp:127
+#, kde-format
+msgid "Found devices:"
+msgstr "ნაპოვნი მოწყობილობები:"
+
+#: ksaneviewer.cpp:105 ksanewidget.cpp:86
+#, kde-format
+msgid "Zoom In"
+msgstr "გადიდება"
+
+#: ksaneviewer.cpp:108 ksanewidget.cpp:92
+#, kde-format
+msgid "Zoom Out"
+msgstr "გადიდება"
+
+#: ksaneviewer.cpp:111 ksanewidget.cpp:98
+#, kde-format
+msgid "Zoom to Selection"
+msgstr "მონიშნულამდე გადიდება"
+
+#: ksaneviewer.cpp:114 ksanewidget.cpp:104
+#, kde-format
+msgid "Zoom to Fit"
+msgstr "გადიდება მოსარგებად"
+
+#: ksaneviewer.cpp:117 ksanewidget.cpp:110
+#, kde-format
+msgid "Clear Selections"
+msgstr "მონიშნულების გასუფთავება"
+
+#: ksanewidget.cpp:58
+#, kde-format
+msgid "Waiting for the scan to start."
+msgstr ""
+
+#: ksanewidget.cpp:71
+#, kde-format
+msgid "Cancel current scan operation"
+msgstr ""
+
+#: ksanewidget.cpp:121
+#, kde-format
+msgid "Scan Preview Image (%1)"
+msgstr "გადახედვის გამოსახულების სკანირება (%1)"
+
+#: ksanewidget.cpp:122
+#, kde-format
+msgctxt "Preview button text"
+msgid "Preview"
+msgstr "მინიატურა"
+
+#: ksanewidget.cpp:127
+#, kde-format
+msgid "Scan Final Image (%1)"
+msgstr "საბოლოო გამოსახულების სკანირება (%1)"
+
+#: ksanewidget.cpp:128
+#, kde-format
+msgctxt "Final scan button text"
+msgid "Scan"
+msgstr "სკანირება"
+
+#: ksanewidget.cpp:169
+#, kde-format
+msgid "Basic Options"
+msgstr "ძირითადი პარამეტრები"
+
+#: ksanewidget.cpp:175
+#, kde-format
+msgid "Advanced Options"
+msgstr "დამატებითი პარამეტრები"
+
+#: ksanewidget.cpp:181
+#, kde-format
+msgid "Scanner Specific Options"
+msgstr "სკანერის სპეციფიკური პარამეტრები"
+
+#: ksanewidget.cpp:322
+#, kde-format
+msgid "Authentication required for resource: %1"
+msgstr "რესურსს ავთენტიკაცია ესაჭიროება: %1"
+
+#: ksanewidget.cpp:484
+#, kde-format
+msgid ""
+"The image data contained 16 bits per color, but the color depth has been "
+"truncated to 8 bits per color."
+msgstr ""
+
+#: ksanewidget_p.cpp:428
+#, kde-format
+msgid "Scan Area Size"
+msgstr "სკანირების ფართობის ზომა"
+
+#: ksanewidget_p.cpp:433
+#, kde-format
+msgid " mm"
+msgstr " მმ"
+
+#: ksanewidget_p.cpp:433
+#, kde-format
+msgid " inch"
+msgstr " დუიმი"
+
+#: ksanewidget_p.cpp:435
+#, kde-format
+msgid "Width"
+msgstr "სიგანე"
+
+#: ksanewidget_p.cpp:440
+#, kde-format
+msgid "Height"
+msgstr "სიმაღლე"
+
+#: ksanewidget_p.cpp:445
+#, kde-format
+msgid "X Offset"
+msgstr "X წანაცვლება"
+
+#: ksanewidget_p.cpp:450
+#, kde-format
+msgid "Y Offset"
+msgstr "Y წანაცვლება"
+
+#: ksanewidget_p.cpp:511
+#, kde-format
+msgid "Image intensity"
+msgstr "სურათის ინტენსივობა"
+
+#: ksanewidget_p.cpp:515
+#, kde-format
+msgid ""
+"Gamma-correction table. In color mode this option equally affects the red, "
+"green, and blue channels simultaneously (i.e., it is an intensity gamma "
+"table)."
+msgstr ""
+
+#: ksanewidget_p.cpp:523
+#, kde-format
+msgid "Separate color intensity tables"
+msgstr ""
+
+#: ksanewidget_p.cpp:1203
+#, kde-format
+msgctxt "This is compared to the option string returned by sane"
+msgid "Transparency"
+msgstr "გამჭვირვალე"
+
+#: ksanewidget_p.cpp:1205
+#, kde-format
+msgctxt "This is compared to the option string returned by sane"
+msgid "Negative"
+msgstr "უარყოფითი"
+
+#: ksanewidget_p.cpp:1252
+#, kde-format
+msgid "Next scan starts in %1 s."
+msgstr "შემდეგი სკანირება %1 წამში დაიწყება."
+
+#: ksanewidget_p.cpp:1265
+#, kde-format
+msgctxt "@title:window"
+msgid "General Error"
+msgstr "ზოგადი შეცდომა"
+
+#: ksanewidget_p.cpp:1268
+#, kde-format
+msgctxt "@title:window"
+msgid "Information"
+msgstr "ინფორმაცია"
+
+#: ksanewidget_p.cpp:1350
+#, kde-format
+msgid "Custom"
+msgstr "ხელით"
+
+#: ksanewidget_p.cpp:1375
+#, kde-format
+msgctxt "Page size landscape"
+msgid " Landscape"
+msgstr " ლანდშაფტი"
+
+#: widgets/ksaneoptionwidget.cpp:66
+#, kde-format
+msgctxt "Label for a scanner option"
+msgid "%1:"
+msgstr "%1:"
+
+#: widgets/labeledcombo.cpp:155 widgets/labeledcombo.cpp:186
+#, kde-format
+msgctxt "Parameter and Unit"
+msgid "%1 Pixel"
+msgid_plural "%1 Pixels"
+msgstr[0] "%1 პიქსელი"
+msgstr[1] "%1 პიქსელი"
+
+#: widgets/labeledcombo.cpp:158 widgets/labeledcombo.cpp:189
+#, kde-format
+msgctxt "Parameter and Unit"
+msgid "%1 Bit"
+msgid_plural "%1 Bits"
+msgstr[0] "%1 ბიტი"
+msgstr[1] "%1 ბიტი"
+
+#: widgets/labeledcombo.cpp:161 widgets/labeledcombo.cpp:192
+#, kde-format
+msgctxt "Parameter and Unit (Millimeter)"
+msgid "%1 mm"
+msgstr "%1 მმ"
+
+#: widgets/labeledcombo.cpp:164 widgets/labeledcombo.cpp:195
+#, kde-format
+msgctxt "Parameter and Unit (Dots Per Inch)"
+msgid "%1 DPI"
+msgstr "%1 DPI"
+
+#: widgets/labeledcombo.cpp:167 widgets/labeledcombo.cpp:198
+#, kde-format
+msgctxt "Parameter and Unit (Percentage)"
+msgid "%1 %"
+msgstr "%1 %"
+
+#: widgets/labeledcombo.cpp:170 widgets/labeledcombo.cpp:201
+#, kde-format
+msgctxt "Parameter and Unit (Microseconds)"
+msgid "%1 µs"
+msgstr "%1 µწმ"
+
+#: widgets/labeledcombo.cpp:173 widgets/labeledcombo.cpp:204
+#, kde-format
+msgctxt "Parameter and Unit (seconds)"
+msgid "%1 s"
+msgstr "%1 წმ"
+
+#: widgets/labeledcombo.cpp:176 widgets/labeledcombo.cpp:207
+#, kde-format
+msgid "%1"
+msgstr "%1"
+
+#: widgets/labeledentry.cpp:52
+#, kde-format
+msgctxt "Label for button to reset text in a KLineEdit"
+msgid "Reset"
+msgstr "თავიდან"
+
+#: widgets/labeledentry.cpp:54
+#, kde-format
+msgctxt "Label for button to write text in a KLineEdit to sane"
+msgid "Set"
+msgstr "დაყენება"
+
+#: widgets/labeledfslider.cpp:40
+#, kde-format
+msgctxt "Double numbers. SpinBox parameter unit"
+msgid " Pixels"
+msgstr " პიქსელი"
+
+#: widgets/labeledfslider.cpp:43
+#, kde-format
+msgctxt "Double numbers. SpinBox parameter unit"
+msgid " Bits"
+msgstr " ბიტი"
+
+#: widgets/labeledfslider.cpp:46
+#, kde-format
+msgctxt "Double numbers. SpinBox parameter unit (Millimeter)"
+msgid " mm"
+msgstr " მმ"
+
+#: widgets/labeledfslider.cpp:49
+#, kde-format
+msgctxt "Double numbers. SpinBox parameter unit (Dots Per Inch)"
+msgid " DPI"
+msgstr " DPI"
+
+#: widgets/labeledfslider.cpp:52
+#, kde-format
+msgctxt "Double numbers. SpinBox parameter unit (Percentage)"
+msgid " %"
+msgstr " %"
+
+#: widgets/labeledfslider.cpp:55
+#, kde-format
+msgctxt "Double numbers. SpinBox parameter unit (Microseconds)"
+msgid " µs"
+msgstr " მკწმ"
+
+#: widgets/labeledfslider.cpp:58
+#, kde-format
+msgctxt "SpinBox parameter unit (seconds), float"
+msgid " s"
+msgstr " წმ"
+
+#: widgets/labeledgamma.cpp:43
+#, kde-format
+msgid "Brightness"
+msgstr "სიკაშკაშე"
+
+#: widgets/labeledgamma.cpp:46
+#, kde-format
+msgid "Contrast"
+msgstr "კონტრასტი"
+
+#: widgets/labeledgamma.cpp:49
+#, kde-format
+msgid "Gamma"
+msgstr "გამა"
+
+#: widgets/labeledslider.cpp:42
+#, kde-format
+msgctxt "SpinBox parameter unit"
+msgid " Pixel"
+msgid_plural " Pixels"
+msgstr[0] " პიქსელი"
+msgstr[1] " პიქსელი"
+
+#: widgets/labeledslider.cpp:45
+#, kde-format
+msgctxt "SpinBox parameter unit"
+msgid " Bit"
+msgid_plural " Bits"
+msgstr[0] " ბიტი"
+msgstr[1] " ბიტი"
+
+#: widgets/labeledslider.cpp:48
+#, kde-format
+msgctxt "SpinBox parameter unit (Millimeter)"
+msgid " mm"
+msgid_plural " mm"
+msgstr[0] " მმ"
+msgstr[1] " მმ"
+
+#: widgets/labeledslider.cpp:51
+#, kde-format
+msgctxt "SpinBox parameter unit (Dots Per Inch)"
+msgid " DPI"
+msgid_plural " DPI"
+msgstr[0] " DPI"
+msgstr[1] " DPI"
+
+#: widgets/labeledslider.cpp:54
+#, kde-format
+msgctxt "SpinBox parameter unit (Percentage)"
+msgid " %"
+msgid_plural " %"
+msgstr[0] " %"
+msgstr[1] " %"
+
+#: widgets/labeledslider.cpp:57
+#, kde-format
+msgctxt "SpinBox parameter unit (Microseconds)"
+msgid " µs"
+msgid_plural " µs"
+msgstr[0] " მკწმ"
+msgstr[1] " მკწმ"
+
+#: widgets/labeledslider.cpp:60
+#, kde-format
+msgctxt "SpinBox parameter unit (seconds)"
+msgid " s"
+msgid_plural " s"
+msgstr[0] " წმ"
+msgstr[1] " წმ"

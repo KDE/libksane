@@ -1,0 +1,700 @@
+# translation of libksane.po to Swedish
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Stefan Asserhäll <stefan.asserhall@bredband.net>, 2007, 2008, 2009, 2010, 2011, 2012, 2015, 2020, 2021.
+msgid ""
+msgstr ""
+"Project-Id-Version: libksane\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-06-13 00:54+0000\n"
+"PO-Revision-Date: 2021-11-04 20:43+0100\n"
+"Last-Translator: Stefan Asserhäll <stefan.asserhall@bredband.net>\n"
+"Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
+"Language: sv\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Lokalize 20.08.1\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#: ../ksanetwain/ktwain_widget.cpp:29
+#, kde-format
+msgid "Open scan dialog"
+msgstr "Öppna inläsningsdialogruta"
+
+#: i18n-hplip.cpp:3
+#, kde-format
+msgid "None"
+msgstr "Ingen"
+
+#: i18n-hplip.cpp:4
+#, kde-format
+msgid "MH"
+msgstr "MH"
+
+#: i18n-hplip.cpp:5
+#, kde-format
+msgid "MR"
+msgstr "MR"
+
+#: i18n-hplip.cpp:6
+#, kde-format
+msgid "MMR"
+msgstr "MMR"
+
+#: i18n-hplip.cpp:7
+#, kde-format
+msgid "JPEG"
+msgstr "JPEG"
+
+#: i18n-hplip.cpp:8
+#, kde-format
+msgid "Auto"
+msgstr "Automatisk"
+
+#: i18n-hplip.cpp:9
+#, kde-format
+msgid "Flatbed"
+msgstr "Flatbädd"
+
+#: i18n-hplip.cpp:10
+#, kde-format
+msgid "ADF"
+msgstr "ADM"
+
+#: i18n-hplip.cpp:11
+#, kde-format
+msgid "Advanced"
+msgstr "Avancerat"
+
+#: i18n-hplip.cpp:12
+#, kde-format
+msgid "Compression"
+msgstr "Komprimering"
+
+#: i18n-hplip.cpp:13
+#, kde-format
+msgid ""
+"Selects the scanner compression method for faster scans, possibly at the "
+"expense of image quality."
+msgstr ""
+"Väljer bildläsarens komprimeringsmetod för snabbare inläsning, möjligen på "
+"bekostnad av bildkvalitet."
+
+#: i18n-hplip.cpp:15
+#, kde-format
+msgid "JPEG compression factor"
+msgstr "Komprimeringsfaktor för JPEG"
+
+#: i18n-hplip.cpp:16
+#, kde-format
+msgid ""
+"Sets the scanner JPEG compression factor. Larger numbers mean better "
+"compression, and smaller numbers mean better image quality."
+msgstr ""
+"Ställer in bildläsarens komprimeringsfaktor för JPEG. Större värden betyder "
+"bättre komprimering, och mindre värden betyder bättre bildkvalitet."
+
+#: i18n-hplip.cpp:19
+#, kde-format
+msgid "Batch scan"
+msgstr "Bakgrundsinläsning"
+
+#: i18n-hplip.cpp:20
+#, kde-format
+msgid "Enables continuous scanning with automatic document feeder (ADF)."
+msgstr "Aktiverar kontinuerlig inläsning med automatisk dokumentmatare (ADM)."
+
+#: i18n-hplip.cpp:21
+#, kde-format
+msgid "Duplex"
+msgstr "Duplex"
+
+#: i18n-hplip.cpp:22
+#, kde-format
+msgid "Enables scanning on both sides of the page."
+msgstr "Aktiverar inläsning av arkets båda sidor."
+
+#: i18n-hplip.cpp:23
+#, kde-format
+msgid "Geometry"
+msgstr "Geometri"
+
+#: i18n-hplip.cpp:24
+#, kde-format
+msgid "Length measurement"
+msgstr "Längdmätning"
+
+#: i18n-hplip.cpp:25
+#, kde-format
+msgid ""
+"Selects how the scanned image length is measured and reported, which is "
+"impossible to know in advance for scrollfed scans."
+msgstr ""
+"Väljer hur den inlästa bildens längd mäts och rapporteras, vilket är "
+"omöjligt att veta i förväg för rullande inläsning."
+
+#: i18n-hplip.cpp:27
+#, kde-format
+msgid "Unknown"
+msgstr "Okänd"
+
+#: i18n-hplip.cpp:28
+#, kde-format
+msgid "Unlimited"
+msgstr "Obegränsad"
+
+#: i18n-hplip.cpp:29
+#, kde-format
+msgid "Approximate"
+msgstr "Ungefärlig"
+
+#: i18n-hplip.cpp:30
+#, kde-format
+msgid "Padded"
+msgstr "Utfylld"
+
+#: i18n-hplip.cpp:31
+#, kde-format
+msgid "Exact"
+msgstr "Exakt"
+
+#: i18n-hplip.cpp:32
+#, kde-format
+msgid "???"
+msgstr "???"
+
+#: ksanedevicedialog.cpp:36
+#, kde-format
+msgid ""
+"<html>The SANE (Scanner Access Now Easy) system could not find any device."
+"<br>Check that the scanner is plugged in and turned on<br>or check your "
+"systems scanner setup.<br>For details about SANE see the <a href='http://www."
+"sane-project.org/'>SANE homepage</a>.</html>"
+msgstr ""
+"<html>SANE-systemet (Scanner Access Now Easy) kunde inte hitta någon enhet."
+"<br>Kontrollera att bildläsaren är ansluten och påslagen<br>eller "
+"kontrollera systemets bildläsarinställning.<br>För detaljerad information om "
+"SANE, se <a href='http://www.sane-project.org/'>SANE:s hemsida.</a></html>"
+
+#: ksanedevicedialog.cpp:58
+#, kde-format
+msgid "Reload devices list"
+msgstr "Uppdatera enhetslista"
+
+#: ksanedevicedialog.cpp:82
+#, kde-format
+msgid "Looking for devices. Please wait."
+msgstr "Letar efter enheter. Vänta."
+
+#: ksanedevicedialog.cpp:117
+#, kde-format
+msgid "Sorry. No devices found."
+msgstr "Tyvärr hittades inga enheter."
+
+#: ksanedevicedialog.cpp:127
+#, kde-format
+msgid "Found devices:"
+msgstr "Hittade enheter:"
+
+#: ksaneviewer.cpp:105 ksanewidget.cpp:86
+#, kde-format
+msgid "Zoom In"
+msgstr "Zooma in"
+
+#: ksaneviewer.cpp:108 ksanewidget.cpp:92
+#, kde-format
+msgid "Zoom Out"
+msgstr "Zooma ut"
+
+#: ksaneviewer.cpp:111 ksanewidget.cpp:98
+#, kde-format
+msgid "Zoom to Selection"
+msgstr "Zooma till markering"
+
+#: ksaneviewer.cpp:114 ksanewidget.cpp:104
+#, kde-format
+msgid "Zoom to Fit"
+msgstr "Fyll sidan"
+
+#: ksaneviewer.cpp:117 ksanewidget.cpp:110
+#, kde-format
+msgid "Clear Selections"
+msgstr "Rensa markeringar"
+
+#: ksanewidget.cpp:58
+#, kde-format
+msgid "Waiting for the scan to start."
+msgstr "Väntar på att inläsning ska börja."
+
+#: ksanewidget.cpp:71
+#, kde-format
+msgid "Cancel current scan operation"
+msgstr "Avbryt pågående bildinläsning"
+
+#: ksanewidget.cpp:121
+#, kde-format
+msgid "Scan Preview Image (%1)"
+msgstr "Läs in förhandsgranskningsbild (%1)"
+
+#: ksanewidget.cpp:122
+#, kde-format
+msgctxt "Preview button text"
+msgid "Preview"
+msgstr "Förhandsgranskning"
+
+#: ksanewidget.cpp:127
+#, kde-format
+msgid "Scan Final Image (%1)"
+msgstr "Läs in slutlig bild (%1)"
+
+#: ksanewidget.cpp:128
+#, kde-format
+msgctxt "Final scan button text"
+msgid "Scan"
+msgstr "Läs in"
+
+#: ksanewidget.cpp:169
+#, kde-format
+msgid "Basic Options"
+msgstr "Grundalternativ"
+
+#: ksanewidget.cpp:175
+#, kde-format
+msgid "Advanced Options"
+msgstr "Avancerade alternativ"
+
+#: ksanewidget.cpp:181
+#, kde-format
+msgid "Scanner Specific Options"
+msgstr "Specifika alternativ för bildläsare"
+
+#: ksanewidget.cpp:322
+#, kde-format
+msgid "Authentication required for resource: %1"
+msgstr "Behörighetskontroll krävs för resurs: %1"
+
+#: ksanewidget.cpp:484
+#, kde-format
+msgid ""
+"The image data contained 16 bits per color, but the color depth has been "
+"truncated to 8 bits per color."
+msgstr ""
+"Bilddata innehåller 16 bitar per färg, men färgdjupet har avkortas till 8 "
+"bitar per färg."
+
+#: ksanewidget_p.cpp:428
+#, kde-format
+msgid "Scan Area Size"
+msgstr "Läs in områdesstorlek"
+
+#: ksanewidget_p.cpp:433
+#, kde-format
+msgid " mm"
+msgstr " mm"
+
+#: ksanewidget_p.cpp:433
+#, kde-format
+msgid " inch"
+msgstr " tum"
+
+#: ksanewidget_p.cpp:435
+#, kde-format
+msgid "Width"
+msgstr "Bredd"
+
+#: ksanewidget_p.cpp:440
+#, kde-format
+msgid "Height"
+msgstr "Höjd"
+
+#: ksanewidget_p.cpp:445
+#, kde-format
+msgid "X Offset"
+msgstr "X-position"
+
+#: ksanewidget_p.cpp:450
+#, kde-format
+msgid "Y Offset"
+msgstr "Y-position"
+
+#: ksanewidget_p.cpp:511
+#, kde-format
+msgid "Image intensity"
+msgstr "Bildintensitet"
+
+#: ksanewidget_p.cpp:515
+#, kde-format
+msgid ""
+"Gamma-correction table. In color mode this option equally affects the red, "
+"green, and blue channels simultaneously (i.e., it is an intensity gamma "
+"table)."
+msgstr ""
+"Gammakorrigeringstabell. I färgläge påverkar alternativet den röda, gröna "
+"och blåa kanalen lika mycket samtidigt (dvs. det är en "
+"intensitetsgammatabell)."
+
+#: ksanewidget_p.cpp:523
+#, kde-format
+msgid "Separate color intensity tables"
+msgstr "Separata färgintensitetstabeller"
+
+#: ksanewidget_p.cpp:1203
+#, kde-format
+msgctxt "This is compared to the option string returned by sane"
+msgid "Transparency"
+msgstr "Genomskinlighet"
+
+#: ksanewidget_p.cpp:1205
+#, kde-format
+msgctxt "This is compared to the option string returned by sane"
+msgid "Negative"
+msgstr "Negativ"
+
+#: ksanewidget_p.cpp:1252
+#, kde-format
+msgid "Next scan starts in %1 s."
+msgstr "Nästa inläsning börjar om %1 s."
+
+#: ksanewidget_p.cpp:1265
+#, kde-format
+msgctxt "@title:window"
+msgid "General Error"
+msgstr "Allmänt fel"
+
+#: ksanewidget_p.cpp:1268
+#, kde-format
+msgctxt "@title:window"
+msgid "Information"
+msgstr "Information"
+
+#: ksanewidget_p.cpp:1350
+#, kde-format
+msgid "Custom"
+msgstr "Egen"
+
+#: ksanewidget_p.cpp:1375
+#, kde-format
+msgctxt "Page size landscape"
+msgid " Landscape"
+msgstr " Liggande"
+
+#: widgets/ksaneoptionwidget.cpp:66
+#, kde-format
+msgctxt "Label for a scanner option"
+msgid "%1:"
+msgstr "%1:"
+
+#: widgets/labeledcombo.cpp:155 widgets/labeledcombo.cpp:186
+#, kde-format
+msgctxt "Parameter and Unit"
+msgid "%1 Pixel"
+msgid_plural "%1 Pixels"
+msgstr[0] "%1 bildpunkt"
+msgstr[1] "%1 bildpunkter"
+
+#: widgets/labeledcombo.cpp:158 widgets/labeledcombo.cpp:189
+#, kde-format
+msgctxt "Parameter and Unit"
+msgid "%1 Bit"
+msgid_plural "%1 Bits"
+msgstr[0] "%1 bit"
+msgstr[1] "%1 bitar"
+
+#: widgets/labeledcombo.cpp:161 widgets/labeledcombo.cpp:192
+#, kde-format
+msgctxt "Parameter and Unit (Millimeter)"
+msgid "%1 mm"
+msgstr "%1 mm"
+
+#: widgets/labeledcombo.cpp:164 widgets/labeledcombo.cpp:195
+#, kde-format
+msgctxt "Parameter and Unit (Dots Per Inch)"
+msgid "%1 DPI"
+msgstr "%1 punkter/tum"
+
+#: widgets/labeledcombo.cpp:167 widgets/labeledcombo.cpp:198
+#, kde-format
+msgctxt "Parameter and Unit (Percentage)"
+msgid "%1 %"
+msgstr "%1 %"
+
+#: widgets/labeledcombo.cpp:170 widgets/labeledcombo.cpp:201
+#, kde-format
+msgctxt "Parameter and Unit (Microseconds)"
+msgid "%1 µs"
+msgstr "%1 µs"
+
+#: widgets/labeledcombo.cpp:173 widgets/labeledcombo.cpp:204
+#, kde-format
+msgctxt "Parameter and Unit (seconds)"
+msgid "%1 s"
+msgstr "%1 s"
+
+#: widgets/labeledcombo.cpp:176 widgets/labeledcombo.cpp:207
+#, kde-format
+msgid "%1"
+msgstr "%1"
+
+#: widgets/labeledentry.cpp:52
+#, kde-format
+msgctxt "Label for button to reset text in a KLineEdit"
+msgid "Reset"
+msgstr "Ta bort"
+
+#: widgets/labeledentry.cpp:54
+#, kde-format
+msgctxt "Label for button to write text in a KLineEdit to sane"
+msgid "Set"
+msgstr "Lägg till"
+
+#: widgets/labeledfslider.cpp:40
+#, kde-format
+msgctxt "Double numbers. SpinBox parameter unit"
+msgid " Pixels"
+msgstr " bildpunkter"
+
+#: widgets/labeledfslider.cpp:43
+#, kde-format
+msgctxt "Double numbers. SpinBox parameter unit"
+msgid " Bits"
+msgstr " bitar"
+
+#: widgets/labeledfslider.cpp:46
+#, kde-format
+msgctxt "Double numbers. SpinBox parameter unit (Millimeter)"
+msgid " mm"
+msgstr " mm"
+
+#: widgets/labeledfslider.cpp:49
+#, kde-format
+msgctxt "Double numbers. SpinBox parameter unit (Dots Per Inch)"
+msgid " DPI"
+msgstr " punkter/tum"
+
+#: widgets/labeledfslider.cpp:52
+#, kde-format
+msgctxt "Double numbers. SpinBox parameter unit (Percentage)"
+msgid " %"
+msgstr "   %"
+
+#: widgets/labeledfslider.cpp:55
+#, kde-format
+msgctxt "Double numbers. SpinBox parameter unit (Microseconds)"
+msgid " µs"
+msgstr " µs"
+
+#: widgets/labeledfslider.cpp:58
+#, kde-format
+msgctxt "SpinBox parameter unit (seconds), float"
+msgid " s"
+msgstr " s"
+
+#: widgets/labeledgamma.cpp:43
+#, kde-format
+msgid "Brightness"
+msgstr "Ljusstyrka"
+
+#: widgets/labeledgamma.cpp:46
+#, kde-format
+msgid "Contrast"
+msgstr "Kontrast"
+
+#: widgets/labeledgamma.cpp:49
+#, kde-format
+msgid "Gamma"
+msgstr "Gamma"
+
+#: widgets/labeledslider.cpp:42
+#, kde-format
+msgctxt "SpinBox parameter unit"
+msgid " Pixel"
+msgid_plural " Pixels"
+msgstr[0] " bildpunkt"
+msgstr[1] " bildpunkter"
+
+#: widgets/labeledslider.cpp:45
+#, kde-format
+msgctxt "SpinBox parameter unit"
+msgid " Bit"
+msgid_plural " Bits"
+msgstr[0] " bit"
+msgstr[1] " bitar"
+
+#: widgets/labeledslider.cpp:48
+#, kde-format
+msgctxt "SpinBox parameter unit (Millimeter)"
+msgid " mm"
+msgid_plural " mm"
+msgstr[0] " mm"
+msgstr[1] " mm"
+
+#: widgets/labeledslider.cpp:51
+#, kde-format
+msgctxt "SpinBox parameter unit (Dots Per Inch)"
+msgid " DPI"
+msgid_plural " DPI"
+msgstr[0] " punkter/tum"
+msgstr[1] " punkter/tum"
+
+#: widgets/labeledslider.cpp:54
+#, kde-format
+msgctxt "SpinBox parameter unit (Percentage)"
+msgid " %"
+msgid_plural " %"
+msgstr[0] " %"
+msgstr[1] " %"
+
+#: widgets/labeledslider.cpp:57
+#, kde-format
+msgctxt "SpinBox parameter unit (Microseconds)"
+msgid " µs"
+msgid_plural " µs"
+msgstr[0] " µs"
+msgstr[1] " µs"
+
+#: widgets/labeledslider.cpp:60
+#, kde-format
+msgctxt "SpinBox parameter unit (seconds)"
+msgid " s"
+msgid_plural " s"
+msgstr[0] " s"
+msgstr[1] " s"
+
+#~ msgid "Scanning stopped by user."
+#~ msgstr "Inläsning stoppad av användaren."
+
+#~ msgid "Batch mode time delay"
+#~ msgstr "Tidsfördröjning för bakgrundsläge"
+
+#~ msgid "Specify the time delay between each scan when batch mode is enabled."
+#~ msgstr ""
+#~ "Ange tidsfördröjningen mellan varje inläsning när bakgrundsläge är "
+#~ "aktiverat."
+
+#~ msgid "Batch mode with time delay"
+#~ msgstr "Bakgrundsläge med tidsfördröjning"
+
+#~ msgid ""
+#~ "Enables batch mode scanning. Continues scanning after a delay until "
+#~ "canceled."
+#~ msgstr ""
+#~ "Aktiverar inläsning i bakgrundsläge. Fortsätter inläsning efter en "
+#~ "fördröjning tills det avbryts."
+
+#~ msgid "Invert colors"
+#~ msgstr "Invertera färger"
+
+#~ msgid "Invert the colors of the scanned image."
+#~ msgstr "Invertera färgerna på den inlästa bilden."
+
+#~ msgctxt "Page size landscape"
+#~ msgid "Landscape %1"
+#~ msgstr "Liggande %1"
+
+#~ msgid "Scan area size"
+#~ msgstr "Läs in områdesstorlek"
+
+#~ msgid "Select a predefined page size for the scanning area."
+#~ msgstr "Välj en fördefinierad sidstorlek för inläsningsområdet."
+
+#~ msgid "%1 Pixel"
+#~ msgid_plural "%1 Pixels"
+#~ msgstr[0] "%1 bildpunkt"
+#~ msgstr[1] "%1 bildpunkter"
+
+#~ msgid "%1 Bit"
+#~ msgid_plural "%1 Bits"
+#~ msgstr[0] "1 bit"
+#~ msgstr[1] "%1 bitar"
+
+#~ msgid "%1 mm"
+#~ msgid_plural "%1 mm"
+#~ msgstr[0] "%1 mm"
+#~ msgstr[1] "%1 mm"
+
+#~ msgid "%1 DPI"
+#~ msgid_plural "%1 DPI"
+#~ msgstr[0] "%1 punkt/tum"
+#~ msgstr[1] "%1 punkter/tum"
+
+#~ msgid "%1 %"
+#~ msgid_plural "%1 %"
+#~ msgstr[0] "%1 %"
+#~ msgstr[1] "%1 %"
+
+#~ msgid "%1 µs"
+#~ msgid_plural "%1 µs"
+#~ msgstr[0] "%1 µs"
+#~ msgstr[1] "%1 µs"
+
+#~ msgid "%1 usec"
+#~ msgid_plural "%1 usec"
+#~ msgstr[0] "%1 μs"
+#~ msgstr[1] "%1 μs"
+
+#~ msgctxt "Parameter and Unit"
+#~ msgid "%1 mm"
+#~ msgstr "%1 mm"
+
+#~ msgctxt "Parameter and Unit"
+#~ msgid "%1 DPI"
+#~ msgstr "%1 punkter/tum"
+
+#~ msgctxt "Parameter and Unit"
+#~ msgid "%1 %"
+#~ msgstr "%1 %"
+
+#~ msgctxt "Parameter and Unit"
+#~ msgid "%1 usec"
+#~ msgid_plural "%1 usec"
+#~ msgstr[0] "%1 μs"
+#~ msgstr[1] "%1 μs"
+
+#~ msgctxt "SpinBox parameter unit"
+#~ msgid " usec"
+#~ msgid_plural " usecs"
+#~ msgstr[0] " μs"
+#~ msgstr[1] " μs"
+
+#~ msgctxt "Double numbers. SpinBox parameter unit"
+#~ msgid " mm"
+#~ msgstr " mm"
+
+#~ msgctxt "Double numbers. SpinBox parameter unit"
+#~ msgid " DPI"
+#~ msgstr " punkter/tum"
+
+#~ msgctxt "Double numbers. SpinBox parameter unit"
+#~ msgid " %"
+#~ msgstr " %"
+
+#~ msgctxt "Double numbers. SpinBox parameter unit"
+#~ msgid " usec"
+#~ msgstr " μs"
+
+#~ msgctxt "Reset"
+#~ msgid "Label for button to reset text in a KLineEdit"
+#~ msgstr "Beteckning för knapp att återställa text i en radeditor"
+
+#~ msgctxt "Set"
+#~ msgid "Label for button to write text in a KLineEdit to sane"
+#~ msgstr "Beteckning för knapp att skriva text i en radeditor till Sane"
+
+#~ msgid "Other Options"
+#~ msgstr "Övriga alternativ"
+
+#~ msgid "The image format is not (yet?) supported by libksane."
+#~ msgstr "Bildformatet stöds inte (ännu) av libksane."
+
+#~ msgid "The lamp is warming up."
+#~ msgstr "Lampan värms upp."
+
+#~ msgctxt "Parameter and Unit"
+#~ msgid "%1 Pixels"
+#~ msgstr "%1 bildpunkter"
+
+#~ msgctxt "Parameter and Unit"
+#~ msgid "%1 Bits"
+#~ msgstr "%1 bitar"

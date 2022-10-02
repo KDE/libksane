@@ -1,0 +1,674 @@
+# Translation of libksane to Croatian
+#
+# Zarko Pintar <zarko.pintar@gmail.com>, 2009.
+# Marko Dimjasevic <marko@dimjasevic.net>, 2010.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-06-13 00:54+0000\n"
+"PO-Revision-Date: 2010-05-12 10:59+0200\n"
+"Last-Translator: Marko Dimjasevic <marko@dimjasevic.net>\n"
+"Language-Team: Croatian <kde-croatia-list@lists.sourceforge.net>\n"
+"Language: hr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Lokalize 1.0\n"
+"X-Environment: kde\n"
+"X-Accelerator-Marker: &\n"
+"X-Text-Markup: kde4\n"
+
+#: ../ksanetwain/ktwain_widget.cpp:29
+#, kde-format
+msgid "Open scan dialog"
+msgstr "Otvori dijalog za skeniranje"
+
+#: i18n-hplip.cpp:3
+#, kde-format
+msgid "None"
+msgstr "Nijedan"
+
+#: i18n-hplip.cpp:4
+#, kde-format
+msgid "MH"
+msgstr "MH"
+
+#: i18n-hplip.cpp:5
+#, kde-format
+msgid "MR"
+msgstr "MR"
+
+#: i18n-hplip.cpp:6
+#, kde-format
+msgid "MMR"
+msgstr "MMR"
+
+#: i18n-hplip.cpp:7
+#, kde-format
+msgid "JPEG"
+msgstr "JPEG"
+
+#: i18n-hplip.cpp:8
+#, kde-format
+msgid "Auto"
+msgstr "Automatski"
+
+#: i18n-hplip.cpp:9
+#, kde-format
+msgid "Flatbed"
+msgstr ""
+
+#: i18n-hplip.cpp:10
+#, kde-format
+msgid "ADF"
+msgstr "ADF"
+
+#: i18n-hplip.cpp:11
+#, kde-format
+msgid "Advanced"
+msgstr "Napredno"
+
+#: i18n-hplip.cpp:12
+#, kde-format
+msgid "Compression"
+msgstr "Sabijanje"
+
+#: i18n-hplip.cpp:13
+#, kde-format
+msgid ""
+"Selects the scanner compression method for faster scans, possibly at the "
+"expense of image quality."
+msgstr ""
+"Odabire metodu sabijanja skenera za brža skeniranja, moguće na štetu "
+"kvalitete slike."
+
+#: i18n-hplip.cpp:15
+#, kde-format
+msgid "JPEG compression factor"
+msgstr "Faktor sabijanja JPEG-a"
+
+#: i18n-hplip.cpp:16
+#, kde-format
+msgid ""
+"Sets the scanner JPEG compression factor. Larger numbers mean better "
+"compression, and smaller numbers mean better image quality."
+msgstr ""
+"Postavlja faktor sabijanja JPEG-a u skeneru. Veći brojevi znače veće "
+"sabijanje, a mali brojevi znače veću kvalitetu slike."
+
+#: i18n-hplip.cpp:19
+#, kde-format
+msgid "Batch scan"
+msgstr "Naredbeno skeniranje"
+
+#: i18n-hplip.cpp:20
+#, kde-format
+msgid "Enables continuous scanning with automatic document feeder (ADF)."
+msgstr ""
+"Omogućuje kontinuirano skeniranje s automatskom opskrbom dokumenata (ADF)."
+
+#: i18n-hplip.cpp:21
+#, kde-format
+msgid "Duplex"
+msgstr "Dvostrano"
+
+#: i18n-hplip.cpp:22
+#, kde-format
+msgid "Enables scanning on both sides of the page."
+msgstr "Omogućuje skeniranje na obje strane."
+
+#: i18n-hplip.cpp:23
+#, kde-format
+msgid "Geometry"
+msgstr "Geometrija"
+
+#: i18n-hplip.cpp:24
+#, kde-format
+msgid "Length measurement"
+msgstr "Mjerenje duljine"
+
+#: i18n-hplip.cpp:25
+#, kde-format
+msgid ""
+"Selects how the scanned image length is measured and reported, which is "
+"impossible to know in advance for scrollfed scans."
+msgstr ""
+"Odabire kako se mjeri i prijavljuje dužina skenirane slike što nije moguće "
+"znati unaprijed za rolna skeniranja."
+
+#: i18n-hplip.cpp:27
+#, kde-format
+msgid "Unknown"
+msgstr "Nepoznato"
+
+#: i18n-hplip.cpp:28
+#, kde-format
+msgid "Unlimited"
+msgstr "Neograničeno"
+
+#: i18n-hplip.cpp:29
+#, kde-format
+msgid "Approximate"
+msgstr "Približno"
+
+#: i18n-hplip.cpp:30
+#, kde-format
+msgid "Padded"
+msgstr "Razmaknuto"
+
+#: i18n-hplip.cpp:31
+#, kde-format
+msgid "Exact"
+msgstr "Točan"
+
+#: i18n-hplip.cpp:32
+#, kde-format
+msgid "???"
+msgstr "???"
+
+#: ksanedevicedialog.cpp:36
+#, kde-format
+msgid ""
+"<html>The SANE (Scanner Access Now Easy) system could not find any device."
+"<br>Check that the scanner is plugged in and turned on<br>or check your "
+"systems scanner setup.<br>For details about SANE see the <a href='http://www."
+"sane-project.org/'>SANE homepage</a>.</html>"
+msgstr ""
+
+#: ksanedevicedialog.cpp:58
+#, kde-format
+msgid "Reload devices list"
+msgstr "Ponovno učitaj listu uređaja"
+
+#: ksanedevicedialog.cpp:82
+#, kde-format
+msgid "Looking for devices. Please wait."
+msgstr "Tražim uređaje. Molim pričekajte."
+
+#: ksanedevicedialog.cpp:117
+#, kde-format
+msgid "Sorry. No devices found."
+msgstr "Nažalost ni jedan uređaj nije pronađen."
+
+#: ksanedevicedialog.cpp:127
+#, kde-format
+msgid "Found devices:"
+msgstr "Pronađeni uređaji:"
+
+#: ksaneviewer.cpp:105 ksanewidget.cpp:86
+#, kde-format
+msgid "Zoom In"
+msgstr "Uvećaj"
+
+#: ksaneviewer.cpp:108 ksanewidget.cpp:92
+#, kde-format
+msgid "Zoom Out"
+msgstr "Umanji"
+
+#: ksaneviewer.cpp:111 ksanewidget.cpp:98
+#, kde-format
+msgid "Zoom to Selection"
+msgstr "Zumiraj označeno"
+
+#: ksaneviewer.cpp:114 ksanewidget.cpp:104
+#, kde-format
+msgid "Zoom to Fit"
+msgstr "Zumiraj na prigodno"
+
+#: ksaneviewer.cpp:117 ksanewidget.cpp:110
+#, kde-format
+msgid "Clear Selections"
+msgstr "Obriši odabire"
+
+#: ksanewidget.cpp:58
+#, kde-format
+msgid "Waiting for the scan to start."
+msgstr "Čekam da skeniranje počne."
+
+#: ksanewidget.cpp:71
+#, kde-format
+msgid "Cancel current scan operation"
+msgstr "Prekini trenutnu radnju skeniranja"
+
+#: ksanewidget.cpp:121
+#, fuzzy, kde-format
+#| msgid "Scan Preview Image"
+msgid "Scan Preview Image (%1)"
+msgstr "Pregledna slika skeniranja"
+
+#: ksanewidget.cpp:122
+#, kde-format
+msgctxt "Preview button text"
+msgid "Preview"
+msgstr "Pregled"
+
+#: ksanewidget.cpp:127
+#, fuzzy, kde-format
+#| msgid "Scan Final Image"
+msgid "Scan Final Image (%1)"
+msgstr "Završna slika skeniranja"
+
+#: ksanewidget.cpp:128
+#, kde-format
+msgctxt "Final scan button text"
+msgid "Scan"
+msgstr "Skeniraj"
+
+#: ksanewidget.cpp:169
+#, kde-format
+msgid "Basic Options"
+msgstr "Osnovne opcije"
+
+#: ksanewidget.cpp:175
+#, fuzzy, kde-format
+#| msgid "Basic Options"
+msgid "Advanced Options"
+msgstr "Osnovne opcije"
+
+#: ksanewidget.cpp:181
+#, kde-format
+msgid "Scanner Specific Options"
+msgstr "Opcije za specifični skener"
+
+#: ksanewidget.cpp:322
+#, kde-format
+msgid "Authentication required for resource: %1"
+msgstr "Potrebna je autentifikacija za resurs: %1"
+
+#: ksanewidget.cpp:484
+#, kde-format
+msgid ""
+"The image data contained 16 bits per color, but the color depth has been "
+"truncated to 8 bits per color."
+msgstr ""
+"Podaci slike sadržavali su 16 bita po boji, no dubina boja je smanjena na 8 "
+"bita po boji."
+
+#: ksanewidget_p.cpp:428
+#, kde-format
+msgid "Scan Area Size"
+msgstr ""
+
+#: ksanewidget_p.cpp:433
+#, fuzzy, kde-format
+#| msgctxt "SpinBox parameter unit"
+#| msgid " mm"
+msgid " mm"
+msgstr " mm"
+
+#: ksanewidget_p.cpp:433
+#, kde-format
+msgid " inch"
+msgstr ""
+
+#: ksanewidget_p.cpp:435
+#, kde-format
+msgid "Width"
+msgstr ""
+
+#: ksanewidget_p.cpp:440
+#, kde-format
+msgid "Height"
+msgstr ""
+
+#: ksanewidget_p.cpp:445
+#, kde-format
+msgid "X Offset"
+msgstr ""
+
+#: ksanewidget_p.cpp:450
+#, kde-format
+msgid "Y Offset"
+msgstr ""
+
+#: ksanewidget_p.cpp:511
+#, kde-format
+msgid "Image intensity"
+msgstr ""
+
+#: ksanewidget_p.cpp:515
+#, kde-format
+msgid ""
+"Gamma-correction table. In color mode this option equally affects the red, "
+"green, and blue channels simultaneously (i.e., it is an intensity gamma "
+"table)."
+msgstr ""
+
+#: ksanewidget_p.cpp:523
+#, kde-format
+msgid "Separate color intensity tables"
+msgstr "Razdvoji tablice jačina boja"
+
+#: ksanewidget_p.cpp:1203
+#, kde-format
+msgctxt "This is compared to the option string returned by sane"
+msgid "Transparency"
+msgstr "Transparentnost"
+
+#: ksanewidget_p.cpp:1205
+#, kde-format
+msgctxt "This is compared to the option string returned by sane"
+msgid "Negative"
+msgstr "Negativ"
+
+#: ksanewidget_p.cpp:1252
+#, kde-format
+msgid "Next scan starts in %1 s."
+msgstr ""
+
+#: ksanewidget_p.cpp:1265
+#, kde-format
+msgctxt "@title:window"
+msgid "General Error"
+msgstr ""
+
+#: ksanewidget_p.cpp:1268
+#, kde-format
+msgctxt "@title:window"
+msgid "Information"
+msgstr ""
+
+#: ksanewidget_p.cpp:1350
+#, kde-format
+msgid "Custom"
+msgstr ""
+
+#: ksanewidget_p.cpp:1375
+#, kde-format
+msgctxt "Page size landscape"
+msgid " Landscape"
+msgstr ""
+
+#: widgets/ksaneoptionwidget.cpp:66
+#, kde-format
+msgctxt "Label for a scanner option"
+msgid "%1:"
+msgstr ""
+
+#: widgets/labeledcombo.cpp:155 widgets/labeledcombo.cpp:186
+#, kde-format
+msgctxt "Parameter and Unit"
+msgid "%1 Pixel"
+msgid_plural "%1 Pixels"
+msgstr[0] "%1 piksel"
+msgstr[1] "%1 piksela"
+msgstr[2] "%1 piksela"
+
+#: widgets/labeledcombo.cpp:158 widgets/labeledcombo.cpp:189
+#, kde-format
+msgctxt "Parameter and Unit"
+msgid "%1 Bit"
+msgid_plural "%1 Bits"
+msgstr[0] "%1 bit"
+msgstr[1] "%1 bita"
+msgstr[2] "%1 bita"
+
+#: widgets/labeledcombo.cpp:161 widgets/labeledcombo.cpp:192
+#, fuzzy, kde-format
+#| msgid "%1 mm"
+#| msgid_plural "%1 mm"
+msgctxt "Parameter and Unit (Millimeter)"
+msgid "%1 mm"
+msgstr "%1 mm"
+
+#: widgets/labeledcombo.cpp:164 widgets/labeledcombo.cpp:195
+#, fuzzy, kde-format
+#| msgid "%1 DPI"
+#| msgid_plural "%1 DPI"
+msgctxt "Parameter and Unit (Dots Per Inch)"
+msgid "%1 DPI"
+msgstr "%1 DPI"
+
+#: widgets/labeledcombo.cpp:167 widgets/labeledcombo.cpp:198
+#, fuzzy, kde-format
+#| msgid "%1 %"
+#| msgid_plural "%1 %"
+msgctxt "Parameter and Unit (Percentage)"
+msgid "%1 %"
+msgstr "%1 %"
+
+#: widgets/labeledcombo.cpp:170 widgets/labeledcombo.cpp:201
+#, fuzzy, kde-format
+#| msgid "%1 usec"
+#| msgid_plural "%1 usec"
+msgctxt "Parameter and Unit (Microseconds)"
+msgid "%1 µs"
+msgstr "%1 usec"
+
+#: widgets/labeledcombo.cpp:173 widgets/labeledcombo.cpp:204
+#, kde-format
+msgctxt "Parameter and Unit (seconds)"
+msgid "%1 s"
+msgstr ""
+
+#: widgets/labeledcombo.cpp:176 widgets/labeledcombo.cpp:207
+#, fuzzy, kde-format
+#| msgid "%1 %"
+#| msgid_plural "%1 %"
+msgid "%1"
+msgstr "%1 %"
+
+#: widgets/labeledentry.cpp:52
+#, kde-format
+msgctxt "Label for button to reset text in a KLineEdit"
+msgid "Reset"
+msgstr "Poništi"
+
+#: widgets/labeledentry.cpp:54
+#, kde-format
+msgctxt "Label for button to write text in a KLineEdit to sane"
+msgid "Set"
+msgstr "Postavi"
+
+#: widgets/labeledfslider.cpp:40
+#, kde-format
+msgctxt "Double numbers. SpinBox parameter unit"
+msgid " Pixels"
+msgstr " Pixela"
+
+#: widgets/labeledfslider.cpp:43
+#, kde-format
+msgctxt "Double numbers. SpinBox parameter unit"
+msgid " Bits"
+msgstr " Bita"
+
+#: widgets/labeledfslider.cpp:46
+#, fuzzy, kde-format
+#| msgctxt "SpinBox parameter unit"
+#| msgid " mm"
+msgctxt "Double numbers. SpinBox parameter unit (Millimeter)"
+msgid " mm"
+msgstr " mm"
+
+#: widgets/labeledfslider.cpp:49
+#, fuzzy, kde-format
+#| msgctxt "SpinBox parameter unit"
+#| msgid " DPI"
+msgctxt "Double numbers. SpinBox parameter unit (Dots Per Inch)"
+msgid " DPI"
+msgstr " DPI"
+
+#: widgets/labeledfslider.cpp:52
+#, fuzzy, kde-format
+#| msgctxt "SpinBox parameter unit"
+#| msgid " %"
+msgctxt "Double numbers. SpinBox parameter unit (Percentage)"
+msgid " %"
+msgstr " %"
+
+#: widgets/labeledfslider.cpp:55
+#, kde-format
+msgctxt "Double numbers. SpinBox parameter unit (Microseconds)"
+msgid " µs"
+msgstr ""
+
+#: widgets/labeledfslider.cpp:58
+#, kde-format
+msgctxt "SpinBox parameter unit (seconds), float"
+msgid " s"
+msgstr ""
+
+#: widgets/labeledgamma.cpp:43
+#, kde-format
+msgid "Brightness"
+msgstr "Osvjetljenje"
+
+#: widgets/labeledgamma.cpp:46
+#, kde-format
+msgid "Contrast"
+msgstr "Kontrast"
+
+#: widgets/labeledgamma.cpp:49
+#, kde-format
+msgid "Gamma"
+msgstr "Gama"
+
+#: widgets/labeledslider.cpp:42
+#, kde-format
+msgctxt "SpinBox parameter unit"
+msgid " Pixel"
+msgid_plural " Pixels"
+msgstr[0] " Pixel"
+msgstr[1] " Pixela"
+msgstr[2] " Pixela"
+
+#: widgets/labeledslider.cpp:45
+#, kde-format
+msgctxt "SpinBox parameter unit"
+msgid " Bit"
+msgid_plural " Bits"
+msgstr[0] " Bit"
+msgstr[1] " Bita"
+msgstr[2] " Bita"
+
+#: widgets/labeledslider.cpp:48
+#, fuzzy, kde-format
+#| msgctxt "SpinBox parameter unit"
+#| msgid " mm"
+msgctxt "SpinBox parameter unit (Millimeter)"
+msgid " mm"
+msgid_plural " mm"
+msgstr[0] " mm"
+msgstr[1] " mm"
+msgstr[2] " mm"
+
+#: widgets/labeledslider.cpp:51
+#, fuzzy, kde-format
+#| msgctxt "SpinBox parameter unit"
+#| msgid " DPI"
+msgctxt "SpinBox parameter unit (Dots Per Inch)"
+msgid " DPI"
+msgid_plural " DPI"
+msgstr[0] " DPI"
+msgstr[1] " DPI"
+msgstr[2] " DPI"
+
+#: widgets/labeledslider.cpp:54
+#, fuzzy, kde-format
+#| msgctxt "SpinBox parameter unit"
+#| msgid " %"
+msgctxt "SpinBox parameter unit (Percentage)"
+msgid " %"
+msgid_plural " %"
+msgstr[0] " %"
+msgstr[1] " %"
+msgstr[2] " %"
+
+#: widgets/labeledslider.cpp:57
+#, kde-format
+msgctxt "SpinBox parameter unit (Microseconds)"
+msgid " µs"
+msgid_plural " µs"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#: widgets/labeledslider.cpp:60
+#, kde-format
+msgctxt "SpinBox parameter unit (seconds)"
+msgid " s"
+msgid_plural " s"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+
+#~ msgid "Invert colors"
+#~ msgstr "Obrni boje"
+
+#~ msgid "%1 Pixel"
+#~ msgid_plural "%1 Pixels"
+#~ msgstr[0] "%1 pixel"
+#~ msgstr[1] "%1 pixela"
+#~ msgstr[2] "%1 pixela"
+
+#~ msgid "%1 Bit"
+#~ msgid_plural "%1 Bits"
+#~ msgstr[0] "%1 Bit"
+#~ msgstr[1] "%1 Bita"
+#~ msgstr[2] "%1 Bita"
+
+#~ msgid "%1 mm"
+#~ msgid_plural "%1 mm"
+#~ msgstr[0] "%1 mm"
+#~ msgstr[1] "%1 mm"
+#~ msgstr[2] "%1 mm"
+
+#~ msgid "%1 DPI"
+#~ msgid_plural "%1 DPI"
+#~ msgstr[0] "%1 DPI"
+#~ msgstr[1] "%1 DPI"
+#~ msgstr[2] "%1 DPI"
+
+#, fuzzy
+#~| msgid "%1 usec"
+#~| msgid_plural "%1 usec"
+#~ msgid "%1 µs"
+#~ msgid_plural "%1 µs"
+#~ msgstr[0] "%1 usec"
+#~ msgstr[1] "%1 usec"
+#~ msgstr[2] "%1 usec"
+
+#~ msgctxt "Parameter and Unit"
+#~ msgid "%1 mm"
+#~ msgstr "%1 mm"
+
+#~ msgctxt "Parameter and Unit"
+#~ msgid "%1 DPI"
+#~ msgstr "%1 DPI"
+
+#~ msgctxt "Parameter and Unit"
+#~ msgid "%1 %"
+#~ msgstr "%1 %"
+
+#~ msgctxt "Parameter and Unit"
+#~ msgid "%1 usec"
+#~ msgid_plural "%1 usec"
+#~ msgstr[0] "%1 usec"
+#~ msgstr[1] "%1 usec"
+#~ msgstr[2] "%1 usec"
+
+#~ msgctxt "SpinBox parameter unit"
+#~ msgid " usec"
+#~ msgid_plural " usecs"
+#~ msgstr[0] " usec"
+#~ msgstr[1] " usec"
+#~ msgstr[2] " usecs"
+
+#~ msgctxt "Double numbers. SpinBox parameter unit"
+#~ msgid " mm"
+#~ msgstr " mm"
+
+#~ msgctxt "Double numbers. SpinBox parameter unit"
+#~ msgid " DPI"
+#~ msgstr " DPI"
+
+#~ msgctxt "Double numbers. SpinBox parameter unit"
+#~ msgid " %"
+#~ msgstr " %"
+
+#~ msgctxt "Double numbers. SpinBox parameter unit"
+#~ msgid " usec"
+#~ msgstr " usec"

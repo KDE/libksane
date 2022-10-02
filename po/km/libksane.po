@@ -1,0 +1,591 @@
+# translation of libksane.po to Khmer
+# Copyright (C) YEAR This_file_is_part_of_KDE
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Khoem Sokhem <khoemsokhem@khmeros.info>, 2008, 2009, 2010, 2012.
+# Eng Vannak <evannak@khmeros.info>, 2008.
+# Seng Sutha, 2010.
+msgid ""
+msgstr ""
+"Project-Id-Version: libksane\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2022-06-13 00:54+0000\n"
+"PO-Revision-Date: 2012-06-11 14:10+0700\n"
+"Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
+"Language-Team: Khmer\n"
+"Language: km\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: KBabel 1.11.4\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: ../ksanetwain/ktwain_widget.cpp:29
+#, kde-format
+msgid "Open scan dialog"
+msgstr "បើក​ប្រអប់​ស្កេន"
+
+#: i18n-hplip.cpp:3
+#, kde-format
+msgid "None"
+msgstr "គ្មាន"
+
+#: i18n-hplip.cpp:4
+#, kde-format
+msgid "MH"
+msgstr "MH"
+
+#: i18n-hplip.cpp:5
+#, kde-format
+msgid "MR"
+msgstr "MR"
+
+#: i18n-hplip.cpp:6
+#, kde-format
+msgid "MMR"
+msgstr "MMR"
+
+#: i18n-hplip.cpp:7
+#, kde-format
+msgid "JPEG"
+msgstr "JPEG"
+
+#: i18n-hplip.cpp:8
+#, kde-format
+msgid "Auto"
+msgstr "ស្វ័យ​ប្រវត្តិ"
+
+#: i18n-hplip.cpp:9
+#, kde-format
+msgid "Flatbed"
+msgstr "Flatbed"
+
+#: i18n-hplip.cpp:10
+#, kde-format
+msgid "ADF"
+msgstr "ADF"
+
+#: i18n-hplip.cpp:11
+#, kde-format
+msgid "Advanced"
+msgstr "កម្រិតខ្ពស់"
+
+#: i18n-hplip.cpp:12
+#, kde-format
+msgid "Compression"
+msgstr "ការ​បង្ហាប់"
+
+#: i18n-hplip.cpp:13
+#, kde-format
+msgid ""
+"Selects the scanner compression method for faster scans, possibly at the "
+"expense of image quality."
+msgstr "ជ្រើស​វិធីសាស្ត្រ​បង្ហាប់​របស់ម៉ាស៊ីន​ស្កេន​ដើម្បី​ស្កេន​កាន់​តែ​រហ័ស អាច​នៅពេល​ចំណាយ​គុណភាព​រូបភាព ។"
+
+#: i18n-hplip.cpp:15
+#, kde-format
+msgid "JPEG compression factor"
+msgstr "កត្តា​បង្ហាប់ JPEG"
+
+#: i18n-hplip.cpp:16
+#, kde-format
+msgid ""
+"Sets the scanner JPEG compression factor. Larger numbers mean better "
+"compression, and smaller numbers mean better image quality."
+msgstr ""
+"កំណត់​​កត្តា​បង្ហាប់ JPEG របស់​ម៉ាស៊ីន​ស្កេន ។ លេខ​ធំ​មាន​ន័យ​ថា​ការ​បង្ហាប់​កាន់តែ​ល្អ ហើយលេខ​តូច​​មាន​ន័យ​ថា​"
+"គុណភាព​រូបភាព​​ល្អ ។"
+
+#: i18n-hplip.cpp:19
+#, kde-format
+msgid "Batch scan"
+msgstr "ស្កេន​ Batch"
+
+#: i18n-hplip.cpp:20
+#, kde-format
+msgid "Enables continuous scanning with automatic document feeder (ADF)."
+msgstr "អនុញ្ញាត​កា​រស្កេន​បន្ត​ជា​មួយ​នឹង​​ ADF ។"
+
+#: i18n-hplip.cpp:21
+#, kde-format
+msgid "Duplex"
+msgstr "ទ្វេទិស"
+
+#: i18n-hplip.cpp:22
+#, kde-format
+msgid "Enables scanning on both sides of the page."
+msgstr "អនុញ្ញាត​ឲ្យ​ស្កេន​ទំព័រ​ទាំង​សងខាង ។"
+
+#: i18n-hplip.cpp:23
+#, kde-format
+msgid "Geometry"
+msgstr "ធរណីមាត្រ"
+
+#: i18n-hplip.cpp:24
+#, kde-format
+msgid "Length measurement"
+msgstr "ប្រវែង​រង្វាស់"
+
+#: i18n-hplip.cpp:25
+#, kde-format
+msgid ""
+"Selects how the scanned image length is measured and reported, which is "
+"impossible to know in advance for scrollfed scans."
+msgstr ""
+"ជ្រើស​វិធី​ដែល​ប្រវែង​រូបភាព​ដែល​ស្កេន​ត្រូវ​បានវាស់ និង​រាយការណ៍ ដែល​អាច​ស្គាល់​ជា​មុន​សម្រាប់​ការ​ស្កេន​ដែល​"
+"បាន​រមូរ ។"
+
+#: i18n-hplip.cpp:27
+#, kde-format
+msgid "Unknown"
+msgstr "មិន​ស្គាល់"
+
+#: i18n-hplip.cpp:28
+#, kde-format
+msgid "Unlimited"
+msgstr "គ្មាន​ដែន​កំណត់"
+
+#: i18n-hplip.cpp:29
+#, kde-format
+msgid "Approximate"
+msgstr "សមរម្យ"
+
+#: i18n-hplip.cpp:30
+#, kde-format
+msgid "Padded"
+msgstr "បានទ្រាប់"
+
+#: i18n-hplip.cpp:31
+#, kde-format
+msgid "Exact"
+msgstr "ពិតប្រាកដ"
+
+#: i18n-hplip.cpp:32
+#, kde-format
+msgid "???"
+msgstr "???"
+
+#: ksanedevicedialog.cpp:36
+#, kde-format
+msgid ""
+"<html>The SANE (Scanner Access Now Easy) system could not find any device."
+"<br>Check that the scanner is plugged in and turned on<br>or check your "
+"systems scanner setup.<br>For details about SANE see the <a href='http://www."
+"sane-project.org/'>SANE homepage</a>.</html>"
+msgstr ""
+
+#: ksanedevicedialog.cpp:58
+#, kde-format
+msgid "Reload devices list"
+msgstr "ផ្ទុក​បញ្ជី​ឧបករណ៍​ឡើងវិញ"
+
+#: ksanedevicedialog.cpp:82
+#, kde-format
+msgid "Looking for devices. Please wait."
+msgstr "រកមើល​ឧបករណ៍ ។ សូម​រង់ចាំ ។"
+
+#: ksanedevicedialog.cpp:117
+#, kde-format
+msgid "Sorry. No devices found."
+msgstr "សូម​ទោស ។ រក​មិនឃើញ​ឧបករណ៍​ទេ ។"
+
+#: ksanedevicedialog.cpp:127
+#, kde-format
+msgid "Found devices:"
+msgstr "រក​ឃើញ​ឧបករណ៍ ៖"
+
+#: ksaneviewer.cpp:105 ksanewidget.cpp:86
+#, kde-format
+msgid "Zoom In"
+msgstr "ពង្រីក"
+
+#: ksaneviewer.cpp:108 ksanewidget.cpp:92
+#, kde-format
+msgid "Zoom Out"
+msgstr "បង្រួម"
+
+#: ksaneviewer.cpp:111 ksanewidget.cpp:98
+#, kde-format
+msgid "Zoom to Selection"
+msgstr "ពង្រីក​តាម​ការ​ជ្រើស"
+
+#: ksaneviewer.cpp:114 ksanewidget.cpp:104
+#, kde-format
+msgid "Zoom to Fit"
+msgstr "ពង្រីក​ឲ្យ​សម"
+
+#: ksaneviewer.cpp:117 ksanewidget.cpp:110
+#, kde-format
+msgid "Clear Selections"
+msgstr "ជម្រះជម្រើស"
+
+#: ksanewidget.cpp:58
+#, kde-format
+msgid "Waiting for the scan to start."
+msgstr "រង់ចាំ​ការ​វិភាគ​​ដើម្បី​​ចាប់ផ្តើម ។"
+
+#: ksanewidget.cpp:71
+#, kde-format
+msgid "Cancel current scan operation"
+msgstr "បោះបង់​ប្រតិបត្តិ​ស្កេន​បច្ចុប្បន្ន"
+
+#: ksanewidget.cpp:121
+#, fuzzy, kde-format
+#| msgid "Scan Preview Image"
+msgid "Scan Preview Image (%1)"
+msgstr "ស្កេន​រូបភាព​មើលជា​មុន"
+
+#: ksanewidget.cpp:122
+#, kde-format
+msgctxt "Preview button text"
+msgid "Preview"
+msgstr "មើល​ជាមុន"
+
+#: ksanewidget.cpp:127
+#, fuzzy, kde-format
+#| msgid "Scan Final Image"
+msgid "Scan Final Image (%1)"
+msgstr "ស្កេន​រូបភាព​ចុងក្រោយ"
+
+#: ksanewidget.cpp:128
+#, kde-format
+msgctxt "Final scan button text"
+msgid "Scan"
+msgstr "ស្កេន"
+
+#: ksanewidget.cpp:169
+#, kde-format
+msgid "Basic Options"
+msgstr "ជម្រើស​មូលដ្ឋាន"
+
+#: ksanewidget.cpp:175
+#, fuzzy, kde-format
+#| msgid "Basic Options"
+msgid "Advanced Options"
+msgstr "ជម្រើស​មូលដ្ឋាន"
+
+#: ksanewidget.cpp:181
+#, kde-format
+msgid "Scanner Specific Options"
+msgstr "ជម្រើស​ជាក់លាក់​របស់​ម៉ាស៊ីនស្កេន​"
+
+#: ksanewidget.cpp:322
+#, kde-format
+msgid "Authentication required for resource: %1"
+msgstr "ត្រូវការ​ការ​ផ្ទៀងផ្ទាត់​ភាព​ត្រឹមត្រូវ​សម្រាប់​ធនធាន ៖ %1"
+
+#: ksanewidget.cpp:484
+#, kde-format
+msgid ""
+"The image data contained 16 bits per color, but the color depth has been "
+"truncated to 8 bits per color."
+msgstr "ទិន្នន័យ​រូបភាព​មាន​ ១៦ ប៊ីត​/ពណ៌ ប៉ុន្តែ​ជម្រៅ​ពណ៌​ត្រូវ​បានកាត់​ឲ្យ​ខ្លី​ទៅ ៨ ប៊ីត/ពណ៌ ។"
+
+#: ksanewidget_p.cpp:428
+#, kde-format
+msgid "Scan Area Size"
+msgstr ""
+
+#: ksanewidget_p.cpp:433
+#, fuzzy, kde-format
+#| msgctxt "SpinBox parameter unit (Millimeter)"
+#| msgid " mm"
+msgid " mm"
+msgstr " ម.ម​."
+
+#: ksanewidget_p.cpp:433
+#, kde-format
+msgid " inch"
+msgstr ""
+
+#: ksanewidget_p.cpp:435
+#, kde-format
+msgid "Width"
+msgstr ""
+
+#: ksanewidget_p.cpp:440
+#, kde-format
+msgid "Height"
+msgstr ""
+
+#: ksanewidget_p.cpp:445
+#, kde-format
+msgid "X Offset"
+msgstr ""
+
+#: ksanewidget_p.cpp:450
+#, kde-format
+msgid "Y Offset"
+msgstr ""
+
+#: ksanewidget_p.cpp:511
+#, kde-format
+msgid "Image intensity"
+msgstr ""
+
+#: ksanewidget_p.cpp:515
+#, kde-format
+msgid ""
+"Gamma-correction table. In color mode this option equally affects the red, "
+"green, and blue channels simultaneously (i.e., it is an intensity gamma "
+"table)."
+msgstr ""
+
+#: ksanewidget_p.cpp:523
+#, kde-format
+msgid "Separate color intensity tables"
+msgstr "តារាង​អាំងតង់ស៊ីតេ​ពណ៌​ដោយ​ឡែក"
+
+#: ksanewidget_p.cpp:1203
+#, kde-format
+msgctxt "This is compared to the option string returned by sane"
+msgid "Transparency"
+msgstr "ភាព​​ថ្លា"
+
+#: ksanewidget_p.cpp:1205
+#, kde-format
+msgctxt "This is compared to the option string returned by sane"
+msgid "Negative"
+msgstr "បដិសេធ"
+
+#: ksanewidget_p.cpp:1252
+#, kde-format
+msgid "Next scan starts in %1 s."
+msgstr ""
+
+#: ksanewidget_p.cpp:1265
+#, kde-format
+msgctxt "@title:window"
+msgid "General Error"
+msgstr ""
+
+#: ksanewidget_p.cpp:1268
+#, kde-format
+msgctxt "@title:window"
+msgid "Information"
+msgstr ""
+
+#: ksanewidget_p.cpp:1350
+#, kde-format
+msgid "Custom"
+msgstr ""
+
+#: ksanewidget_p.cpp:1375
+#, kde-format
+msgctxt "Page size landscape"
+msgid " Landscape"
+msgstr ""
+
+#: widgets/ksaneoptionwidget.cpp:66
+#, kde-format
+msgctxt "Label for a scanner option"
+msgid "%1:"
+msgstr "%1 ៖"
+
+#: widgets/labeledcombo.cpp:155 widgets/labeledcombo.cpp:186
+#, kde-format
+msgctxt "Parameter and Unit"
+msgid "%1 Pixel"
+msgid_plural "%1 Pixels"
+msgstr[0] "%1 ភីកសែល"
+
+#: widgets/labeledcombo.cpp:158 widgets/labeledcombo.cpp:189
+#, kde-format
+msgctxt "Parameter and Unit"
+msgid "%1 Bit"
+msgid_plural "%1 Bits"
+msgstr[0] "%1 ប៊ីត"
+
+#: widgets/labeledcombo.cpp:161 widgets/labeledcombo.cpp:192
+#, kde-format
+msgctxt "Parameter and Unit (Millimeter)"
+msgid "%1 mm"
+msgstr "%1 ម.ម​."
+
+#: widgets/labeledcombo.cpp:164 widgets/labeledcombo.cpp:195
+#, kde-format
+msgctxt "Parameter and Unit (Dots Per Inch)"
+msgid "%1 DPI"
+msgstr "%1 DPI"
+
+#: widgets/labeledcombo.cpp:167 widgets/labeledcombo.cpp:198
+#, kde-format
+msgctxt "Parameter and Unit (Percentage)"
+msgid "%1 %"
+msgstr "%1 %"
+
+#: widgets/labeledcombo.cpp:170 widgets/labeledcombo.cpp:201
+#, kde-format
+msgctxt "Parameter and Unit (Microseconds)"
+msgid "%1 µs"
+msgstr "%1 µs"
+
+#: widgets/labeledcombo.cpp:173 widgets/labeledcombo.cpp:204
+#, kde-format
+msgctxt "Parameter and Unit (seconds)"
+msgid "%1 s"
+msgstr ""
+
+#: widgets/labeledcombo.cpp:176 widgets/labeledcombo.cpp:207
+#, fuzzy, kde-format
+#| msgctxt "Label for a scanner option"
+#| msgid "%1:"
+msgid "%1"
+msgstr "%1 ៖"
+
+#: widgets/labeledentry.cpp:52
+#, kde-format
+msgctxt "Label for button to reset text in a KLineEdit"
+msgid "Reset"
+msgstr "កំណត់​ឡើង​វិញ"
+
+#: widgets/labeledentry.cpp:54
+#, kde-format
+msgctxt "Label for button to write text in a KLineEdit to sane"
+msgid "Set"
+msgstr "កំណត់"
+
+#: widgets/labeledfslider.cpp:40
+#, kde-format
+msgctxt "Double numbers. SpinBox parameter unit"
+msgid " Pixels"
+msgstr " ភីកសែល"
+
+#: widgets/labeledfslider.cpp:43
+#, kde-format
+msgctxt "Double numbers. SpinBox parameter unit"
+msgid " Bits"
+msgstr " ប៊ីត"
+
+#: widgets/labeledfslider.cpp:46
+#, kde-format
+msgctxt "Double numbers. SpinBox parameter unit (Millimeter)"
+msgid " mm"
+msgstr " ម.ម​."
+
+#: widgets/labeledfslider.cpp:49
+#, kde-format
+msgctxt "Double numbers. SpinBox parameter unit (Dots Per Inch)"
+msgid " DPI"
+msgstr " DPI"
+
+#: widgets/labeledfslider.cpp:52
+#, kde-format
+msgctxt "Double numbers. SpinBox parameter unit (Percentage)"
+msgid " %"
+msgstr " %"
+
+#: widgets/labeledfslider.cpp:55
+#, kde-format
+msgctxt "Double numbers. SpinBox parameter unit (Microseconds)"
+msgid " µs"
+msgstr " µs"
+
+#: widgets/labeledfslider.cpp:58
+#, fuzzy, kde-format
+#| msgctxt "Double numbers. SpinBox parameter unit (Microseconds)"
+#| msgid " µs"
+msgctxt "SpinBox parameter unit (seconds), float"
+msgid " s"
+msgstr " µs"
+
+#: widgets/labeledgamma.cpp:43
+#, kde-format
+msgid "Brightness"
+msgstr "ពន្លឺ"
+
+#: widgets/labeledgamma.cpp:46
+#, kde-format
+msgid "Contrast"
+msgstr "កម្រិត​ពន្លឺ​"
+
+#: widgets/labeledgamma.cpp:49
+#, kde-format
+msgid "Gamma"
+msgstr "ហ្គាម៉ា"
+
+#: widgets/labeledslider.cpp:42
+#, kde-format
+msgctxt "SpinBox parameter unit"
+msgid " Pixel"
+msgid_plural " Pixels"
+msgstr[0] " ភីកសែល"
+
+#: widgets/labeledslider.cpp:45
+#, kde-format
+msgctxt "SpinBox parameter unit"
+msgid " Bit"
+msgid_plural " Bits"
+msgstr[0] " ប៊ីត"
+
+#: widgets/labeledslider.cpp:48
+#, fuzzy, kde-format
+#| msgctxt "SpinBox parameter unit (Millimeter)"
+#| msgid " mm"
+msgctxt "SpinBox parameter unit (Millimeter)"
+msgid " mm"
+msgid_plural " mm"
+msgstr[0] " ម.ម​."
+
+#: widgets/labeledslider.cpp:51
+#, fuzzy, kde-format
+#| msgctxt "SpinBox parameter unit (Dots Per Inch)"
+#| msgid " DPI"
+msgctxt "SpinBox parameter unit (Dots Per Inch)"
+msgid " DPI"
+msgid_plural " DPI"
+msgstr[0] " DPI"
+
+#: widgets/labeledslider.cpp:54
+#, fuzzy, kde-format
+#| msgctxt "SpinBox parameter unit (Percentage)"
+#| msgid " %"
+msgctxt "SpinBox parameter unit (Percentage)"
+msgid " %"
+msgid_plural " %"
+msgstr[0] " %"
+
+#: widgets/labeledslider.cpp:57
+#, fuzzy, kde-format
+#| msgctxt "SpinBox parameter unit (Microseconds)"
+#| msgid " µs"
+msgctxt "SpinBox parameter unit (Microseconds)"
+msgid " µs"
+msgid_plural " µs"
+msgstr[0] " µs"
+
+#: widgets/labeledslider.cpp:60
+#, fuzzy, kde-format
+#| msgctxt "Double numbers. SpinBox parameter unit (Microseconds)"
+#| msgid " µs"
+msgctxt "SpinBox parameter unit (seconds)"
+msgid " s"
+msgid_plural " s"
+msgstr[0] " µs"
+
+#~ msgid "Invert colors"
+#~ msgstr "ដាក់​បញ្ច្រាស​ពណ៌"
+
+#~ msgid "%1 Pixel"
+#~ msgid_plural "%1 Pixels"
+#~ msgstr[0] "%1 ភីកសែល"
+
+#~ msgid "%1 Bit"
+#~ msgid_plural "%1 Bits"
+#~ msgstr[0] "%1 ប៊ីត"
+
+#~ msgid "%1 mm"
+#~ msgid_plural "%1 mm"
+#~ msgstr[0] "%1 ម.ម​."
+
+#~ msgid "%1 DPI"
+#~ msgid_plural "%1 DPI"
+#~ msgstr[0] "%1 DPI"
+
+#~ msgid "%1 %"
+#~ msgid_plural "%1 %"
+#~ msgstr[0] "%1 %"
+
+#~ msgid "%1 µs"
+#~ msgid_plural "%1 µs"
+#~ msgstr[0] "%1 µs"
