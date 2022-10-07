@@ -565,6 +565,3 @@ msgid " s"
 msgid_plural " s"
 msgstr[0] ""
 msgstr[1] ""
-
-#~ msgid "Invert colors"
-#~ msgstr "色を反転"
