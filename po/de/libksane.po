@@ -4,20 +4,21 @@
 # Panagiotis Papadopoulos <pano_90@gmx.net>, 2010, 2011.
 # Frederik Schwarzer <schwarzer@kde.org>, 2010, 2012, 2022.
 # Johannes Obermayr <johannesobermayr@gmx.de>, 2010.
+# Frank Steinmetzger <dev-kde@felsenfleischer.de>, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: libksane\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-06-13 00:54+0000\n"
-"PO-Revision-Date: 2022-03-11 20:51+0100\n"
-"Last-Translator: Frederik Schwarzer <schwarzer@kde.org>\n"
-"Language-Team: German <kde-i18n-doc@kde.org>\n"
+"PO-Revision-Date: 2022-11-10 20:47+0100\n"
+"Last-Translator: Frank Steinmetzger <dev-kde@felsenfleischer.de>\n"
+"Language-Team: German <kde-i18n-de@kde.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 21.12.3\n"
+"X-Generator: Lokalize 22.08.3\n"
 
 #: ../ksanetwain/ktwain_widget.cpp:29
 #, kde-format
@@ -336,6 +337,9 @@ msgid ""
 "green, and blue channels simultaneously (i.e., it is an intensity gamma "
 "table)."
 msgstr ""
+"Gammakorrekturtabelle. Im Farbmodus beeinflusst diese Option die Kanäle für "
+"rot, grün und blau gleichermaßen (sprich: es ist eine Leuchtwert-"
+"Gammatabelle)."
 
 #: ksanewidget_p.cpp:523
 #, kde-format
@@ -357,7 +361,7 @@ msgstr "Negativ"
 #: ksanewidget_p.cpp:1252
 #, kde-format
 msgid "Next scan starts in %1 s."
-msgstr ""
+msgstr "Nächster Scan startet in %1 s."
 
 #: ksanewidget_p.cpp:1265
 #, kde-format
