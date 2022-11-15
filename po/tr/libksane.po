@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kdegraphics-kde4\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-06-13 00:54+0000\n"
-"PO-Revision-Date: 2022-04-26 11:19+0300\n"
+"PO-Revision-Date: 2022-11-14 14:03+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 21.12.3\n"
+"X-Generator: Lokalize 22.08.3\n"
 
 #: ../ksanetwain/ktwain_widget.cpp:29
 #, kde-format
@@ -82,8 +82,8 @@ msgid ""
 "Selects the scanner compression method for faster scans, possibly at the "
 "expense of image quality."
 msgstr ""
-"Daha hızlı tarama için tarayıcının sıkıştırma yöntemini seçer, muhtemelen "
-"resim kalitesinden ödün verilir."
+"Daha hızlı tarama için tarayıcının sıkıştırma yöntemini seçer, büyük "
+"olasılıkla görsel kalitesinden ödün verilir."
 
 #: i18n-hplip.cpp:15
 #, kde-format
@@ -97,7 +97,7 @@ msgid ""
 "compression, and smaller numbers mean better image quality."
 msgstr ""
 "Tarayıcının JPEG sıkıştırma düzeyini ayarlar. Büyük numaralar daha fazla "
-"sıkıştırma, küçük numaralar daha iyi resim kalitesi demektir."
+"sıkıştırma, küçük numaralar daha iyi görsel kalitesi demektir."
 
 #: i18n-hplip.cpp:19
 #, kde-format
@@ -135,8 +135,8 @@ msgid ""
 "Selects how the scanned image length is measured and reported, which is "
 "impossible to know in advance for scrollfed scans."
 msgstr ""
-"Taranan resmin boyutunun nasıl ölçüleceğini ve bildirileceğini seçer ki "
-"kaydırma şeklinde beslenen taramalarda bunu bilmek imkansızdır."
+"Taranan görselin boyutunun nasıl ölçüleceğini ve bildirileceğini seçer ki "
+"kaydırma şeklinde beslenen taramalarda bunu bilmek olanaksızdır."
 
 #: i18n-hplip.cpp:27
 #, kde-format
@@ -239,7 +239,7 @@ msgstr "Geçerli tarama işlemini iptal et"
 #: ksanewidget.cpp:121
 #, kde-format
 msgid "Scan Preview Image (%1)"
-msgstr "Önizleme Resmini Tara (%1)"
+msgstr "Önizleme Görselini Tara (%1)"
 
 #: ksanewidget.cpp:122
 #, kde-format
@@ -284,7 +284,7 @@ msgid ""
 "The image data contained 16 bits per color, but the color depth has been "
 "truncated to 8 bits per color."
 msgstr ""
-"Resim verileri her renk için 18 bit içeriyor ama renk derinliği her renk "
+"Görsel verisi her renk için 18 bit içeriyor; ancak renk derinliği her renk "
 "için 8 bit ile sınırlandırılmış."
 
 #: ksanewidget_p.cpp:428
