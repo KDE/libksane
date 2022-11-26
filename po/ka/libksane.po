@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: libksane\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-06-13 00:54+0000\n"
-"PO-Revision-Date: 2022-09-27 08:12+0200\n"
+"PO-Revision-Date: 2022-11-25 12:38+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.1.1\n"
+"X-Generator: Poedit 3.2\n"
 
 #: ../ksanetwain/ktwain_widget.cpp:29
 #, kde-format
@@ -56,7 +56,7 @@ msgstr "ავტომატური"
 #: i18n-hplip.cpp:9
 #, kde-format
 msgid "Flatbed"
-msgstr ""
+msgstr "Flatbed"
 
 #: i18n-hplip.cpp:10
 #, kde-format
@@ -79,6 +79,8 @@ msgid ""
 "Selects the scanner compression method for faster scans, possibly at the "
 "expense of image quality."
 msgstr ""
+"სწრაფი სკანირებისთვის აირჩიეთ სკანერის შეკუმშვის მეთოდი. შესაძლებელია, "
+"გამოსახულების ხარისხის ფასად."
 
 #: i18n-hplip.cpp:15
 #, kde-format
@@ -91,6 +93,8 @@ msgid ""
 "Sets the scanner JPEG compression factor. Larger numbers mean better "
 "compression, and smaller numbers mean better image quality."
 msgstr ""
+"JPEG შეკუმშვის ფაქტორის დაყენება. მაღალი მნიშვნელობა უკეთეს შეკუმშვას "
+"ნიშნავს, მცირე მნიშვნელობებით გამოსახულების უკეთეს ხარისხს მიიღებთ."
 
 #: i18n-hplip.cpp:19
 #, kde-format
@@ -147,7 +151,7 @@ msgstr "დაახლოებით"
 #: i18n-hplip.cpp:30
 #, kde-format
 msgid "Padded"
-msgstr ""
+msgstr "Padded"
 
 #: i18n-hplip.cpp:31
 #, kde-format
@@ -216,12 +220,12 @@ msgstr "მონიშნულების გასუფთავება"
 #: ksanewidget.cpp:58
 #, kde-format
 msgid "Waiting for the scan to start."
-msgstr ""
+msgstr "სკანირების დაწყების მოლოდინი."
 
 #: ksanewidget.cpp:71
 #, kde-format
 msgid "Cancel current scan operation"
-msgstr ""
+msgstr "სკანირების მიმდინარე ოპერაციის გაუქმება"
 
 #: ksanewidget.cpp:121
 #, kde-format
@@ -323,7 +327,7 @@ msgstr ""
 #: ksanewidget_p.cpp:523
 #, kde-format
 msgid "Separate color intensity tables"
-msgstr ""
+msgstr "ფერის ინტენსივობის ცხრილების გაცალკევება"
 
 #: ksanewidget_p.cpp:1203
 #, kde-format
