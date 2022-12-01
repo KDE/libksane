@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libksane\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-06-13 00:54+0000\n"
+"POT-Creation-Date: 2022-12-01 00:44+0000\n"
 "PO-Revision-Date: 2021-11-08 18:32+0000\n"
 "Last-Translator: José Nuno Coelho Pires <zepires@gmail.com>\n"
 "Language-Team: pt <kde-i18n-pt@kde.org>\n"
@@ -199,27 +199,27 @@ msgstr "Infelizmente, não foram encontrados dispositivos."
 msgid "Found devices:"
 msgstr "Dispositivos encontrados:"
 
-#: ksaneviewer.cpp:105 ksanewidget.cpp:86
+#: ksaneviewer.cpp:109 ksanewidget.cpp:86
 #, kde-format
 msgid "Zoom In"
 msgstr "Ampliar"
 
-#: ksaneviewer.cpp:108 ksanewidget.cpp:92
+#: ksaneviewer.cpp:112 ksanewidget.cpp:92
 #, kde-format
 msgid "Zoom Out"
 msgstr "Reduzir"
 
-#: ksaneviewer.cpp:111 ksanewidget.cpp:98
+#: ksaneviewer.cpp:115 ksanewidget.cpp:98
 #, kde-format
 msgid "Zoom to Selection"
 msgstr "Ampliar para a Selecção"
 
-#: ksaneviewer.cpp:114 ksanewidget.cpp:104
+#: ksaneviewer.cpp:118 ksanewidget.cpp:104
 #, kde-format
 msgid "Zoom to Fit"
 msgstr "Ampliar para Caber"
 
-#: ksaneviewer.cpp:117 ksanewidget.cpp:110
+#: ksaneviewer.cpp:121 ksanewidget.cpp:110
 #, kde-format
 msgid "Clear Selections"
 msgstr "Limpar as Selecções"

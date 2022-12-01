@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libksane\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-06-13 00:54+0000\n"
+"POT-Creation-Date: 2022-12-01 00:44+0000\n"
 "PO-Revision-Date: 2012-06-11 14:10+0700\n"
 "Last-Translator: Khoem Sokhem <khoemsokhem@khmeros.info>\n"
 "Language-Team: Khmer\n"
@@ -194,27 +194,27 @@ msgstr "សូម​ទោស ។ រក​មិនឃើញ​ឧបករណ
 msgid "Found devices:"
 msgstr "រក​ឃើញ​ឧបករណ៍ ៖"
 
-#: ksaneviewer.cpp:105 ksanewidget.cpp:86
+#: ksaneviewer.cpp:109 ksanewidget.cpp:86
 #, kde-format
 msgid "Zoom In"
 msgstr "ពង្រីក"
 
-#: ksaneviewer.cpp:108 ksanewidget.cpp:92
+#: ksaneviewer.cpp:112 ksanewidget.cpp:92
 #, kde-format
 msgid "Zoom Out"
 msgstr "បង្រួម"
 
-#: ksaneviewer.cpp:111 ksanewidget.cpp:98
+#: ksaneviewer.cpp:115 ksanewidget.cpp:98
 #, kde-format
 msgid "Zoom to Selection"
 msgstr "ពង្រីក​តាម​ការ​ជ្រើស"
 
-#: ksaneviewer.cpp:114 ksanewidget.cpp:104
+#: ksaneviewer.cpp:118 ksanewidget.cpp:104
 #, kde-format
 msgid "Zoom to Fit"
 msgstr "ពង្រីក​ឲ្យ​សម"
 
-#: ksaneviewer.cpp:117 ksanewidget.cpp:110
+#: ksaneviewer.cpp:121 ksanewidget.cpp:110
 #, kde-format
 msgid "Clear Selections"
 msgstr "ជម្រះជម្រើស"

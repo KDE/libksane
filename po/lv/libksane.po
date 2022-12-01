@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libksane\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-06-13 00:54+0000\n"
+"POT-Creation-Date: 2022-12-01 00:44+0000\n"
 "PO-Revision-Date: 2010-01-02 20:40+0200\n"
 "Last-Translator: Viesturs Zarins <viesturs.zarins@mii.lu.lv>\n"
 "Language-Team: Latvian <locale@laka.lv>\n"
@@ -197,27 +197,27 @@ msgstr "Atvainojiet, nav atrasta neviena ierīce."
 msgid "Found devices:"
 msgstr "Atrastās ierīces:"
 
-#: ksaneviewer.cpp:105 ksanewidget.cpp:86
+#: ksaneviewer.cpp:109 ksanewidget.cpp:86
 #, kde-format
 msgid "Zoom In"
 msgstr "Tuvināt"
 
-#: ksaneviewer.cpp:108 ksanewidget.cpp:92
+#: ksaneviewer.cpp:112 ksanewidget.cpp:92
 #, kde-format
 msgid "Zoom Out"
 msgstr "Tālināt"
 
-#: ksaneviewer.cpp:111 ksanewidget.cpp:98
+#: ksaneviewer.cpp:115 ksanewidget.cpp:98
 #, kde-format
 msgid "Zoom to Selection"
 msgstr "Ietilpināt iezīmēto"
 
-#: ksaneviewer.cpp:114 ksanewidget.cpp:104
+#: ksaneviewer.cpp:118 ksanewidget.cpp:104
 #, kde-format
 msgid "Zoom to Fit"
 msgstr "Ietilpināt attēlu"
 
-#: ksaneviewer.cpp:117 ksanewidget.cpp:110
+#: ksaneviewer.cpp:121 ksanewidget.cpp:110
 #, kde-format
 msgid "Clear Selections"
 msgstr "Notīrīt iezīmējumus"

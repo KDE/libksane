@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdegraphics-kde4\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2022-06-13 00:54+0000\n"
+"POT-Creation-Date: 2022-12-01 00:44+0000\n"
 "PO-Revision-Date: 2022-11-14 14:03+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
@@ -201,27 +201,27 @@ msgstr "Üzgünüm. Hiçbir aygıt bulunamadı."
 msgid "Found devices:"
 msgstr "Bulunan aygıtlar:"
 
-#: ksaneviewer.cpp:105 ksanewidget.cpp:86
+#: ksaneviewer.cpp:109 ksanewidget.cpp:86
 #, kde-format
 msgid "Zoom In"
 msgstr "Büyüt"
 
-#: ksaneviewer.cpp:108 ksanewidget.cpp:92
+#: ksaneviewer.cpp:112 ksanewidget.cpp:92
 #, kde-format
 msgid "Zoom Out"
 msgstr "Küçült"
 
-#: ksaneviewer.cpp:111 ksanewidget.cpp:98
+#: ksaneviewer.cpp:115 ksanewidget.cpp:98
 #, kde-format
 msgid "Zoom to Selection"
 msgstr "Seçime Büyüt"
 
-#: ksaneviewer.cpp:114 ksanewidget.cpp:104
+#: ksaneviewer.cpp:118 ksanewidget.cpp:104
 #, kde-format
 msgid "Zoom to Fit"
 msgstr "Ekrana Sığdır"
 
-#: ksaneviewer.cpp:117 ksanewidget.cpp:110
+#: ksaneviewer.cpp:121 ksanewidget.cpp:110
 #, kde-format
 msgid "Clear Selections"
 msgstr "Seçimleri Temizle"
