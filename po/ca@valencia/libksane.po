@@ -88,7 +88,7 @@ msgstr ""
 #: i18n-hplip.cpp:15
 #, kde-format
 msgid "JPEG compression factor"
-msgstr "Factor de compressió del JPEG"
+msgstr "Factor de compressió de JPEG"
 
 #: i18n-hplip.cpp:16
 #, kde-format
@@ -96,9 +96,9 @@ msgid ""
 "Sets the scanner JPEG compression factor. Larger numbers mean better "
 "compression, and smaller numbers mean better image quality."
 msgstr ""
-"Establix el factor de compressió del JPEG de l'escàner. Els números més "
-"grans indiquen una compressió millor, els números més petits indiquen una "
-"millor qualitat de la imatge."
+"Establix el factor de compressió de JPEG de l'escàner. Els números més grans "
+"indiquen una compressió millor, els números més petits indiquen una millor "
+"qualitat de la imatge."
 
 #: i18n-hplip.cpp:19
 #, kde-format
