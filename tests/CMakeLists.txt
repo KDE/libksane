@@ -10,8 +10,8 @@ if (COMPILE_VIEWER_TESTAPP)
     target_link_libraries(viewertest
         PRIVATE
             KF5Sane
-            KF5::I18n
-            KF5::Wallet
-            KF5::WidgetsAddons
+            KF${KF_MAJOR_VERSION}::I18n
+            KF${KF_MAJOR_VERSION}::Wallet
+            KF${KF_MAJOR_VERSION}::WidgetsAddons
     )
 endif()

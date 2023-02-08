@@ -6,7 +6,7 @@ target_compile_definitions(KF5Sane PRIVATE -DTRANSLATION_DOMAIN=\"libksane\")
 
 if (KF5Wallet_FOUND)
     target_compile_definitions(KF5Sane PRIVATE -DHAVE_KF5WALLET)
-    target_link_libraries(KF5Sane PRIVATE KF5::Wallet)
+    target_link_libraries(KF5Sane PRIVATE KF${KF_MAJOR_VERSION}::Wallet)
 endif()
 
 target_sources(KF5Sane PRIVATE
@@ -49,9 +49,9 @@ target_link_libraries(KF5Sane
         Qt${QT_MAJOR_VERSION}::Gui
         Qt${QT_MAJOR_VERSION}::Widgets
     PRIVATE
-        KF5::I18n
-        KF5::WidgetsAddons
-        KF5::TextWidgets
+        KF${KF_MAJOR_VERSION}::I18n
+        KF${KF_MAJOR_VERSION}::WidgetsAddons
+        KF${KF_MAJOR_VERSION}::TextWidgets
         KSane::Core
 )
 

@@ -2,7 +2,16 @@
 # SPDX-License-Identifier: CC0-1.0
 
 Dependencies:
-- 'on': ['@all']
+- 'on': ['Linux/Qt6', 'FreeBSD/Qt6']
+  'require':
+    'libraries/ksanecore': '@latest-kf6'
+    'frameworks/extra-cmake-modules': '@latest-kf6'
+    'frameworks/ki18n': '@latest-kf6'
+    'frameworks/kwidgetsaddons': '@latest-kf6'
+    'frameworks/ktextwidgets': '@latest-kf6'
+    'frameworks/kwallet': '@latest-kf6'
+
+- 'on': ['Linux/Qt5', 'FreeBSD/Qt5']
   'require':
     'libraries/ksanecore': '@same'
     'frameworks/extra-cmake-modules': '@stable'

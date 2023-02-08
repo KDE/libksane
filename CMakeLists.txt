@@ -39,22 +39,28 @@ ecm_setup_version(
   PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5SaneConfigVersion.cmake"
   SOVERSION 5
 )
-
 # Dependencies
 set(REQUIRED_QT_VERSION "5.15.2")
+if (QT_MAJOR_VERSION STREQUAL "6")
+    set(QT_REQUIRED_VERSION "6.4.0")
+    set(KF_MIN_VERSION "5.240.0")
+    set(KF_MAJOR_VERSION "6")
+else()
+    set(KF_MAJOR_VERSION "5")
+endif()
 # Required Qt5 components to build this framework
 find_package(Qt${QT_MAJOR_VERSION} ${REQUIRED_QT_VERSION} NO_MODULE REQUIRED Core Widgets)
 
 # Required KF5 frameworks
-find_package(KF5I18n ${KF5_VERSION} REQUIRED)
+find_package(KF${KF_MAJOR_VERSION}I18n ${KF5_VERSION} REQUIRED)
 
 if (NOT WIN32)
-    find_package(KF5WidgetsAddons ${KF5_VERSION} REQUIRED)
-    find_package(KF5TextWidgets ${KF5_VERSION} REQUIRED)
+    find_package(KF${KF_MAJOR_VERSION}WidgetsAddons ${KF5_VERSION} REQUIRED)
+    find_package(KF${KF_MAJOR_VERSION}TextWidgets ${KF5_VERSION} REQUIRED)
 
     # Optional KF5 frameworks
-    find_package(KF5Wallet ${KF5_VERSION})
-    set_package_properties(KF5Wallet PROPERTIES DESCRIPTION "Safe desktop-wide storage for passwords" TYPE OPTIONAL
+    find_package(KF${KF_MAJOR_VERSION}Wallet ${KF5_VERSION})
+    set_package_properties(KF${KF_MAJOR_VERSION}Wallet PROPERTIES DESCRIPTION "Safe desktop-wide storage for passwords" TYPE OPTIONAL
         PURPOSE "Required to have permanent storage of passwords for scanners"
     )
 
