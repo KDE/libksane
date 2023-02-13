@@ -4,7 +4,7 @@
 Dependencies:
 - 'on': ['Linux/Qt6', 'FreeBSD/Qt6']
   'require':
-    'libraries/ksanecore': '@latest-kf6'
+    'libraries/ksanecore': '@same'
     'frameworks/extra-cmake-modules': '@latest-kf6'
     'frameworks/ki18n': '@latest-kf6'
     'frameworks/kwidgetsaddons': '@latest-kf6'
