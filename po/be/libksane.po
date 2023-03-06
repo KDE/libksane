@@ -1,16 +1,12 @@
-# translation of libksane.po to Belarusian
-# Copyright (C) YEAR This_file_is_part_of_KDE
-# This file is distributed under the same license as the PACKAGE package.
-#
 # Darafei Praliaskouski <komzpa@licei2.com>, 2007.
 msgid ""
 msgstr ""
-"Project-Id-Version: libksane\n"
+"Project-Id-Version: 86ff119b1606fcaa910d6b44fc14b611\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-01 00:44+0000\n"
-"PO-Revision-Date: 2007-10-28 13:49+0200\n"
+"PO-Revision-Date: 2023-03-03 13:01\n"
 "Last-Translator: Darafei Praliaskouski <komzpa@licei2.com>\n"
-"Language-Team: Belarusian <i18n@mova.org>\n"
+"Language-Team: Belarusian\n"
 "Language: be\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -19,61 +15,66 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<12 || n%100>14) ? 1 : n%10==0 || n%10>=5 && n%10<=9 || n"
 "%100>=11 && n%100<=14 ? 2 : 3);\n"
+"X-Crowdin-Project: 86ff119b1606fcaa910d6b44fc14b611\n"
+"X-Crowdin-Project-ID: 127\n"
+"X-Crowdin-Language: be\n"
+"X-Crowdin-File: /main/be/libksane/libksane.po\n"
+"X-Crowdin-File-ID: 8407\n"
 
 #: ../ksanetwain/ktwain_widget.cpp:29
 #, kde-format
 msgid "Open scan dialog"
-msgstr ""
+msgstr "Адкрыць дыялогавае акно сканавання"
 
 #: i18n-hplip.cpp:3
 #, kde-format
 msgid "None"
-msgstr ""
+msgstr "Няма"
 
 #: i18n-hplip.cpp:4
 #, kde-format
 msgid "MH"
-msgstr ""
+msgstr "MH"
 
 #: i18n-hplip.cpp:5
 #, kde-format
 msgid "MR"
-msgstr ""
+msgstr "MR"
 
 #: i18n-hplip.cpp:6
 #, kde-format
 msgid "MMR"
-msgstr ""
+msgstr "MMR"
 
 #: i18n-hplip.cpp:7
 #, kde-format
 msgid "JPEG"
-msgstr ""
+msgstr "JPEG"
 
 #: i18n-hplip.cpp:8
 #, kde-format
 msgid "Auto"
-msgstr ""
+msgstr "Аўтаматычна"
 
 #: i18n-hplip.cpp:9
 #, kde-format
 msgid "Flatbed"
-msgstr ""
+msgstr "Планшэтны сканер"
 
 #: i18n-hplip.cpp:10
 #, kde-format
 msgid "ADF"
-msgstr ""
+msgstr "ADF"
 
 #: i18n-hplip.cpp:11
 #, kde-format
 msgid "Advanced"
-msgstr ""
+msgstr "Дадатковыя налады"
 
 #: i18n-hplip.cpp:12
 #, kde-format
 msgid "Compression"
-msgstr ""
+msgstr "Сцісканне"
 
 #: i18n-hplip.cpp:13
 #, kde-format
@@ -81,11 +82,13 @@ msgid ""
 "Selects the scanner compression method for faster scans, possibly at the "
 "expense of image quality."
 msgstr ""
+"Абірае метад сціскання для паскарэння сканавання, можа пагаршацца якасць "
+"выявы."
 
 #: i18n-hplip.cpp:15
 #, kde-format
 msgid "JPEG compression factor"
-msgstr ""
+msgstr "Каэфіцыент сціскання JPEG"
 
 #: i18n-hplip.cpp:16
 #, kde-format
@@ -93,36 +96,39 @@ msgid ""
 "Sets the scanner JPEG compression factor. Larger numbers mean better "
 "compression, and smaller numbers mean better image quality."
 msgstr ""
+"Выўначае каэфіцыент сціскання JPEG. Большыя лікі - лепшае сцісканне, а "
+"меншыя лікі - лепшая якасць выявы."
 
 #: i18n-hplip.cpp:19
 #, kde-format
 msgid "Batch scan"
-msgstr ""
+msgstr "Пакетнае сканаванне"
 
 #: i18n-hplip.cpp:20
 #, kde-format
 msgid "Enables continuous scanning with automatic document feeder (ADF)."
 msgstr ""
+"Уключае бесперапыннае сканаванне з аўтаматычнай падачай дакументаў (ADF)."
 
 #: i18n-hplip.cpp:21
 #, kde-format
 msgid "Duplex"
-msgstr ""
+msgstr "Два бакі"
 
 #: i18n-hplip.cpp:22
 #, kde-format
 msgid "Enables scanning on both sides of the page."
-msgstr ""
+msgstr "Уключае сканаванне з двух бакоў старонкі."
 
 #: i18n-hplip.cpp:23
 #, kde-format
 msgid "Geometry"
-msgstr ""
+msgstr "Геаметрыя"
 
 #: i18n-hplip.cpp:24
 #, kde-format
 msgid "Length measurement"
-msgstr ""
+msgstr "Вымярэнне даўжыні"
 
 #: i18n-hplip.cpp:25
 #, kde-format
@@ -130,36 +136,38 @@ msgid ""
 "Selects how the scanned image length is measured and reported, which is "
 "impossible to know in advance for scrollfed scans."
 msgstr ""
+"Абірае спосаб вымярэння і апавяшчэння даўжыні адсканаванай выявы, што "
+"немагчыма выявіць загадзя для сканаў з пракручваннем."
 
 #: i18n-hplip.cpp:27
 #, kde-format
 msgid "Unknown"
-msgstr ""
+msgstr "Невядома"
 
 #: i18n-hplip.cpp:28
 #, kde-format
 msgid "Unlimited"
-msgstr ""
+msgstr "Не абмежавана"
 
 #: i18n-hplip.cpp:29
 #, kde-format
 msgid "Approximate"
-msgstr ""
+msgstr "Прыблізна"
 
 #: i18n-hplip.cpp:30
 #, kde-format
 msgid "Padded"
-msgstr ""
+msgstr "Мякка"
 
 #: i18n-hplip.cpp:31
 #, kde-format
 msgid "Exact"
-msgstr ""
+msgstr "Дакладна"
 
 #: i18n-hplip.cpp:32
 #, kde-format
 msgid "???"
-msgstr ""
+msgstr "???"
 
 #: ksanedevicedialog.cpp:36
 #, kde-format
@@ -169,103 +177,107 @@ msgid ""
 "systems scanner setup.<br>For details about SANE see the <a href='http://www."
 "sane-project.org/'>SANE homepage</a>.</html>"
 msgstr ""
+"<html>Сістэма SANE (Scanner Access Now Easy) не можа знайсці ніводнай "
+"прылады.<br>Пераканайцеся, што сканер падлучаны і ўключаны<br>або праверце "
+"сістэмныя налады сканера.<br>Падрабязней пра SANE гл. <a href='http://www."
+"sane-project.org/'>Хатняя старонка SANE</a>.</html>"
 
 #: ksanedevicedialog.cpp:58
 #, kde-format
 msgid "Reload devices list"
-msgstr ""
+msgstr "Перазагрузіць спіс прылад"
 
 #: ksanedevicedialog.cpp:82
 #, kde-format
 msgid "Looking for devices. Please wait."
-msgstr ""
+msgstr "Выконваецца пошук прылад. Калі ласка, пачакайце."
 
 #: ksanedevicedialog.cpp:117
 #, kde-format
 msgid "Sorry. No devices found."
-msgstr ""
+msgstr "Прылады не знойдзеныя."
 
 #: ksanedevicedialog.cpp:127
 #, kde-format
 msgid "Found devices:"
-msgstr ""
+msgstr "Знойдзеныя прылады:"
 
 #: ksaneviewer.cpp:109 ksanewidget.cpp:86
 #, kde-format
 msgid "Zoom In"
-msgstr ""
+msgstr "Павялічыць"
 
 #: ksaneviewer.cpp:112 ksanewidget.cpp:92
 #, kde-format
 msgid "Zoom Out"
-msgstr ""
+msgstr "Паменшыць"
 
 #: ksaneviewer.cpp:115 ksanewidget.cpp:98
 #, kde-format
 msgid "Zoom to Selection"
-msgstr ""
+msgstr "Маштабаваць да абранага"
 
 #: ksaneviewer.cpp:118 ksanewidget.cpp:104
 #, kde-format
 msgid "Zoom to Fit"
-msgstr ""
+msgstr "Маштабаваць па памеры"
 
 #: ksaneviewer.cpp:121 ksanewidget.cpp:110
 #, kde-format
 msgid "Clear Selections"
-msgstr ""
+msgstr "Адкінуць выбар"
 
 #: ksanewidget.cpp:58
 #, kde-format
 msgid "Waiting for the scan to start."
-msgstr ""
+msgstr "Чаканне запуску сканавання."
 
 #: ksanewidget.cpp:71
 #, kde-format
 msgid "Cancel current scan operation"
-msgstr ""
+msgstr "Скасаваць бягучую аперацыю сканавання"
 
 #: ksanewidget.cpp:121
 #, kde-format
 msgid "Scan Preview Image (%1)"
-msgstr ""
+msgstr "Сканаваць выяву папярэдняга прагляду (%1)"
 
 #: ksanewidget.cpp:122
 #, kde-format
 msgctxt "Preview button text"
 msgid "Preview"
-msgstr ""
+msgstr "Папярэдні прагляд"
 
 #: ksanewidget.cpp:127
 #, kde-format
 msgid "Scan Final Image (%1)"
-msgstr ""
+msgstr "Сканаваць канчатковую выяву (%1)"
 
 #: ksanewidget.cpp:128
 #, kde-format
 msgctxt "Final scan button text"
 msgid "Scan"
-msgstr ""
+msgstr "Сканаваць"
 
 #: ksanewidget.cpp:169
 #, kde-format
 msgid "Basic Options"
-msgstr ""
+msgstr "Базавыя параметры"
 
 #: ksanewidget.cpp:175
 #, kde-format
 msgid "Advanced Options"
-msgstr ""
+msgstr "Дадатковыя параметры"
 
 #: ksanewidget.cpp:181
 #, kde-format
 msgid "Scanner Specific Options"
-msgstr ""
+msgstr "Адмысловыя параметры сканера"
 
 #: ksanewidget.cpp:322
 #, kde-format
 msgid "Authentication required for resource: %1"
-msgstr ""
+msgstr "Для рэсурсу патрабуецца аўтэнтыфікацыя: %1"
 
 #: ksanewidget.cpp:484
 #, kde-format
@@ -273,47 +285,48 @@ msgid ""
 "The image data contained 16 bits per color, but the color depth has been "
 "truncated to 8 bits per color."
 msgstr ""
+"Глыбіня даных выявы была 16 бітаў на колер, але яна была паменшаная да 8 "
+"бітаў на колер."
 
 #: ksanewidget_p.cpp:428
 #, kde-format
 msgid "Scan Area Size"
-msgstr ""
+msgstr "Памер вобласці сканавання"
 
 #: ksanewidget_p.cpp:433
-#, fuzzy, kde-format
-#| msgid " mm"
+#, kde-format
 msgid " mm"
-msgstr "мм"
+msgstr " мм"
 
 #: ksanewidget_p.cpp:433
 #, kde-format
 msgid " inch"
-msgstr ""
+msgstr " цаляў"
 
 #: ksanewidget_p.cpp:435
 #, kde-format
 msgid "Width"
-msgstr ""
+msgstr "Шырыня"
 
 #: ksanewidget_p.cpp:440
 #, kde-format
 msgid "Height"
-msgstr ""
+msgstr "Вышыня"
 
 #: ksanewidget_p.cpp:445
 #, kde-format
 msgid "X Offset"
-msgstr ""
+msgstr "Зрух па X"
 
 #: ksanewidget_p.cpp:450
 #, kde-format
 msgid "Y Offset"
-msgstr ""
+msgstr "Зрух па Y"
 
 #: ksanewidget_p.cpp:511
 #, kde-format
 msgid "Image intensity"
-msgstr ""
+msgstr "Інтэнсіўнасць выявы"
 
 #: ksanewidget_p.cpp:515
 #, kde-format
@@ -322,175 +335,169 @@ msgid ""
 "green, and blue channels simultaneously (i.e., it is an intensity gamma "
 "table)."
 msgstr ""
+"Табліца гама-карэкцыі. У каляровым рэжыме гэты параметр аднолькава ўплывае "
+"на чырвоны, зялёны і сіні каналы адначасова (гэта значыць, штр гэта гама-"
+"табліца інтэнсіўнасці)."
 
 #: ksanewidget_p.cpp:523
 #, kde-format
 msgid "Separate color intensity tables"
-msgstr ""
+msgstr "Асобныя табліцы інтэнсіўнасці колераў"
 
 #: ksanewidget_p.cpp:1203
 #, kde-format
 msgctxt "This is compared to the option string returned by sane"
 msgid "Transparency"
-msgstr ""
+msgstr "Празрыстасць"
 
 #: ksanewidget_p.cpp:1205
 #, kde-format
 msgctxt "This is compared to the option string returned by sane"
 msgid "Negative"
-msgstr ""
+msgstr "Негатыў"
 
 #: ksanewidget_p.cpp:1252
 #, kde-format
 msgid "Next scan starts in %1 s."
-msgstr ""
+msgstr "Наступнае сканаванне пачнецца праз %1 с."
 
 #: ksanewidget_p.cpp:1265
 #, kde-format
 msgctxt "@title:window"
 msgid "General Error"
-msgstr ""
+msgstr "Агульная памылка"
 
 #: ksanewidget_p.cpp:1268
 #, kde-format
 msgctxt "@title:window"
 msgid "Information"
-msgstr ""
+msgstr "Інфармацыя"
 
 #: ksanewidget_p.cpp:1350
 #, kde-format
 msgid "Custom"
-msgstr ""
+msgstr "Адвольна"
 
 #: ksanewidget_p.cpp:1375
 #, kde-format
 msgctxt "Page size landscape"
 msgid " Landscape"
-msgstr ""
+msgstr " Альбомная"
 
 #: widgets/ksaneoptionwidget.cpp:66
 #, kde-format
 msgctxt "Label for a scanner option"
 msgid "%1:"
-msgstr ""
+msgstr "%1:"
 
 #: widgets/labeledcombo.cpp:155 widgets/labeledcombo.cpp:186
-#, fuzzy, kde-format
-#| msgid " Pixel"
+#, kde-format
 msgctxt "Parameter and Unit"
 msgid "%1 Pixel"
 msgid_plural "%1 Pixels"
-msgstr[0] " піксел"
-msgstr[1] " піксел"
-msgstr[2] " піксел"
+msgstr[0] "%1 піксель"
+msgstr[1] "%1 пікселі"
+msgstr[2] "%1 пікселяў"
+msgstr[3] "%1 пікселі"
 
 #: widgets/labeledcombo.cpp:158 widgets/labeledcombo.cpp:189
-#, fuzzy, kde-format
-#| msgid " Bit"
+#, kde-format
 msgctxt "Parameter and Unit"
 msgid "%1 Bit"
 msgid_plural "%1 Bits"
-msgstr[0] " біт"
-msgstr[1] " біт"
-msgstr[2] " біт"
+msgstr[0] "%1 біт"
+msgstr[1] "%1 біты"
+msgstr[2] "%1 бітаў"
+msgstr[3] "%1 біты"
 
 #: widgets/labeledcombo.cpp:161 widgets/labeledcombo.cpp:192
-#, fuzzy, kde-format
-#| msgid " mm"
+#, kde-format
 msgctxt "Parameter and Unit (Millimeter)"
 msgid "%1 mm"
-msgstr "мм"
+msgstr "%1 мм"
 
 #: widgets/labeledcombo.cpp:164 widgets/labeledcombo.cpp:195
-#, fuzzy, kde-format
-#| msgid " DPI"
+#, kde-format
 msgctxt "Parameter and Unit (Dots Per Inch)"
 msgid "%1 DPI"
-msgstr " DPI"
+msgstr "%1 DPI (кропак на цалю)"
 
 #: widgets/labeledcombo.cpp:167 widgets/labeledcombo.cpp:198
-#, fuzzy, kde-format
-#| msgid " mm"
+#, kde-format
 msgctxt "Parameter and Unit (Percentage)"
 msgid "%1 %"
-msgstr "мм"
+msgstr "%1 %"
 
 #: widgets/labeledcombo.cpp:170 widgets/labeledcombo.cpp:201
 #, kde-format
 msgctxt "Parameter and Unit (Microseconds)"
 msgid "%1 µs"
-msgstr ""
+msgstr "%1 мкс"
 
 #: widgets/labeledcombo.cpp:173 widgets/labeledcombo.cpp:204
 #, kde-format
 msgctxt "Parameter and Unit (seconds)"
 msgid "%1 s"
-msgstr ""
+msgstr "%1 с"
 
 #: widgets/labeledcombo.cpp:176 widgets/labeledcombo.cpp:207
-#, fuzzy, kde-format
-#| msgid " mm"
+#, kde-format
 msgid "%1"
-msgstr "мм"
+msgstr "%1"
 
 #: widgets/labeledentry.cpp:52
 #, kde-format
 msgctxt "Label for button to reset text in a KLineEdit"
 msgid "Reset"
-msgstr ""
+msgstr "Скінуць"
 
 #: widgets/labeledentry.cpp:54
 #, kde-format
 msgctxt "Label for button to write text in a KLineEdit to sane"
 msgid "Set"
-msgstr ""
+msgstr "Вызначыць"
 
 #: widgets/labeledfslider.cpp:40
-#, fuzzy, kde-format
-#| msgid " Pixel"
+#, kde-format
 msgctxt "Double numbers. SpinBox parameter unit"
 msgid " Pixels"
-msgstr " піксел"
+msgstr " Пікселі"
 
 #: widgets/labeledfslider.cpp:43
-#, fuzzy, kde-format
-#| msgid " Bit"
+#, kde-format
 msgctxt "Double numbers. SpinBox parameter unit"
 msgid " Bits"
-msgstr " біт"
+msgstr " бітаў"
 
 #: widgets/labeledfslider.cpp:46
-#, fuzzy, kde-format
-#| msgid " mm"
+#, kde-format
 msgctxt "Double numbers. SpinBox parameter unit (Millimeter)"
 msgid " mm"
-msgstr "мм"
+msgstr " мм"
 
 #: widgets/labeledfslider.cpp:49
-#, fuzzy, kde-format
-#| msgid " DPI"
+#, kde-format
 msgctxt "Double numbers. SpinBox parameter unit (Dots Per Inch)"
 msgid " DPI"
-msgstr " DPI"
+msgstr " DPI (кропак на цалю)"
 
 #: widgets/labeledfslider.cpp:52
-#, fuzzy, kde-format
-#| msgid " mm"
+#, kde-format
 msgctxt "Double numbers. SpinBox parameter unit (Percentage)"
 msgid " %"
-msgstr "мм"
+msgstr " %"
 
 #: widgets/labeledfslider.cpp:55
 #, kde-format
 msgctxt "Double numbers. SpinBox parameter unit (Microseconds)"
 msgid " µs"
-msgstr ""
+msgstr " мкс"
 
 #: widgets/labeledfslider.cpp:58
 #, kde-format
 msgctxt "SpinBox parameter unit (seconds), float"
 msgid " s"
-msgstr ""
+msgstr " с"
 
 #: widgets/labeledgamma.cpp:43
 #, kde-format
@@ -500,7 +507,7 @@ msgstr "Яркасць"
 #: widgets/labeledgamma.cpp:46
 #, kde-format
 msgid "Contrast"
-msgstr "Кантраст"
+msgstr "Кантраснасць"
 
 #: widgets/labeledgamma.cpp:49
 #, kde-format
@@ -508,72 +515,74 @@ msgid "Gamma"
 msgstr "Гама"
 
 #: widgets/labeledslider.cpp:42
-#, fuzzy, kde-format
-#| msgid " Pixel"
+#, kde-format
 msgctxt "SpinBox parameter unit"
 msgid " Pixel"
 msgid_plural " Pixels"
-msgstr[0] " піксел"
-msgstr[1] " піксел"
-msgstr[2] " піксел"
+msgstr[0] " Піксель"
+msgstr[1] " Пікселі"
+msgstr[2] " Пікселяў"
+msgstr[3] " Пікселі"
 
 #: widgets/labeledslider.cpp:45
-#, fuzzy, kde-format
-#| msgid " Bit"
+#, kde-format
 msgctxt "SpinBox parameter unit"
 msgid " Bit"
 msgid_plural " Bits"
 msgstr[0] " біт"
-msgstr[1] " біт"
-msgstr[2] " біт"
+msgstr[1] " біты"
+msgstr[2] " бітаў"
+msgstr[3] " біты"
 
 #: widgets/labeledslider.cpp:48
-#, fuzzy, kde-format
-#| msgid " mm"
+#, kde-format
 msgctxt "SpinBox parameter unit (Millimeter)"
 msgid " mm"
 msgid_plural " mm"
-msgstr[0] "мм"
-msgstr[1] "мм"
-msgstr[2] "мм"
+msgstr[0] " мм"
+msgstr[1] " мм"
+msgstr[2] " мм"
+msgstr[3] " мм"
 
 #: widgets/labeledslider.cpp:51
-#, fuzzy, kde-format
-#| msgid " DPI"
+#, kde-format
 msgctxt "SpinBox parameter unit (Dots Per Inch)"
 msgid " DPI"
 msgid_plural " DPI"
-msgstr[0] " DPI"
-msgstr[1] " DPI"
-msgstr[2] " DPI"
+msgstr[0] " DPI (кропак на цалю)"
+msgstr[1] " DPI (кропак на цалю)"
+msgstr[2] " DPI (кропак на цалю)"
+msgstr[3] " DPI (кропак на цалю)"
 
 #: widgets/labeledslider.cpp:54
-#, fuzzy, kde-format
-#| msgid " mm"
+#, kde-format
 msgctxt "SpinBox parameter unit (Percentage)"
 msgid " %"
 msgid_plural " %"
-msgstr[0] "мм"
-msgstr[1] "мм"
-msgstr[2] "мм"
+msgstr[0] " %"
+msgstr[1] " %"
+msgstr[2] " %"
+msgstr[3] " %"
 
 #: widgets/labeledslider.cpp:57
 #, kde-format
 msgctxt "SpinBox parameter unit (Microseconds)"
 msgid " µs"
 msgid_plural " µs"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] " мкс"
+msgstr[1] " мкс"
+msgstr[2] " мкс"
+msgstr[3] " мкс"
 
 #: widgets/labeledslider.cpp:60
 #, kde-format
 msgctxt "SpinBox parameter unit (seconds)"
 msgid " s"
 msgid_plural " s"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] " с"
+msgstr[1] " с"
+msgstr[2] " с"
+msgstr[3] " с"
 
 #, fuzzy
 #~| msgid " Pixel"
