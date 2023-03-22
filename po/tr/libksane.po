@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: kdegraphics-kde4\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-01 00:44+0000\n"
-"PO-Revision-Date: 2023-01-18 22:32+0300\n"
+"PO-Revision-Date: 2023-03-21 21:17+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -19,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 22.12.1\n"
+"X-Generator: Lokalize 22.12.3\n"
 
 #: ../ksanetwain/ktwain_widget.cpp:29
 #, kde-format
@@ -184,7 +184,7 @@ msgstr ""
 #: ksanedevicedialog.cpp:58
 #, kde-format
 msgid "Reload devices list"
-msgstr "Aygıt listesini yeniden yükle"
+msgstr "Aygıt Listesini Yeniden Yükle"
 
 #: ksanedevicedialog.cpp:82
 #, kde-format
@@ -427,7 +427,7 @@ msgstr "% %1"
 #, kde-format
 msgctxt "Parameter and Unit (Microseconds)"
 msgid "%1 µs"
-msgstr "%1 ns"
+msgstr "%1 µs"
 
 #: widgets/labeledcombo.cpp:173 widgets/labeledcombo.cpp:204
 #, kde-format
@@ -486,13 +486,13 @@ msgstr " %"
 #, kde-format
 msgctxt "Double numbers. SpinBox parameter unit (Microseconds)"
 msgid " µs"
-msgstr " ns"
+msgstr " µs"
 
 #: widgets/labeledfslider.cpp:58
 #, kde-format
 msgctxt "SpinBox parameter unit (seconds), float"
 msgid " s"
-msgstr " ns"
+msgstr " sn"
 
 #: widgets/labeledgamma.cpp:43
 #, kde-format
@@ -554,16 +554,16 @@ msgstr[1] " %"
 msgctxt "SpinBox parameter unit (Microseconds)"
 msgid " µs"
 msgid_plural " µs"
-msgstr[0] " ns"
-msgstr[1] " ns"
+msgstr[0] " µs"
+msgstr[1] " µs"
 
 #: widgets/labeledslider.cpp:60
 #, kde-format
 msgctxt "SpinBox parameter unit (seconds)"
 msgid " s"
 msgid_plural " s"
-msgstr[0] " ns"
-msgstr[1] " ns"
+msgstr[0] " sn"
+msgstr[1] " sn"
 
 #~ msgid "Scanning stopped by user."
 #~ msgstr "Tarama, kullanıcı tarafından durduruldu."
