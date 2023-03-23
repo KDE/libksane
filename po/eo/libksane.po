@@ -1,4 +1,5 @@
 # Translation of libksane into esperanto.
+# Copyright (C) 2009 Free Software Foundation, Inc.
 # Axel Rousseau <axel@esperanto-jeunes.org>, 2009.
 #
 msgid ""
@@ -6,8 +7,8 @@ msgstr ""
 "Project-Id-Version: libksane\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-01 00:44+0000\n"
-"PO-Revision-Date: 2009-11-15 12:06+0100\n"
-"Last-Translator: Axel Rousseau <axel@esperanto-jeunes.org>\n"
+"PO-Revision-Date: 2023-03-22 19:14+0100\n"
+"Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
 "Language: eo\n"
 "MIME-Version: 1.0\n"
@@ -202,10 +203,9 @@ msgid "Zoom to Selection"
 msgstr ""
 
 #: ksaneviewer.cpp:118 ksanewidget.cpp:104
-#, fuzzy, kde-format
-#| msgid "Zoom To Fit"
+#, kde-format
 msgid "Zoom to Fit"
-msgstr "Zomi por adapti"
+msgstr ""
 
 #: ksaneviewer.cpp:121 ksanewidget.cpp:110
 #, kde-format
@@ -250,10 +250,9 @@ msgid "Basic Options"
 msgstr ""
 
 #: ksanewidget.cpp:175
-#, fuzzy, kde-format
-#| msgid "Advanced"
+#, kde-format
 msgid "Advanced Options"
-msgstr "Plie"
+msgstr ""
 
 #: ksanewidget.cpp:181
 #, kde-format
@@ -278,9 +277,7 @@ msgid "Scan Area Size"
 msgstr ""
 
 #: ksanewidget_p.cpp:433
-#, fuzzy, kde-format
-#| msgctxt "SpinBox parameter unit (Millimeter)"
-#| msgid " mm"
+#, kde-format
 msgid " mm"
 msgstr " mm"
 
@@ -420,11 +417,9 @@ msgid "%1 s"
 msgstr ""
 
 #: widgets/labeledcombo.cpp:176 widgets/labeledcombo.cpp:207
-#, fuzzy, kde-format
-#| msgctxt "Label for a scanner option"
-#| msgid "%1:"
+#, kde-format
 msgid "%1"
-msgstr "%1:"
+msgstr "%1"
 
 #: widgets/labeledentry.cpp:52
 #, kde-format
@@ -512,9 +507,7 @@ msgstr[0] " Bito"
 msgstr[1] " Bitoj"
 
 #: widgets/labeledslider.cpp:48
-#, fuzzy, kde-format
-#| msgctxt "SpinBox parameter unit (Millimeter)"
-#| msgid " mm"
+#, kde-format
 msgctxt "SpinBox parameter unit (Millimeter)"
 msgid " mm"
 msgid_plural " mm"
@@ -526,13 +519,11 @@ msgstr[1] " mm"
 msgctxt "SpinBox parameter unit (Dots Per Inch)"
 msgid " DPI"
 msgid_plural " DPI"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] " DPI"
+msgstr[1] " DPI"
 
 #: widgets/labeledslider.cpp:54
-#, fuzzy, kde-format
-#| msgctxt "SpinBox parameter unit (Percentage)"
-#| msgid " %"
+#, kde-format
 msgctxt "SpinBox parameter unit (Percentage)"
 msgid " %"
 msgid_plural " %"
@@ -544,41 +535,13 @@ msgstr[1] " %"
 msgctxt "SpinBox parameter unit (Microseconds)"
 msgid " µs"
 msgid_plural " µs"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] " µs"
+msgstr[1] " µs"
 
 #: widgets/labeledslider.cpp:60
 #, kde-format
 msgctxt "SpinBox parameter unit (seconds)"
 msgid " s"
 msgid_plural " s"
-msgstr[0] ""
-msgstr[1] ""
-
-#~ msgid "%1 Bit"
-#~ msgid_plural "%1 Bits"
-#~ msgstr[0] "%1 Bito"
-#~ msgstr[1] "%1 Bitoj"
-
-#~ msgid "%1 mm"
-#~ msgid_plural "%1 mm"
-#~ msgstr[0] "%1 mm"
-#~ msgstr[1] "%1 mm"
-
-#~ msgid "%1 %"
-#~ msgid_plural "%1 %"
-#~ msgstr[0] "%1 %"
-#~ msgstr[1] "%1 %"
-
-#~ msgid "%1 µs"
-#~ msgid_plural "%1 µs"
-#~ msgstr[0] "%1 µs"
-#~ msgstr[1] "%1 µs"
-
-#~ msgctxt "Double numbers. SpinBox parameter unit"
-#~ msgid " mm"
-#~ msgstr " mm"
-
-#~ msgctxt "Double numbers. SpinBox parameter unit"
-#~ msgid " %"
-#~ msgstr " %"
+msgstr[0] " s"
+msgstr[1] " s"
