@@ -32,10 +32,11 @@ include(CheckFunctionExists)
 include(GenerateExportHeader)
 include(ECMQtDeclareLoggingCategory)
 
+set(ksane_version_header "${CMAKE_CURRENT_BINARY_DIR}/src/ksane_version.h")
 ecm_setup_version(
   ${RELEASE_SERVICE_VERSION}
   VARIABLE_PREFIX KSANE
-  VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/ksane_version.h"
+  VERSION_HEADER "${ksane_version_header}"
   PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5SaneConfigVersion.cmake"
   SOVERSION 5
 )
@@ -116,7 +117,7 @@ install(EXPORT
 )
 
 install(FILES
-  "${CMAKE_CURRENT_BINARY_DIR}/ksane_version.h"
+  "${ksane_version_header}"
   DESTINATION "${KDE_INSTALL_INCLUDEDIR_KF}/KSane"
   COMPONENT Devel
 )
