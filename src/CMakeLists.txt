@@ -2,6 +2,12 @@ add_library(KF5Sane)
 add_library(KF5::Sane ALIAS KF5Sane)
 add_library(KF5::SaneWidget ALIAS KF5Sane)
 
+set_target_properties(KF5Sane PROPERTIES
+    VERSION     ${KSANE_VERSION}
+    SOVERSION   ${KSANE_SOVERSION}
+    EXPORT_NAME "Sane"
+)
+
 target_compile_definitions(KF5Sane PRIVATE -DTRANSLATION_DOMAIN=\"libksane\")
 
 if (KF5Wallet_FOUND)
@@ -53,12 +59,6 @@ target_link_libraries(KF5Sane
         KF${KF_MAJOR_VERSION}::WidgetsAddons
         KF${KF_MAJOR_VERSION}::TextWidgets
         KSane::Core
-)
-
-set_target_properties(KF5Sane
-  PROPERTIES VERSION ${KSANE_VERSION}
-  SOVERSION ${KSANE_SOVERSION}
-  EXPORT_NAME "Sane"
 )
 
 ecm_generate_headers(KSane_HEADERS
