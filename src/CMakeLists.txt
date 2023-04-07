@@ -40,7 +40,24 @@ ecm_qt_declare_logging_category(KF5Sane
   CATEGORY_NAME org.kde.ksane
 )
 
-generate_export_header(KF5Sane BASE_NAME KSane)
+if (QT_MAJOR_VERSION STREQUAL "5")
+    set(_generate_export_header_version_args)
+else()
+    # For Qt6/KF6 world transitively include the version header
+    if(ECM_VERSION VERSION_LESS "5.106")
+        set(include_version_header_code "#include <ksane_version.h>\n")
+        set(_generate_export_header_version_args CUSTOM_CONTENT_FROM_VARIABLE include_version_header_code)
+    else()
+        set(_generate_export_header_version_args USE_VERSION_HEADER)
+    endif()
+endif()
+
+ecm_generate_export_header(KF5Sane
+    BASE_NAME KSane
+    VERSION ${KSANE_VERSION}
+    DEPRECATED_BASE_VERSION 0
+    ${_generate_export_header_version_args}
+)
 
 target_include_directories(KF5Sane
     INTERFACE

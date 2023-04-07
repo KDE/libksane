@@ -29,7 +29,7 @@ include(ECMGenerateHeaders)
 include(ECMInstallIcons)
 include(CMakePackageConfigHelpers)
 include(CheckFunctionExists)
-include(GenerateExportHeader)
+include(ECMGenerateExportHeader)
 include(ECMQtDeclareLoggingCategory)
 
 set(ksane_version_header "${CMAKE_CURRENT_BINARY_DIR}/src/ksane_version.h")
