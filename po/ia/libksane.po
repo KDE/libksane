@@ -237,7 +237,7 @@ msgstr "Cancella le currente operation de scander"
 #: ksanewidget.cpp:121
 #, kde-format
 msgid "Scan Preview Image (%1)"
-msgstr "Scande imagine de vista preliminari (%1)"
+msgstr "Scande imagine de vista preliminar (%1)"
 
 #: ksanewidget.cpp:122
 #, kde-format
