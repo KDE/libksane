@@ -5,14 +5,14 @@
 # Marce Villarino <mvillarino@gmail.com>, 2009, 2014.
 # Xosé <xosecalvo@gmail.com>, 2012.
 # Adrián Chaves Fernández (Gallaecio) <adriyetichaves@gmail.com>, 2015.
-# Adrián Chaves (Gallaecio) <adrian@chaves.io>, 2018, 2020.
+# Adrián Chaves (Gallaecio) <adrian@chaves.io>, 2018, 2020, 2023.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: libksane\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-01 00:44+0000\n"
-"PO-Revision-Date: 2020-03-07 09:20+0100\n"
+"PO-Revision-Date: 2023-04-30 09:39+0200\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Galician <proxecto@trasno.gal>\n"
 "Language: gl\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 19.08.3\n"
+"X-Generator: Lokalize 23.04.0\n"
 
 #: ../ksanetwain/ktwain_widget.cpp:29
 #, kde-format
@@ -240,10 +240,9 @@ msgid "Cancel current scan operation"
 msgstr "Cancelar a dixitalización"
 
 #: ksanewidget.cpp:121
-#, fuzzy, kde-format
-#| msgid "Scan Preview Image"
+#, kde-format
 msgid "Scan Preview Image (%1)"
-msgstr "Vista previa da dixitalización"
+msgstr "Vista previa da dixitalización (%1)"
 
 #: ksanewidget.cpp:122
 #, kde-format
@@ -252,10 +251,9 @@ msgid "Preview"
 msgstr "Previsualizar"
 
 #: ksanewidget.cpp:127
-#, fuzzy, kde-format
-#| msgid "Scan Final Image"
+#, kde-format
 msgid "Scan Final Image (%1)"
-msgstr "Dixitalizar a imaxe final"
+msgstr "Dixitalizar a imaxe final (%1)"
 
 #: ksanewidget.cpp:128
 #, kde-format
@@ -269,10 +267,9 @@ msgid "Basic Options"
 msgstr "Opcións básicas"
 
 #: ksanewidget.cpp:175
-#, fuzzy, kde-format
-#| msgid "Basic Options"
+#, kde-format
 msgid "Advanced Options"
-msgstr "Opcións básicas"
+msgstr "Opcións avanzadas"
 
 #: ksanewidget.cpp:181
 #, kde-format
@@ -331,7 +328,7 @@ msgstr "Desprazamento en Y"
 #: ksanewidget_p.cpp:511
 #, kde-format
 msgid "Image intensity"
-msgstr ""
+msgstr "Intensidade da imaxe"
 
 #: ksanewidget_p.cpp:515
 #, kde-format
@@ -340,6 +337,9 @@ msgid ""
 "green, and blue channels simultaneously (i.e., it is an intensity gamma "
 "table)."
 msgstr ""
+"Táboa de corrección de gamma. No modo de cor esta opción afecta de maneira "
+"igual e ao mesmo tempo ás canles vermella, verde e azul (é dicir, é unha "
+"táboa de gamma de intensidade)."
 
 #: ksanewidget_p.cpp:523
 #, kde-format
@@ -361,7 +361,7 @@ msgstr "Negativo"
 #: ksanewidget_p.cpp:1252
 #, kde-format
 msgid "Next scan starts in %1 s."
-msgstr ""
+msgstr "Seguinte dixitalización en %1 s."
 
 #: ksanewidget_p.cpp:1265
 #, kde-format
@@ -436,14 +436,12 @@ msgstr "%1 µs"
 #, kde-format
 msgctxt "Parameter and Unit (seconds)"
 msgid "%1 s"
-msgstr ""
+msgstr "%1 s"
 
 #: widgets/labeledcombo.cpp:176 widgets/labeledcombo.cpp:207
-#, fuzzy, kde-format
-#| msgctxt "Label for a scanner option"
-#| msgid "%1:"
+#, kde-format
 msgid "%1"
-msgstr "%1:"
+msgstr "%1"
 
 #: widgets/labeledentry.cpp:52
 #, kde-format
@@ -494,12 +492,10 @@ msgid " µs"
 msgstr " µs"
 
 #: widgets/labeledfslider.cpp:58
-#, fuzzy, kde-format
-#| msgctxt "Double numbers. SpinBox parameter unit (Microseconds)"
-#| msgid " µs"
+#, kde-format
 msgctxt "SpinBox parameter unit (seconds), float"
 msgid " s"
-msgstr " µs"
+msgstr " s"
 
 #: widgets/labeledgamma.cpp:43
 #, kde-format
@@ -533,9 +529,7 @@ msgstr[0] "Bit"
 msgstr[1] "Bits"
 
 #: widgets/labeledslider.cpp:48
-#, fuzzy, kde-format
-#| msgctxt "SpinBox parameter unit (Millimeter)"
-#| msgid " mm"
+#, kde-format
 msgctxt "SpinBox parameter unit (Millimeter)"
 msgid " mm"
 msgid_plural " mm"
@@ -543,9 +537,7 @@ msgstr[0] " mm"
 msgstr[1] " mm"
 
 #: widgets/labeledslider.cpp:51
-#, fuzzy, kde-format
-#| msgctxt "SpinBox parameter unit (Dots Per Inch)"
-#| msgid " DPI"
+#, kde-format
 msgctxt "SpinBox parameter unit (Dots Per Inch)"
 msgid " DPI"
 msgid_plural " DPI"
@@ -553,9 +545,7 @@ msgstr[0] " PPP"
 msgstr[1] " PPP"
 
 #: widgets/labeledslider.cpp:54
-#, fuzzy, kde-format
-#| msgctxt "SpinBox parameter unit (Percentage)"
-#| msgid " %"
+#, kde-format
 msgctxt "SpinBox parameter unit (Percentage)"
 msgid " %"
 msgid_plural " %"
@@ -563,9 +553,7 @@ msgstr[0] " %"
 msgstr[1] " %"
 
 #: widgets/labeledslider.cpp:57
-#, fuzzy, kde-format
-#| msgctxt "SpinBox parameter unit (Microseconds)"
-#| msgid " µs"
+#, kde-format
 msgctxt "SpinBox parameter unit (Microseconds)"
 msgid " µs"
 msgid_plural " µs"
@@ -573,14 +561,12 @@ msgstr[0] " µs"
 msgstr[1] " µs"
 
 #: widgets/labeledslider.cpp:60
-#, fuzzy, kde-format
-#| msgctxt "Double numbers. SpinBox parameter unit (Microseconds)"
-#| msgid " µs"
+#, kde-format
 msgctxt "SpinBox parameter unit (seconds)"
 msgid " s"
 msgid_plural " s"
-msgstr[0] " µs"
-msgstr[1] " µs"
+msgstr[0] " s"
+msgstr[1] " s"
 
 #~ msgid "Invert colors"
 #~ msgstr "Inverter as cores"
