@@ -14,7 +14,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
 
@@ -388,7 +388,6 @@ msgctxt "Parameter and Unit"
 msgid "%1 Pixel"
 msgid_plural "%1 Pixels"
 msgstr[0] "%1 ピクセル"
-msgstr[1] "%1 ピクセル"
 
 #: widgets/labeledcombo.cpp:158 widgets/labeledcombo.cpp:189
 #, kde-format
@@ -396,7 +395,6 @@ msgctxt "Parameter and Unit"
 msgid "%1 Bit"
 msgid_plural "%1 Bits"
 msgstr[0] "%1 ビット"
-msgstr[1] "%1 ビット"
 
 #: widgets/labeledcombo.cpp:161 widgets/labeledcombo.cpp:192
 #, kde-format
@@ -510,7 +508,6 @@ msgctxt "SpinBox parameter unit"
 msgid " Pixel"
 msgid_plural " Pixels"
 msgstr[0] " ピクセル"
-msgstr[1] " ピクセル"
 
 #: widgets/labeledslider.cpp:45
 #, kde-format
@@ -518,7 +515,6 @@ msgctxt "SpinBox parameter unit"
 msgid " Bit"
 msgid_plural " Bits"
 msgstr[0] " ビット"
-msgstr[1] " ビット"
 
 #: widgets/labeledslider.cpp:48
 #, fuzzy, kde-format
@@ -528,7 +524,6 @@ msgctxt "SpinBox parameter unit (Millimeter)"
 msgid " mm"
 msgid_plural " mm"
 msgstr[0] " mm"
-msgstr[1] " mm"
 
 #: widgets/labeledslider.cpp:51
 #, fuzzy, kde-format
@@ -538,7 +533,6 @@ msgctxt "SpinBox parameter unit (Dots Per Inch)"
 msgid " DPI"
 msgid_plural " DPI"
 msgstr[0] " DPI"
-msgstr[1] " DPI"
 
 #: widgets/labeledslider.cpp:54
 #, fuzzy, kde-format
@@ -548,7 +542,6 @@ msgctxt "SpinBox parameter unit (Percentage)"
 msgid " %"
 msgid_plural " %"
 msgstr[0] " %"
-msgstr[1] " %"
 
 #: widgets/labeledslider.cpp:57
 #, kde-format
@@ -556,7 +549,6 @@ msgctxt "SpinBox parameter unit (Microseconds)"
 msgid " µs"
 msgid_plural " µs"
 msgstr[0] ""
-msgstr[1] ""
 
 #: widgets/labeledslider.cpp:60
 #, kde-format
@@ -564,4 +556,3 @@ msgctxt "SpinBox parameter unit (seconds)"
 msgid " s"
 msgid_plural " s"
 msgstr[0] ""
-msgstr[1] ""
