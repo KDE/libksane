@@ -502,7 +502,7 @@ msgstr " s"
 #: widgets/labeledgamma.cpp:43
 #, kde-format
 msgid "Brightness"
-msgstr "Lluminositat"
+msgstr "Brillantor"
 
 #: widgets/labeledgamma.cpp:46
 #, kde-format
