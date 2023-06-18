@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-01 00:44+0000\n"
-"PO-Revision-Date: 2023-05-22 14:04\n"
+"PO-Revision-Date: 2023-06-17 04:13\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Language: zh_CN\n"
@@ -185,7 +185,7 @@ msgstr "正在搜索设备。请稍候。"
 #: ksanedevicedialog.cpp:117
 #, kde-format
 msgid "Sorry. No devices found."
-msgstr "未发现任何设备。"
+msgstr "对不起，没有发现任何设备。"
 
 #: ksanedevicedialog.cpp:127
 #, kde-format
