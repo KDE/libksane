@@ -453,7 +453,7 @@ msgstr "Reiniciar"
 #, kde-format
 msgctxt "Label for button to write text in a KLineEdit to sane"
 msgid "Set"
-msgstr "Estabelecer"
+msgstr "Definir"
 
 #: widgets/labeledfslider.cpp:40
 #, kde-format
