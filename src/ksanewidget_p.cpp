@@ -1398,3 +1398,5 @@ void KSaneWidgetPrivate::setPageSize(int)
 
 
 }  // NameSpace KSaneIface
+
+#include "moc_ksanewidget_p.cpp"

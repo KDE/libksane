@@ -745,3 +745,5 @@ void KSaneWidget::setScanButtonHidden(bool hidden)
 }
 
 }  // NameSpace KSaneIface
+
+#include "moc_ksanewidget.cpp"

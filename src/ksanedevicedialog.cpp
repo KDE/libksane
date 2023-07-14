@@ -154,3 +154,5 @@ void KSaneDeviceDialog::updateDevicesList(const QList<KSaneCore::DeviceInformati
 }
 
 }
+
+#include "moc_ksanedevicedialog.cpp"

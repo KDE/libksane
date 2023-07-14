@@ -109,3 +109,5 @@ void GammaDisp::paintEvent(QPaintEvent *)
 }
 
 }  // NameSpace KSaneIface
+
+#include "moc_gammadisp.cpp"

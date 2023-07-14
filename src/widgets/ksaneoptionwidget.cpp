@@ -78,3 +78,5 @@ void KSaneOptionWidget::setLabelWidth(int labelWidth)
 }
 
 }  // NameSpace KSaneIface
+
+#include "moc_ksaneoptionwidget.cpp"

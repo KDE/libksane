@@ -39,3 +39,5 @@ void KSaneButton::initButton(const QString &text)
 }
 
 }  // NameSpace KSaneIface
+
+#include "moc_ksanebutton.cpp"

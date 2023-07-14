@@ -210,3 +210,5 @@ QString LabeledCombo::getStringWithUnitForFloat(float fValue) const
 }
 
 }  // NameSpace KSaneIface
+
+#include "moc_labeledcombo.cpp"

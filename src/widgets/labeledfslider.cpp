@@ -234,3 +234,5 @@ void LabeledFSlider::fixValue()
 }
 
 }  // NameSpace KSaneIface
+
+#include "moc_labeledfslider.cpp"

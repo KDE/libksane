@@ -55,3 +55,5 @@ bool LabeledCheckbox::isChecked()
 }
 
 }  // NameSpace KSaneIface
+
+#include "moc_labeledcheckbox.cpp"

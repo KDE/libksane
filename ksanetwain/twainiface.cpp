@@ -600,3 +600,5 @@ void KSaneWidgetPrivate::ImageData(TW_MEMREF pdata, TW_IMAGEINFO &info)
 }
 
 }
+
+#include "moc_twainiface.cpp"

@@ -291,3 +291,5 @@ void SplitterCollapser::paintEvent(QPaintEvent *)
 }
 
 } // namespace
+
+#include "moc_splittercollapser.cpp"

@@ -1188,3 +1188,5 @@ QPointF KSaneViewer::scenePos(QMouseEvent *e) const
 }
 
 }  // NameSpace KSaneIface
+
+#include "moc_ksaneviewer.cpp"

@@ -88,3 +88,5 @@ void LabeledEntry::setClicked()
 }
 
 }  // NameSpace KSaneIface
+
+#include "moc_labeledentry.cpp"

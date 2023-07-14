@@ -140,3 +140,5 @@ int LabeledGamma::maxValue()
 }
 
 }  // NameSpace KSaneIface
+
+#include "moc_labeledgamma.cpp"

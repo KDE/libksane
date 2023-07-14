@@ -189,3 +189,5 @@ int LabeledSlider::value() const
 }
 
 }  // NameSpace KSaneIface
+
+#include "moc_labeledslider.cpp"
