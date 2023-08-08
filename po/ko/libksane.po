@@ -273,7 +273,7 @@ msgstr "스캐너 지정 옵션"
 #: ksanewidget.cpp:322
 #, kde-format
 msgid "Authentication required for resource: %1"
-msgstr "자원에 대한 인증이 필요함: %1"
+msgstr "리소스에 대한 인증이 필요함: %1"
 
 #: ksanewidget.cpp:484
 #, kde-format
