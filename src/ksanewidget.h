@@ -29,21 +29,6 @@ class KSANE_EXPORT KSaneWidget : public QWidget
     friend class KSaneWidgetPrivate;
 
 public:
-    /** This enumeration describes the type of the returned data.
-     * The number of formats might grow, so it is wise to be prepared fro more.*/
-    typedef enum {
-        FormatBlackWhite,   /**< One bit per pixel 1 = black 0 = white */
-        FormatGrayScale8,   /**< Grayscale with one byte per pixel 0 = black 255 = white */
-        FormatGrayScale16,  /**< Grayscale withtTwo bytes per pixel.
-                             * The byte order is the one provided by libsane. */
-        FormatRGB_8_C,      /**< Every pixel consists of three colors in the order Read,
-                             * Grean and Blue, with one byte per color (no alpha channel). */
-        FormatRGB_16_C,     /**< Every pixel consists of three colors in the order Read,
-                             * Grean and Blue, with two bytes per color(no alpha channel).
-                             * The byte order is the one provided by libsane. */
-        FormatBMP,          /**< The image data  is returned as a BMP. */
-        FormatNone = 0xFFFF /**< This enumeration value should never be returned to the user */
-    } ImageFormat;
 
     /** @note There might come more enumerations in the future. */
     typedef enum {
@@ -73,13 +58,6 @@ public:
      * device name of the selected scanner device is returned. */
     QString selectDevice(QWidget *parent = nullptr);
 
-    /**
-     * Get the list of available scanning devices. Connect to availableDevices()
-     * which is fired once these devices are known.
-     * @deprecated since 22.08, manually calling is not needed anymore
-     */
-    KSANE_DEPRECATED void initGetDeviceList() const;
-
     /** This method opens the specified scanner device and adds the scan options to the
      * KSane widget.
      * @param device_name is the libsane device name for the scanner to open.
@@ -90,69 +68,6 @@ public:
     * @return 'true' if all goes well and 'false' if no device is open. */
     bool closeDevice();
 
-    KSANE_DEPRECATED bool makeQImage(const QByteArray &, int, int, int, ImageFormat, QImage &);
-
-    /**
-     * This is a convenience method that can be used to create a QImage from the image data
-     * returned by the imageReady(...) signal.
-     * @note: If the image data has 16 bits/color the * data is truncated to 8 bits/color
-     * A warning message will be shown.
-     * @deprecated since 21.08
-     * @see use scannedImageReady(const QImage &scannedImage) and directly use the provided QImage
-     * @param data is the byte data containing the image.
-     * @param width is the width of the image in pixels.
-     * @param height is the height of the image in pixels.
-     * @param bytes_per_line is the number of bytes used per line. This might include padding
-     * and is probably only relevant for 'FormatBlackWhite'.
-     * @param format is the KSane image format of the data.
-     * @return This function returns the provided image data as a QImage. */
-    KSANE_DEPRECATED QImage toQImage(const QByteArray &data,
-                    int width,
-                    int height,
-                    int bytes_per_line,
-                    ImageFormat format);
-
-    /**
-     * This is a convenience method that can be used to create a QImage from the image data
-     * returned by the imageReady(...) signal.
-     * @note: If the image data has 16 bits/color the * data is truncated to 8 bits/color, but
-     * unlike toQImage() this function will not give a warning.
-     * @deprecated since 21.08
-     * @see use scannedImageReady(const QImage &scannedImage) and directly use the provided QImage
-     * @param data is the byte data containing the image.
-     * @param width is the width of the image in pixels.
-     * @param height is the height of the image in pixels.
-     * @param bytes_per_line is the number of bytes used per line. This might include padding
-     * and is probably only relevant for 'FormatBlackWhite'.
-     * @param format is the KSane image format of the data.
-     * @return This function returns the provided image data as a QImage. */
-    KSANE_DEPRECATED QImage toQImageSilent(const QByteArray &data,
-                          int width,
-                          int height,
-                          int bytes_per_line,
-                          ImageFormat format);
-
-    /**
-     * This is a static version of toQImageSilent() method that requires dpi as additional
-     * argument. Non-static version uses currentDPI() for it.
-     * @deprecated since 21.08
-     * @see use scannedImageReady(const QImage &scannedImage) and directly use the provided QImage
-     * @param data is the byte data containing the image.
-     * @param width is the width of the image in pixels.
-     * @param height is the height of the image in pixels.
-     * @param bytes_per_line is the number of bytes used per line. This might include padding
-     * and is probably only relevant for 'FormatBlackWhite'.
-     * @param format is the KSane image format of the data.
-     * @param dpi is the dpi value of the image.
-     * @return This function returns the provided image data as a QImage. */
-    KSANE_DEPRECATED static
-    QImage toQImageSilent(const QByteArray &data,
-                          int width,
-                          int height,
-                          int bytes_per_line,
-                          int dpi,
-                          ImageFormat format);
-
     /** This method returns the internal device name of the currently opened scanner. */
     QString deviceName() const;
 
@@ -161,25 +76,6 @@ public:
 
     /** This method returns the model of the currently opened scanner. */
     QString deviceModel() const;
-
-    /** This method returns the vendor name of the currently opened scanner
-     * and blocks until the vendor name is available. */
-    KSANE_DEPRECATED QString vendor() const;
-
-    /** same as vendor() */
-    KSANE_DEPRECATED QString make() const;
-    /** This method returns the model of the currently opened scanner
-     * and blocks until the model name is available. */
-    KSANE_DEPRECATED QString model() const;
-
-    /** This method returns the current resolution of the acquired image,
-    * in dots per inch.
-    * @note This function should be called from the slot connected
-    * to the imageReady signal. The connection should not be queued.
-    * @return the resolution used for scanning or 0.0 on failure.
-    * @deprecated since 22.08, only required when not using the QImage based signal
-    * for retrieving the scanned data and using the deprecated toQImageSilent members */
-    KSANE_DEPRECATED float currentDPI();
 
     /** This method returns the scan area's width in mm
     * @return Width of the scannable area in mm */
@@ -206,29 +102,17 @@ public:
      * @param opts is a QMap with the parameter names and values. */
     void getOptionValues(QMap <QString, QString> &options);
 
-    /** @deprecated since 22.04
-     * @see use getOptionValues(QMap <QString, QString> &options) */
-    KSANE_DEPRECATED void getOptVals(QMap <QString, QString> &opts);
-
     /** This method can be used to write many parameter values at once.
      * @param opts is a QMap with the parameter names and values.
      * @return This function returns the number of successful writes
      * or -1 if scanning is in progress. */
     int setOptionValues(const QMap <QString, QString> &options);
 
-    /** @deprecated since 22.04
-     * @see use setOptionValues(const QMap <QString, QString> &options) */
-    int setOptVals(const QMap <QString, QString> &opts);
-
     /** This function reads one parameter value into a string.
      * @param optname is the name of the parameter to read.
      * @param value is the string representation of the value.
      * @return this function returns true if the read was successful. */
     bool getOptionValue(const QString &option, QString &value);
-
-    /** @deprecated since 22.04
-     * @see use getOptionValue(const QString &option, QString &value) */
-    bool getOptVal(const QString &optname, QString &value);
 
     /** This function writes one parameter value into a string.
      * @param optname is the name of the parameter to write.
@@ -237,48 +121,20 @@ public:
      * false if it was unsuccessful or scanning is in progress. */
     bool setOptionValue(const QString &option, const QString &value);
 
-    /** @deprecated since 22.04
-     * @see use setOptionValue(const QString &option, const QString &value) */
-    bool setOptVal(const QString &optname, const QString &value);
-
-    /** This function sets the label on the final scan button
-    * @param scanLabel is the new label for the button. */
-    KSANE_DEPRECATED void setScanButtonText(const QString &scanLabel);
-
-    /** This function sets the label on the preview button
-    * @param previewLabel is the new label for the button. */
-    KSANE_DEPRECATED void setPreviewButtonText(const QString &previewLabel);
-
     /** This function can be used to enable/disable automatic selections on previews.
     * The default state is enabled.
     * @param enable specifies if the auto selection should be turned on or off. */
     void enableAutoSelect(bool enable);
 
-    /** This function is used to programatically collapse/restore the options.
-    * @param collapse defines the state to set. */
-    KSANE_DEPRECATED void setOptionsCollapsed(bool collapse);
-
-    /** This function is used hide/show the final scan button.
-    * @param hidden defines the state to set. */
-    KSANE_DEPRECATED void setScanButtonHidden(bool hidden);
-
 public Q_SLOTS:
     /** This method can be used to cancel a scan or prevent an automatic new scan. */
     void cancelScan();
-
-    /** @deprecated since 22.04
-     * @see use cancelScan() */
-    KSANE_DEPRECATED void scanCancel();
 
     /** This method can be used to start a scan (if no GUI is needed).
     * @note libksane may return one or more images as a result of one invocation of this slot.
     * If no more images are wanted cancelScan should be called in the slot handling the
     * imageReady signal. */
     void startScan();
-
-    /** @deprecated since 22.04
-     * @see use startScan() */
-    KSANE_DEPRECATED void scanFinal();
 
     /** This method can be used to start a preview scan. */
     void startPreviewScan();
@@ -288,19 +144,6 @@ Q_SIGNALS:
      * This signal is emitted when a final scan is ready.
      * @param scannedImage is the QImage containing the scanned image data. */
     void scannedImageReady(const QImage &scannedImage);
-
-    /**
-     * This Signal is emitted when a final scan is ready.
-     * @deprecated since 21.08
-     * @see use new scannedImageReady(const QImage &scannedImage) instead
-     * @param data is the byte data containing the image.
-     * @param width is the width of the image in pixels.
-     * @param height is the height of the image in pixels.
-     * @param bytes_per_line is the number of bytes used per line. This might include padding
-     * and is probably only relevant for 'FormatBlackWhite'.
-     * @param format is the KSane image format of the data. */
-    KSANE_DEPRECATED void imageReady(QByteArray &data, int width, int height,
-                    int bytes_per_line, int format);
 
     /**
      * This signal is emitted when the scanning has ended.

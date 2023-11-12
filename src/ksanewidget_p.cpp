@@ -135,24 +135,6 @@ void KSaneWidgetPrivate::signalDevListUpdate(const QList<KSaneCore::DeviceInform
     Q_EMIT q->availableDevices(list);
 }
 
-KSaneWidget::ImageFormat KSaneWidgetPrivate::getImgFormat(const QImage &image)
-{
-    switch (image.format()) {
-    case QImage::Format_Mono:
-        return KSaneWidget::FormatBlackWhite;
-    case QImage::Format_Grayscale8:
-        return KSaneWidget::FormatGrayScale8;
-    case QImage::Format_Grayscale16:
-         return KSaneWidget::FormatGrayScale16;
-    case QImage::Format_RGB32:
-        return KSaneWidget::FormatRGB_8_C;
-    case QImage::Format_RGBX64:
-        return KSaneWidget::FormatRGB_16_C;
-    default:
-         return KSaneWidget::FormatNone;
-    }
-}
-
 float KSaneWidgetPrivate::ratioToScanAreaX(float ratio)
 {
     if (!m_optBrX) {
@@ -1033,69 +1015,6 @@ void KSaneWidgetPrivate::imageReady(const QImage &image)
         return;
     }
     Q_EMIT q->scannedImageReady(image);
-    //TODO: only for compatibility, remove in the future
-    if (q->isSignalConnected(QMetaMethod::fromSignal(&KSaneWidget::imageReady))) {
-        KSaneWidget::ImageFormat format = getImgFormat(image);
-        QByteArray scanData;
-        scanData.reserve(image.sizeInBytes());
-        switch (format) {
-            case KSaneWidget::FormatBlackWhite:
-                scanData = QByteArray::fromRawData(reinterpret_cast<const char*>(image.bits()), image.sizeInBytes());
-                break;
-            case KSaneWidget::FormatGrayScale8: {
-                for (int y = 0; y < image.height(); y++) {
-                    const uchar *line = image.scanLine(y);
-                    for (int x = 0; x < image.width(); x++) {
-                        scanData.append(line[x]);
-                    }
-                }
-                break;
-            }
-            case KSaneWidget::FormatGrayScale16: {
-                for (int y = 0; y < image.height(); y++) {
-                    const uchar *line = image.scanLine(y);
-                    for (int x = 0; x < image.width(); x++) {
-                        scanData.append(line[2 * x]);
-                        scanData.append(line[2 * x + 1]);
-                    }
-                }
-                break;
-            }
-            case KSaneWidget::FormatRGB_8_C: {
-                for (int y = 0; y < image.height(); y++) {
-                    const QRgb *line = reinterpret_cast<const QRgb *>(image.scanLine(y));
-                    for (int x = 0; x < image.width(); x++) {
-                        scanData.append(qRed(line[x]));
-                        scanData.append(qGreen(line[x]));
-                        scanData.append(qBlue(line[x]));
-                    }
-                }
-                break;
-            }
-            case KSaneWidget::FormatRGB_16_C: {
-                for (int y = 0; y < image.height(); y++) {
-                    const uchar *line = image.scanLine(y);
-                    for (int x = 0; x < image.width(); x++) {
-                        scanData.append(line[8 * x]);
-                        scanData.append(line[8 * x + 1]);
-                        scanData.append(line[8 * x + 2]);
-                        scanData.append(line[8 * x + 3]);
-                        scanData.append(line[8 * x + 4]);
-                        scanData.append(line[8 * x + 5]);
-                    }
-                }
-                break;
-            }
-            default:
-                break;
-        }
-
-        Q_EMIT q->imageReady(scanData,
-            image.width(),
-            image.height(),
-            image.bytesPerLine(),
-            format);
-    }
 }
 
 bool KSaneWidgetPrivate::scanSourceADF()

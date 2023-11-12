@@ -220,45 +220,6 @@ QString KSaneWidget::deviceModel() const
     return d->m_ksaneCoreInterface->deviceModel();
 }
 
-QString KSaneWidget::vendor() const
-{
-    const QString &vendor = d->m_ksaneCoreInterface->deviceVendor();
-    if (!vendor.isEmpty()) {
-        return vendor;
-    }
-
-    const QString &name = d->m_ksaneCoreInterface->deviceName();
-    if (name.isEmpty()) {
-        return QString();
-    }
-    QEventLoop loop;
-    connect(this, &KSaneWidget::openedDeviceInfoUpdated, &loop, &QEventLoop::quit, Qt::QueuedConnection);
-    loop.exec();
-    return d->m_ksaneCoreInterface->deviceVendor();
-}
-
-QString KSaneWidget::make() const
-{
-    return vendor();
-}
-
-QString KSaneWidget::model() const
-{
-    const QString &model = d->m_ksaneCoreInterface->deviceModel();
-    if (!model.isEmpty()) {
-        return model;
-    }
-
-    const QString &name = d->m_ksaneCoreInterface->deviceName();
-    if (name.isEmpty()) {
-        return QString();
-    }
-    QEventLoop loop;
-    connect(this, &KSaneWidget::openedDeviceInfoUpdated, &loop, &QEventLoop::quit, Qt::QueuedConnection);
-    loop.exec();
-    return d->m_ksaneCoreInterface->deviceModel();
-}
-
 QString KSaneWidget::selectDevice(QWidget *parent)
 {
     QString selected_name;
@@ -274,11 +235,6 @@ QString KSaneWidget::selectDevice(QWidget *parent)
 
     delete sel;
     return selected_name;
-}
-
-void KSaneWidget::initGetDeviceList() const
-{
-    d->m_ksaneCoreInterface->reloadDevicesList();
 }
 
 bool KSaneWidget::openDevice(const QString &deviceName)
@@ -380,113 +336,6 @@ bool KSaneWidget::closeDevice()
     return true;
 }
 
-QImage KSaneWidget::toQImageSilent(const QByteArray &data,
-                                   int width,
-                                   int height,
-                                   int bytes_per_line,
-                                   ImageFormat format)
-{
-    return KSaneWidget::toQImageSilent(data, width, height, bytes_per_line, currentDPI(), format);
-}
-
-QImage KSaneWidget::toQImageSilent(const QByteArray &data,
-                                   int width,
-                                   int height,
-                                   int bytes_per_line,
-                                   int dpi,
-                                   ImageFormat format)
-{
-    QImage img;
-    int j = 0;
-    QVector<QRgb> table;
-    QRgb *imgLine;
-
-    switch (format) {
-    case FormatBlackWhite:
-        img = QImage((uchar *)data.data(),
-                     width,
-                     height,
-                     bytes_per_line,
-                     QImage::Format_Mono);
-        // The color table must be set
-        table.append(0xFFFFFFFF);
-        table.append(0xFF000000);
-        img.setColorTable(table);
-        break;
-
-    case FormatGrayScale8: {
-        img = QImage(width, height, QImage::Format_RGB32);
-        int dI = 0;
-        for (int i = 0; (i < img.height() && dI < data.size()); i++) {
-            imgLine = reinterpret_cast<QRgb *>(img.scanLine(i));
-            for (j = 0; (j < img.width() && dI < data.size()); j++) {
-                imgLine[j] = qRgb(data[dI], data[dI], data[dI]);
-                dI++;
-            }
-        }
-        break;
-    }
-    case FormatGrayScale16: {
-        img = QImage(width, height, QImage::Format_RGB32);
-        int dI = 1;
-        for (int i = 0; (i < img.height() && dI < data.size()); i++) {
-            imgLine = reinterpret_cast<QRgb *>(img.scanLine(i));
-            for (j = 0; (j < img.width() && dI < data.size()); j++) {
-                imgLine[j] = qRgb(data[dI], data[dI], data[dI]);
-                dI += 2;
-            }
-        }
-        break;
-    }
-    case FormatRGB_8_C: {
-        img = QImage(width, height, QImage::Format_RGB32);
-        int dI = 0;
-        for (int i = 0; (i < img.height() && dI < data.size()); i++) {
-            imgLine = reinterpret_cast<QRgb *>(img.scanLine(i));
-            for (j = 0; (j < img.width() && dI < data.size()); j++) {
-                imgLine[j] = qRgb(data[dI], data[dI + 1], data[dI + 2]);
-                dI += 3;
-            }
-        }
-        break;
-    }
-    case FormatRGB_16_C: {
-        img = QImage(width, height, QImage::Format_RGB32);
-        int dI = 1;
-        for (int i = 0; (i < img.height() && dI < data.size()); i++) {
-            imgLine = reinterpret_cast<QRgb *>(img.scanLine(i));
-            for (j = 0; (j < img.width() && dI < data.size()); j++) {
-                imgLine[j] = qRgb(data[dI], data[dI + 2], data[dI + 4]);
-                dI += 6;
-            }
-        }
-        break;
-    }
-    case FormatNone:
-    default:
-        qCDebug(KSANE_LOG) << "Unsupported conversion";
-        break;
-    }
-    float dpm = dpi * (1000.0 / 25.4);
-    img.setDotsPerMeterX(dpm);
-    img.setDotsPerMeterY(dpm);
-    return img;
-}
-
-QImage KSaneWidget::toQImage(const QByteArray &data,
-                             int width,
-                             int height,
-                             int bytes_per_line,
-                             ImageFormat format)
-{
-
-    if ((format == FormatRGB_16_C) || (format == FormatGrayScale16)) {
-        d->alertUser(KSaneCore::Interface::ErrorGeneral, i18n("The image data contained 16 bits per color, "
-                     "but the color depth has been truncated to 8 bits per color."));
-    }
-    return toQImageSilent(data, width, height, bytes_per_line, format);
-}
-
 void KSaneWidget::startScan()
 {
     if (d->m_btnFrame->isEnabled()) {
@@ -496,11 +345,6 @@ void KSaneWidget::startScan()
         // if the button frame is disabled, there is no open device to scan from
         Q_EMIT scanDone(KSaneWidget::ErrorGeneral, QString());
     }
-}
-
-void KSaneWidget::scanFinal()
-{
-    startScan();
 }
 
 void KSaneWidget::startPreviewScan()
@@ -520,11 +364,6 @@ void KSaneWidget::cancelScan()
     d->m_ksaneCoreInterface->stopScan();
 }
 
-void KSaneWidget::scanCancel()
-{
-    cancelScan();
-}
-
 void KSaneWidget::setPreviewResolution(float dpi)
 {
     d->m_previewDPI = dpi;
@@ -534,11 +373,6 @@ void KSaneWidget::getOptionValues(QMap <QString, QString> &opts)
 {
     opts.clear();
     opts = d->m_ksaneCoreInterface->getOptionsMap();
-}
-
-void KSaneWidget::getOptVals(QMap <QString, QString> &opts)
-{
-    getOptionValues(opts);
 }
 
 bool KSaneWidget::getOptionValue(const QString &option, QString &value)
@@ -553,11 +387,6 @@ bool KSaneWidget::getOptionValue(const QString &option, QString &value)
         it++;
     }
     return false;
-}
-
-bool KSaneWidget::getOptVal(const QString &optname, QString &value)
-{
-    return getOptionValue(optname, value);
 }
 
 int KSaneWidget::setOptionValues(const QMap <QString, QString> &options)
@@ -585,11 +414,6 @@ int KSaneWidget::setOptionValues(const QMap <QString, QString> &options)
         }
     }
     return ret;
-}
-
-int KSaneWidget::setOptVals(const QMap <QString, QString> &opts)
-{
-    return setOptionValues(opts);
 }
 
 bool KSaneWidget::setOptionValue(const QString &option, const QString &value)
@@ -629,43 +453,9 @@ bool KSaneWidget::setOptionValue(const QString &option, const QString &value)
     return false;
 }
 
-bool KSaneWidget::setOptVal(const QString &option, const QString &value)
-{
-    return setOptionValue(option, value);
-}
-
-void KSaneWidget::setScanButtonText(const QString &scanLabel)
-{
-    if (d->m_scanBtn == nullptr) {
-        qCritical() << "setScanButtonText was called before KSaneWidget was initialized";
-        return;
-    }
-    d->m_scanBtn->setText(scanLabel);
-}
-
-void KSaneWidget::setPreviewButtonText(const QString &previewLabel)
-{
-    if (d->m_scanBtn == nullptr) {
-        qCritical() << "setPreviewButtonText was called before KSaneWidget was initialized";
-        return;
-    }
-    d->m_prevBtn->setText(previewLabel);
-}
-
 void KSaneWidget::enableAutoSelect(bool enable)
 {
     d->m_autoSelect = enable;
-}
-
-float KSaneWidget::currentDPI()
-{
-    if (d->m_optRes) {
-        QVariant value = d->m_optRes->value();
-        if (!value.isNull()) {
-            return value.toFloat();
-        }
-    }
-    return 0.0; // Failure to read DPI
 }
 
 float KSaneWidget::scanAreaWidth()
@@ -728,20 +518,6 @@ void KSaneWidget::setSelection(QPointF topLeft, QPointF bottomRight)
     float bryRatio = d->scanAreaToRatioX(bottomRight.y());
 
     d->m_previewViewer->setSelection(tlxRatio, tlyRatio, brxRatio, bryRatio);
-}
-
-void KSaneWidget::setOptionsCollapsed(bool collapse)
-{
-    if (collapse) {
-        QTimer::singleShot(0, d->m_optionsCollapser, &SplitterCollapser::slotCollapse);
-    } else {
-        QTimer::singleShot(0, d->m_optionsCollapser, &SplitterCollapser::slotRestore);
-    }
-}
-
-void KSaneWidget::setScanButtonHidden(bool hidden)
-{
-    d->m_scanBtn->setHidden(hidden);
 }
 
 }  // NameSpace KSaneIface

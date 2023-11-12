@@ -50,7 +50,6 @@ public:
     void updatePreviewSize();
     void setBusy(bool busy);
     KSaneOptionWidget *createOptionWidget(QWidget *parent, KSaneCore::Option *option);
-    KSaneWidget::ImageFormat getImgFormat(const QImage &image);
 
     float ratioToScanAreaX(float ratio);
     float ratioToScanAreaY(float ratio);
