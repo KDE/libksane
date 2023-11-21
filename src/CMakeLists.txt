@@ -1,21 +1,22 @@
-add_library(KF5Sane)
-add_library(KF5::Sane ALIAS KF5Sane)
-add_library(KF5::SaneWidget ALIAS KF5Sane)
+add_library(KSaneWidgets)
+add_library(KF5::Sane ALIAS KSaneWidgets)
+add_library(KF5::SaneWidget ALIAS KSaneWidgets)
 
-set_target_properties(KF5Sane PROPERTIES
+set_target_properties(KSaneWidgets PROPERTIES
     VERSION     ${KSANE_VERSION}
     SOVERSION   ${KSANE_SOVERSION}
     EXPORT_NAME "Sane"
+    OUTPUT_NAME KF5Sane
 )
 
-target_compile_definitions(KF5Sane PRIVATE -DTRANSLATION_DOMAIN=\"libksane\")
+target_compile_definitions(KSaneWidgets PRIVATE -DTRANSLATION_DOMAIN=\"libksane\")
 
 if (KF5Wallet_FOUND)
-    target_compile_definitions(KF5Sane PRIVATE -DHAVE_KF5WALLET)
-    target_link_libraries(KF5Sane PRIVATE KF${KF_MAJOR_VERSION}::Wallet)
+    target_compile_definitions(KSaneWidgets PRIVATE -DHAVE_KF5WALLET)
+    target_link_libraries(KSaneWidgets PRIVATE KF${KF_MAJOR_VERSION}::Wallet)
 endif()
 
-target_sources(KF5Sane PRIVATE
+target_sources(KSaneWidgets PRIVATE
     widgets/gammadisp.cpp
     widgets/labeledgamma.cpp
     widgets/labeledcheckbox.cpp
@@ -34,7 +35,7 @@ target_sources(KF5Sane PRIVATE
     splittercollapser.cpp
 )
 
-ecm_qt_declare_logging_category(KF5Sane
+ecm_qt_declare_logging_category(KSaneWidgets
   HEADER ksane_debug.h
   IDENTIFIER KSANE_LOG
   CATEGORY_NAME org.kde.ksane
@@ -52,21 +53,21 @@ else()
     endif()
 endif()
 
-ecm_generate_export_header(KF5Sane
+ecm_generate_export_header(KSaneWidgets
     BASE_NAME KSane
     VERSION ${KSANE_VERSION}
     DEPRECATED_BASE_VERSION 0
     ${_generate_export_header_version_args}
 )
 
-target_include_directories(KF5Sane
+target_include_directories(KSaneWidgets
     INTERFACE
         "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR_KF}/KSane>"
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/widgets
 )
 
-target_link_libraries(KF5Sane
+target_link_libraries(KSaneWidgets
     PUBLIC
         Qt${QT_MAJOR_VERSION}::Core
         Qt${QT_MAJOR_VERSION}::Gui
@@ -93,8 +94,8 @@ ecm_install_icons(ICONS
   16-actions-gray-scale.png
   DESTINATION ${KDE_INSTALL_ICONDIR})
 
-install(TARGETS KF5Sane
-  EXPORT KF5SaneTargets
+install(TARGETS KSaneWidgets
+  EXPORT KSaneWidgetsTargets
   ${KDE_INSTALL_TARGETS_DEFAULT_ARGS}
 )
 

@@ -110,7 +110,7 @@ install(FILES
 )
 
 install(EXPORT
-  KF5SaneTargets
+  KSaneWidgetsTargets
   DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
   FILE KF5SaneTargets.cmake
   NAMESPACE KF5::
