@@ -1,5 +1,12 @@
 add_library(KSaneWidgets)
 
+set_target_properties(KSaneWidgets PROPERTIES
+    VERSION     ${KSANE_VERSION}
+    SOVERSION   ${KSANE_SOVERSION}
+    EXPORT_NAME "Sane"
+    OUTPUT_NAME KF5Sane
+)
+
 target_compile_definitions(KSaneWidgets PRIVATE -DTRANSLATION_DOMAIN=\"libksane\")
 
 IF( WIN32 )
@@ -27,14 +34,6 @@ target_link_libraries(KSaneWidgets
     PRIVATE
         KF${KF_MAJOR_VERSION}::I18n
 )
-
-set_target_properties(KSaneWidgets
-    PROPERTIES VERSION ${KSANE_VERSION}
-    SOVERSION ${KSANE_SOVERSION}
-    EXPORT_NAME "Sane"
-    OUTPUT_NAME KF5Sane
-)
-
 
 ecm_generate_headers(KSane_HEADERS
     HEADER_NAMES
