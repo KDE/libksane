@@ -3,8 +3,8 @@ add_library(KSaneWidgets)
 set_target_properties(KSaneWidgets PROPERTIES
     VERSION     ${KSANE_VERSION}
     SOVERSION   ${KSANE_SOVERSION}
-    EXPORT_NAME "Sane"
-    OUTPUT_NAME KF5Sane
+    EXPORT_NAME ${TARGET_EXPORT_NAME}
+    OUTPUT_NAME ${LIBRARYFILE_NAME}
 )
 
 target_compile_definitions(KSaneWidgets PRIVATE -DTRANSLATION_DOMAIN=\"libksane\")
@@ -60,7 +60,7 @@ ecm_generate_export_header(KSaneWidgets
 
 target_include_directories(KSaneWidgets
     INTERFACE
-        "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR_KF}/KSane>"
+        "$<INSTALL_INTERFACE:${KSANEWIDGETS_INSTALL_INCLUDEDIR}>"
     PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/widgets
 )
@@ -100,6 +100,6 @@ install(TARGETS KSaneWidgets
 install(FILES
   ${CMAKE_CURRENT_BINARY_DIR}/ksane_export.h
   ${KSane_HEADERS}
-  DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF}/KSane
+  DESTINATION ${KSANEWIDGETS_INSTALL_INCLUDEDIR}
   COMPONENT Devel
 )

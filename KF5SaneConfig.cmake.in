@@ -2,4 +2,4 @@
 
 include(CMakeFindDependencyMacro)
 find_dependency(Qt@QT_MAJOR_VERSION@Widgets "@REQUIRED_QT_VERSION@")
-include("${CMAKE_CURRENT_LIST_DIR}/KF5SaneTargets.cmake")
+include("${CMAKE_CURRENT_LIST_DIR}/@KSANEWIDGETS_CMAKECONFIG_NAME@Targets.cmake")
