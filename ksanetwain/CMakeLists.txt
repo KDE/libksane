@@ -1,5 +1,4 @@
 add_library(KSaneWidgets)
-add_library(KF5::Sane ALIAS KSaneWidgets)
 
 target_compile_definitions(KSaneWidgets PRIVATE -DTRANSLATION_DOMAIN=\"libksane\")
 

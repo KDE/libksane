@@ -1,6 +1,4 @@
 add_library(KSaneWidgets)
-add_library(KF5::Sane ALIAS KSaneWidgets)
-add_library(KF5::SaneWidget ALIAS KSaneWidgets)
 
 set_target_properties(KSaneWidgets PROPERTIES
     VERSION     ${KSANE_VERSION}
