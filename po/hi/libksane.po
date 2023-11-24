@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libksane\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-05 12:27+0000\n"
+"POT-Creation-Date: 2023-11-24 00:40+0000\n"
 "PO-Revision-Date: 2022-02-17 22:09+0530\n"
 "Last-Translator: Raghavendra Kamath <raghu@raghukamath.com>\n"
 "Language-Team: Hindi <kde-l10n-hi@kde.org>\n"
@@ -269,61 +269,52 @@ msgstr "उन्नत विकल्प"
 msgid "Scanner Specific Options"
 msgstr "स्कैनर विशिष्ट विकल्प"
 
-#: ksanewidget.cpp:322
+#: ksanewidget.cpp:278
 #, kde-format
 msgid "Authentication required for resource: %1"
 msgstr "संसाधन के लिए प्रमाणीकरण आवश्यक : %1"
 
-#: ksanewidget.cpp:484
-#, kde-format
-msgid ""
-"The image data contained 16 bits per color, but the color depth has been "
-"truncated to 8 bits per color."
-msgstr ""
-"छवि डेटा में प्रति रंग १६ बिट थे, लेकिन रंग की गहराई को ८ बिट प्रति रंग तक छोटा कर "
-"दिया गया है।"
-
-#: ksanewidget_p.cpp:428
+#: ksanewidget_p.cpp:410
 #, kde-format
 msgid "Scan Area Size"
 msgstr "स्कैन क्षेत्र का आकार"
 
-#: ksanewidget_p.cpp:433
+#: ksanewidget_p.cpp:415
 #, kde-format
 msgid " mm"
 msgstr " मिमि"
 
-#: ksanewidget_p.cpp:433
+#: ksanewidget_p.cpp:415
 #, kde-format
 msgid " inch"
 msgstr " इंच"
 
-#: ksanewidget_p.cpp:435
+#: ksanewidget_p.cpp:417
 #, kde-format
 msgid "Width"
 msgstr "चौड़ाई"
 
-#: ksanewidget_p.cpp:440
+#: ksanewidget_p.cpp:422
 #, kde-format
 msgid "Height"
 msgstr "ऊंचाई"
 
-#: ksanewidget_p.cpp:445
+#: ksanewidget_p.cpp:427
 #, kde-format
 msgid "X Offset"
 msgstr "एक्स ऑफसेट"
 
-#: ksanewidget_p.cpp:450
+#: ksanewidget_p.cpp:432
 #, kde-format
 msgid "Y Offset"
 msgstr "वाय ऑफसेट"
 
-#: ksanewidget_p.cpp:511
+#: ksanewidget_p.cpp:493
 #, kde-format
 msgid "Image intensity"
 msgstr "छवि तीव्रता"
 
-#: ksanewidget_p.cpp:515
+#: ksanewidget_p.cpp:497
 #, kde-format
 msgid ""
 "Gamma-correction table. In color mode this option equally affects the red, "
@@ -334,46 +325,46 @@ msgstr ""
 "प्रभावित करता है (यानी, यह एक तीव्रता वाली गामा तालिका है)।"
 
 # No context is given for translators, we probably need to revisit this later to find out if separate is verb
-#: ksanewidget_p.cpp:523
+#: ksanewidget_p.cpp:505
 #, kde-format
 msgid "Separate color intensity tables"
 msgstr "अलग रंग तीव्रता तालिका"
 
-#: ksanewidget_p.cpp:1203
+#: ksanewidget_p.cpp:1122
 #, kde-format
 msgctxt "This is compared to the option string returned by sane"
 msgid "Transparency"
 msgstr "पारदर्शिता"
 
-#: ksanewidget_p.cpp:1205
+#: ksanewidget_p.cpp:1124
 #, kde-format
 msgctxt "This is compared to the option string returned by sane"
 msgid "Negative"
 msgstr "ऋणात्मक"
 
-#: ksanewidget_p.cpp:1252
+#: ksanewidget_p.cpp:1171
 #, kde-format
 msgid "Next scan starts in %1 s."
 msgstr "अगला स्कैन %1s में प्रारंभ होता है।"
 
-#: ksanewidget_p.cpp:1265
+#: ksanewidget_p.cpp:1184
 #, kde-format
 msgctxt "@title:window"
 msgid "General Error"
 msgstr "साधारण त्रुटी"
 
-#: ksanewidget_p.cpp:1268
+#: ksanewidget_p.cpp:1187
 #, kde-format
 msgctxt "@title:window"
 msgid "Information"
 msgstr "जानकारी"
 
-#: ksanewidget_p.cpp:1350
+#: ksanewidget_p.cpp:1269
 #, kde-format
 msgid "Custom"
 msgstr "तदनुकूल"
 
-#: ksanewidget_p.cpp:1375
+#: ksanewidget_p.cpp:1294
 #, kde-format
 msgctxt "Page size landscape"
 msgid " Landscape"
@@ -560,6 +551,13 @@ msgid " s"
 msgid_plural " s"
 msgstr[0] " से."
 msgstr[1] " से."
+
+#~ msgid ""
+#~ "The image data contained 16 bits per color, but the color depth has been "
+#~ "truncated to 8 bits per color."
+#~ msgstr ""
+#~ "छवि डेटा में प्रति रंग १६ बिट थे, लेकिन रंग की गहराई को ८ बिट प्रति रंग तक छोटा कर "
+#~ "दिया गया है।"
 
 #~ msgid "Scanning stopped by user."
 #~ msgstr "उपयोक्ता द्वारा स्कैन करना बंद कर दिया गया है।"

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libksane\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-05 12:27+0000\n"
+"POT-Creation-Date: 2023-11-24 00:40+0000\n"
 "PO-Revision-Date: 2020-05-15 00:08+0800\n"
 "Last-Translator: Yi-Jyun Pan <pan93412@gmail.com>\n"
 "Language-Team: Chinese <zh-l10n@lists.linux.org.tw>\n"
@@ -269,59 +269,52 @@ msgstr "基本選項"
 msgid "Scanner Specific Options"
 msgstr "掃描器指定選項"
 
-#: ksanewidget.cpp:322
+#: ksanewidget.cpp:278
 #, kde-format
 msgid "Authentication required for resource: %1"
 msgstr "此資源需要認證：%1"
 
-#: ksanewidget.cpp:484
-#, kde-format
-msgid ""
-"The image data contained 16 bits per color, but the color depth has been "
-"truncated to 8 bits per color."
-msgstr "影像資料中每個顏色包含了 16 位元，但是顏色深度卻被切到 8 位元。"
-
-#: ksanewidget_p.cpp:428
+#: ksanewidget_p.cpp:410
 #, kde-format
 msgid "Scan Area Size"
 msgstr "掃描區域大小"
 
-#: ksanewidget_p.cpp:433
+#: ksanewidget_p.cpp:415
 #, kde-format
 msgid " mm"
 msgstr " 毫米"
 
-#: ksanewidget_p.cpp:433
+#: ksanewidget_p.cpp:415
 #, kde-format
 msgid " inch"
 msgstr " 英寸"
 
-#: ksanewidget_p.cpp:435
+#: ksanewidget_p.cpp:417
 #, kde-format
 msgid "Width"
 msgstr "寬度"
 
-#: ksanewidget_p.cpp:440
+#: ksanewidget_p.cpp:422
 #, kde-format
 msgid "Height"
 msgstr "長度"
 
-#: ksanewidget_p.cpp:445
+#: ksanewidget_p.cpp:427
 #, kde-format
 msgid "X Offset"
 msgstr "X 位移"
 
-#: ksanewidget_p.cpp:450
+#: ksanewidget_p.cpp:432
 #, kde-format
 msgid "Y Offset"
 msgstr "Y 位移"
 
-#: ksanewidget_p.cpp:511
+#: ksanewidget_p.cpp:493
 #, kde-format
 msgid "Image intensity"
 msgstr ""
 
-#: ksanewidget_p.cpp:515
+#: ksanewidget_p.cpp:497
 #, kde-format
 msgid ""
 "Gamma-correction table. In color mode this option equally affects the red, "
@@ -329,46 +322,46 @@ msgid ""
 "table)."
 msgstr ""
 
-#: ksanewidget_p.cpp:523
+#: ksanewidget_p.cpp:505
 #, kde-format
 msgid "Separate color intensity tables"
 msgstr "分離顏色強度表格"
 
-#: ksanewidget_p.cpp:1203
+#: ksanewidget_p.cpp:1122
 #, kde-format
 msgctxt "This is compared to the option string returned by sane"
 msgid "Transparency"
 msgstr "透明度"
 
-#: ksanewidget_p.cpp:1205
+#: ksanewidget_p.cpp:1124
 #, kde-format
 msgctxt "This is compared to the option string returned by sane"
 msgid "Negative"
 msgstr "負"
 
-#: ksanewidget_p.cpp:1252
+#: ksanewidget_p.cpp:1171
 #, kde-format
 msgid "Next scan starts in %1 s."
 msgstr ""
 
-#: ksanewidget_p.cpp:1265
+#: ksanewidget_p.cpp:1184
 #, kde-format
 msgctxt "@title:window"
 msgid "General Error"
 msgstr "一般錯誤"
 
-#: ksanewidget_p.cpp:1268
+#: ksanewidget_p.cpp:1187
 #, kde-format
 msgctxt "@title:window"
 msgid "Information"
 msgstr "資訊"
 
-#: ksanewidget_p.cpp:1350
+#: ksanewidget_p.cpp:1269
 #, kde-format
 msgid "Custom"
 msgstr "自訂"
 
-#: ksanewidget_p.cpp:1375
+#: ksanewidget_p.cpp:1294
 #, kde-format
 msgctxt "Page size landscape"
 msgid " Landscape"
@@ -560,6 +553,11 @@ msgctxt "SpinBox parameter unit (seconds)"
 msgid " s"
 msgid_plural " s"
 msgstr[0] " 微秒"
+
+#~ msgid ""
+#~ "The image data contained 16 bits per color, but the color depth has been "
+#~ "truncated to 8 bits per color."
+#~ msgstr "影像資料中每個顏色包含了 16 位元，但是顏色深度卻被切到 8 位元。"
 
 #~ msgid "Invert colors"
 #~ msgstr "反轉顏色"

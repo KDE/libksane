@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libksane\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-05 12:27+0000\n"
+"POT-Creation-Date: 2023-11-24 00:40+0000\n"
 "PO-Revision-Date: 2022-01-01 15:42+0000\n"
 "Last-Translator: Steve Allewell <steve.allewell@gmail.com>\n"
 "Language-Team: British English <kde-l10n-en_gb@kde.org>\n"
@@ -271,61 +271,52 @@ msgstr "Advanced Options"
 msgid "Scanner Specific Options"
 msgstr "Scanner Specific Options"
 
-#: ksanewidget.cpp:322
+#: ksanewidget.cpp:278
 #, kde-format
 msgid "Authentication required for resource: %1"
 msgstr "Authentication required for resource: %1"
 
-#: ksanewidget.cpp:484
-#, kde-format
-msgid ""
-"The image data contained 16 bits per color, but the color depth has been "
-"truncated to 8 bits per color."
-msgstr ""
-"The image data contained 16 bits per colour, but the colour depth has been "
-"truncated to 8 bits per colour."
-
-#: ksanewidget_p.cpp:428
+#: ksanewidget_p.cpp:410
 #, kde-format
 msgid "Scan Area Size"
 msgstr "Scan Area Size"
 
-#: ksanewidget_p.cpp:433
+#: ksanewidget_p.cpp:415
 #, kde-format
 msgid " mm"
 msgstr " mm"
 
-#: ksanewidget_p.cpp:433
+#: ksanewidget_p.cpp:415
 #, kde-format
 msgid " inch"
 msgstr " inch"
 
-#: ksanewidget_p.cpp:435
+#: ksanewidget_p.cpp:417
 #, kde-format
 msgid "Width"
 msgstr "Width"
 
-#: ksanewidget_p.cpp:440
+#: ksanewidget_p.cpp:422
 #, kde-format
 msgid "Height"
 msgstr "Height"
 
-#: ksanewidget_p.cpp:445
+#: ksanewidget_p.cpp:427
 #, kde-format
 msgid "X Offset"
 msgstr "X Offset"
 
-#: ksanewidget_p.cpp:450
+#: ksanewidget_p.cpp:432
 #, kde-format
 msgid "Y Offset"
 msgstr "Y Offset"
 
-#: ksanewidget_p.cpp:511
+#: ksanewidget_p.cpp:493
 #, kde-format
 msgid "Image intensity"
 msgstr "Image intensity"
 
-#: ksanewidget_p.cpp:515
+#: ksanewidget_p.cpp:497
 #, kde-format
 msgid ""
 "Gamma-correction table. In color mode this option equally affects the red, "
@@ -336,46 +327,46 @@ msgstr ""
 "green, and blue channels simultaneously (i.e., it is an intensity gamma "
 "table)."
 
-#: ksanewidget_p.cpp:523
+#: ksanewidget_p.cpp:505
 #, kde-format
 msgid "Separate color intensity tables"
 msgstr "Separate colour intensity tables"
 
-#: ksanewidget_p.cpp:1203
+#: ksanewidget_p.cpp:1122
 #, kde-format
 msgctxt "This is compared to the option string returned by sane"
 msgid "Transparency"
 msgstr "Transparency"
 
-#: ksanewidget_p.cpp:1205
+#: ksanewidget_p.cpp:1124
 #, kde-format
 msgctxt "This is compared to the option string returned by sane"
 msgid "Negative"
 msgstr "Negative"
 
-#: ksanewidget_p.cpp:1252
+#: ksanewidget_p.cpp:1171
 #, kde-format
 msgid "Next scan starts in %1 s."
 msgstr "Next scan starts in %1 s."
 
-#: ksanewidget_p.cpp:1265
+#: ksanewidget_p.cpp:1184
 #, kde-format
 msgctxt "@title:window"
 msgid "General Error"
 msgstr "General Error"
 
-#: ksanewidget_p.cpp:1268
+#: ksanewidget_p.cpp:1187
 #, kde-format
 msgctxt "@title:window"
 msgid "Information"
 msgstr "Information"
 
-#: ksanewidget_p.cpp:1350
+#: ksanewidget_p.cpp:1269
 #, kde-format
 msgid "Custom"
 msgstr "Custom"
 
-#: ksanewidget_p.cpp:1375
+#: ksanewidget_p.cpp:1294
 #, kde-format
 msgctxt "Page size landscape"
 msgid " Landscape"
@@ -562,6 +553,13 @@ msgid " s"
 msgid_plural " s"
 msgstr[0] " s"
 msgstr[1] " µs"
+
+#~ msgid ""
+#~ "The image data contained 16 bits per color, but the color depth has been "
+#~ "truncated to 8 bits per color."
+#~ msgstr ""
+#~ "The image data contained 16 bits per colour, but the colour depth has "
+#~ "been truncated to 8 bits per colour."
 
 #~ msgid "Scanning stopped by user."
 #~ msgstr "Scanning stopped by user."

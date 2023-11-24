@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libksane\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-05 12:27+0000\n"
+"POT-Creation-Date: 2023-11-24 00:40+0000\n"
 "PO-Revision-Date: 2022-08-22 17:54+0000\n"
 "Last-Translator: Sveinn í Felli <sv1@fellsnet.is>\n"
 "Language-Team: Icelandic\n"
@@ -275,61 +275,52 @@ msgstr "Ítarlegir valkostir"
 msgid "Scanner Specific Options"
 msgstr "Sértækar skannastillingar"
 
-#: ksanewidget.cpp:322
+#: ksanewidget.cpp:278
 #, kde-format
 msgid "Authentication required for resource: %1"
 msgstr "Auðkenningar er krafist fyrir auðlindina: %1"
 
-#: ksanewidget.cpp:484
-#, kde-format
-msgid ""
-"The image data contained 16 bits per color, but the color depth has been "
-"truncated to 8 bits per color."
-msgstr ""
-"Myndgögnin innihéldu upplýsingar um 16 bita per lit, en litadýptin hefur "
-"verið skorin niður í 8 bita per lit."
-
-#: ksanewidget_p.cpp:428
+#: ksanewidget_p.cpp:410
 #, kde-format
 msgid "Scan Area Size"
 msgstr "Stærð skannaðs svæðis"
 
-#: ksanewidget_p.cpp:433
+#: ksanewidget_p.cpp:415
 #, kde-format
 msgid " mm"
 msgstr " mm"
 
-#: ksanewidget_p.cpp:433
+#: ksanewidget_p.cpp:415
 #, kde-format
 msgid " inch"
 msgstr " tomma"
 
-#: ksanewidget_p.cpp:435
+#: ksanewidget_p.cpp:417
 #, kde-format
 msgid "Width"
 msgstr "Breidd"
 
-#: ksanewidget_p.cpp:440
+#: ksanewidget_p.cpp:422
 #, kde-format
 msgid "Height"
 msgstr "Hæð"
 
-#: ksanewidget_p.cpp:445
+#: ksanewidget_p.cpp:427
 #, kde-format
 msgid "X Offset"
 msgstr "X-hliðrun"
 
-#: ksanewidget_p.cpp:450
+#: ksanewidget_p.cpp:432
 #, kde-format
 msgid "Y Offset"
 msgstr "Y-hliðrun"
 
-#: ksanewidget_p.cpp:511
+#: ksanewidget_p.cpp:493
 #, kde-format
 msgid "Image intensity"
 msgstr "Litstyrkur myndar"
 
-#: ksanewidget_p.cpp:515
+#: ksanewidget_p.cpp:497
 #, kde-format
 msgid ""
 "Gamma-correction table. In color mode this option equally affects the red, "
@@ -340,46 +331,46 @@ msgstr ""
 "grænu og bláu litrásirnar (þ.e.a.s. þetta er tafla yfir styrk litrófs - e. "
 "'intensity gamma table')."
 
-#: ksanewidget_p.cpp:523
+#: ksanewidget_p.cpp:505
 #, kde-format
 msgid "Separate color intensity tables"
 msgstr "Aðskilja litstyrkstöflur"
 
-#: ksanewidget_p.cpp:1203
+#: ksanewidget_p.cpp:1122
 #, kde-format
 msgctxt "This is compared to the option string returned by sane"
 msgid "Transparency"
 msgstr "Gegnsæi"
 
-#: ksanewidget_p.cpp:1205
+#: ksanewidget_p.cpp:1124
 #, kde-format
 msgctxt "This is compared to the option string returned by sane"
 msgid "Negative"
 msgstr "Negatíft"
 
-#: ksanewidget_p.cpp:1252
+#: ksanewidget_p.cpp:1171
 #, kde-format
 msgid "Next scan starts in %1 s."
 msgstr "Næsta skönnun hefst eftir %1 sek."
 
-#: ksanewidget_p.cpp:1265
+#: ksanewidget_p.cpp:1184
 #, kde-format
 msgctxt "@title:window"
 msgid "General Error"
 msgstr "Almenn villa"
 
-#: ksanewidget_p.cpp:1268
+#: ksanewidget_p.cpp:1187
 #, kde-format
 msgctxt "@title:window"
 msgid "Information"
 msgstr "Upplýsingar"
 
-#: ksanewidget_p.cpp:1350
+#: ksanewidget_p.cpp:1269
 #, kde-format
 msgid "Custom"
 msgstr "Sérsniðið"
 
-#: ksanewidget_p.cpp:1375
+#: ksanewidget_p.cpp:1294
 #, kde-format
 msgctxt "Page size landscape"
 msgid " Landscape"
@@ -566,6 +557,13 @@ msgid " s"
 msgid_plural " s"
 msgstr[0] " s"
 msgstr[1] " s"
+
+#~ msgid ""
+#~ "The image data contained 16 bits per color, but the color depth has been "
+#~ "truncated to 8 bits per color."
+#~ msgstr ""
+#~ "Myndgögnin innihéldu upplýsingar um 16 bita per lit, en litadýptin hefur "
+#~ "verið skorin niður í 8 bita per lit."
 
 #~ msgid "Invert colors"
 #~ msgstr "Snúa við litum"

@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdegraphics-kde4\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-05 12:27+0000\n"
+"POT-Creation-Date: 2023-11-24 00:40+0000\n"
 "PO-Revision-Date: 2023-03-21 21:17+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
@@ -273,61 +273,52 @@ msgstr "Gelişmiş Seçenekler"
 msgid "Scanner Specific Options"
 msgstr "Tarayıcıya Özel Seçenekler"
 
-#: ksanewidget.cpp:322
+#: ksanewidget.cpp:278
 #, kde-format
 msgid "Authentication required for resource: %1"
 msgstr "Bu kaynak için yetkilendirme gerekiyor: %1"
 
-#: ksanewidget.cpp:484
-#, kde-format
-msgid ""
-"The image data contained 16 bits per color, but the color depth has been "
-"truncated to 8 bits per color."
-msgstr ""
-"Görsel verisi her renk için 18 bit içeriyor; ancak renk derinliği her renk "
-"için 8 bit ile sınırlandırılmış."
-
-#: ksanewidget_p.cpp:428
+#: ksanewidget_p.cpp:410
 #, kde-format
 msgid "Scan Area Size"
 msgstr "Tarama Alanı Boyutu"
 
-#: ksanewidget_p.cpp:433
+#: ksanewidget_p.cpp:415
 #, kde-format
 msgid " mm"
 msgstr " mm"
 
-#: ksanewidget_p.cpp:433
+#: ksanewidget_p.cpp:415
 #, kde-format
 msgid " inch"
 msgstr " inç"
 
-#: ksanewidget_p.cpp:435
+#: ksanewidget_p.cpp:417
 #, kde-format
 msgid "Width"
 msgstr "Genişlik"
 
-#: ksanewidget_p.cpp:440
+#: ksanewidget_p.cpp:422
 #, kde-format
 msgid "Height"
 msgstr "Yükseklik"
 
-#: ksanewidget_p.cpp:445
+#: ksanewidget_p.cpp:427
 #, kde-format
 msgid "X Offset"
 msgstr "X Ofseti"
 
-#: ksanewidget_p.cpp:450
+#: ksanewidget_p.cpp:432
 #, kde-format
 msgid "Y Offset"
 msgstr "Y Ofseti"
 
-#: ksanewidget_p.cpp:511
+#: ksanewidget_p.cpp:493
 #, kde-format
 msgid "Image intensity"
 msgstr "Görsel yoğunluğu"
 
-#: ksanewidget_p.cpp:515
+#: ksanewidget_p.cpp:497
 #, kde-format
 msgid ""
 "Gamma-correction table. In color mode this option equally affects the red, "
@@ -338,46 +329,46 @@ msgstr ""
 "kanalları eşit olarak ve aynı anda etkiler (örn. bir yoğunluk gama "
 "tablosudur)."
 
-#: ksanewidget_p.cpp:523
+#: ksanewidget_p.cpp:505
 #, kde-format
 msgid "Separate color intensity tables"
 msgstr "Renk yoğunluğu tablolarını ayır"
 
-#: ksanewidget_p.cpp:1203
+#: ksanewidget_p.cpp:1122
 #, kde-format
 msgctxt "This is compared to the option string returned by sane"
 msgid "Transparency"
 msgstr "Şeffaflık"
 
-#: ksanewidget_p.cpp:1205
+#: ksanewidget_p.cpp:1124
 #, kde-format
 msgctxt "This is compared to the option string returned by sane"
 msgid "Negative"
 msgstr "Negatif"
 
-#: ksanewidget_p.cpp:1252
+#: ksanewidget_p.cpp:1171
 #, kde-format
 msgid "Next scan starts in %1 s."
 msgstr "Sonraki tarama %1 saniye içinde başlıyor."
 
-#: ksanewidget_p.cpp:1265
+#: ksanewidget_p.cpp:1184
 #, kde-format
 msgctxt "@title:window"
 msgid "General Error"
 msgstr "Genel Hata"
 
-#: ksanewidget_p.cpp:1268
+#: ksanewidget_p.cpp:1187
 #, kde-format
 msgctxt "@title:window"
 msgid "Information"
 msgstr "Bilgi"
 
-#: ksanewidget_p.cpp:1350
+#: ksanewidget_p.cpp:1269
 #, kde-format
 msgid "Custom"
 msgstr "Özel"
 
-#: ksanewidget_p.cpp:1375
+#: ksanewidget_p.cpp:1294
 #, kde-format
 msgctxt "Page size landscape"
 msgid " Landscape"
@@ -564,6 +555,13 @@ msgid " s"
 msgid_plural " s"
 msgstr[0] " sn"
 msgstr[1] " sn"
+
+#~ msgid ""
+#~ "The image data contained 16 bits per color, but the color depth has been "
+#~ "truncated to 8 bits per color."
+#~ msgstr ""
+#~ "Görsel verisi her renk için 18 bit içeriyor; ancak renk derinliği her "
+#~ "renk için 8 bit ile sınırlandırılmış."
 
 #~ msgid "Scanning stopped by user."
 #~ msgstr "Tarama, kullanıcı tarafından durduruldu."
