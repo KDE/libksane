@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: libksane\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-01 00:44+0000\n"
-"PO-Revision-Date: 2023-03-22 19:14+0100\n"
+"PO-Revision-Date: 2023-11-19 11:25+0100\n"
 "Last-Translator: Oliver Kellogg <okellogg@users.sourceforge.net>\n"
 "Language-Team: esperanto <kde-i18n-eo@kde.org>\n"
 "Language: eo\n"
@@ -20,7 +20,7 @@ msgstr ""
 #: ../ksanetwain/ktwain_widget.cpp:29
 #, kde-format
 msgid "Open scan dialog"
-msgstr ""
+msgstr "Malfermu skanan dialogon"
 
 #: i18n-hplip.cpp:3
 #, kde-format
@@ -55,12 +55,12 @@ msgstr "Aŭtomate"
 #: i18n-hplip.cpp:9
 #, kde-format
 msgid "Flatbed"
-msgstr ""
+msgstr "Plat-ebena"
 
 #: i18n-hplip.cpp:10
 #, kde-format
 msgid "ADF"
-msgstr ""
+msgstr "ADF"
 
 #: i18n-hplip.cpp:11
 #, kde-format
@@ -78,11 +78,13 @@ msgid ""
 "Selects the scanner compression method for faster scans, possibly at the "
 "expense of image quality."
 msgstr ""
+"Elektas la skanan kunpreman metodon por pli rapidaj skanadoj, eble koste de "
+"bildkvalito."
 
 #: i18n-hplip.cpp:15
 #, kde-format
 msgid "JPEG compression factor"
-msgstr ""
+msgstr "JPEG kunprema faktoro"
 
 #: i18n-hplip.cpp:16
 #, kde-format
@@ -90,16 +92,19 @@ msgid ""
 "Sets the scanner JPEG compression factor. Larger numbers mean better "
 "compression, and smaller numbers mean better image quality."
 msgstr ""
+"Agordas la skanilon JPEG-kunpremfaktoron. Pli grandaj nombroj signifas pli "
+"bonan kunpremadon, kaj pli malgrandaj nombroj signifas pli bonan "
+"bildkvaliton."
 
 #: i18n-hplip.cpp:19
 #, kde-format
 msgid "Batch scan"
-msgstr ""
+msgstr "Loka skanado"
 
 #: i18n-hplip.cpp:20
 #, kde-format
 msgid "Enables continuous scanning with automatic document feeder (ADF)."
-msgstr ""
+msgstr "Ebligas kontinuan skanadon per aŭtomata dokumentonutrilo (ADF)."
 
 #: i18n-hplip.cpp:21
 #, kde-format
@@ -109,7 +114,7 @@ msgstr "Duplex"
 #: i18n-hplip.cpp:22
 #, kde-format
 msgid "Enables scanning on both sides of the page."
-msgstr ""
+msgstr "Ebligas skanadon ambaŭflanke de la paĝo."
 
 #: i18n-hplip.cpp:23
 #, kde-format
@@ -119,7 +124,7 @@ msgstr "Geometrio"
 #: i18n-hplip.cpp:24
 #, kde-format
 msgid "Length measurement"
-msgstr ""
+msgstr "Longmezuro"
 
 #: i18n-hplip.cpp:25
 #, kde-format
@@ -127,6 +132,8 @@ msgid ""
 "Selects how the scanned image length is measured and reported, which is "
 "impossible to know in advance for scrollfed scans."
 msgstr ""
+"Elektas kiel la skanita bildolongo estas mezurita kaj raportita, kio estas "
+"neeble scii anticipe por rulumitaj skanadoj."
 
 #: i18n-hplip.cpp:27
 #, kde-format
@@ -141,12 +148,12 @@ msgstr "Senlima"
 #: i18n-hplip.cpp:29
 #, kde-format
 msgid "Approximate"
-msgstr ""
+msgstr "Proksimuma"
 
 #: i18n-hplip.cpp:30
 #, kde-format
 msgid "Padded"
-msgstr ""
+msgstr "Remburita"
 
 #: i18n-hplip.cpp:31
 #, kde-format
@@ -166,26 +173,30 @@ msgid ""
 "systems scanner setup.<br>For details about SANE see the <a href='http://www."
 "sane-project.org/'>SANE homepage</a>.</html>"
 msgstr ""
+"<html>La sistemo SANE (Scanner Access Now Easy) ne povis trovi ajnan "
+"aparaton.<br>Kontrolu, ke la skanilo estas enŝaltita kaj ŝaltita<br>aŭ "
+"kontrolu la agordon de via sistema skanilo.<br>Por detaloj pri SANE vidu la "
+"<a href='http://www.sane-project.org/'>SANE-hejmpaĝo</a>.</html>"
 
 #: ksanedevicedialog.cpp:58
 #, kde-format
 msgid "Reload devices list"
-msgstr ""
+msgstr "Reŝargi liston de aparatoj"
 
 #: ksanedevicedialog.cpp:82
 #, kde-format
 msgid "Looking for devices. Please wait."
-msgstr ""
+msgstr "Serĉante pri aparatoj. Bonvolu atendi."
 
 #: ksanedevicedialog.cpp:117
 #, kde-format
 msgid "Sorry. No devices found."
-msgstr ""
+msgstr "Pardonu. Neniuj aparatoj trovitaj."
 
 #: ksanedevicedialog.cpp:127
 #, kde-format
 msgid "Found devices:"
-msgstr ""
+msgstr "Trovitaj aparatoj:"
 
 #: ksaneviewer.cpp:109 ksanewidget.cpp:86
 #, kde-format
@@ -200,32 +211,32 @@ msgstr "Elzomi"
 #: ksaneviewer.cpp:115 ksanewidget.cpp:98
 #, kde-format
 msgid "Zoom to Selection"
-msgstr ""
+msgstr "Zomi al Elekto"
 
 #: ksaneviewer.cpp:118 ksanewidget.cpp:104
 #, kde-format
 msgid "Zoom to Fit"
-msgstr ""
+msgstr "Zomi al Konveno"
 
 #: ksaneviewer.cpp:121 ksanewidget.cpp:110
 #, kde-format
 msgid "Clear Selections"
-msgstr ""
+msgstr "Viŝi Elektojn"
 
 #: ksanewidget.cpp:58
 #, kde-format
 msgid "Waiting for the scan to start."
-msgstr ""
+msgstr "Atendante ke la skanado komenciĝos."
 
 #: ksanewidget.cpp:71
 #, kde-format
 msgid "Cancel current scan operation"
-msgstr ""
+msgstr "Nuligi nunan skanan operacion"
 
 #: ksanewidget.cpp:121
 #, kde-format
 msgid "Scan Preview Image (%1)"
-msgstr ""
+msgstr "Skani Antaŭrigardan Bildon (%1)"
 
 #: ksanewidget.cpp:122
 #, kde-format
@@ -236,7 +247,7 @@ msgstr "Antaŭrigardo"
 #: ksanewidget.cpp:127
 #, kde-format
 msgid "Scan Final Image (%1)"
-msgstr ""
+msgstr "Skani Finan Bildon (%1)"
 
 #: ksanewidget.cpp:128
 #, kde-format
@@ -247,22 +258,22 @@ msgstr "Trarigardi"
 #: ksanewidget.cpp:169
 #, kde-format
 msgid "Basic Options"
-msgstr ""
+msgstr "Bazaj Opcioj"
 
 #: ksanewidget.cpp:175
 #, kde-format
 msgid "Advanced Options"
-msgstr ""
+msgstr "Altnivelaj Opcioj"
 
 #: ksanewidget.cpp:181
 #, kde-format
 msgid "Scanner Specific Options"
-msgstr ""
+msgstr "Specifaj Opcioj de Skanilo"
 
 #: ksanewidget.cpp:322
 #, kde-format
 msgid "Authentication required for resource: %1"
-msgstr ""
+msgstr "Aŭtentigo necesa por rimedo: %1"
 
 #: ksanewidget.cpp:484
 #, kde-format
@@ -274,7 +285,7 @@ msgstr ""
 #: ksanewidget_p.cpp:428
 #, kde-format
 msgid "Scan Area Size"
-msgstr ""
+msgstr "Skanado Areo Grandeco"
 
 #: ksanewidget_p.cpp:433
 #, kde-format
@@ -284,32 +295,32 @@ msgstr " mm"
 #: ksanewidget_p.cpp:433
 #, kde-format
 msgid " inch"
-msgstr ""
+msgstr "colo"
 
 #: ksanewidget_p.cpp:435
 #, kde-format
 msgid "Width"
-msgstr ""
+msgstr "Larĝo"
 
 #: ksanewidget_p.cpp:440
 #, kde-format
 msgid "Height"
-msgstr ""
+msgstr "Alteco"
 
 #: ksanewidget_p.cpp:445
 #, kde-format
 msgid "X Offset"
-msgstr ""
+msgstr "X-Deŝovo"
 
 #: ksanewidget_p.cpp:450
 #, kde-format
 msgid "Y Offset"
-msgstr ""
+msgstr "Y-Deŝovo"
 
 #: ksanewidget_p.cpp:511
 #, kde-format
 msgid "Image intensity"
-msgstr ""
+msgstr "Bilda intenseco"
 
 #: ksanewidget_p.cpp:515
 #, kde-format
@@ -318,11 +329,13 @@ msgid ""
 "green, and blue channels simultaneously (i.e., it is an intensity gamma "
 "table)."
 msgstr ""
+"Gama-korekta tabelo. En kolorreĝimo ĉi tiu opcio egale influas la ruĝan, "
+"verdan kaj bluan kanalojn samtempe (t.e., ĝi estas intenseca gama-tabelo)."
 
 #: ksanewidget_p.cpp:523
 #, kde-format
 msgid "Separate color intensity tables"
-msgstr ""
+msgstr "Apartaj tabeloj de kolora intenseco"
 
 #: ksanewidget_p.cpp:1203
 #, kde-format
@@ -339,30 +352,30 @@ msgstr "Minussigno"
 #: ksanewidget_p.cpp:1252
 #, kde-format
 msgid "Next scan starts in %1 s."
-msgstr ""
+msgstr "La sekva skanado komenciĝas en %1 s."
 
 #: ksanewidget_p.cpp:1265
 #, kde-format
 msgctxt "@title:window"
 msgid "General Error"
-msgstr ""
+msgstr "Ĝenerala Eraro"
 
 #: ksanewidget_p.cpp:1268
 #, kde-format
 msgctxt "@title:window"
 msgid "Information"
-msgstr ""
+msgstr "Informoj"
 
 #: ksanewidget_p.cpp:1350
 #, kde-format
 msgid "Custom"
-msgstr ""
+msgstr "Propra"
 
 #: ksanewidget_p.cpp:1375
 #, kde-format
 msgctxt "Page size landscape"
 msgid " Landscape"
-msgstr ""
+msgstr "Pejzaĝo"
 
 #: widgets/ksaneoptionwidget.cpp:66
 #, kde-format
@@ -375,8 +388,8 @@ msgstr "%1:"
 msgctxt "Parameter and Unit"
 msgid "%1 Pixel"
 msgid_plural "%1 Pixels"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%1 Rastrumero"
+msgstr[1] "%1 Rastrumeroj"
 
 #: widgets/labeledcombo.cpp:158 widgets/labeledcombo.cpp:189
 #, kde-format
@@ -396,7 +409,7 @@ msgstr "%1 mm"
 #, kde-format
 msgctxt "Parameter and Unit (Dots Per Inch)"
 msgid "%1 DPI"
-msgstr ""
+msgstr "%1 DPI"
 
 #: widgets/labeledcombo.cpp:167 widgets/labeledcombo.cpp:198
 #, kde-format
@@ -414,7 +427,7 @@ msgstr "%1 µs"
 #, kde-format
 msgctxt "Parameter and Unit (seconds)"
 msgid "%1 s"
-msgstr ""
+msgstr "%1 s"
 
 #: widgets/labeledcombo.cpp:176 widgets/labeledcombo.cpp:207
 #, kde-format
@@ -437,13 +450,13 @@ msgstr "Difini"
 #, kde-format
 msgctxt "Double numbers. SpinBox parameter unit"
 msgid " Pixels"
-msgstr ""
+msgstr "Pikseloj"
 
 #: widgets/labeledfslider.cpp:43
 #, kde-format
 msgctxt "Double numbers. SpinBox parameter unit"
 msgid " Bits"
-msgstr ""
+msgstr "Bitoj"
 
 #: widgets/labeledfslider.cpp:46
 #, kde-format
@@ -455,7 +468,7 @@ msgstr " mm"
 #, kde-format
 msgctxt "Double numbers. SpinBox parameter unit (Dots Per Inch)"
 msgid " DPI"
-msgstr ""
+msgstr "DPI"
 
 #: widgets/labeledfslider.cpp:52
 #, kde-format
@@ -467,18 +480,18 @@ msgstr " %"
 #, kde-format
 msgctxt "Double numbers. SpinBox parameter unit (Microseconds)"
 msgid " µs"
-msgstr ""
+msgstr "µs"
 
 #: widgets/labeledfslider.cpp:58
 #, kde-format
 msgctxt "SpinBox parameter unit (seconds), float"
 msgid " s"
-msgstr ""
+msgstr "s"
 
 #: widgets/labeledgamma.cpp:43
 #, kde-format
 msgid "Brightness"
-msgstr ""
+msgstr "Brilo"
 
 #: widgets/labeledgamma.cpp:46
 #, kde-format
@@ -495,7 +508,7 @@ msgstr "Gamo"
 msgctxt "SpinBox parameter unit"
 msgid " Pixel"
 msgid_plural " Pixels"
-msgstr[0] ""
+msgstr[0] " Rastrumero"
 msgstr[1] ""
 
 #: widgets/labeledslider.cpp:45
