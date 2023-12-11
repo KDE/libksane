@@ -11,7 +11,7 @@
 #include <QGroupBox>
 
 #include <KLocalizedString>
-#include <Option>
+#include <KSaneCore/Option>
 
 namespace KSaneIface
 {

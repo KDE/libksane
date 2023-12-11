@@ -12,7 +12,7 @@
 #include <QLabel>
 #include <QGridLayout>
 
-#include <Option>
+#include <KSaneCore/Option>
 
 namespace KSaneIface
 {

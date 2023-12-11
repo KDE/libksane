@@ -19,7 +19,7 @@
 #include <QBoxLayout>
 #include <QDialog>
 
-#include <Interface>
+#include <KSaneCore/Interface>
 
 namespace KSaneIface
 {

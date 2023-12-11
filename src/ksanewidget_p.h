@@ -20,8 +20,8 @@
 #include <QToolButton>
 #include <QSet>
 
-#include <Interface>
-#include <Option>
+#include <KSaneCore/Interface>
+#include <KSaneCore/Option>
 
 #include "ksanewidget.h"
 #include "ksaneoptionwidget.h"
