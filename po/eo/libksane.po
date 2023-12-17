@@ -509,7 +509,7 @@ msgctxt "SpinBox parameter unit"
 msgid " Pixel"
 msgid_plural " Pixels"
 msgstr[0] " Rastrumero"
-msgstr[1] ""
+msgstr[1] " Rastrumeroj"
 
 #: widgets/labeledslider.cpp:45
 #, kde-format
