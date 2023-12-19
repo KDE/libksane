@@ -74,7 +74,7 @@ target_link_libraries(KSaneWidgets
         KF${KF_MAJOR_VERSION}::I18n
         KF${KF_MAJOR_VERSION}::WidgetsAddons
         KF${KF_MAJOR_VERSION}::TextWidgets
-        KSane::Core
+        ${KSANECORE_TARGET}
 )
 
 ecm_generate_headers(KSane_HEADERS
