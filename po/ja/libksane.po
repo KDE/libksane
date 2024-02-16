@@ -1,4 +1,5 @@
 # Translation of libksane into Japanese.
+# SPDX-FileCopyrightText: 2024 Tarot Osuji <tarot@sdf.org>
 # This file is distributed under the same license as the kdegraphics package.
 # Yukiko Bando <ybando@k6.dion.ne.jp>, 2007, 2008, 2009, 2010.
 # Fumiaki Okushi <fumiaki.okushi@gmail.com>, 2010, 2014.
@@ -7,8 +8,8 @@ msgstr ""
 "Project-Id-Version: libksane\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-11-24 00:40+0000\n"
-"PO-Revision-Date: 2014-09-28 22:55-0700\n"
-"Last-Translator: Fumiaki Okushi <fumiaki.okushi@gmail.com>\n"
+"PO-Revision-Date: 2024-01-14 08:34+0900\n"
+"Last-Translator: Tarot Osuji <tarot@sdf.org>\n"
 "Language-Team: Japanese <kde-jp@kde.org>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
@@ -17,6 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Accelerator-Marker: &\n"
 "X-Text-Markup: kde4\n"
+"X-Generator: Lokalize 23.08.4\n"
 
 #: ../ksanetwain/ktwain_widget.cpp:29
 #, kde-format
@@ -79,13 +81,13 @@ msgid ""
 "Selects the scanner compression method for faster scans, possibly at the "
 "expense of image quality."
 msgstr ""
-"スキャナの圧縮方法を選択します。スキャンが早く終了する代わり画質が落ちる可能"
-"性があります。"
+"スキャナの圧縮方式を選択します。スキャンを高速化する代わりに画質が低下する場"
+"合があります。"
 
 #: i18n-hplip.cpp:15
 #, kde-format
 msgid "JPEG compression factor"
-msgstr "JPEG の圧縮率"
+msgstr "JPEG 圧縮係数"
 
 #: i18n-hplip.cpp:16
 #, kde-format
@@ -93,18 +95,18 @@ msgid ""
 "Sets the scanner JPEG compression factor. Larger numbers mean better "
 "compression, and smaller numbers mean better image quality."
 msgstr ""
-"スキャナの JPEG の圧縮率を設定します。大きい数値は高い圧縮率を意味し、小さい"
-"数値は高い画質を意味します。"
+"スキャナの JPEG 圧縮係数を設定します。数値が大きいほど圧縮率が高くなり、数値"
+"が小さいほど画質が良くなります。"
 
 #: i18n-hplip.cpp:19
 #, kde-format
 msgid "Batch scan"
-msgstr "連続スキャン"
+msgstr "バッチスキャン"
 
 #: i18n-hplip.cpp:20
 #, kde-format
 msgid "Enables continuous scanning with automatic document feeder (ADF)."
-msgstr "ADF を使った連続スキャンを行います。"
+msgstr "自動原稿送り装置 (ADF) による連続スキャンを行います。"
 
 #: i18n-hplip.cpp:21
 #, kde-format
@@ -114,17 +116,17 @@ msgstr "両面"
 #: i18n-hplip.cpp:22
 #, kde-format
 msgid "Enables scanning on both sides of the page."
-msgstr "両面をスキャンします。"
+msgstr "ページの両面をスキャンします。"
 
 #: i18n-hplip.cpp:23
 #, kde-format
 msgid "Geometry"
-msgstr ""
+msgstr "ジオメトリ"
 
 #: i18n-hplip.cpp:24
 #, kde-format
 msgid "Length measurement"
-msgstr ""
+msgstr "長さの測定"
 
 #: i18n-hplip.cpp:25
 #, kde-format
@@ -132,6 +134,8 @@ msgid ""
 "Selects how the scanned image length is measured and reported, which is "
 "impossible to know in advance for scrollfed scans."
 msgstr ""
+"スキャンした画像の長さを測定して報告する方法を選択します。これは、スクロール"
+"フィードのスキャンでは事前に知ることができません。"
 
 #: i18n-hplip.cpp:27
 #, kde-format
@@ -146,17 +150,17 @@ msgstr "無制限"
 #: i18n-hplip.cpp:29
 #, kde-format
 msgid "Approximate"
-msgstr ""
+msgstr "概算"
 
 #: i18n-hplip.cpp:30
 #, kde-format
 msgid "Padded"
-msgstr ""
+msgstr "冗長"
 
 #: i18n-hplip.cpp:31
 #, kde-format
 msgid "Exact"
-msgstr ""
+msgstr "正確"
 
 #: i18n-hplip.cpp:32
 #, kde-format
@@ -171,6 +175,11 @@ msgid ""
 "systems scanner setup.<br>For details about SANE see the <a href='http://www."
 "sane-project.org/'>SANE homepage</a>.</html>"
 msgstr ""
+"<html>SANE (Scanner Access Now Easy) システムはデバイスを見つけられませんでし"
+"た。<br>スキャナが接続され電源が入っているか確認してください。<br>またはシス"
+"テムのスキャナ設定を確認してください。<br>SANE についての詳細は <a "
+"href='http://www.sane-project.org/'>SANE ホームページ</a>を参照してください。"
+"</html>"
 
 #: ksanedevicedialog.cpp:58
 #, kde-format
@@ -185,7 +194,7 @@ msgstr "デバイスを探しています。お待ちください。"
 #: ksanedevicedialog.cpp:117
 #, kde-format
 msgid "Sorry. No devices found."
-msgstr "デバイスが見つかりません。"
+msgstr "申し訳ありません。デバイスが見つかりません。"
 
 #: ksanedevicedialog.cpp:127
 #, kde-format
@@ -220,18 +229,17 @@ msgstr "選択をクリア"
 #: ksanewidget.cpp:58
 #, kde-format
 msgid "Waiting for the scan to start."
-msgstr "スキャンが開始されるのを待っています。"
+msgstr "スキャンの開始を待っています。"
 
 #: ksanewidget.cpp:71
 #, kde-format
 msgid "Cancel current scan operation"
-msgstr "現在のスキャン操作をキャンセル"
+msgstr "現在のスキャンをキャンセル"
 
 #: ksanewidget.cpp:121
-#, fuzzy, kde-format
-#| msgid "Scan Preview Image"
+#, kde-format
 msgid "Scan Preview Image (%1)"
-msgstr "プレビュー画像をスキャン"
+msgstr "プレビュー画像をスキャン (%1)"
 
 #: ksanewidget.cpp:122
 #, kde-format
@@ -240,10 +248,9 @@ msgid "Preview"
 msgstr "プレビュー"
 
 #: ksanewidget.cpp:127
-#, fuzzy, kde-format
-#| msgid "Scan Final Image"
+#, kde-format
 msgid "Scan Final Image (%1)"
-msgstr "最終画像をスキャン"
+msgstr "最終画像をスキャン (%1)"
 
 #: ksanewidget.cpp:128
 #, kde-format
@@ -254,13 +261,12 @@ msgstr "スキャン"
 #: ksanewidget.cpp:169
 #, kde-format
 msgid "Basic Options"
-msgstr "基本的なオプション"
+msgstr "基本オプション"
 
 #: ksanewidget.cpp:175
-#, fuzzy, kde-format
-#| msgid "Basic Options"
+#, kde-format
 msgid "Advanced Options"
-msgstr "基本的なオプション"
+msgstr "詳細オプション"
 
 #: ksanewidget.cpp:181
 #, kde-format
@@ -275,44 +281,42 @@ msgstr "このリソースには認証が必要です: %1"
 #: ksanewidget_p.cpp:410
 #, kde-format
 msgid "Scan Area Size"
-msgstr ""
+msgstr "スキャン領域サイズ"
 
 #: ksanewidget_p.cpp:415
-#, fuzzy, kde-format
-#| msgctxt "SpinBox parameter unit (Millimeter)"
-#| msgid " mm"
+#, kde-format
 msgid " mm"
 msgstr " mm"
 
 #: ksanewidget_p.cpp:415
 #, kde-format
 msgid " inch"
-msgstr ""
+msgstr " インチ"
 
 #: ksanewidget_p.cpp:417
 #, kde-format
 msgid "Width"
-msgstr ""
+msgstr "幅"
 
 #: ksanewidget_p.cpp:422
 #, kde-format
 msgid "Height"
-msgstr ""
+msgstr "高さ"
 
 #: ksanewidget_p.cpp:427
 #, kde-format
 msgid "X Offset"
-msgstr ""
+msgstr "X オフセット"
 
 #: ksanewidget_p.cpp:432
 #, kde-format
 msgid "Y Offset"
-msgstr ""
+msgstr "Y オフセット"
 
 #: ksanewidget_p.cpp:493
 #, kde-format
 msgid "Image intensity"
-msgstr ""
+msgstr "画像強度"
 
 #: ksanewidget_p.cpp:497
 #, kde-format
@@ -321,6 +325,8 @@ msgid ""
 "green, and blue channels simultaneously (i.e., it is an intensity gamma "
 "table)."
 msgstr ""
+"ガンマ補正テーブル。カラーモードでは、このオプションは赤、緑、青の各チャンネ"
+"ルに同時に適用されます (すなわち、強度のガンマテーブルです)。"
 
 #: ksanewidget_p.cpp:505
 #, kde-format
@@ -331,47 +337,47 @@ msgstr "色強度テーブルを分離する"
 #, kde-format
 msgctxt "This is compared to the option string returned by sane"
 msgid "Transparency"
-msgstr ""
+msgstr "透過"
 
 #: ksanewidget_p.cpp:1124
 #, kde-format
 msgctxt "This is compared to the option string returned by sane"
 msgid "Negative"
-msgstr ""
+msgstr "ネガ"
 
 #: ksanewidget_p.cpp:1171
 #, kde-format
 msgid "Next scan starts in %1 s."
-msgstr ""
+msgstr "次のスキャンは %1 秒後に開始します。"
 
 #: ksanewidget_p.cpp:1184
 #, kde-format
 msgctxt "@title:window"
 msgid "General Error"
-msgstr ""
+msgstr "一般エラー"
 
 #: ksanewidget_p.cpp:1187
 #, kde-format
 msgctxt "@title:window"
 msgid "Information"
-msgstr ""
+msgstr "情報"
 
 #: ksanewidget_p.cpp:1269
 #, kde-format
 msgid "Custom"
-msgstr ""
+msgstr "カスタム"
 
 #: ksanewidget_p.cpp:1294
 #, kde-format
 msgctxt "Page size landscape"
 msgid " Landscape"
-msgstr ""
+msgstr "横長"
 
 #: widgets/ksaneoptionwidget.cpp:66
 #, kde-format
 msgctxt "Label for a scanner option"
 msgid "%1:"
-msgstr ""
+msgstr "%1:"
 
 #: widgets/labeledcombo.cpp:155 widgets/labeledcombo.cpp:186
 #, kde-format
@@ -403,26 +409,24 @@ msgstr "%1 DPI"
 #, kde-format
 msgctxt "Parameter and Unit (Percentage)"
 msgid "%1 %"
-msgstr "%1%"
+msgstr "%1 %"
 
 #: widgets/labeledcombo.cpp:170 widgets/labeledcombo.cpp:201
 #, kde-format
 msgctxt "Parameter and Unit (Microseconds)"
 msgid "%1 µs"
-msgstr ""
+msgstr "%1 µ秒"
 
 #: widgets/labeledcombo.cpp:173 widgets/labeledcombo.cpp:204
 #, kde-format
 msgctxt "Parameter and Unit (seconds)"
 msgid "%1 s"
-msgstr ""
+msgstr "%1 秒"
 
 #: widgets/labeledcombo.cpp:176 widgets/labeledcombo.cpp:207
-#, fuzzy, kde-format
-#| msgid "%1 %"
-#| msgid_plural "%1 %"
+#, kde-format
 msgid "%1"
-msgstr "%1%"
+msgstr "%1"
 
 #: widgets/labeledentry.cpp:52
 #, kde-format
@@ -470,13 +474,13 @@ msgstr " %"
 #, kde-format
 msgctxt "Double numbers. SpinBox parameter unit (Microseconds)"
 msgid " µs"
-msgstr ""
+msgstr " µ秒"
 
 #: widgets/labeledfslider.cpp:58
 #, kde-format
 msgctxt "SpinBox parameter unit (seconds), float"
 msgid " s"
-msgstr ""
+msgstr " 秒"
 
 #: widgets/labeledgamma.cpp:43
 #, kde-format
@@ -508,27 +512,21 @@ msgid_plural " Bits"
 msgstr[0] " ビット"
 
 #: widgets/labeledslider.cpp:48
-#, fuzzy, kde-format
-#| msgctxt "SpinBox parameter unit (Millimeter)"
-#| msgid " mm"
+#, kde-format
 msgctxt "SpinBox parameter unit (Millimeter)"
 msgid " mm"
 msgid_plural " mm"
 msgstr[0] " mm"
 
 #: widgets/labeledslider.cpp:51
-#, fuzzy, kde-format
-#| msgctxt "SpinBox parameter unit (Dots Per Inch)"
-#| msgid " DPI"
+#, kde-format
 msgctxt "SpinBox parameter unit (Dots Per Inch)"
 msgid " DPI"
 msgid_plural " DPI"
 msgstr[0] " DPI"
 
 #: widgets/labeledslider.cpp:54
-#, fuzzy, kde-format
-#| msgctxt "SpinBox parameter unit (Percentage)"
-#| msgid " %"
+#, kde-format
 msgctxt "SpinBox parameter unit (Percentage)"
 msgid " %"
 msgid_plural " %"
@@ -539,11 +537,11 @@ msgstr[0] " %"
 msgctxt "SpinBox parameter unit (Microseconds)"
 msgid " µs"
 msgid_plural " µs"
-msgstr[0] ""
+msgstr[0] " µ秒"
 
 #: widgets/labeledslider.cpp:60
 #, kde-format
 msgctxt "SpinBox parameter unit (seconds)"
 msgid " s"
 msgid_plural " s"
-msgstr[0] ""
+msgstr[0] " 秒"
