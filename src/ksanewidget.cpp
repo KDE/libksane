@@ -23,7 +23,7 @@
 #include <QShortcut>
 
 #include <KPasswordDialog>
-#ifdef HAVE_KF5WALLET
+#ifdef HAVE_KWALLET
 #include <KWallet>
 #endif
 
@@ -240,7 +240,7 @@ QString KSaneWidget::selectDevice(QWidget *parent)
 bool KSaneWidget::openDevice(const QString &deviceName)
 {
     KPasswordDialog               *dlg;
-#ifdef HAVE_KF5WALLET
+#ifdef HAVE_KWALLET
     KWallet::Wallet               *saneWallet;
 #endif
     QString                        myFolderName = QStringLiteral("ksane");
@@ -255,7 +255,7 @@ bool KSaneWidget::openDevice(const QString &deviceName)
 
     // prepare wallet for authentication and create password dialog
     if (status == KSaneCore::Interface::OpeningDenied) {
-#ifdef HAVE_KF5WALLET
+#ifdef HAVE_KWALLET
         saneWallet = KWallet::Wallet::openWallet(KWallet::Wallet::LocalWallet(), winId());
 
         if (saneWallet) {
@@ -292,7 +292,7 @@ bool KSaneWidget::openDevice(const QString &deviceName)
         // add/update the device user-name and password for authentication
         status = d->m_ksaneCoreInterface->openRestrictedDevice(deviceName, dlg->username(), dlg->password());
 
-#ifdef HAVE_KF5WALLET
+#ifdef HAVE_KWALLET
         // store password in wallet on successful authentication
         if (dlg->keepPassword() && status != KSaneCore::Interface::OpeningDenied) {
             QMap<QString, QString> entry;
