@@ -9,8 +9,8 @@ set_target_properties(KSaneWidgets PROPERTIES
 
 target_compile_definitions(KSaneWidgets PRIVATE -DTRANSLATION_DOMAIN=\"libksane\")
 
-if (KF5Wallet_FOUND)
-    target_compile_definitions(KSaneWidgets PRIVATE -DHAVE_KF5WALLET)
+if (KF${KF_MAJOR_VERSION}Wallet_FOUND)
+    target_compile_definitions(KSaneWidgets PRIVATE -DHAVE_KWALLET)
     target_link_libraries(KSaneWidgets PRIVATE KF${KF_MAJOR_VERSION}::Wallet)
 endif()
 
