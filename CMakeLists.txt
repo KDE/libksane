@@ -61,7 +61,7 @@ ecm_setup_version(
   SOVERSION ${SOVERSION}
 )
 # Dependencies
-set(REQUIRED_QT_VERSION "5.15.2")
+set(QT_REQUIRED_VERSION "5.15.2")
 if (QT_MAJOR_VERSION STREQUAL "6")
     set(QT_REQUIRED_VERSION "6.4.0")
     set(KF_MIN_VERSION "5.240.0")
@@ -70,7 +70,7 @@ else()
     set(KF_MAJOR_VERSION "5")
 endif()
 # Required Qt5 components to build this framework
-find_package(Qt${QT_MAJOR_VERSION} ${REQUIRED_QT_VERSION} NO_MODULE REQUIRED Core Widgets)
+find_package(Qt${QT_MAJOR_VERSION} ${QT_REQUIRED_VERSION} NO_MODULE REQUIRED Core Widgets)
 
 # Required KF5 frameworks
 find_package(KF${KF_MAJOR_VERSION}I18n ${KF5_VERSION} REQUIRED)
