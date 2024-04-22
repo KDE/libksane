@@ -560,3 +560,77 @@ msgid " s"
 msgid_plural " s"
 msgstr[0] " s"
 msgstr[1] " s"
+
+#~ msgid ""
+#~ "The image data contained 16 bits per color, but the color depth has been "
+#~ "truncated to 8 bits per color."
+#~ msgstr ""
+#~ "Les dades de la imatge tenien 16 bits per color, però la profunditat de "
+#~ "color s'ha truncat a 8 bits per color."
+
+#~ msgid "Scanning stopped by user."
+#~ msgstr "L'usuari ha aturat l'escaneig."
+
+#~ msgid "Batch mode time delay"
+#~ msgstr "Temps de retard en el mode de treball per lots"
+
+#~ msgid "Specify the time delay between each scan when batch mode is enabled."
+#~ msgstr ""
+#~ "Especifiqueu el temps de retard entre cada escaneig quan el mode de "
+#~ "treball per lots és actiu."
+
+#~ msgid "Batch mode with time delay"
+#~ msgstr "Mode de treball per lots amb temps de retard"
+
+#~ msgid ""
+#~ "Enables batch mode scanning. Continues scanning after a delay until "
+#~ "canceled."
+#~ msgstr ""
+#~ "Activa l'escaneig en el mode de treball per lots. L'escaneig continua "
+#~ "després d'un retard fins que es cancel·la."
+
+#~ msgid "Invert colors"
+#~ msgstr "Inverteix els colors"
+
+#~ msgid "Invert the colors of the scanned image."
+#~ msgstr "Inverteix els colors de la imatge escanejada."
+
+#~ msgctxt "Page size landscape"
+#~ msgid "Landscape %1"
+#~ msgstr "Apaïsada %1"
+
+#~ msgid "Scan area size"
+#~ msgstr "Mida de l'àrea d'escaneig"
+
+#~ msgid "Select a predefined page size for the scanning area."
+#~ msgstr "Selecciona una mida de pàgina predefinida per a l'àrea d'escaneig."
+
+#~ msgid "%1 Pixel"
+#~ msgid_plural "%1 Pixels"
+#~ msgstr[0] "%1 píxel"
+#~ msgstr[1] "%1 píxels"
+
+#~ msgid "%1 Bit"
+#~ msgid_plural "%1 Bits"
+#~ msgstr[0] "%1 bit"
+#~ msgstr[1] "%1 bits"
+
+#~ msgid "%1 mm"
+#~ msgid_plural "%1 mm"
+#~ msgstr[0] "%1 mm"
+#~ msgstr[1] "%1 mm"
+
+#~ msgid "%1 DPI"
+#~ msgid_plural "%1 DPI"
+#~ msgstr[0] "%1 PPP"
+#~ msgstr[1] "%1 PPP"
+
+#~ msgid "%1 %"
+#~ msgid_plural "%1 %"
+#~ msgstr[0] "%1 %"
+#~ msgstr[1] "%1 %"
+
+#~ msgid "%1 µs"
+#~ msgid_plural "%1 µs"
+#~ msgstr[0] "%1 µs"
+#~ msgstr[1] "%1 µs"
