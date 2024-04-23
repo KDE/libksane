@@ -19,3 +19,6 @@ Dependencies:
     'frameworks/kwidgetsaddons': '@stable'
     'frameworks/ktextwidgets': '@stable'
     'frameworks/kwallet': '@stable'
+
+Options:
+  require-passing-tests-on: ['Linux', 'FreeBSD', 'Windows']
