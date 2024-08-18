@@ -6,21 +6,22 @@
 # Franklin Weng <franklin@goodhorse.idv.tw>, 2011, 2012.
 # Jeff Huang <s8321414@gmail.com>, 2016.
 # pan93412 <pan93412@gmail.com>, 2020.
+# SPDX-FileCopyrightText: 2024 Kisaragi Hiu <mail@kisaragi-hiu.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: libksane\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-11-24 00:40+0000\n"
-"PO-Revision-Date: 2020-05-15 00:08+0800\n"
-"Last-Translator: Yi-Jyun Pan <pan93412@gmail.com>\n"
-"Language-Team: Chinese <zh-l10n@lists.linux.org.tw>\n"
+"PO-Revision-Date: 2024-08-18 01:12+0900\n"
+"Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
+"Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "dot tw>\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Lokalize 20.04.0\n"
+"X-Generator: Lokalize 24.04.70\n"
 
 #: ../ksanetwain/ktwain_widget.cpp:29
 #, kde-format
@@ -259,10 +260,9 @@ msgid "Basic Options"
 msgstr "基本選項"
 
 #: ksanewidget.cpp:175
-#, fuzzy, kde-format
-#| msgid "Basic Options"
+#, kde-format
 msgid "Advanced Options"
-msgstr "基本選項"
+msgstr "進階選項"
 
 #: ksanewidget.cpp:181
 #, kde-format
@@ -312,7 +312,7 @@ msgstr "Y 位移"
 #: ksanewidget_p.cpp:493
 #, kde-format
 msgid "Image intensity"
-msgstr ""
+msgstr "影像強度"
 
 #: ksanewidget_p.cpp:497
 #, kde-format
@@ -321,6 +321,8 @@ msgid ""
 "green, and blue channels simultaneously (i.e., it is an intensity gamma "
 "table)."
 msgstr ""
+"Gamma 校正表。在多彩模式下這個選項會同步影像紅、綠、藍色版（亦即它是強度 "
+"gamma 表）。"
 
 #: ksanewidget_p.cpp:505
 #, kde-format
@@ -342,7 +344,7 @@ msgstr "負"
 #: ksanewidget_p.cpp:1171
 #, kde-format
 msgid "Next scan starts in %1 s."
-msgstr ""
+msgstr "距離下一個掃描還有 %1 秒."
 
 #: ksanewidget_p.cpp:1184
 #, kde-format
@@ -415,14 +417,12 @@ msgstr "%1 微秒"
 #, kde-format
 msgctxt "Parameter and Unit (seconds)"
 msgid "%1 s"
-msgstr ""
+msgstr "%1 秒"
 
 #: widgets/labeledcombo.cpp:176 widgets/labeledcombo.cpp:207
-#, fuzzy, kde-format
-#| msgctxt "Label for a scanner option"
-#| msgid "%1:"
+#, kde-format
 msgid "%1"
-msgstr "%1："
+msgstr "%1"
 
 #: widgets/labeledentry.cpp:52
 #, kde-format
@@ -473,12 +473,10 @@ msgid " µs"
 msgstr " 微秒"
 
 #: widgets/labeledfslider.cpp:58
-#, fuzzy, kde-format
-#| msgctxt "Double numbers. SpinBox parameter unit (Microseconds)"
-#| msgid " µs"
+#, kde-format
 msgctxt "SpinBox parameter unit (seconds), float"
 msgid " s"
-msgstr " 微秒"
+msgstr " 秒"
 
 #: widgets/labeledgamma.cpp:43
 #, kde-format
@@ -510,49 +508,39 @@ msgid_plural " Bits"
 msgstr[0] " 位元"
 
 #: widgets/labeledslider.cpp:48
-#, fuzzy, kde-format
-#| msgctxt "SpinBox parameter unit (Millimeter)"
-#| msgid " mm"
+#, kde-format
 msgctxt "SpinBox parameter unit (Millimeter)"
 msgid " mm"
 msgid_plural " mm"
 msgstr[0] " mm"
 
 #: widgets/labeledslider.cpp:51
-#, fuzzy, kde-format
-#| msgctxt "SpinBox parameter unit (Dots Per Inch)"
-#| msgid " DPI"
+#, kde-format
 msgctxt "SpinBox parameter unit (Dots Per Inch)"
 msgid " DPI"
 msgid_plural " DPI"
 msgstr[0] " DPI"
 
 #: widgets/labeledslider.cpp:54
-#, fuzzy, kde-format
-#| msgctxt "SpinBox parameter unit (Percentage)"
-#| msgid " %"
+#, kde-format
 msgctxt "SpinBox parameter unit (Percentage)"
 msgid " %"
 msgid_plural " %"
 msgstr[0] " %"
 
 #: widgets/labeledslider.cpp:57
-#, fuzzy, kde-format
-#| msgctxt "SpinBox parameter unit (Microseconds)"
-#| msgid " µs"
+#, kde-format
 msgctxt "SpinBox parameter unit (Microseconds)"
 msgid " µs"
 msgid_plural " µs"
 msgstr[0] " 微秒"
 
 #: widgets/labeledslider.cpp:60
-#, fuzzy, kde-format
-#| msgctxt "Double numbers. SpinBox parameter unit (Microseconds)"
-#| msgid " µs"
+#, kde-format
 msgctxt "SpinBox parameter unit (seconds)"
 msgid " s"
 msgid_plural " s"
-msgstr[0] " 微秒"
+msgstr[0] " 秒"
 
 #~ msgid ""
 #~ "The image data contained 16 bits per color, but the color depth has been "
