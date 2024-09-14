@@ -1,34 +1,32 @@
-# translation of libksane.po to Lithuanian
+# Copyright (C) 2024 This file is copyright:
 # This file is distributed under the same license as the libksane package.
-# Donatas Glodenis <dgvirtual@akl.lt>, 2007-2009.
-# Remigijus Jarmalavičius <remigijus@jarmalavicius.lt>, 2011.
-# Liudas Ališauskas <liudas.alisauskas@gmail.com>, 2011, 2013.
-# Mindaugas Baranauskas <opensuse.lietuviu.kalba@gmail.com>, 2015.
+#
+# SPDX-FileCopyrightText: 2024 Yaron Shahrabani <sh.yaron@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: libksane\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-11-24 00:40+0000\n"
-"PO-Revision-Date: 2024-09-13 23:08+0300\n"
-"Last-Translator: Moo\n"
-"Language-Team: lt <kde-i18n-lt@kde.org>\n"
-"Language: lt\n"
+"PO-Revision-Date: 2024-09-12 15:21+0300\n"
+"Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
+"Language-Team: צוות התרגום של KDE ישראל\n"
+"Language: he\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : n%10>=2 && (n%100<10 || n"
-"%100>=20) ? 1 : n%10==0 || (n%100>10 && n%100<20) ? 2 : 3);\n"
-"X-Generator: Poedit 3.4.2\n"
+"Plural-Forms: nplurals=4; plural=(n==1 ? 0 : n==2 ? 1 : n>10 && n%10==0 ? "
+"2 : 3);\n"
+"X-Generator: Lokalize 24.05.2\n"
 
 #: ../ksanetwain/ktwain_widget.cpp:29
 #, kde-format
 msgid "Open scan dialog"
-msgstr "Atverti skenavimo dialogą"
+msgstr "פתיחת חלונית סריקה"
 
 #: i18n-hplip.cpp:3
 #, kde-format
 msgid "None"
-msgstr "Nėra"
+msgstr "ללא"
 
 #: i18n-hplip.cpp:4
 #, kde-format
@@ -53,41 +51,39 @@ msgstr "JPEG"
 #: i18n-hplip.cpp:8
 #, kde-format
 msgid "Auto"
-msgstr "Auto"
+msgstr "אוטו׳"
 
 #: i18n-hplip.cpp:9
 #, kde-format
 msgid "Flatbed"
-msgstr "Plokščiasis"
+msgstr "משטח סריקה"
 
 #: i18n-hplip.cpp:10
 #, kde-format
 msgid "ADF"
-msgstr "ADF"
+msgstr "מזין מסמכים"
 
 #: i18n-hplip.cpp:11
 #, kde-format
 msgid "Advanced"
-msgstr "Išplėstiniai"
+msgstr "מתקדם"
 
 #: i18n-hplip.cpp:12
 #, kde-format
 msgid "Compression"
-msgstr "Glaudinimas"
+msgstr "דחיסה"
 
 #: i18n-hplip.cpp:13
 #, kde-format
 msgid ""
 "Selects the scanner compression method for faster scans, possibly at the "
 "expense of image quality."
-msgstr ""
-"Parenka skenerio glaudinimo metodą greitesniam skenavimui, tikriausiai, "
-"paveikslo kokybės sąskaita."
+msgstr "בחירת שיטת דחיסת הסורק להאצת הסריקה, כפי הנראה על חשבון איכות התמונה."
 
 #: i18n-hplip.cpp:15
 #, kde-format
 msgid "JPEG compression factor"
-msgstr "JPEG glaudinimo faktorius"
+msgstr "מקדם דחיסת JPEG"
 
 #: i18n-hplip.cpp:16
 #, kde-format
@@ -95,39 +91,38 @@ msgid ""
 "Sets the scanner JPEG compression factor. Larger numbers mean better "
 "compression, and smaller numbers mean better image quality."
 msgstr ""
-"Nustato skenerio JPEG glaudinimo faktorių. Didesni skaičiai reiškia geresnį "
-"glaudinimą, mažesni skaičiai reiškia geresnę paveikslo kokybę."
+"הגדרת מקדם דחיסת JPEG של הסורק. מספרים גדולים משמעם דחיסה טוב יותר בעוד "
+"מספרים קטנים יותר שומרים על איכות תמונה טובה יותר."
 
 #: i18n-hplip.cpp:19
 #, kde-format
 msgid "Batch scan"
-msgstr "Paketinis skenavimas"
+msgstr "סריקה במרוכז"
 
 #: i18n-hplip.cpp:20
 #, kde-format
 msgid "Enables continuous scanning with automatic document feeder (ADF)."
-msgstr ""
-"Įjungia nepertraukiamą skenavimą su automatiniu dokumentų padavikliu (ADF)."
+msgstr "הפעלת סריקה עם מזין מסמכים אוטומטי (ADF)."
 
 #: i18n-hplip.cpp:21
 #, kde-format
 msgid "Duplex"
-msgstr "Dvipusis"
+msgstr "דו־כיווני"
 
 #: i18n-hplip.cpp:22
 #, kde-format
 msgid "Enables scanning on both sides of the page."
-msgstr "Įjungia skenavimą iš abiejų lapo pusių."
+msgstr "הפעלת סריקה משני צידי הדף."
 
 #: i18n-hplip.cpp:23
 #, kde-format
 msgid "Geometry"
-msgstr "Geometrija"
+msgstr "ממדים"
 
 #: i18n-hplip.cpp:24
 #, kde-format
 msgid "Length measurement"
-msgstr "Matų sistema"
+msgstr "מדידת אורך"
 
 #: i18n-hplip.cpp:25
 #, kde-format
@@ -135,33 +130,33 @@ msgid ""
 "Selects how the scanned image length is measured and reported, which is "
 "impossible to know in advance for scrollfed scans."
 msgstr ""
-"Parenka kaip skenuotų paveikslų ilgis yra matuojamas ir perduodamas, o tai "
-"yra neįmanoma iš anksto žinoti slenkantiems skenavimams."
+"בחירה איך אורך התמונה הנסרקת נמדד ומדווח, מה שאי אפשר לדעת מראש בסריקות שבהן "
+"הדפים נעים או נמשכים."
 
 #: i18n-hplip.cpp:27
 #, kde-format
 msgid "Unknown"
-msgstr "Nežinoma"
+msgstr "לא ידוע"
 
 #: i18n-hplip.cpp:28
 #, kde-format
 msgid "Unlimited"
-msgstr "Neribota"
+msgstr "ללא הגבלה"
 
 #: i18n-hplip.cpp:29
 #, kde-format
 msgid "Approximate"
-msgstr "Apytiksliai"
+msgstr "משוערך"
 
 #: i18n-hplip.cpp:30
 #, kde-format
 msgid "Padded"
-msgstr "Užpildytas"
+msgstr "מרופד"
 
 #: i18n-hplip.cpp:31
 #, kde-format
 msgid "Exact"
-msgstr "Tiksliai"
+msgstr "מדויק"
 
 #: i18n-hplip.cpp:32
 #, kde-format
@@ -176,148 +171,147 @@ msgid ""
 "systems scanner setup.<br>For details about SANE see the <a href='http://www."
 "sane-project.org/'>SANE homepage</a>.</html>"
 msgstr ""
-"<html>SANE (Scanner Access Now Easy) sistemai nepavyko aptikti jokio "
-"įrenginio.<br>Patikrinkite ar skeneris yra prijungtas ir įjungtas,<br>arba "
-"patikrinkite savo sistemos skenerio sąranka.<br>Daugiau informacijos apie "
-"SANE ieškokite <a href='http://www.sane-project.org/'>SANE svetainėje</a>.</"
-"html>"
+"<html>מערכת SANE (גישה קלה לסורק ועכשיו) לא הצליחה למצוא אף התקן.<br>נא "
+"לבדוק שהסורק מחובר ופעיל<br>או לבדוק את הגדרות הסורק שבמערכת שלך.<br>לפרטים "
+"על SANE יש לפנות אל <a href='http://www.sane-project.org/'>דף הבית של SANE</"
+"a>.</html>"
 
 #: ksanedevicedialog.cpp:58
 #, kde-format
 msgid "Reload devices list"
-msgstr "Iš naujo įkelti įrenginių sąrašą"
+msgstr "רענון רשימת ההתקנים"
 
 #: ksanedevicedialog.cpp:82
 #, kde-format
 msgid "Looking for devices. Please wait."
-msgstr "Ieškoma įrenginių. Palaukite."
+msgstr "מתבצע חיפוש אחר התקנים. נא להמתין."
 
 #: ksanedevicedialog.cpp:117
 #, kde-format
 msgid "Sorry. No devices found."
-msgstr "Deja, nerasta jokių įrenginių."
+msgstr "לא נמצאו התקנים. מחילה."
 
 #: ksanedevicedialog.cpp:127
 #, kde-format
 msgid "Found devices:"
-msgstr "Rasti įrenginiai:"
+msgstr "התקנים שנמצאו:"
 
 #: ksaneviewer.cpp:109 ksanewidget.cpp:86
 #, kde-format
 msgid "Zoom In"
-msgstr "Didinti"
+msgstr "התקרבות"
 
 #: ksaneviewer.cpp:112 ksanewidget.cpp:92
 #, kde-format
 msgid "Zoom Out"
-msgstr "Mažinti"
+msgstr "התרחקות"
 
 #: ksaneviewer.cpp:115 ksanewidget.cpp:98
 #, kde-format
 msgid "Zoom to Selection"
-msgstr "Didinti iki pažymėtos srities"
+msgstr "התמקדות בבחירה"
 
 #: ksaneviewer.cpp:118 ksanewidget.cpp:104
 #, kde-format
 msgid "Zoom to Fit"
-msgstr "Mastelis toks, kad tilptų"
+msgstr "תקריב לפי גודל המסך"
 
 #: ksaneviewer.cpp:121 ksanewidget.cpp:110
 #, kde-format
 msgid "Clear Selections"
-msgstr "Išvalyti žymėjimus"
+msgstr "איפוס בחירות"
 
 #: ksanewidget.cpp:58
 #, kde-format
 msgid "Waiting for the scan to start."
-msgstr "Laukiama, kol prasidės skenavimas."
+msgstr "בהמתנה לתחילת הסריקה."
 
 #: ksanewidget.cpp:71
 #, kde-format
 msgid "Cancel current scan operation"
-msgstr "Atsisakyti dabartinės skenavimo operacijos"
+msgstr "ביטול פעולת הסריקה הנוכחית"
 
 #: ksanewidget.cpp:121
 #, kde-format
 msgid "Scan Preview Image (%1)"
-msgstr "Skenuoti peržiūros paveikslą (%1)"
+msgstr "סריקת תמונת תצוגה מקדימה (%1)"
 
 #: ksanewidget.cpp:122
 #, kde-format
 msgctxt "Preview button text"
 msgid "Preview"
-msgstr "Peržiūra"
+msgstr "תצוגה מקדימה"
 
 #: ksanewidget.cpp:127
 #, kde-format
 msgid "Scan Final Image (%1)"
-msgstr "Skenuoti galutinį paveikslą (%1)"
+msgstr "סריקת תמונה סופית (%1)"
 
 #: ksanewidget.cpp:128
 #, kde-format
 msgctxt "Final scan button text"
 msgid "Scan"
-msgstr "Skenuoti"
+msgstr "סריקה"
 
 #: ksanewidget.cpp:169
 #, kde-format
 msgid "Basic Options"
-msgstr "Pagrindinės parinktys"
+msgstr "אפשרויות בסיסיות"
 
 #: ksanewidget.cpp:175
 #, kde-format
 msgid "Advanced Options"
-msgstr "Išplėstinės parinktys"
+msgstr "הגדרות מתקדמות"
 
 #: ksanewidget.cpp:181
 #, kde-format
 msgid "Scanner Specific Options"
-msgstr "Specifinės skenerio parinktys"
+msgstr "אפשרויות נקודתיות לסורק"
 
 #: ksanewidget.cpp:278
 #, kde-format
 msgid "Authentication required for resource: %1"
-msgstr "Reikalingas tapatybės nustatymas ištekliui: %1"
+msgstr "נדרש אימות למשאב: %1"
 
 #: ksanewidget_p.cpp:410
 #, kde-format
 msgid "Scan Area Size"
-msgstr "Skenavimo srities dydis"
+msgstr "גודל אזור הסריקה"
 
 #: ksanewidget_p.cpp:415
 #, kde-format
 msgid " mm"
-msgstr " mm"
+msgstr " מ״מ"
 
 #: ksanewidget_p.cpp:415
 #, kde-format
 msgid " inch"
-msgstr " col."
+msgstr " אינטש"
 
 #: ksanewidget_p.cpp:417
 #, kde-format
 msgid "Width"
-msgstr "Plotis"
+msgstr "רוחב"
 
 #: ksanewidget_p.cpp:422
 #, kde-format
 msgid "Height"
-msgstr "Aukštis"
+msgstr "גובה"
 
 #: ksanewidget_p.cpp:427
 #, kde-format
 msgid "X Offset"
-msgstr "X poslinkis"
+msgstr "היסט ב־X"
 
 #: ksanewidget_p.cpp:432
 #, kde-format
 msgid "Y Offset"
-msgstr "Y poslinkis"
+msgstr "היסט ב־Y"
 
 #: ksanewidget_p.cpp:493
 #, kde-format
 msgid "Image intensity"
-msgstr "Paveikslo intensyvumas"
+msgstr "חוזק תמונה"
 
 #: ksanewidget_p.cpp:497
 #, kde-format
@@ -326,54 +320,53 @@ msgid ""
 "green, and blue channels simultaneously (i.e., it is an intensity gamma "
 "table)."
 msgstr ""
-"Gamos taisymo lentelė. Spalvotoje veiksenoje ši parinktis vienodai vienu "
-"metu paveikia raudoną, žalią ir mėlyną kanalą (kitaip tariant, tai yra "
-"intensyvumo gamos lentelė)."
+"טבלת תיקון גאמה. במצב צבע האפשרות הזאת משפיעה באופן שווה על ערוצי האדום, "
+"הירוק והכחול בו־זמנית (כלומר, זאת טבלת חוזק גאמה)."
 
 #: ksanewidget_p.cpp:505
 #, kde-format
 msgid "Separate color intensity tables"
-msgstr "Atskiros spalvų intensyvumo lentelės"
+msgstr "טבלאות חוזק צבע נפרדות"
 
 #: ksanewidget_p.cpp:1122
 #, kde-format
 msgctxt "This is compared to the option string returned by sane"
 msgid "Transparency"
-msgstr "Permatomumas"
+msgstr "שקיפות"
 
 #: ksanewidget_p.cpp:1124
 #, kde-format
 msgctxt "This is compared to the option string returned by sane"
 msgid "Negative"
-msgstr "Negatyvas"
+msgstr "שלילי"
 
 #: ksanewidget_p.cpp:1171
 #, kde-format
 msgid "Next scan starts in %1 s."
-msgstr "Kitas skenavimas prasideda po %1 sek."
+msgstr "הסריקה הבאה מתחילה בעוד %1 שנ׳."
 
 #: ksanewidget_p.cpp:1184
 #, kde-format
 msgctxt "@title:window"
 msgid "General Error"
-msgstr "Bendrinė klaida"
+msgstr "שגיאה כללית"
 
 #: ksanewidget_p.cpp:1187
 #, kde-format
 msgctxt "@title:window"
 msgid "Information"
-msgstr "Informacija"
+msgstr "פרטים"
 
 #: ksanewidget_p.cpp:1269
 #, kde-format
 msgid "Custom"
-msgstr "Tinkintas"
+msgstr "מותאם אישית"
 
 #: ksanewidget_p.cpp:1294
 #, kde-format
 msgctxt "Page size landscape"
 msgid " Landscape"
-msgstr " Gulsčias"
+msgstr " לרוחב"
 
 #: widgets/ksaneoptionwidget.cpp:66
 #, kde-format
@@ -386,32 +379,32 @@ msgstr "%1:"
 msgctxt "Parameter and Unit"
 msgid "%1 Pixel"
 msgid_plural "%1 Pixels"
-msgstr[0] "%1 pikselis"
-msgstr[1] "%1 pikseliai"
-msgstr[2] "%1 pikselių"
-msgstr[3] "%1 pikselis"
+msgstr[0] "פיקסל"
+msgstr[1] "שני פיקסלים"
+msgstr[2] "%1 פיקסלים"
+msgstr[3] "%1 פיקסלים"
 
 #: widgets/labeledcombo.cpp:158 widgets/labeledcombo.cpp:189
 #, kde-format
 msgctxt "Parameter and Unit"
 msgid "%1 Bit"
 msgid_plural "%1 Bits"
-msgstr[0] "%1 bitas"
-msgstr[1] "%1 bitai"
-msgstr[2] "%1 bitų"
-msgstr[3] "%1 bitas"
+msgstr[0] "סיבית"
+msgstr[1] "שתי סיביות"
+msgstr[2] "%1 סיביות"
+msgstr[3] "%1 סיביות"
 
 #: widgets/labeledcombo.cpp:161 widgets/labeledcombo.cpp:192
 #, kde-format
 msgctxt "Parameter and Unit (Millimeter)"
 msgid "%1 mm"
-msgstr "%1 mm"
+msgstr "%1 מ״מ"
 
 #: widgets/labeledcombo.cpp:164 widgets/labeledcombo.cpp:195
 #, kde-format
 msgctxt "Parameter and Unit (Dots Per Inch)"
 msgid "%1 DPI"
-msgstr "%1 DPI"
+msgstr "%1 נק׳ לאינטש/DPI"
 
 #: widgets/labeledcombo.cpp:167 widgets/labeledcombo.cpp:198
 #, kde-format
@@ -423,13 +416,13 @@ msgstr "%1 %"
 #, kde-format
 msgctxt "Parameter and Unit (Microseconds)"
 msgid "%1 µs"
-msgstr "%1 µs"
+msgstr "%1 מיקרושניות"
 
 #: widgets/labeledcombo.cpp:173 widgets/labeledcombo.cpp:204
 #, kde-format
 msgctxt "Parameter and Unit (seconds)"
 msgid "%1 s"
-msgstr "%1 sek."
+msgstr "%1 שנ׳"
 
 #: widgets/labeledcombo.cpp:176 widgets/labeledcombo.cpp:207
 #, kde-format
@@ -440,37 +433,37 @@ msgstr "%1"
 #, kde-format
 msgctxt "Label for button to reset text in a KLineEdit"
 msgid "Reset"
-msgstr "Atstatyti"
+msgstr "איפוס"
 
 #: widgets/labeledentry.cpp:54
 #, kde-format
 msgctxt "Label for button to write text in a KLineEdit to sane"
 msgid "Set"
-msgstr "Nustatyti"
+msgstr "הגדרה"
 
 #: widgets/labeledfslider.cpp:40
 #, kde-format
 msgctxt "Double numbers. SpinBox parameter unit"
 msgid " Pixels"
-msgstr " pikselių"
+msgstr " פיקסלים"
 
 #: widgets/labeledfslider.cpp:43
 #, kde-format
 msgctxt "Double numbers. SpinBox parameter unit"
 msgid " Bits"
-msgstr " bitų"
+msgstr " סיביות"
 
 #: widgets/labeledfslider.cpp:46
 #, kde-format
 msgctxt "Double numbers. SpinBox parameter unit (Millimeter)"
 msgid " mm"
-msgstr " mm"
+msgstr " מ״מ"
 
 #: widgets/labeledfslider.cpp:49
 #, kde-format
 msgctxt "Double numbers. SpinBox parameter unit (Dots Per Inch)"
 msgid " DPI"
-msgstr " DPI"
+msgstr " נק׳ לאינטש/DPI"
 
 #: widgets/labeledfslider.cpp:52
 #, kde-format
@@ -482,68 +475,68 @@ msgstr " %"
 #, kde-format
 msgctxt "Double numbers. SpinBox parameter unit (Microseconds)"
 msgid " µs"
-msgstr " µs"
+msgstr " מיקרושניות"
 
 #: widgets/labeledfslider.cpp:58
 #, kde-format
 msgctxt "SpinBox parameter unit (seconds), float"
 msgid " s"
-msgstr " sek."
+msgstr " שנ׳"
 
 #: widgets/labeledgamma.cpp:43
 #, kde-format
 msgid "Brightness"
-msgstr "Ryškumas"
+msgstr "בהירות"
 
 #: widgets/labeledgamma.cpp:46
 #, kde-format
 msgid "Contrast"
-msgstr "Kontrastas"
+msgstr "ניגודיות"
 
 #: widgets/labeledgamma.cpp:49
 #, kde-format
 msgid "Gamma"
-msgstr "Gama"
+msgstr "גאמה"
 
 #: widgets/labeledslider.cpp:42
 #, kde-format
 msgctxt "SpinBox parameter unit"
 msgid " Pixel"
 msgid_plural " Pixels"
-msgstr[0] " pikselis"
-msgstr[1] " pikseliai"
-msgstr[2] " pikselių"
-msgstr[3] " pikselis"
+msgstr[0] " פיקסל"
+msgstr[1] " פיקסלים"
+msgstr[2] " פיקסלים"
+msgstr[3] " פיקסלים"
 
 #: widgets/labeledslider.cpp:45
 #, kde-format
 msgctxt "SpinBox parameter unit"
 msgid " Bit"
 msgid_plural " Bits"
-msgstr[0] " bitas"
-msgstr[1] " bitai"
-msgstr[2] " bitų"
-msgstr[3] " bitas"
+msgstr[0] " סיבית"
+msgstr[1] " סיביות"
+msgstr[2] " סיביות"
+msgstr[3] " סיביות"
 
 #: widgets/labeledslider.cpp:48
 #, kde-format
 msgctxt "SpinBox parameter unit (Millimeter)"
 msgid " mm"
 msgid_plural " mm"
-msgstr[0] " mm"
-msgstr[1] " mm"
-msgstr[2] " mm"
-msgstr[3] " mm"
+msgstr[0] " מ״מ"
+msgstr[1] " מ״מ"
+msgstr[2] " מ״מ"
+msgstr[3] " מ״מ"
 
 #: widgets/labeledslider.cpp:51
 #, kde-format
 msgctxt "SpinBox parameter unit (Dots Per Inch)"
 msgid " DPI"
 msgid_plural " DPI"
-msgstr[0] " DPI"
-msgstr[1] " DPI"
-msgstr[2] " DPI"
-msgstr[3] " DPI"
+msgstr[0] " נק׳ לאינטש/DPI"
+msgstr[1] " נק׳ לאינטש/DPI"
+msgstr[2] " נק׳ לאינטש/DPI"
+msgstr[3] " נק׳ לאינטש/DPI"
 
 #: widgets/labeledslider.cpp:54
 #, kde-format
@@ -560,82 +553,17 @@ msgstr[3] " %"
 msgctxt "SpinBox parameter unit (Microseconds)"
 msgid " µs"
 msgid_plural " µs"
-msgstr[0] " µs"
-msgstr[1] " µs"
-msgstr[2] " µs"
-msgstr[3] " µs"
+msgstr[0] " מיקרושנייה"
+msgstr[1] " מיקרושניות"
+msgstr[2] " מיקרושניות"
+msgstr[3] " מיקרושניות"
 
 #: widgets/labeledslider.cpp:60
 #, kde-format
 msgctxt "SpinBox parameter unit (seconds)"
 msgid " s"
 msgid_plural " s"
-msgstr[0] " sek."
-msgstr[1] " sek."
-msgstr[2] " sek."
-msgstr[3] " sek."
-
-#~ msgid ""
-#~ "The image data contained 16 bits per color, but the color depth has been "
-#~ "truncated to 8 bits per color."
-#~ msgstr ""
-#~ "Paveikslo duomenyse yra 16 bitų spalvai, tačiau spalvų gylis buvo "
-#~ "sumažintas iki 8 bitų spalvai."
-
-#~ msgid "Invert colors"
-#~ msgstr "Invertuoti spalvas"
-
-#~ msgid "Invert the colors of the scanned image."
-#~ msgstr "Invertuoti skenuojamo paveikslo spalvas."
-
-#~ msgctxt "Page size landscape"
-#~ msgid "Landscape %1"
-#~ msgstr "Gulsčias %1"
-
-#~ msgid "Scan area size"
-#~ msgstr "Skenavimo srities dydis"
-
-#~ msgid "Select a predefined page size for the scanning area."
-#~ msgstr "Pasirinkite iš anksto apibrėžtą skenuojamos srities puslapio dydį."
-
-#~ msgid "%1 Pixel"
-#~ msgid_plural "%1 Pixels"
-#~ msgstr[0] "%1 pikselis"
-#~ msgstr[1] "%1 pikseliai"
-#~ msgstr[2] "%1 pikselių"
-#~ msgstr[3] "%1 pikselis"
-
-#~ msgid "%1 Bit"
-#~ msgid_plural "%1 Bits"
-#~ msgstr[0] "%1 bitas"
-#~ msgstr[1] "%1 bitai"
-#~ msgstr[2] "%1 bitų"
-#~ msgstr[3] "%1 bitas"
-
-#~ msgid "%1 mm"
-#~ msgid_plural "%1 mm"
-#~ msgstr[0] "%1 mm"
-#~ msgstr[1] "%1 mm"
-#~ msgstr[2] "%1 mm"
-#~ msgstr[3] "%1 mm"
-
-#~ msgid "%1 DPI"
-#~ msgid_plural "%1 DPI"
-#~ msgstr[0] "%1 DPI"
-#~ msgstr[1] "%1 DPI"
-#~ msgstr[2] "%1 DPI"
-#~ msgstr[3] "%1 DPI"
-
-#~ msgid "%1 %"
-#~ msgid_plural "%1 %"
-#~ msgstr[0] "%1 %"
-#~ msgstr[1] "%1 %"
-#~ msgstr[2] "%1 %"
-#~ msgstr[3] "%1 %"
-
-#~ msgid "%1 µs"
-#~ msgid_plural "%1 µs"
-#~ msgstr[0] "%1 µs"
-#~ msgstr[1] "%1 µs"
-#~ msgstr[2] "%1 µs"
-#~ msgstr[3] "%1 µs"
+msgstr[0] " שנ׳"
+msgstr[1] " שנ׳"
+msgstr[2] " שנ׳"
+msgstr[3] " שנ׳"
