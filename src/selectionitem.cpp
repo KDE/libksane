@@ -33,7 +33,7 @@ struct SelectionItem::Private {
     qreal      invZoom;
     qreal      selMargin;
     QRectF     addRemRect;
-    qreal      devicePixelRatio;
+    qreal      devicePixelRatio = 1.0;
 
     bool       addButtonEnabled = true;
 };
