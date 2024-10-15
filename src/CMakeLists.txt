@@ -9,9 +9,9 @@ set_target_properties(KSaneWidgets PROPERTIES
 
 target_compile_definitions(KSaneWidgets PRIVATE -DTRANSLATION_DOMAIN=\"libksane\")
 
-if (KF${KF_MAJOR_VERSION}Wallet_FOUND)
+if (KF6Wallet_FOUND)
     target_compile_definitions(KSaneWidgets PRIVATE -DHAVE_KWALLET)
-    target_link_libraries(KSaneWidgets PRIVATE KF${KF_MAJOR_VERSION}::Wallet)
+    target_link_libraries(KSaneWidgets PRIVATE KF6::Wallet)
 endif()
 
 target_sources(KSaneWidgets PRIVATE
@@ -39,17 +39,7 @@ ecm_qt_declare_logging_category(KSaneWidgets
   CATEGORY_NAME org.kde.ksane
 )
 
-if (QT_MAJOR_VERSION STREQUAL "5")
-    set(_generate_export_header_version_args)
-else()
-    # For Qt6/KF6 world transitively include the version header
-    if(ECM_VERSION VERSION_LESS "5.106")
-        set(include_version_header_code "#include <ksane_version.h>\n")
-        set(_generate_export_header_version_args CUSTOM_CONTENT_FROM_VARIABLE include_version_header_code)
-    else()
-        set(_generate_export_header_version_args USE_VERSION_HEADER)
-    endif()
-endif()
+set(_generate_export_header_version_args USE_VERSION_HEADER)
 
 ecm_generate_export_header(KSaneWidgets
     BASE_NAME KSane
@@ -67,13 +57,13 @@ target_include_directories(KSaneWidgets
 
 target_link_libraries(KSaneWidgets
     PUBLIC
-        Qt${QT_MAJOR_VERSION}::Core
-        Qt${QT_MAJOR_VERSION}::Gui
-        Qt${QT_MAJOR_VERSION}::Widgets
+        Qt6::Core
+        Qt6::Gui
+        Qt6::Widgets
     PRIVATE
-        KF${KF_MAJOR_VERSION}::I18n
-        KF${KF_MAJOR_VERSION}::WidgetsAddons
-        KF${KF_MAJOR_VERSION}::TextWidgets
+        KF6::I18n
+        KF6::WidgetsAddons
+        KF6::TextWidgets
         ${KSANECORE_TARGET}
 )
 

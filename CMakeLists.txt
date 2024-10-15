@@ -11,10 +11,12 @@ project(KSane VERSION ${RELEASE_SERVICE_VERSION})
 message(STATUS "-------------------------------------------")
 message(STATUS "Starting CMake configuration for: libksane")
 
+set(QT_REQUIRED_VERSION "6.4.0")
+set(KF_MIN_VERSION "6.0.0")
+
 # ECM setup (Extended Cmake Modules)
 include(FeatureSummary)
-set(KF5_VERSION "5.90.0")
-find_package(ECM ${KF5_VERSION} REQUIRED NO_MODULE)
+find_package(ECM ${KF_MIN_VERSION} REQUIRED NO_MODULE)
 set_package_properties(ECM PROPERTIES TYPE REQUIRED DESCRIPTION "Extra CMake Modules." URL "https://commits.kde.org/extra-cmake-modules")
 # ECM setup2 and include find same cmake module (copied from /usr/share/kde4/apps/cmake/modules/FindSane.cmake)
 set(CMAKE_MODULE_PATH ${KSane_SOURCE_DIR}/cmake-modules ${ECM_MODULE_PATH})
@@ -31,25 +33,14 @@ include(CheckFunctionExists)
 include(ECMGenerateExportHeader)
 include(ECMQtDeclareLoggingCategory)
 
-if (QT_MAJOR_VERSION STREQUAL "5")
-    set(KSANEWIDGETS_INSTALL_INCLUDEDIR "${KDE_INSTALL_INCLUDEDIR_KF}/KSane")
-    set(KSANEWIDGETS_CMAKECONFIG_NAME "KF5Sane")
-    set(LIBRARYFILE_NAME "KF5Sane")
-    set(TARGET_EXPORT_NAME "Sane")
-    set(TARGET_EXPORT_NAMESPACE_NAME "KF5::")
-    set(SOVERSION 6)
-    set(KSANECORE_NAME "KSaneCore")
-    set(KSANECORE_TARGET "KSane::Core")
-else()
-    set(KSANEWIDGETS_INSTALL_INCLUDEDIR "${KDE_INSTALL_INCLUDEDIR}/KSaneWidgets6")
-    set(KSANEWIDGETS_CMAKECONFIG_NAME "KSaneWidgets6")
-    set(LIBRARYFILE_NAME "KSaneWidgets6")
-    set(TARGET_EXPORT_NAME "KSaneWidgets6")
-    set(TARGET_EXPORT_NAMESPACE_NAME "")
-    set(SOVERSION 6)
-    set(KSANECORE_NAME "KSaneCore6")
-    set(KSANECORE_TARGET "KSane6::Core")
-endif()
+set(KSANEWIDGETS_INSTALL_INCLUDEDIR "${KDE_INSTALL_INCLUDEDIR}/KSaneWidgets6")
+set(KSANEWIDGETS_CMAKECONFIG_NAME "KSaneWidgets6")
+set(LIBRARYFILE_NAME "KSaneWidgets6")
+set(TARGET_EXPORT_NAME "KSaneWidgets6")
+set(TARGET_EXPORT_NAMESPACE_NAME "")
+set(SOVERSION 6)
+set(KSANECORE_NAME "KSaneCore6")
+set(KSANECORE_TARGET "KSane6::Core")
 
 set(ksane_version_header "${CMAKE_CURRENT_BINARY_DIR}/src/ksane_version.h")
 ecm_setup_version(
@@ -60,27 +51,18 @@ ecm_setup_version(
   SOVERSION ${SOVERSION}
 )
 # Dependencies
-set(QT_REQUIRED_VERSION "5.15.2")
-if (QT_MAJOR_VERSION STREQUAL "6")
-    set(QT_REQUIRED_VERSION "6.4.0")
-    set(KF_MIN_VERSION "5.240.0")
-    set(KF_MAJOR_VERSION "6")
-else()
-    set(KF_MAJOR_VERSION "5")
-endif()
-# Required Qt5 components to build this framework
-find_package(Qt${QT_MAJOR_VERSION} ${QT_REQUIRED_VERSION} NO_MODULE REQUIRED Core Widgets)
+find_package(Qt6 ${QT_REQUIRED_VERSION} NO_MODULE REQUIRED Core Widgets)
 
-# Required KF5 frameworks
-find_package(KF${KF_MAJOR_VERSION}I18n ${KF5_VERSION} REQUIRED)
+# Required KDE Frameworks
+find_package(KF6I18n ${KF_MIN_VERSION} REQUIRED)
 
 if (NOT WIN32)
-    find_package(KF${KF_MAJOR_VERSION}WidgetsAddons ${KF5_VERSION} REQUIRED)
-    find_package(KF${KF_MAJOR_VERSION}TextWidgets ${KF5_VERSION} REQUIRED)
+    find_package(KF6WidgetsAddons ${KF_MIN_VERSION} REQUIRED)
+    find_package(KF6TextWidgets ${KF_MIN_VERSION} REQUIRED)
 
-    # Optional KF5 frameworks
-    find_package(KF${KF_MAJOR_VERSION}Wallet ${KF5_VERSION})
-    set_package_properties(KF${KF_MAJOR_VERSION}Wallet PROPERTIES DESCRIPTION "Safe desktop-wide storage for passwords" TYPE OPTIONAL
+    # Optional KDE Frameworks
+    find_package(KF6Wallet ${KF_MIN_VERSION})
+    set_package_properties(KF6Wallet PROPERTIES DESCRIPTION "Safe desktop-wide storage for passwords" TYPE OPTIONAL
         PURPOSE "Required to have permanent storage of passwords for scanners"
     )
 
@@ -116,7 +98,7 @@ add_definitions(
 set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/${KSANEWIDGETS_CMAKECONFIG_NAME}")
 
 configure_package_config_file(
-  "${CMAKE_CURRENT_SOURCE_DIR}/KF5SaneConfig.cmake.in"
+  "${CMAKE_CURRENT_SOURCE_DIR}/KFSaneConfig.cmake.in"
   "${CMAKE_CURRENT_BINARY_DIR}/${KSANEWIDGETS_CMAKECONFIG_NAME}Config.cmake"
   INSTALL_DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
 )

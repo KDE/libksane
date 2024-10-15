@@ -30,9 +30,9 @@ target_include_directories(KSaneWidgets
 
 target_link_libraries(KSaneWidgets
     PUBLIC
-        Qt${QT_MAJOR_VERSION}::Widgets
+        Qt6::Widgets
     PRIVATE
-        KF${KF_MAJOR_VERSION}::I18n
+        KF6::I18n
 )
 
 ecm_generate_headers(KSane_HEADERS

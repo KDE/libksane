@@ -11,14 +11,5 @@ Dependencies:
     'frameworks/ktextwidgets': '@latest-kf6'
     'frameworks/kwallet': '@latest-kf6'
 
-- 'on': ['Linux/Qt5', 'FreeBSD/Qt5']
-  'require':
-    'libraries/ksanecore': '@same'
-    'frameworks/extra-cmake-modules': '@stable'
-    'frameworks/ki18n': '@stable'
-    'frameworks/kwidgetsaddons': '@stable'
-    'frameworks/ktextwidgets': '@stable'
-    'frameworks/kwallet': '@stable'
-
 Options:
   require-passing-tests-on: ['Linux', 'FreeBSD', 'Windows']
