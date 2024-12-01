@@ -40,10 +40,12 @@ KSaneWidget::KSaneWidget(QWidget *parent)
 {
     d->m_ksaneCoreInterface = new KSaneCore::Interface();
 
-    connect(d->m_ksaneCoreInterface, &KSaneCore::Interface::scannedImageReady, d, &KSaneWidgetPrivate::imageReady);
-    connect(d->m_ksaneCoreInterface, &KSaneCore::Interface::scanFinished, d, &KSaneWidgetPrivate::scanDone);
+    connect(d->m_ksaneCoreInterface, &KSaneCore::Interface::scannedImageReady, this, &KSaneWidget::scannedImageReady);
+    connect(d->m_ksaneCoreInterface, &KSaneCore::Interface::scanFinished, d, &KSaneWidgetPrivate::oneFinalScanDone);
+    connect(d->m_ksaneCoreInterface, &KSaneCore::Interface::previewScanFinished, d, &KSaneWidgetPrivate::previewScanDone);
     connect(d->m_ksaneCoreInterface, &KSaneCore::Interface::userMessage, d, &KSaneWidgetPrivate::alertUser);
     connect(d->m_ksaneCoreInterface, &KSaneCore::Interface::scanProgress, d, &KSaneWidgetPrivate::updateProgress);
+    connect(d->m_ksaneCoreInterface, &KSaneCore::Interface::previewProgress, d, &KSaneWidgetPrivate::updatePreviewProgress);
     connect(d->m_ksaneCoreInterface, &KSaneCore::Interface::batchModeCountDown, d, &KSaneWidgetPrivate::updateCountDown);
     connect(d->m_ksaneCoreInterface, &KSaneCore::Interface::availableDevices, d, &KSaneWidgetPrivate::signalDevListUpdate);
     connect(d->m_ksaneCoreInterface, &KSaneCore::Interface::buttonPressed, this, &KSaneWidget::buttonPressed);
@@ -366,7 +368,7 @@ void KSaneWidget::cancelScan()
 
 void KSaneWidget::setPreviewResolution(float dpi)
 {
-    d->m_previewDPI = dpi;
+    d->m_ksaneCoreInterface->setPreviewResolution(dpi);
 }
 
 void KSaneWidget::getOptionValues(QMap <QString, QString> &opts)

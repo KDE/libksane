@@ -66,14 +66,13 @@ public:
 public Q_SLOTS:
     void startFinalScan();
     void startPreviewScan();
-    void scanDone(KSaneCore::Interface::ScanStatus status, const QString &strStatus);
     void previewScanDone(KSaneCore::Interface::ScanStatus status, const QString &strStatus);
     void oneFinalScanDone(KSaneCore::Interface::ScanStatus status, const QString &strStatus);
     void updateProgress(int progress);
+    void updatePreviewProgress(int progress);
     void updateCountDown(int remainingSeconds);
     void handleSelection(float tl_x, float tl_y, float br_x, float br_y);
     void signalDevListUpdate(const QList<KSaneCore::DeviceInformation*> &deviceList);
-    void imageReady(const QImage &image);
 
 private Q_SLOTS:
 
@@ -162,9 +161,7 @@ public:
     // preview variables
     float               m_previewWidth;
     float               m_previewHeight;
-    float               m_previewDPI;
     QImage              m_previewImg;
-    bool                m_isPreview;
     bool                m_autoSelect;
 
     bool                m_cancelMultiScan = false;

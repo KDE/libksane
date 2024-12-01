@@ -52,11 +52,8 @@ KSaneWidgetPrivate::KSaneWidgetPrivate(KSaneWidget *parent):
     m_progressBar   = nullptr;
 
     // scanning variables
-    m_isPreview     = false;
-
     m_splitGamChB   = nullptr;
     m_commonGamma   = nullptr;
-    m_previewDPI    = 0;
 
     m_previewWidth  = 0;
     m_previewHeight = 0;
@@ -848,88 +845,6 @@ void KSaneWidgetPrivate::startPreviewScan()
     }
     m_scanOngoing = true;
 
-    int targetPreviewDPI;
-    float max_x, max_y;
-
-    // store the current settings of parameters to be changed
-    if (m_optDepth != nullptr) {
-        m_optDepth->storeCurrentData();
-    }
-    if (m_optRes != nullptr) {
-        m_optRes->storeCurrentData();
-    }
-    if (m_optResX != nullptr) {
-        m_optResX->storeCurrentData();
-    }
-    if (m_optResY != nullptr) {
-        m_optResY->storeCurrentData();
-    }
-    if (m_optPreview != nullptr) {
-        m_optPreview->storeCurrentData();
-    }
-
-    // check if we can modify the selection
-    if ((m_optTlX != nullptr) && (m_optTlY != nullptr) &&
-            (m_optBrX != nullptr) && (m_optBrY != nullptr)) {
-        // get maximums
-        max_x = m_optBrX->maximumValue().toFloat();
-        max_y = m_optBrY->maximumValue().toFloat();
-        // select the whole area
-        m_optTlX->setValue(0);
-        m_optTlY->setValue(0);
-        m_optBrX->setValue(max_x);
-        m_optBrY->setValue(max_y);
-
-    } else {
-        // no use to try auto selections if you can not use them
-        m_autoSelect = false;
-    }
-
-    if (m_optRes != nullptr) {
-        if (m_previewDPI < m_optRes->minimumValue().toFloat()) {
-            targetPreviewDPI = qMax(m_optRes->minimumValue().toFloat(), 25.0f);
-            if ((m_optBrX != nullptr) && (m_optBrY != nullptr)) {
-                if (m_optBrX->valueUnit() == KSaneCore::Option::UnitMilliMeter) {
-                    targetPreviewDPI = 300 * 25.4 / (m_optBrX->value().toFloat());
-                    // always round to a multiple of 25
-                    int remainder = targetPreviewDPI % 25;
-                    targetPreviewDPI = targetPreviewDPI + 25 - remainder;
-                }
-            }
-        } else {
-            targetPreviewDPI = m_previewDPI;
-        }
-        if (m_optRes->type() == KSaneCore::Option::TypeValueList) {
-            const auto &values = m_optRes->valueList();
-            if (values.count() <= 0) {
-                qCWarning(KSANE_LOG) << "Resolution option is broken and has no entries";
-                return;
-            }
-            /* if there are discrete values, try to find the one which fits best. */
-            int minIndex = 0;
-            int minDistance = abs(values.at(0).toInt() - m_previewDPI);
-            for (int i = 1; i < values.count(); ++i) {
-                int distance = abs(values.at(i).toInt() - m_previewDPI);
-                if (distance < minDistance) {
-                    minIndex = i;
-                    minDistance = distance;
-                }
-
-            }
-            targetPreviewDPI = values.at(minIndex).toInt();
-
-        }
-        m_optRes->setValue(targetPreviewDPI);
-        if ((m_optResY != nullptr) && (m_optRes == m_optResX)) {
-            m_optResY->setValue(targetPreviewDPI);
-        }
-    }
-
-    // set preview option to true if possible
-    if (m_optPreview != nullptr) {
-        m_optPreview->setValue(true);
-    }
-
     // clear the preview
     m_previewViewer->clearHighlight();
     m_previewViewer->clearSelections();
@@ -938,30 +853,12 @@ void KSaneWidgetPrivate::startPreviewScan()
 
     setBusy(true);
 
-    m_isPreview = true;
     m_cancelMultiScan = false;
-    m_ksaneCoreInterface->startScan();
+    m_ksaneCoreInterface->startPreviewScan();
 }
 
 void KSaneWidgetPrivate::previewScanDone(KSaneCore::Interface::ScanStatus status, const QString &strStatus)
 {
-    // restore the original settings of the changed parameters
-    if (m_optDepth != nullptr) {
-        m_optDepth->restoreSavedData();
-    }
-    if (m_optRes != nullptr) {
-        m_optRes->restoreSavedData();
-    }
-    if (m_optResX != nullptr) {
-        m_optResX->restoreSavedData();
-    }
-    if (m_optResY != nullptr) {
-        m_optResY->restoreSavedData();
-    }
-    if (m_optPreview != nullptr) {
-        m_optPreview->restoreSavedData();
-    }
-
     m_previewImg = std::move(*m_ksaneCoreInterface->scanImage());
     m_previewViewer->setQImage(&m_previewImg);
     m_previewViewer->zoom2Fit();
@@ -985,8 +882,6 @@ void KSaneWidgetPrivate::startFinalScan()
     }
     m_scanOngoing = true;
 
-    m_isPreview = false;
-
     float x1 = 0, y1 = 0, x2 = 0, y2 = 0;
 
     m_selIndex = 0;
@@ -1009,14 +904,6 @@ void KSaneWidgetPrivate::startFinalScan()
     m_ksaneCoreInterface->startScan();
 }
 
-void KSaneWidgetPrivate::imageReady(const QImage &image)
-{
-    if (m_isPreview) {
-        return;
-    }
-    Q_EMIT q->scannedImageReady(image);
-}
-
 bool KSaneWidgetPrivate::scanSourceADF()
 {
     if (!m_optSource) {
@@ -1028,15 +915,6 @@ bool KSaneWidgetPrivate::scanSourceADF()
     return source.contains(QStringLiteral("Automatic Document Feeder")) ||
     source.contains(QStringLiteral("ADF")) ||
     source.contains(QStringLiteral("Duplex"));
-}
-
-void KSaneWidgetPrivate::scanDone(KSaneCore::Interface::ScanStatus status, const QString &strStatus)
-{
-    if (m_isPreview) {
-        previewScanDone(status, strStatus);
-    } else {
-        oneFinalScanDone(status, strStatus);
-    }
 }
 
 void KSaneWidgetPrivate::oneFinalScanDone(KSaneCore::Interface::ScanStatus status, const QString &strStatus)
@@ -1144,26 +1022,27 @@ void KSaneWidgetPrivate::updateProgress(int progress)
         m_progressBar->show();
         m_countDown->hide();
     }
-    if (m_isPreview) {
-        // the image size might have changed
-        if (m_ksaneCoreInterface->scanImage()->height() != m_previewViewer->currentImageHeight()
-            || m_ksaneCoreInterface->scanImage()->width() != m_previewViewer->currentImageWidth() ) {
-
-            m_ksaneCoreInterface->lockScanImage();
-            m_previewViewer->setQImage(m_ksaneCoreInterface->scanImage());
-            m_previewViewer->zoom2Fit();
-            m_ksaneCoreInterface->unlockScanImage();
-        } else {
-            m_ksaneCoreInterface->lockScanImage();
-            m_previewViewer->updateImage();
-            m_ksaneCoreInterface->unlockScanImage();
-        }
-    } else {
-        m_previewViewer->setHighlightShown(progress);
-    }
 
     m_progressBar->setValue(progress);
     Q_EMIT q->scanProgress(progress);
+}
+
+void KSaneWidgetPrivate::updatePreviewProgress(int progress)
+{
+    // the image size might have changed
+    if (m_ksaneCoreInterface->scanImage()->height() != m_previewViewer->currentImageHeight()
+        || m_ksaneCoreInterface->scanImage()->width() != m_previewViewer->currentImageWidth() ) {
+        m_ksaneCoreInterface->lockScanImage();
+        m_previewViewer->setQImage(m_ksaneCoreInterface->scanImage());
+        m_previewViewer->zoom2Fit();
+        m_ksaneCoreInterface->unlockScanImage();
+    } else {
+        m_ksaneCoreInterface->lockScanImage();
+        m_previewViewer->updateImage();
+        m_ksaneCoreInterface->unlockScanImage();
+    }
+    m_previewViewer->setHighlightShown(progress);
+    updateProgress(progress);
 }
 
 void KSaneWidgetPrivate::updateCountDown(int remainingSeconds)
