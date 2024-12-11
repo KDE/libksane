@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: libksane\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-11-24 00:40+0000\n"
+"POT-Creation-Date: 2024-12-11 00:39+0000\n"
 "PO-Revision-Date: 2022-11-01 10:38+0700\n"
 "Last-Translator: OIS <mistresssilvara@hotmail.com>\n"
 "Language-Team: Interlingue <kde-i18n-doc@kde.org>\n"
@@ -192,124 +192,124 @@ msgstr "Null aparates trovat."
 msgid "Found devices:"
 msgstr "Trovat aparates:"
 
-#: ksaneviewer.cpp:109 ksanewidget.cpp:86
+#: ksaneviewer.cpp:109 ksanewidget.cpp:88
 #, kde-format
 msgid "Zoom In"
 msgstr "Agrandar"
 
-#: ksaneviewer.cpp:112 ksanewidget.cpp:92
+#: ksaneviewer.cpp:112 ksanewidget.cpp:94
 #, kde-format
 msgid "Zoom Out"
 msgstr "Diminuer"
 
-#: ksaneviewer.cpp:115 ksanewidget.cpp:98
+#: ksaneviewer.cpp:115 ksanewidget.cpp:100
 #, kde-format
 msgid "Zoom to Selection"
 msgstr "Adjustar al selection"
 
-#: ksaneviewer.cpp:118 ksanewidget.cpp:104
+#: ksaneviewer.cpp:118 ksanewidget.cpp:106
 #, kde-format
 msgid "Zoom to Fit"
 msgstr "Adjustar dimension"
 
-#: ksaneviewer.cpp:121 ksanewidget.cpp:110
+#: ksaneviewer.cpp:121 ksanewidget.cpp:112
 #, kde-format
 msgid "Clear Selections"
 msgstr "Vacuar selectiones"
 
-#: ksanewidget.cpp:58
+#: ksanewidget.cpp:60
 #, kde-format
 msgid "Waiting for the scan to start."
 msgstr "Atendente li inicie de scannation."
 
-#: ksanewidget.cpp:71
+#: ksanewidget.cpp:73
 #, kde-format
 msgid "Cancel current scan operation"
 msgstr "Anullar li actual scannation"
 
-#: ksanewidget.cpp:121
+#: ksanewidget.cpp:123
 #, kde-format
 msgid "Scan Preview Image (%1)"
 msgstr "Scannar un image por prevision (%1)"
 
-#: ksanewidget.cpp:122
+#: ksanewidget.cpp:124
 #, kde-format
 msgctxt "Preview button text"
 msgid "Preview"
 msgstr "Previder"
 
-#: ksanewidget.cpp:127
+#: ksanewidget.cpp:129
 #, kde-format
 msgid "Scan Final Image (%1)"
 msgstr "Scannar li final image (%1)"
 
-#: ksanewidget.cpp:128
+#: ksanewidget.cpp:130
 #, kde-format
 msgctxt "Final scan button text"
 msgid "Scan"
 msgstr "Scannar"
 
-#: ksanewidget.cpp:169
+#: ksanewidget.cpp:171
 #, kde-format
 msgid "Basic Options"
 msgstr "Basic optiones"
 
-#: ksanewidget.cpp:175
+#: ksanewidget.cpp:177
 #, kde-format
 msgid "Advanced Options"
 msgstr "Optiones avansat"
 
-#: ksanewidget.cpp:181
+#: ksanewidget.cpp:183
 #, kde-format
 msgid "Scanner Specific Options"
 msgstr "Parametres del scannator"
 
-#: ksanewidget.cpp:278
+#: ksanewidget.cpp:280
 #, kde-format
 msgid "Authentication required for resource: %1"
 msgstr "Autentication es besonat por li ressurse: %1"
 
-#: ksanewidget_p.cpp:410
+#: ksanewidget_p.cpp:407
 #, kde-format
 msgid "Scan Area Size"
 msgstr "Dimension del area de scannation"
 
-#: ksanewidget_p.cpp:415
+#: ksanewidget_p.cpp:412
 #, kde-format
 msgid " mm"
 msgstr " mm"
 
-#: ksanewidget_p.cpp:415
+#: ksanewidget_p.cpp:412
 #, kde-format
 msgid " inch"
 msgstr " inch"
 
-#: ksanewidget_p.cpp:417
+#: ksanewidget_p.cpp:414
 #, kde-format
 msgid "Width"
 msgstr "Largore"
 
-#: ksanewidget_p.cpp:422
+#: ksanewidget_p.cpp:419
 #, kde-format
 msgid "Height"
 msgstr "Altore"
 
-#: ksanewidget_p.cpp:427
+#: ksanewidget_p.cpp:424
 #, kde-format
 msgid "X Offset"
 msgstr "Deplazzament X"
 
-#: ksanewidget_p.cpp:432
+#: ksanewidget_p.cpp:429
 #, kde-format
 msgid "Y Offset"
 msgstr "Deplazzament Y"
 
-#: ksanewidget_p.cpp:493
+#: ksanewidget_p.cpp:490
 #, kde-format
 msgid "Image intensity"
 msgstr "Intensitá del image"
 
-#: ksanewidget_p.cpp:497
+#: ksanewidget_p.cpp:494
 #, kde-format
 msgid ""
 "Gamma-correction table. In color mode this option equally affects the red, "
@@ -317,46 +317,46 @@ msgid ""
 "table)."
 msgstr ""
 
-#: ksanewidget_p.cpp:505
+#: ksanewidget_p.cpp:502
 #, kde-format
 msgid "Separate color intensity tables"
 msgstr ""
 
-#: ksanewidget_p.cpp:1122
+#: ksanewidget_p.cpp:1000
 #, kde-format
 msgctxt "This is compared to the option string returned by sane"
 msgid "Transparency"
 msgstr "Transparency"
 
-#: ksanewidget_p.cpp:1124
+#: ksanewidget_p.cpp:1002
 #, kde-format
 msgctxt "This is compared to the option string returned by sane"
 msgid "Negative"
 msgstr "Negative"
 
-#: ksanewidget_p.cpp:1171
+#: ksanewidget_p.cpp:1050
 #, kde-format
 msgid "Next scan starts in %1 s."
 msgstr "Li sequent scannation va iniciar pos %1 s."
 
-#: ksanewidget_p.cpp:1184
+#: ksanewidget_p.cpp:1063
 #, kde-format
 msgctxt "@title:window"
 msgid "General Error"
 msgstr "General errore"
 
-#: ksanewidget_p.cpp:1187
+#: ksanewidget_p.cpp:1066
 #, kde-format
 msgctxt "@title:window"
 msgid "Information"
 msgstr "Information"
 
-#: ksanewidget_p.cpp:1269
+#: ksanewidget_p.cpp:1148
 #, fuzzy, kde-format
 msgid "Custom"
 msgstr "Nonstandard"
 
-#: ksanewidget_p.cpp:1294
+#: ksanewidget_p.cpp:1173
 #, kde-format
 msgctxt "Page size landscape"
 msgid " Landscape"
