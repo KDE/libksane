@@ -3,19 +3,21 @@
 # This file is distributed under the same license as the libksane package.
 # Kali <EMAIL@ADDRESS>, 2024.
 #
+# SPDX-FileCopyrightText: 2024 kali <skkalwar999@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: libksane\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-12-11 00:39+0000\n"
-"PO-Revision-Date: 2024-12-13 19:10+0530\n"
-"Last-Translator: Kali <EMAIL@ADDRESS>\n"
-"Language-Team: Sanskrit\n"
+"PO-Revision-Date: 2024-12-14 01:12+0530\n"
+"Last-Translator: kali <skkalwar999@gmail.com>\n"
+"Language-Team: Sanskrit <kde-i18n-doc@kde.org>\n"
 "Language: sa\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n>2);\n"
+"X-Generator: Lokalize 24.08.2\n"
 
 #: ../ksanetwain/ktwain_widget.cpp:29
 #, kde-format
@@ -239,7 +241,7 @@ msgstr "स्कैन पूर्वावलोकन चित्रम् 
 #, kde-format
 msgctxt "Preview button text"
 msgid "Preview"
-msgstr ""
+msgstr "पूर्वावलोकन"
 
 #: ksanewidget.cpp:129
 #, kde-format
@@ -250,7 +252,7 @@ msgstr "अन्तिम चित्रं स्कैन कुर्वन
 #, kde-format
 msgctxt "Final scan button text"
 msgid "Scan"
-msgstr ""
+msgstr "स्कैन् कुर्वन्तु"
 
 #: ksanewidget.cpp:171
 #, kde-format
@@ -331,13 +333,13 @@ msgstr "वर्णतीव्रतासारणीः पृथक् क�
 #, kde-format
 msgctxt "This is compared to the option string returned by sane"
 msgid "Transparency"
-msgstr ""
+msgstr "पारदर्शिता"
 
 #: ksanewidget_p.cpp:1002
 #, kde-format
 msgctxt "This is compared to the option string returned by sane"
 msgid "Negative"
-msgstr ""
+msgstr "नकारात्मक"
 
 #: ksanewidget_p.cpp:1050
 #, kde-format
@@ -348,13 +350,13 @@ msgstr "अग्रिमः स्कैन् %1 s मध्ये आरभ�
 #, kde-format
 msgctxt "@title:window"
 msgid "General Error"
-msgstr ""
+msgstr "सामान्यदोषः"
 
 #: ksanewidget_p.cpp:1066
 #, kde-format
 msgctxt "@title:window"
 msgid "Information"
-msgstr ""
+msgstr "सूचना"
 
 #: ksanewidget_p.cpp:1148
 #, kde-format
@@ -365,59 +367,59 @@ msgstr "आचारः"
 #, kde-format
 msgctxt "Page size landscape"
 msgid " Landscape"
-msgstr ""
+msgstr " भूप्रदेश"
 
 #: widgets/ksaneoptionwidget.cpp:66
 #, kde-format
 msgctxt "Label for a scanner option"
 msgid "%1:"
-msgstr ""
+msgstr "%1: १."
 
 #: widgets/labeledcombo.cpp:155 widgets/labeledcombo.cpp:186
 #, kde-format
 msgctxt "Parameter and Unit"
 msgid "%1 Pixel"
 msgid_plural "%1 Pixels"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%1 पिक्सेल"
+msgstr[1] "%1 पिक्सेल्"
 
 #: widgets/labeledcombo.cpp:158 widgets/labeledcombo.cpp:189
 #, kde-format
 msgctxt "Parameter and Unit"
 msgid "%1 Bit"
 msgid_plural "%1 Bits"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%1 बिट्"
+msgstr[1] "%1 बिट्"
 
 #: widgets/labeledcombo.cpp:161 widgets/labeledcombo.cpp:192
 #, kde-format
 msgctxt "Parameter and Unit (Millimeter)"
 msgid "%1 mm"
-msgstr ""
+msgstr "%1 मि.मी"
 
 #: widgets/labeledcombo.cpp:164 widgets/labeledcombo.cpp:195
 #, kde-format
 msgctxt "Parameter and Unit (Dots Per Inch)"
 msgid "%1 DPI"
-msgstr ""
+msgstr "%1 डीपीआई"
 
 #: widgets/labeledcombo.cpp:167 widgets/labeledcombo.cpp:198
 #, kde-format
 msgctxt "Parameter and Unit (Percentage)"
 msgid "%1 %"
-msgstr ""
+msgstr "%1 % ."
 
 #: widgets/labeledcombo.cpp:170 widgets/labeledcombo.cpp:201
 #, kde-format
 msgctxt "Parameter and Unit (Microseconds)"
 msgid "%1 µs"
-msgstr ""
+msgstr "%1 μs इति"
 
 #: widgets/labeledcombo.cpp:173 widgets/labeledcombo.cpp:204
 #, kde-format
 msgctxt "Parameter and Unit (seconds)"
 msgid "%1 s"
-msgstr ""
+msgstr "%1 स"
 
 #: widgets/labeledcombo.cpp:176 widgets/labeledcombo.cpp:207
 #, kde-format
@@ -428,25 +430,25 @@ msgstr "%1"
 #, kde-format
 msgctxt "Label for button to reset text in a KLineEdit"
 msgid "Reset"
-msgstr ""
+msgstr "पुनः सेट् करें"
 
 #: widgets/labeledentry.cpp:54
 #, kde-format
 msgctxt "Label for button to write text in a KLineEdit to sane"
 msgid "Set"
-msgstr ""
+msgstr "दृढः"
 
 #: widgets/labeledfslider.cpp:40
 #, kde-format
 msgctxt "Double numbers. SpinBox parameter unit"
 msgid " Pixels"
-msgstr ""
+msgstr " पिक्सेल"
 
 #: widgets/labeledfslider.cpp:43
 #, kde-format
 msgctxt "Double numbers. SpinBox parameter unit"
 msgid " Bits"
-msgstr ""
+msgstr " बिट्स"
 
 #: widgets/labeledfslider.cpp:46
 #, kde-format
@@ -458,25 +460,25 @@ msgstr " मि.मी"
 #, kde-format
 msgctxt "Double numbers. SpinBox parameter unit (Dots Per Inch)"
 msgid " DPI"
-msgstr ""
+msgstr " डीपीआई"
 
 #: widgets/labeledfslider.cpp:52
 #, kde-format
 msgctxt "Double numbers. SpinBox parameter unit (Percentage)"
 msgid " %"
-msgstr ""
+msgstr " % ."
 
 #: widgets/labeledfslider.cpp:55
 #, kde-format
 msgctxt "Double numbers. SpinBox parameter unit (Microseconds)"
 msgid " µs"
-msgstr ""
+msgstr " μs"
 
 #: widgets/labeledfslider.cpp:58
 #, kde-format
 msgctxt "SpinBox parameter unit (seconds), float"
 msgid " s"
-msgstr ""
+msgstr " स"
 
 #: widgets/labeledgamma.cpp:43
 #, kde-format
@@ -498,53 +500,53 @@ msgstr "गाम्मा"
 msgctxt "SpinBox parameter unit"
 msgid " Pixel"
 msgid_plural " Pixels"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] " पिक्सेल"
+msgstr[1] " पिक्सेल"
 
 #: widgets/labeledslider.cpp:45
 #, kde-format
 msgctxt "SpinBox parameter unit"
 msgid " Bit"
 msgid_plural " Bits"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] " किञ्चित्"
+msgstr[1] " बिट्स"
 
 #: widgets/labeledslider.cpp:48
 #, kde-format
 msgctxt "SpinBox parameter unit (Millimeter)"
 msgid " mm"
 msgid_plural " mm"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] " मि.मी"
+msgstr[1] " मि.मी"
 
 #: widgets/labeledslider.cpp:51
 #, kde-format
 msgctxt "SpinBox parameter unit (Dots Per Inch)"
 msgid " DPI"
 msgid_plural " DPI"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] " डीपीआई"
+msgstr[1] " डीपीआई"
 
 #: widgets/labeledslider.cpp:54
 #, kde-format
 msgctxt "SpinBox parameter unit (Percentage)"
 msgid " %"
 msgid_plural " %"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] " % ."
+msgstr[1] " % ."
 
 #: widgets/labeledslider.cpp:57
 #, kde-format
 msgctxt "SpinBox parameter unit (Microseconds)"
 msgid " µs"
 msgid_plural " µs"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] " μs"
+msgstr[1] " μs"
 
 #: widgets/labeledslider.cpp:60
 #, kde-format
 msgctxt "SpinBox parameter unit (seconds)"
 msgid " s"
 msgid_plural " s"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] " स"
+msgstr[1] " स"
