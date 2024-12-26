@@ -175,7 +175,7 @@ Q_SIGNALS:
      * @note The list is only a snapshot of the current available devices. Devices
      * might be added or removed/opened after the signal is emitted.
      */
-    void availableDevices(const QList<KSaneWidget::DeviceInfo> &deviceList);
+    void availableDevices(const QList<KSaneIface::KSaneWidget::DeviceInfo> &deviceList);
 
     /**
      * This Signal is emitted when a hardware button is pressed.
