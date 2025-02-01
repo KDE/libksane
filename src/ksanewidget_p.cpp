@@ -870,7 +870,7 @@ void KSaneWidgetPrivate::previewScanDone(KSaneCore::Interface::ScanStatus status
     setBusy(false);
     m_scanOngoing = false;
 
-    Q_EMIT q->scanDone(KSaneWidget::NoError, QString());
+    Q_EMIT q->scanDone(KSaneWidget::NoError, strStatus);
 
     return;
 }
@@ -1148,7 +1148,7 @@ void KSaneWidgetPrivate::setPossibleScanSizes()
     m_scanareaPapersize->addItem(i18n("Custom"), customSize);
 
     // Add portrait page sizes
-    for (int sizeCode: qAsConst(m_sizeCodes)) {
+    for (int sizeCode : std::as_const(m_sizeCodes)) {
         QSizeF size = QPageSize::size((QPageSize::PageSizeId)sizeCode, QPageSize::Millimeter);
         if (mmToDispUnit(size.width() - PageSizeWiggleRoom) > widthInDispUnit) {
             continue;
@@ -1160,7 +1160,7 @@ void KSaneWidgetPrivate::setPossibleScanSizes()
     }
 
     // Add landscape page sizes
-    for (int sizeCode: qAsConst(m_sizeCodes)) {
+    for (int sizeCode : std::as_const(m_sizeCodes)) {
         QSizeF size = QPageSize::size((QPageSize::PageSizeId)sizeCode, QPageSize::Millimeter);
         size.transpose();
         if (mmToDispUnit(size.width() - PageSizeWiggleRoom) > widthInDispUnit) {

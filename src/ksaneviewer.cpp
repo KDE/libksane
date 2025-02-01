@@ -556,8 +556,8 @@ void KSaneViewer::wheelEvent(QWheelEvent *e)
 void KSaneViewer::mousePressEvent(QMouseEvent *e)
 {
     if (e->button() == Qt::LeftButton) {
-        d->m_left_last_x = e->x();
-        d->m_left_last_y = e->y();
+        d->m_left_last_x = e->position().x();
+        d->m_left_last_y = e->position().y();
         QPointF scenePoint = scenePos(e) * d->selection->devicePixelRatio();
         d->lastSPoint = scenePoint;
         if (e->modifiers() != Qt::ControlModifier) {
@@ -640,12 +640,12 @@ void KSaneViewer::mouseMoveEvent(QMouseEvent *e)
 
     if (e->buttons()&Qt::LeftButton) {
         if (e->modifiers() == Qt::ControlModifier) {
-            int dx = e->x() - d->m_left_last_x;
-            int dy = e->y() - d->m_left_last_y;
+            int dx = e->position().x() - d->m_left_last_x;
+            int dy = e->position().y() - d->m_left_last_y;
             verticalScrollBar()->setValue(verticalScrollBar()->value() - dy);
             horizontalScrollBar()->setValue(horizontalScrollBar()->value() - dx);
-            d->m_left_last_x = e->x();
-            d->m_left_last_y = e->y();
+            d->m_left_last_x = e->position().x();
+            d->m_left_last_y = e->position().y();
         } else {
             ensureVisible(QRectF(scenePoint, QSizeF(0, 0)), 1, 1);
             QRectF rect = d->selection->rect();
@@ -1182,7 +1182,7 @@ QPointF KSaneViewer::scenePos(QMouseEvent *e) const
     // QMouseEvent::localPos() currently returns a rounded QPointF
     // (https://codereview.qt-project.org/259785), so we have to extract a fractional
     // part from QMouseEvent::screenPos().
-    const QPointF screenPos = e->screenPos();
+    const QPointF screenPos = e->globalPosition();
     QPointF delta = screenPos - screenPos.toPoint();
     return mapToScene(QPainterPath(e->pos() + delta)).currentPosition();
 }

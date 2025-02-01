@@ -37,9 +37,9 @@ LabeledCombo::LabeledCombo(QWidget *parent, KSaneCore::Option *option)
     for (int i = 0; i < values.count(); i++) {
         const auto &value = values.at(i);
         const auto &internalValue = internalValues.at(i);
-        if (value.type() == static_cast<QVariant::Type>(QMetaType::Int)) {
+        if (value.userType() == QMetaType::Int) {
             addItem(getStringWithUnitForInteger(value.toInt()), internalValue);
-        } else if (value.type() == static_cast<QVariant::Type>(QMetaType::Float)) {
+        } else if (value.userType() == QMetaType::Float) {
             addItem(getStringWithUnitForFloat(value.toFloat()), internalValue);
         } else {
             addItem(value.toString(), internalValue);

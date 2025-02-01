@@ -89,7 +89,7 @@ void LabeledGamma::setColor(const QColor &color)
 
 void LabeledGamma::setValues(const QVariant &values)
 {
-    if (static_cast<QMetaType::Type>(values.type()) == QMetaType::QVariantList) {
+    if (values.userType() == QMetaType::QVariantList) {
         QVariantList copy = values.toList();
         if (copy.size() != 3) {
             return;
