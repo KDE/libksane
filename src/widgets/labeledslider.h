@@ -10,14 +10,16 @@
 
 #include "ksaneoptionwidget.h"
 
-class QSlider;
+// KDE includes
+#include <KLocalizedString>
+
+// Qt includes
+#include <QSlider>
+#include <QSpinBox>
 
 /**
   *@author Kåre Särs
   */
-
-class KPluralHandlingSpinBox;
-class KLocalizedString;
 
 namespace KSaneIface
 {
@@ -56,10 +58,6 @@ public Q_SLOTS:
     void setValue(const QVariant &val);
     void setRange(int min, int max);
     void setStep(int);
-    /** Set the unit */
-    void setSuffix(const KLocalizedString &text);
-
-
 
 private Q_SLOTS:
 
@@ -76,10 +74,12 @@ Q_SIGNALS:
     void valueChanged(const QVariant &val);
 
 private:
-    void initSlider(int minValue, int maxValue, int stepValue);
-    QSlider   *m_slider;
-    KPluralHandlingSpinBox  *m_spinb;
     int        m_step;
+    void initSlider(int minValue, int maxValue, int stepValue);
+
+    KLocalizedString m_spinboxFormat;
+    QSlider   *m_slider;
+    QSpinBox  *m_spinb;
 };
 
 }  // NameSpace KSaneIface

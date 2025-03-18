@@ -26,7 +26,7 @@ KSaneWidget::KSaneWidget(QWidget *parent)
     : QWidget(parent), d(new KSaneWidgetPrivate)
 {
     QPushButton *openDialog = new QPushButton;
-    openDialog->setText(i18n("Open scan dialog"));
+    openDialog->setText(i18n("Open Scan Dialog"));
     QHBoxLayout *lay = new QHBoxLayout;
     lay->addWidget(openDialog);
     setLayout(lay);

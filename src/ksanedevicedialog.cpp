@@ -55,7 +55,7 @@ KSaneDeviceDialog::KSaneDeviceDialog(QWidget *parent)
     QDialogButtonBox *bottomButtonBox = new QDialogButtonBox(this);
     bottomButtonBox->setStandardButtons(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
     m_btnOk = bottomButtonBox->button(QDialogButtonBox::Ok);
-    m_btnReloadDevices = bottomButtonBox->addButton(i18n("Reload devices list"), QDialogButtonBox::ButtonRole::ActionRole);
+    m_btnReloadDevices = bottomButtonBox->addButton(i18n("Reload Devices List"), QDialogButtonBox::ButtonRole::ActionRole);
     layout->addWidget(bottomButtonBox);
 
     connect(bottomButtonBox, &QDialogButtonBox::accepted, this, &QDialog::accept);
@@ -79,7 +79,7 @@ void KSaneDeviceDialog::reloadDevicesList()
 {
     setAvailable(false);
     qDeleteAll(m_btnGroupDevices->buttons());
-    m_gbDevices->setTitle(i18n("Looking for devices. Please wait."));
+    m_gbDevices->setTitle(i18n("Looking for devices, please wait…"));
     m_gbDevices->layout()->itemAt(0)->widget()->hide();  // explanation
     m_btnReloadDevices->setEnabled(false);
 
@@ -114,7 +114,7 @@ void KSaneDeviceDialog::updateDevicesList(const QList<KSaneCore::DeviceInformati
     qDeleteAll(m_btnGroupDevices->buttons());
 
     if (list.isEmpty()) {
-        m_gbDevices->setTitle(i18n("Sorry. No devices found."));
+        m_gbDevices->setTitle(i18n("Sorry, no devices found."));
         m_gbDevices->layout()->itemAt(0)->widget()->show();  // explanation
         m_gbDevices->layout()->itemAt(1)->widget()->hide();  // scroll area
         m_btnReloadDevices->setEnabled(true);

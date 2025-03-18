@@ -408,26 +408,19 @@ void KSaneWidgetPrivate::createOptInterface()
     connect(m_scanareaPapersize, &LabeledCombo::activated, this, &KSaneWidgetPrivate::setPageSize);
     basicLayout->addWidget(m_scanareaPapersize);
 
-    static QLocale locale;
-    QString unitSuffix = locale.measurementSystem() == QLocale::MetricSystem ? i18n(" mm") : i18n(" inch");
-
     m_scanareaWidth = new LabeledFSlider(m_basicOptsTab, i18n("Width"), 0.0f, 500.0f, 0.1f);
-    m_scanareaWidth->setSuffix(unitSuffix);
     connect(m_scanareaWidth, &LabeledFSlider::valueChanged, this, &KSaneWidgetPrivate::updateScanSelection);
     basicLayout->addWidget(m_scanareaWidth);
 
     m_scanareaHeight = new LabeledFSlider(m_basicOptsTab, i18n("Height"), 0.0f, 500.0f, 0.1f);
-    m_scanareaHeight->setSuffix(unitSuffix);
     connect(m_scanareaHeight, &LabeledFSlider::valueChanged, this, &KSaneWidgetPrivate::updateScanSelection);
     basicLayout->addWidget(m_scanareaHeight);
 
-    m_scanareaX = new LabeledFSlider(m_basicOptsTab, i18n("X Offset"), 0.0f, 500.0f, 0.1f);
-    m_scanareaX->setSuffix(unitSuffix);
+    m_scanareaX = new LabeledFSlider(m_basicOptsTab, i18n("X offset"), 0.0f, 500.0f, 0.1f);
     connect(m_scanareaX, &LabeledFSlider::valueChanged, this, &KSaneWidgetPrivate::updateScanSelection);
     basicLayout->addWidget(m_scanareaX);
 
-    m_scanareaY = new LabeledFSlider(m_basicOptsTab, i18n("Y Offset"), 0.0f, 500.0f, 0.1f);
-    m_scanareaY->setSuffix(unitSuffix);
+    m_scanareaY = new LabeledFSlider(m_basicOptsTab, i18n("Y offset"), 0.0f, 500.0f, 0.1f);
     connect(m_scanareaY, &LabeledFSlider::valueChanged, this, &KSaneWidgetPrivate::updateScanSelection);
     basicLayout->addWidget(m_scanareaY);
 

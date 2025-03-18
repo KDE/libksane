@@ -57,7 +57,7 @@ KSaneWidget::KSaneWidget(QWidget *parent)
             d, &KSaneWidgetPrivate::handleSelection);
 
     d->m_warmingUp = new QLabel;
-    d->m_warmingUp->setText(i18n("Waiting for the scan to start."));
+    d->m_warmingUp->setText(i18n("Waiting for scan to start…"));
     d->m_warmingUp->setAlignment(Qt::AlignCenter);
     d->m_warmingUp->hide();
 
@@ -120,13 +120,13 @@ KSaneWidget::KSaneWidget(QWidget *parent)
 
     d->m_prevBtn = new QPushButton(this);
     d->m_prevBtn->setIcon(QIcon::fromTheme(QStringLiteral("document-import")));
-    d->m_prevBtn->setToolTip(i18n("Scan Preview Image (%1)", prevShortcut->key().toString(QKeySequence::NativeText)));
+    d->m_prevBtn->setToolTip(i18n("Scan preview image (%1)", prevShortcut->key().toString(QKeySequence::NativeText)));
     d->m_prevBtn->setText(i18nc("Preview button text", "Preview"));
     connect(d->m_prevBtn, &QToolButton::clicked, d, &KSaneWidgetPrivate::startPreviewScan);
 
     d->m_scanBtn = new QPushButton(this);
     d->m_scanBtn->setIcon(QIcon::fromTheme(QStringLiteral("document-save")));
-    d->m_scanBtn->setToolTip(i18n("Scan Final Image (%1)", scanShortcut->key().toString(QKeySequence::NativeText)));
+    d->m_scanBtn->setToolTip(i18n("Scan final image (%1)", scanShortcut->key().toString(QKeySequence::NativeText)));
     d->m_scanBtn->setText(i18nc("Final scan button text", "Scan"));
     d->m_scanBtn->setFocus(Qt::OtherFocusReason);
     setFocusProxy(d->m_scanBtn);

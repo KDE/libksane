@@ -9,7 +9,7 @@
 
 //KDE includes
 
-#include <KLocalizedString>
+#include <KLocalization>
 
 #define FLOAT_MULTIP 32768.0
 #define TO_DOUBLE(v) (static_cast<double>(v) / FLOAT_MULTIP)
@@ -33,35 +33,35 @@ LabeledFSlider::LabeledFSlider(QWidget *parent, KSaneCore::Option *option)
     double stepValue = option->stepValue().toDouble();
     initFSlider(minValue, maxValue , stepValue);
 
-    QString unitSuffix;
     KSaneCore::Option::OptionUnit unit = option->valueUnit();
     switch (unit) {
     case KSaneCore::Option::UnitPixel:
-        unitSuffix = i18nc("Double numbers. SpinBox parameter unit", " Pixels");
+        m_spinboxFormat = ki18ncp("@label:spinbox", "%v pixel", "%v pixels");
         break;
     case KSaneCore::Option::UnitBit:
-        unitSuffix = i18nc("Double numbers. SpinBox parameter unit", " Bits");
+        m_spinboxFormat = ki18ncp("@label:spinbox", "%v bit", "%v bits");
         break;
     case KSaneCore::Option::UnitMilliMeter:
-        unitSuffix = i18nc("Double numbers. SpinBox parameter unit (Millimeter)", " mm");
+        m_spinboxFormat = QLocale().measurementSystem() == QLocale::MetricSystem
+        ? ki18nc("@label:spinbox, milimeters", "%v mm")
+        : ki18nc("@label:spinbox, milimeters", "%v in");
         break;
     case KSaneCore::Option::UnitDPI:
-        unitSuffix = i18nc("Double numbers. SpinBox parameter unit (Dots Per Inch)", " DPI");
+        m_spinboxFormat = ki18nc("@label:spinbox, dots per inch", "%v DPI");
         break;
     case KSaneCore::Option::UnitPercent:
-        unitSuffix = i18nc("Double numbers. SpinBox parameter unit (Percentage)", " %");
+        m_spinboxFormat = ki18nc("@label:spinbox, percentage", "%v%");
         break;
     case KSaneCore::Option::UnitMicroSecond:
-        unitSuffix = i18nc("Double numbers. SpinBox parameter unit (Microseconds)", " µs");
+        m_spinboxFormat = ki18nc("@label:spinbox, microsecond", "%v µs");
         break;
     case KSaneCore::Option::UnitSecond:
-        unitSuffix = i18nc("SpinBox parameter unit (seconds), float", " s");
+        m_spinboxFormat = ki18nc("@label:spinbox, second", "%v s");
         break;
     default:
-        unitSuffix = QString();
+        m_spinboxFormat = ki18n("%v");
         break;
     }
-    setSuffix(unitSuffix);
 
     setLabelText(option->title());
     setToolTip(option->description());
@@ -95,6 +95,7 @@ void LabeledFSlider::initFSlider(double minValue, double maxValue, double stepVa
     m_spinb->setMinimum(minValue);
     m_spinb->setMaximum(maxValue);
     m_spinb->setSingleStep(m_fstep);
+
     int decimals = 0;
     double tmp_step = m_fstep;
     while (tmp_step < 1) {
@@ -104,12 +105,13 @@ void LabeledFSlider::initFSlider(double minValue, double maxValue, double stepVa
             break;
         }
     }
+
     m_spinb->setDecimals(decimals);
     m_spinb->setValue(maxValue);
-    //m_spinb->setMinimumWidth(m_spinb->sizeHint().width()+35);
     m_spinb->setMinimumWidth(m_spinb->sizeHint().width());
     m_spinb->setAlignment(Qt::AlignRight);
     m_spinb->setValue(minValue);
+    KLocalization::setupSpinBoxFormatString(m_spinb, m_spinboxFormat);
 
     m_label->setBuddy(m_spinb);
 
@@ -136,11 +138,6 @@ double LabeledFSlider::value() const
 double LabeledFSlider::step() const
 {
     return m_fstep;
-}
-
-void LabeledFSlider::setSuffix(const QString &text)
-{
-    m_spinb->setSuffix(text);
 }
 
 void LabeledFSlider::setRange(double min, double max)

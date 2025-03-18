@@ -9,6 +9,9 @@
 
 #include "ksaneoptionwidget.h"
 
+// KDE includes
+#include <KLocalizedString>
+
 // Qt includes
 #include <QSlider>
 #include <QDoubleSpinBox>
@@ -58,8 +61,6 @@ public Q_SLOTS:
     void setValue(const QVariant &value);
     void setRange(double min, double max);
     void setStep(double step);
-    /** Set the unit */
-    void setSuffix(const QString &text);
 
 private Q_SLOTS:
 
@@ -81,6 +82,7 @@ Q_SIGNALS:
 private:
     void initFSlider(double minValue, double maxValue, double stepValue);
 
+    KLocalizedString m_spinboxFormat;
     QSlider        *m_slider;
     QDoubleSpinBox *m_spinb;
     double          m_fstep;

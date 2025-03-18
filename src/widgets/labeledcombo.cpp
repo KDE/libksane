@@ -152,25 +152,29 @@ QString LabeledCombo::getStringWithUnitForInteger(int iValue) const
     switch (m_option->valueUnit()) {
 
     case KSaneCore::Option::UnitPixel:
-        return i18ncp("Parameter and Unit", "%1 Pixel", "%1 Pixels", iValue);
+        return i18ncp("@label:combobox", "%1 pixel", "%1 pixels", iValue);
         break;
     case KSaneCore::Option::UnitBit:
-        return i18ncp("Parameter and Unit", "%1 Bit", "%1 Bits", iValue);
+        return i18ncp("@label:combobox", "%1 bit", "%1 bits", iValue);
         break;
     case KSaneCore::Option::UnitMilliMeter:
-        return i18nc("Parameter and Unit (Millimeter)", "%1 mm", iValue);
+        if (QLocale().measurementSystem() == QLocale::MetricSystem) {
+            return i18nc("@label:spinbox, milimeters", "%1 mm", iValue);
+        } else {
+            return i18nc("@label:spinbox, inch", "%1 in", iValue);
+        }
         break;
     case KSaneCore::Option::UnitDPI:
-        return i18nc("Parameter and Unit (Dots Per Inch)", "%1 DPI", iValue);
+        return i18nc("@label:combobox, dots per inch", "%1 DPI", iValue);
         break;
     case KSaneCore::Option::UnitPercent:
-        return i18nc("Parameter and Unit (Percentage)", "%1 %", iValue);
+        return i18nc("@label:combobox, percentage", "%1%", iValue);
         break;
     case KSaneCore::Option::UnitMicroSecond:
-        return i18nc("Parameter and Unit (Microseconds)", "%1 µs", iValue);
+        return i18nc("@label:combobox, microseconds", "%1 µs", iValue);
         break;
     case KSaneCore::Option::UnitSecond:
-        return i18nc("Parameter and Unit (seconds)", "%1 s", iValue);
+        return i18nc("@label:combobox, seconds", "%1 s", iValue);
         break;
     default:
         return i18n("%1", iValue);
@@ -181,27 +185,30 @@ QString LabeledCombo::getStringWithUnitForInteger(int iValue) const
 QString LabeledCombo::getStringWithUnitForFloat(float fValue) const
 {
     switch (m_option->valueUnit()) {
-
     case KSaneCore::Option::UnitPixel:
-        return i18ncp("Parameter and Unit", "%1 Pixel", "%1 Pixels", static_cast<int>(fValue));
+        return i18ncp("@label:combobox", "%1 pixel", "%1 pixels", static_cast<int>(fValue));
         break;
     case KSaneCore::Option::UnitBit:
-        return i18ncp("Parameter and Unit", "%1 Bit", "%1 Bits", static_cast<int>(fValue));
+        return i18ncp("@label:combobox", "%1 bit", "%1 bits", static_cast<int>(fValue));
         break;
     case KSaneCore::Option::UnitMilliMeter:
-        return i18nc("Parameter and Unit (Millimeter)", "%1 mm", fValue);
+        if (QLocale().measurementSystem() == QLocale::MetricSystem) {
+            return i18nc("@label:spinbox, milimeters", "%1 mm", fValue);
+        } else {
+            return i18nc("@label:spinbox, inch", "%1 in", fValue);
+        }
         break;
     case KSaneCore::Option::UnitDPI:
-        return i18nc("Parameter and Unit (Dots Per Inch)", "%1 DPI", fValue);
+        return i18nc("@label:combobox, dots per inch", "%1 DPI", fValue);
         break;
     case KSaneCore::Option::UnitPercent:
-        return i18nc("Parameter and Unit (Percentage)", "%1 %", fValue);
+        return i18nc("@label:combobox, percentage", "%1%", fValue);
         break;
     case KSaneCore::Option::UnitMicroSecond:
-        return i18nc("Parameter and Unit (Microseconds)", "%1 µs", fValue);
+        return i18nc("@label:combobox, microseconds", "%1 µs", fValue);
         break;
     case KSaneCore::Option::UnitSecond:
-        return i18nc("Parameter and Unit (seconds)", "%1 s", fValue);
+        return i18nc("@label:combobox, seconds", "%1 s", fValue);
         break;
     default:
         return i18n("%1", fValue);

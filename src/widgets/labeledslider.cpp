@@ -13,7 +13,7 @@
 
 // KDE includes
 
-#include <KPluralHandlingSpinBox>
+#include <KLocalization>
 #include <KSaneCore/Option>
 
 namespace KSaneIface
@@ -34,37 +34,36 @@ LabeledSlider::LabeledSlider(QWidget *parent, KSaneCore::Option *option)
 
     initSlider(minValue, maxValue, stepValue);
 
-    KLocalizedString unitSuffix;
     KSaneCore::Option::OptionUnit unit = option->valueUnit();
     switch (unit) {
-
     case KSaneCore::Option::UnitPixel:
-        unitSuffix = ki18ncp("SpinBox parameter unit", " Pixel", " Pixels");
+        m_spinboxFormat = ki18ncp("@label:spinbox", "%v pixel", "%v pixels");
         break;
     case KSaneCore::Option::UnitBit:
-        unitSuffix = ki18ncp("SpinBox parameter unit", " Bit", " Bits");
+        m_spinboxFormat = ki18ncp("@label:spinbox", "%v bit", "%v bits");
         break;
     case KSaneCore::Option::UnitMilliMeter:
-        unitSuffix = ki18ncp("SpinBox parameter unit (Millimeter)", " mm", " mm");
+        m_spinboxFormat = QLocale().measurementSystem() == QLocale::MetricSystem
+            ? ki18nc("@label:spinbox, milimeters", "%v mm")
+            : ki18nc("@label:spinbox, milimeters", "%v in");
         break;
     case KSaneCore::Option::UnitDPI:
-        unitSuffix = ki18ncp("SpinBox parameter unit (Dots Per Inch)", " DPI", " DPI");
+        m_spinboxFormat = ki18nc("@label:spinbox, dots per inch", "%v DPI");
         break;
     case KSaneCore::Option::UnitPercent:
-        unitSuffix = ki18ncp("SpinBox parameter unit (Percentage)", " %", " %");
+        m_spinboxFormat = ki18nc("@label:spinbox, percentage", "%v%");
         break;
     case KSaneCore::Option::UnitMicroSecond:
-        unitSuffix = ki18ncp("SpinBox parameter unit (Microseconds)", " µs", " µs");
+        m_spinboxFormat = ki18nc("@label:spinbox, microsecond", "%v µs");
         break;
     case KSaneCore::Option::UnitSecond:
-        unitSuffix = ki18ncp("SpinBox parameter unit (seconds)", " s", " s");
+        m_spinboxFormat = ki18nc("@label:spinbox, second", "%v s");
         break;
     default:
-        unitSuffix = KLocalizedString();
+        m_spinboxFormat = ki18n("%v");
         break;
     }
 
-    setSuffix(unitSuffix);
     setLabelText(option->title());
     setToolTip(option->description());
     connect(this, &LabeledSlider::valueChanged, option, &KSaneCore::Option::setValue);
@@ -90,16 +89,15 @@ void LabeledSlider::initSlider(int minValue, int maxValue, int stepValue)
     m_slider->setMaximum(maxValue);
     m_slider->setSingleStep(m_step);
 
-    m_spinb = new KPluralHandlingSpinBox(this);
+    m_spinb = new QSpinBox(this);
     m_spinb->setMinimum(minValue);
     m_spinb->setMaximum(maxValue);
     m_slider->setSingleStep(m_step);
     m_spinb->setValue(maxValue);
-    //m_spinb->setMinimumWidth(m_spinb->sizeHint().width()+35);
     m_spinb->setAlignment(Qt::AlignRight);
     m_spinb->setValue(minValue);
+    KLocalization::setupSpinBoxFormatString(m_spinb, m_spinboxFormat);
 
-    m_spinb->setValue(minValue);
     m_label->setBuddy(m_spinb);
 
     connect(m_spinb, QOverload<int>::of(&QSpinBox::valueChanged), this, &LabeledSlider::syncValues);
@@ -110,11 +108,6 @@ void LabeledSlider::initSlider(int minValue, int maxValue, int stepValue)
     m_layout->addWidget(m_spinb, 0, 1);
     m_layout->setColumnStretch(1, 0);
     m_layout->setColumnStretch(2, 50);
-}
-
-void LabeledSlider::setSuffix(const KLocalizedString &text)
-{
-    m_spinb->setSuffix(text);
 }
 
 void LabeledSlider::setValue(const QVariant &val)
