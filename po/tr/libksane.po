@@ -5,13 +5,13 @@
 # Ozan Çağlayan <ozan@pardus.org.tr>, 2010,2013.
 # obsoleteman <tulliana@gmail.com>, 2008-2009,2012.
 # Volkan Gezer <volkangezer@gmail.com>, 2013, 2017.
-# Emir SARI <emir_sari@icloud.com>, 2022, 2023.
+# SPDX-FileCopyrightText: 2022, 2023, 2025 Emir SARI <emir_sari@icloud.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: kdegraphics-kde4\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-12-11 00:39+0000\n"
-"PO-Revision-Date: 2023-03-21 21:17+0300\n"
+"PO-Revision-Date: 2025-03-18 17:19+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -19,17 +19,17 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 22.12.3\n"
+"X-Generator: Lokalize 25.07.70\n"
 
 #: ../ksanetwain/ktwain_widget.cpp:29
 #, kde-format
 msgid "Open scan dialog"
-msgstr "Tarama penceresini aç"
+msgstr "Tarama iletişim kutusunu aç"
 
 #: i18n-hplip.cpp:3
 #, kde-format
 msgid "None"
-msgstr "Hiçbiri"
+msgstr "Yok"
 
 #: i18n-hplip.cpp:4
 #, kde-format
@@ -54,7 +54,7 @@ msgstr "JPEG"
 #: i18n-hplip.cpp:8
 #, kde-format
 msgid "Auto"
-msgstr "Otomatik"
+msgstr "Kendiliğinden"
 
 #: i18n-hplip.cpp:9
 #, kde-format
@@ -176,10 +176,10 @@ msgid ""
 "systems scanner setup.<br>For details about SANE see the <a href='http://www."
 "sane-project.org/'>SANE homepage</a>.</html>"
 msgstr ""
-"<html>SANE (Scanner Access Now Easy - Tarayıcı Erişimi Artık Kolay) sistemi "
+"<html>SANE (Scanner Access Now Easy — Tarayıcı Erişimi Artık Kolay) sistemi "
 "hiçbir aygıt bulamadı.<br>Tarayıcının takılı ve açık olduğunu veya<br>sistem "
 "tarayıcı yapılandırmasını denetleyin.<br>SANE hakkında ayrıntılı bilgi için "
-"<a href='http://www.sane-project.org/'>SANE anasayfasına</a> bakın.</html>"
+"<a href='http://www.sane-project.org/'>SANE ana sayfasına</a> bakın.</html>"
 
 #: ksanedevicedialog.cpp:58
 #, kde-format
@@ -281,7 +281,7 @@ msgstr "Bu kaynak için yetkilendirme gerekiyor: %1"
 #: ksanewidget_p.cpp:407
 #, kde-format
 msgid "Scan Area Size"
-msgstr "Tarama Alanı Boyutu"
+msgstr "Tarama alanı boyutu"
 
 #: ksanewidget_p.cpp:412
 #, kde-format
@@ -316,7 +316,7 @@ msgstr "Y Ofseti"
 #: ksanewidget_p.cpp:490
 #, kde-format
 msgid "Image intensity"
-msgstr "Görsel yoğunluğu"
+msgstr "Görsel Yoğunluğu"
 
 #: ksanewidget_p.cpp:494
 #, kde-format
@@ -338,7 +338,7 @@ msgstr "Renk yoğunluğu tablolarını ayır"
 #, kde-format
 msgctxt "This is compared to the option string returned by sane"
 msgid "Transparency"
-msgstr "Şeffaflık"
+msgstr "Saydamlık"
 
 #: ksanewidget_p.cpp:1002
 #, kde-format
@@ -372,7 +372,7 @@ msgstr "Özel"
 #, kde-format
 msgctxt "Page size landscape"
 msgid " Landscape"
-msgstr " Yatay"
+msgstr "Yatay"
 
 #: widgets/ksaneoptionwidget.cpp:66
 #, kde-format
@@ -385,16 +385,16 @@ msgstr "%1:"
 msgctxt "Parameter and Unit"
 msgid "%1 Pixel"
 msgid_plural "%1 Pixels"
-msgstr[0] "%1 Piksel"
-msgstr[1] "%1 Piksel"
+msgstr[0] "%1 piksel"
+msgstr[1] "%1 piksel"
 
 #: widgets/labeledcombo.cpp:158 widgets/labeledcombo.cpp:189
 #, kde-format
 msgctxt "Parameter and Unit"
 msgid "%1 Bit"
 msgid_plural "%1 Bits"
-msgstr[0] "%1 Bit"
-msgstr[1] "%1 Bit"
+msgstr[0] "%1 bit"
+msgstr[1] "%1 bit"
 
 #: widgets/labeledcombo.cpp:161 widgets/labeledcombo.cpp:192
 #, kde-format
@@ -412,7 +412,7 @@ msgstr "%1 DPI"
 #, kde-format
 msgctxt "Parameter and Unit (Percentage)"
 msgid "%1 %"
-msgstr "% %1"
+msgstr "%%1"
 
 #: widgets/labeledcombo.cpp:170 widgets/labeledcombo.cpp:201
 #, kde-format
@@ -447,13 +447,13 @@ msgstr "Ayarla"
 #, kde-format
 msgctxt "Double numbers. SpinBox parameter unit"
 msgid " Pixels"
-msgstr " Piksel"
+msgstr " piksel"
 
 #: widgets/labeledfslider.cpp:43
 #, kde-format
 msgctxt "Double numbers. SpinBox parameter unit"
 msgid " Bits"
-msgstr " Bit"
+msgstr " bit"
 
 #: widgets/labeledfslider.cpp:46
 #, kde-format
