@@ -1,13 +1,13 @@
 # translation of libksane.po to Arabic
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
-# zayed <zayed.alsaidi@gmail.com>, 2008, 2012, 2021.
+# SPDX-FileCopyrightText: 2008, 2012, 2021, 2025 zayed <zayed.alsaidi@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: libksane\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-12-11 00:39+0000\n"
-"PO-Revision-Date: 2021-12-14 20:29+0400\n"
+"PO-Revision-Date: 2025-08-03 14:20+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -16,6 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
+"X-Generator: Lokalize 23.08.5\n"
 
 #: ../ksanetwain/ktwain_widget.cpp:29
 #, kde-format
@@ -25,7 +26,7 @@ msgstr "مربع فتح الماسحة"
 #: i18n-hplip.cpp:3
 #, kde-format
 msgid "None"
-msgstr "بدون"
+msgstr "لا شيء"
 
 #: i18n-hplip.cpp:4
 #, kde-format
@@ -173,7 +174,7 @@ msgstr ""
 "<html> لم يتمكن نظام SANE (Scanner Access Now Easy) من العثور على أي جهاز."
 "<br> تحقق من توصيل الماسح وتشغيله <br> أو تحقق من إعداد الماسح الضوئي "
 "للأنظمة. <br> للحصول على تفاصيل حول SANE ، راجع <a href = 'http: //www.sane-"
-"project.org/' > الصفحة الرئيسية SANE </a>. </html> "
+"project.org/' > الصفحة الرئيسة SANE </a>. </html> "
 
 #: ksanedevicedialog.cpp:58
 #, kde-format
@@ -218,7 +219,7 @@ msgstr "عدّل الحجم ليناسب النافذة"
 #: ksaneviewer.cpp:121 ksanewidget.cpp:112
 #, kde-format
 msgid "Clear Selections"
-msgstr "امح التحديد"
+msgstr "امحُ التحديد"
 
 #: ksanewidget.cpp:60
 #, kde-format
@@ -233,7 +234,7 @@ msgstr "ألغ عملية المسح الحالية"
 #: ksanewidget.cpp:123
 #, kde-format
 msgid "Scan Preview Image (%1)"
-msgstr "امسح صورة للعرض (%1)"
+msgstr "امحُ صورة للعرض (%1)"
 
 #: ksanewidget.cpp:124
 #, kde-format
@@ -244,13 +245,13 @@ msgstr "عاين"
 #: ksanewidget.cpp:129
 #, kde-format
 msgid "Scan Final Image (%1)"
-msgstr "امسح الصورة النهائية (%1)"
+msgstr "امحُ الصورة النهائية (%1)"
 
 #: ksanewidget.cpp:130
 #, kde-format
 msgctxt "Final scan button text"
 msgid "Scan"
-msgstr "امسح"
+msgstr "امحُ"
 
 #: ksanewidget.cpp:171
 #, kde-format
@@ -275,7 +276,7 @@ msgstr "الاستيثاق مطلوب للمورد: %1"
 #: ksanewidget_p.cpp:407
 #, kde-format
 msgid "Scan Area Size"
-msgstr "امسح حجم المنطقة"
+msgstr "امحُ حجم المنطقة"
 
 #: ksanewidget_p.cpp:412
 #, kde-format
