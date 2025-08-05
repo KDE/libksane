@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: libksane\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-12-11 00:39+0000\n"
-"PO-Revision-Date: 2025-08-03 14:20+0400\n"
+"PO-Revision-Date: 2025-08-04 13:54+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -51,7 +51,7 @@ msgstr "JPEG"
 #: i18n-hplip.cpp:8
 #, kde-format
 msgid "Auto"
-msgstr "تلقائي"
+msgstr "آليّ"
 
 #: i18n-hplip.cpp:9
 #, kde-format
@@ -102,7 +102,7 @@ msgstr "مسح بالدفعة"
 #: i18n-hplip.cpp:20
 #, kde-format
 msgid "Enables continuous scanning with automatic document feeder (ADF)."
-msgstr "تمكن المسح المتواصل بواسطة ملقم المستندات آلي(ADF)."
+msgstr "تمكن المسح المتواصل بواسطة ملقم المستندات آليّ(ADF)."
 
 #: i18n-hplip.cpp:21
 #, kde-format
@@ -437,7 +437,7 @@ msgstr "‏%1"
 #, kde-format
 msgctxt "Label for button to reset text in a KLineEdit"
 msgid "Reset"
-msgstr "أعد الضبط"
+msgstr "صفّر"
 
 #: widgets/labeledentry.cpp:54
 #, kde-format
