@@ -82,8 +82,8 @@ msgid ""
 "Selects the scanner compression method for faster scans, possibly at the "
 "expense of image quality."
 msgstr ""
-"Selecciona el mètode de compressió per a accelerar els escaneigs, "
-"possiblement a expenses de la qualitat de la imatge."
+"Tria el mètode de compressió per a accelerar els escaneigs, possiblement a "
+"expenses de la qualitat de la imatge."
 
 #: i18n-hplip.cpp:15
 #, kde-format
@@ -138,9 +138,9 @@ msgid ""
 "Selects how the scanned image length is measured and reported, which is "
 "impossible to know in advance for scrollfed scans."
 msgstr ""
-"Selecciona com s'ha de mesurar i informar la llargària de la imatge "
-"escanejada, la qual és impossible de conéixer per avançat en els escàners "
-"d'alimentació per desplaçament."
+"Tria com s'ha de mesurar i informar la llargària de la imatge escanejada, la "
+"qual és impossible de conéixer per avançat en els escàners d'alimentació per "
+"desplaçament."
 
 #: i18n-hplip.cpp:27
 #, kde-format
