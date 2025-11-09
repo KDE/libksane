@@ -14,8 +14,8 @@ msgstr ""
 "X-Crowdin-Project: kdeorg\n"
 "X-Crowdin-Project-ID: 269464\n"
 "X-Crowdin-Language: zh-CN\n"
-"X-Crowdin-File: /kf6-trunk/messages/libksane/libksane.pot\n"
-"X-Crowdin-File-ID: 55826\n"
+"X-Crowdin-File: /kf6-stable/messages/libksane/libksane.pot\n"
+"X-Crowdin-File-ID: 56472\n"
 
 #: ../ksanetwain/ktwain_widget.cpp:29
 #, kde-format
@@ -315,7 +315,7 @@ msgid ""
 "Gamma-correction table. In color mode this option equally affects the red, "
 "green, and blue channels simultaneously (i.e., it is an intensity gamma "
 "table)."
-msgstr "伽玛校正表。在彩色模式下，此选项将同时对红、绿、蓝通道发挥同等影响。"
+msgstr "伽马校正表。在彩色模式下，此选项将同时对红、绿、蓝通道发挥同等影响。"
 
 #: ksanewidget_p.cpp:502
 #, kde-format
@@ -484,7 +484,7 @@ msgstr "对比度"
 #: widgets/labeledgamma.cpp:49
 #, kde-format
 msgid "Gamma"
-msgstr "Gamma"
+msgstr "伽马"
 
 #: widgets/labeledslider.cpp:42
 #, kde-format
