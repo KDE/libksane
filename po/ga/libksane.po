@@ -223,10 +223,9 @@ msgid "Cancel current scan operation"
 msgstr "Cealaigh an oibríocht reatha scanta"
 
 #: ksanewidget.cpp:123
-#, fuzzy, kde-format
-#| msgid "Scan Preview Image"
+#, kde-format
 msgid "Scan Preview Image (%1)"
-msgstr "Scan Réamhamharc"
+msgstr ""
 
 #: ksanewidget.cpp:124
 #, kde-format
@@ -235,10 +234,9 @@ msgid "Preview"
 msgstr "Réamhamharc"
 
 #: ksanewidget.cpp:129
-#, fuzzy, kde-format
-#| msgid "Scan Final Image"
+#, kde-format
 msgid "Scan Final Image (%1)"
-msgstr "Scan an Íomhá Chríochnaithe"
+msgstr ""
 
 #: ksanewidget.cpp:130
 #, kde-format
@@ -252,10 +250,9 @@ msgid "Basic Options"
 msgstr "Bunroghanna"
 
 #: ksanewidget.cpp:177
-#, fuzzy, kde-format
-#| msgid "Basic Options"
+#, kde-format
 msgid "Advanced Options"
-msgstr "Bunroghanna"
+msgstr ""
 
 #: ksanewidget.cpp:183
 #, kde-format
@@ -273,11 +270,9 @@ msgid "Scan Area Size"
 msgstr ""
 
 #: ksanewidget_p.cpp:412
-#, fuzzy, kde-format
-#| msgctxt "SpinBox parameter unit (Millimeter)"
-#| msgid " mm"
+#, kde-format
 msgid " mm"
-msgstr " mm"
+msgstr ""
 
 #: ksanewidget_p.cpp:412
 #, kde-format
@@ -422,11 +417,9 @@ msgid "%1 s"
 msgstr ""
 
 #: widgets/labeledcombo.cpp:176 widgets/labeledcombo.cpp:207
-#, fuzzy, kde-format
-#| msgctxt "Label for a scanner option"
-#| msgid "%1:"
+#, kde-format
 msgid "%1"
-msgstr "%1:"
+msgstr ""
 
 #: widgets/labeledentry.cpp:52
 #, kde-format
@@ -477,12 +470,10 @@ msgid " µs"
 msgstr " µs"
 
 #: widgets/labeledfslider.cpp:58
-#, fuzzy, kde-format
-#| msgctxt "Double numbers. SpinBox parameter unit (Microseconds)"
-#| msgid " µs"
+#, kde-format
 msgctxt "SpinBox parameter unit (seconds), float"
 msgid " s"
-msgstr " µs"
+msgstr ""
 
 #: widgets/labeledgamma.cpp:43
 #, kde-format
@@ -522,232 +513,41 @@ msgstr[3] " nGiotán"
 msgstr[4] " Giotán"
 
 #: widgets/labeledslider.cpp:48
-#, fuzzy, kde-format
-#| msgctxt "SpinBox parameter unit (Millimeter)"
-#| msgid " mm"
+#, kde-format
 msgctxt "SpinBox parameter unit (Millimeter)"
 msgid " mm"
 msgid_plural " mm"
-msgstr[0] " mm"
-msgstr[1] " mm"
-msgstr[2] " mm"
-msgstr[3] " mm"
-msgstr[4] " mm"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/labeledslider.cpp:51
-#, fuzzy, kde-format
-#| msgctxt "SpinBox parameter unit (Dots Per Inch)"
-#| msgid " DPI"
+#, kde-format
 msgctxt "SpinBox parameter unit (Dots Per Inch)"
 msgid " DPI"
 msgid_plural " DPI"
-msgstr[0] " PSO"
-msgstr[1] " PSO"
-msgstr[2] " PSO"
-msgstr[3] " PSO"
-msgstr[4] " PSO"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/labeledslider.cpp:54
-#, fuzzy, kde-format
-#| msgctxt "SpinBox parameter unit (Percentage)"
-#| msgid " %"
+#, kde-format
 msgctxt "SpinBox parameter unit (Percentage)"
 msgid " %"
 msgid_plural " %"
-msgstr[0] " %"
-msgstr[1] " %"
-msgstr[2] " %"
-msgstr[3] " %"
-msgstr[4] " %"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/labeledslider.cpp:57
-#, fuzzy, kde-format
-#| msgctxt "SpinBox parameter unit (Microseconds)"
-#| msgid " µs"
+#, kde-format
 msgctxt "SpinBox parameter unit (Microseconds)"
 msgid " µs"
 msgid_plural " µs"
-msgstr[0] " µs"
-msgstr[1] " µs"
-msgstr[2] " µs"
-msgstr[3] " µs"
-msgstr[4] " µs"
+msgstr[0] ""
+msgstr[1] ""
 
 #: widgets/labeledslider.cpp:60
-#, fuzzy, kde-format
-#| msgctxt "Double numbers. SpinBox parameter unit (Microseconds)"
-#| msgid " µs"
+#, kde-format
 msgctxt "SpinBox parameter unit (seconds)"
 msgid " s"
 msgid_plural " s"
-msgstr[0] " µs"
-msgstr[1] " µs"
-msgstr[2] " µs"
-msgstr[3] " µs"
-msgstr[4] " µs"
-
-#~ msgid ""
-#~ "The image data contained 16 bits per color, but the color depth has been "
-#~ "truncated to 8 bits per color."
-#~ msgstr ""
-#~ "Tá 16 giotán in aghaidh an datha sna sonraí íomhá, ach teascadh na sonraí "
-#~ "íomhá go dtí 8 ngiotán in aghaidh an datha."
-
-#~ msgid "Invert colors"
-#~ msgstr "Inbhéartaigh dathanna"
-
-#~ msgid "%1 Pixel"
-#~ msgid_plural "%1 Pixels"
-#~ msgstr[0] "%1 Phicteilín"
-#~ msgstr[1] "%1 Phicteilín"
-#~ msgstr[2] "%1 Phicteilín"
-#~ msgstr[3] "%1 bPicteilín"
-#~ msgstr[4] "%1 Picteilín"
-
-#~ msgid "%1 Bit"
-#~ msgid_plural "%1 Bits"
-#~ msgstr[0] "%1 Ghiotán"
-#~ msgstr[1] "%1 Ghiotán"
-#~ msgstr[2] "%1 Ghiotán"
-#~ msgstr[3] "%1 nGiotán"
-#~ msgstr[4] "%1 Giotán"
-
-#~ msgid "%1 mm"
-#~ msgid_plural "%1 mm"
-#~ msgstr[0] "%1 mm"
-#~ msgstr[1] "%1 mm"
-#~ msgstr[2] "%1 mm"
-#~ msgstr[3] "%1 mm"
-#~ msgstr[4] "%1 mm"
-
-#~ msgid "%1 DPI"
-#~ msgid_plural "%1 DPI"
-#~ msgstr[0] "%1 PSO"
-#~ msgstr[1] "%1 PSO"
-#~ msgstr[2] "%1 PSO"
-#~ msgstr[3] "%1 PSO"
-#~ msgstr[4] "%1 PSO"
-
-#~ msgid "%1 %"
-#~ msgid_plural "%1 %"
-#~ msgstr[0] "%1 %"
-#~ msgstr[1] "%1 %"
-#~ msgstr[2] "%1 %"
-#~ msgstr[3] "%1 %"
-#~ msgstr[4] "%1 %"
-
-#~ msgid "%1 usec"
-#~ msgid_plural "%1 usec"
-#~ msgstr[0] "%1 usec"
-#~ msgstr[1] "%1 usec"
-#~ msgstr[2] "%1 usec"
-#~ msgstr[3] "%1 usec"
-#~ msgstr[4] "%1 usec"
-
-#~ msgctxt "Parameter and Unit"
-#~ msgid "%1 mm"
-#~ msgstr "%1 mm"
-
-#~ msgctxt "Parameter and Unit"
-#~ msgid "%1 DPI"
-#~ msgstr "%1 PSO"
-
-#~ msgctxt "Parameter and Unit"
-#~ msgid "%1 %"
-#~ msgstr "%1 %"
-
-#~ msgctxt "Parameter and Unit"
-#~ msgid "%1 usec"
-#~ msgid_plural "%1 usec"
-#~ msgstr[0] "%1 usec"
-#~ msgstr[1] "%1 usec"
-#~ msgstr[2] "%1 usec"
-#~ msgstr[3] "%1 usec"
-#~ msgstr[4] "%1 usec"
-
-#~ msgctxt "SpinBox parameter unit"
-#~ msgid " usec"
-#~ msgid_plural " usecs"
-#~ msgstr[0] " usec"
-#~ msgstr[1] " usec"
-#~ msgstr[2] " usec"
-#~ msgstr[3] " usec"
-#~ msgstr[4] " usec"
-
-#~ msgctxt "Double numbers. SpinBox parameter unit"
-#~ msgid " mm"
-#~ msgstr " mm"
-
-#~ msgctxt "Double numbers. SpinBox parameter unit"
-#~ msgid " DPI"
-#~ msgstr " PSO"
-
-#~ msgctxt "Double numbers. SpinBox parameter unit"
-#~ msgid " %"
-#~ msgstr " %"
-
-#~ msgctxt "Double numbers. SpinBox parameter unit"
-#~ msgid " usec"
-#~ msgstr " usec"
-
-#~ msgid "Other Options"
-#~ msgstr "Roghanna Eile"
-
-#~ msgid "The image format is not (yet?) supported by libksane."
-#~ msgstr "Ní thacaíonn libksane leis an bhformáid íomhá seo (fós?)."
-
-#~ msgid "The lamp is warming up."
-#~ msgstr "Tá an lampa ag téamh."
-
-#~ msgctxt "Parameter and Unit"
-#~ msgid "%1 Pixels"
-#~ msgstr "%1 Picteilín"
-
-#~ msgctxt "Parameter and Unit"
-#~ msgid "%1 Bits"
-#~ msgstr "%1 Giotán"
-
-#~ msgid "No scanner device has been found."
-#~ msgstr "Níor aimsíodh gléas scanta."
-
-#~ msgid "Select Scanner"
-#~ msgstr "Roghnaigh Scanóir"
-
-#~ msgid "Scanning Failed!"
-#~ msgstr "Theip ar Scanadh!"
-
-#~ msgid "Zoom out preview image"
-#~ msgstr "Súmáil an réamhamharc amach"
-
-#~ msgid "Zoom to fit preview image"
-#~ msgstr "Súmáil chun an réamhamharc a oiriúnú"
-
-#~ msgid "Scan preview image from device"
-#~ msgstr "Scan réamhamharc ón ghléas"
-
-# source says "same as Lineart"?
-#~ msgid "Binary"
-#~ msgstr "Dénártha"
-
-# not a verb -see source
-#~ msgid "Tester"
-#~ msgstr "Tástálaí"
-
-#~ msgid "Model"
-#~ msgstr "Samhail"
-
-# not a verb -see source
-#~ msgid "Test Scanner"
-#~ msgstr "Scanóir Tástála"
-
-#~ msgid "Debug"
-#~ msgstr "Dífhabhtaigh"
-
-#~ msgid "OK"
-#~ msgstr "OK"
-
-#~ msgid "Cancel"
-#~ msgstr "Cealaigh"
-
-#~ msgid "Option Level"
-#~ msgstr "Leibhéal Rogha"
+msgstr[0] ""
+msgstr[1] ""
