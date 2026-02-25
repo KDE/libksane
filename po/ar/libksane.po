@@ -1,13 +1,13 @@
 # translation of libksane.po to Arabic
 # Copyright (C) YEAR This_file_is_part_of_KDE
 # This file is distributed under the same license as the PACKAGE package.
-# SPDX-FileCopyrightText: 2008, 2012, 2021, 2025 zayed <zayed.alsaidi@gmail.com>
+# SPDX-FileCopyrightText: 2008, 2012, 2021, 2025, 2026 zayed <zayed.alsaidi@gmail.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: libksane\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 11:50+0000\n"
-"PO-Revision-Date: 2025-08-04 13:54+0400\n"
+"PO-Revision-Date: 2026-02-24 23:06+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -366,7 +366,7 @@ msgstr "مخصّص"
 #, kde-format
 msgctxt "Page size landscape"
 msgid " Landscape"
-msgstr " بالعرض"
+msgstr "  عرضي"
 
 #: widgets/ksaneoptionwidget.cpp:66
 #, kde-format
