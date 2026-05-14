@@ -3,8 +3,8 @@ add_library(KSaneWidgets)
 set_target_properties(KSaneWidgets PROPERTIES
     VERSION     ${KSANE_VERSION}
     SOVERSION   ${KSANE_SOVERSION}
-    EXPORT_NAME ${TARGET_EXPORT_NAME}
-    OUTPUT_NAME ${LIBRARYFILE_NAME}
+    EXPORT_NAME "KSaneWidgets6"
+    OUTPUT_NAME "KSaneWidgets6"
 )
 
 target_compile_definitions(KSaneWidgets PRIVATE -DTRANSLATION_DOMAIN=\"libksane\")
@@ -39,13 +39,11 @@ ecm_qt_declare_logging_category(KSaneWidgets
   CATEGORY_NAME org.kde.ksane
 )
 
-set(_generate_export_header_version_args USE_VERSION_HEADER)
-
 ecm_generate_export_header(KSaneWidgets
     BASE_NAME KSane
     VERSION ${KSANE_VERSION}
     DEPRECATED_BASE_VERSION 0
-    ${_generate_export_header_version_args}
+    USE_VERSION_HEADER
 )
 
 target_include_directories(KSaneWidgets
@@ -64,7 +62,7 @@ target_link_libraries(KSaneWidgets
         KF6::I18n
         KF6::WidgetsAddons
         KF6::TextWidgets
-        ${KSANECORE_TARGET}
+        KSane6::Core
 )
 
 ecm_generate_headers(KSane_HEADERS

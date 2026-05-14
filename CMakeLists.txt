@@ -35,11 +35,6 @@ include(ECMQtDeclareLoggingCategory)
 
 set(KSANEWIDGETS_INSTALL_INCLUDEDIR "${KDE_INSTALL_INCLUDEDIR}/KSaneWidgets6")
 set(KSANEWIDGETS_CMAKECONFIG_NAME "KSaneWidgets6")
-set(LIBRARYFILE_NAME "KSaneWidgets6")
-set(TARGET_EXPORT_NAME "KSaneWidgets6")
-set(SOVERSION 6)
-set(KSANECORE_NAME "KSaneCore6")
-set(KSANECORE_TARGET "KSane6::Core")
 
 set(ksane_version_header "${CMAKE_CURRENT_BINARY_DIR}/src/ksane_version.h")
 ecm_setup_version(
@@ -47,7 +42,7 @@ ecm_setup_version(
   VARIABLE_PREFIX KSANE
   VERSION_HEADER "${ksane_version_header}"
   PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/${KSANEWIDGETS_CMAKECONFIG_NAME}ConfigVersion.cmake"
-  SOVERSION ${SOVERSION}
+  SOVERSION 6
 )
 # Dependencies
 find_package(Qt6 ${QT_REQUIRED_VERSION} NO_MODULE REQUIRED Core Widgets)
@@ -66,7 +61,7 @@ if (NOT WIN32)
     )
 
     # Check if sane API is available.
-    find_package(${KSANECORE_NAME} "${RELEASE_SERVICE_VERSION_MAJOR}.${RELEASE_SERVICE_VERSION_MINOR}" REQUIRED)
+    find_package(KSaneCore6 "${RELEASE_SERVICE_VERSION_MAJOR}.${RELEASE_SERVICE_VERSION_MINOR}" REQUIRED)
     add_subdirectory(src)
     if (BUILD_TESTING)
         add_subdirectory(autotests)
