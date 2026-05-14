@@ -1,5 +1,5 @@
 @PACKAGE_INIT@
 
 include(CMakeFindDependencyMacro)
-find_dependency(Qt6Widgets "@REQUIRED_QT_VERSION@")
+find_dependency(Qt6Widgets "@QT_REQUIRED_VERSION@")
 include("${CMAKE_CURRENT_LIST_DIR}/@KSANEWIDGETS_CMAKECONFIG_NAME@Targets.cmake")
