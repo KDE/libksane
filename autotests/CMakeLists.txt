@@ -1,4 +1,4 @@
-find_package(Qt6 ${REQUIRED_QT_VERSION} CONFIG REQUIRED Test)
+find_package(Qt6 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Test)
 
 include(ECMMarkAsTest)
 
