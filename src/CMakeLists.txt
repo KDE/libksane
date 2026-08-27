@@ -65,7 +65,7 @@ target_link_libraries(KSaneWidgets
         KSane6::Core
 )
 
-ecm_generate_headers(KSane_HEADERS
+ecm_generate_headers(KSane_CamelCase_HEADERS
     HEADER_NAMES
         KSaneWidget
     REQUIRED_HEADERS KSane_HEADERS
@@ -88,6 +88,24 @@ install(TARGETS KSaneWidgets
 install(FILES
   ${CMAKE_CURRENT_BINARY_DIR}/ksane_export.h
   ${KSane_HEADERS}
+  ${KSane_CamelCase_HEADERS}
   DESTINATION ${KSANEWIDGETS_INSTALL_INCLUDEDIR}
   COMPONENT Devel
 )
+
+if(${ECM_VERSION} VERSION_GREATER_EQUAL 6.30)
+include(ECMInstalledLibraryCheck)
+
+ecm_add_installed_library_check(KSaneWidgets
+    PACKAGE_NAME "KSaneWidgets6"
+    NO_PACKAGE_TARGET_NAMESPACE
+)
+
+ecm_installed_library_check_include_strings(KSaneWidgets
+    HEADERS ${KSane_CamelCase_HEADERS}
+)
+
+ecm_installed_library_check_version_preprocessor_macros(KSaneWidgets
+    PREFIX KSANE
+)
+endif()
