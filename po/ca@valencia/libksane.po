@@ -330,7 +330,7 @@ msgid ""
 "green, and blue channels simultaneously (i.e., it is an intensity gamma "
 "table)."
 msgstr ""
-"Taula de la correcció gamma. En el mode de color esta opció afecta igualment "
+"Taula de la correcció gamma. En el mode «Color» esta opció afecta igualment "
 "els canals roig, verd i blau simultàniament (és a dir, és una taula "
 "d'intensitat de la gamma)."
 
@@ -417,7 +417,7 @@ msgstr "%1 PPP"
 #, kde-format
 msgctxt "Parameter and Unit (Percentage)"
 msgid "%1 %"
-msgstr "%1%"
+msgstr "%1 %"
 
 #: widgets/labeledcombo.cpp:170 widgets/labeledcombo.cpp:201
 #, kde-format
