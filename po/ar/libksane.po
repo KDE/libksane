@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: libksane\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 11:50+0000\n"
-"PO-Revision-Date: 2026-02-24 23:06+0400\n"
+"PO-Revision-Date: 2026-10-03 15:29+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
 "&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
-"X-Generator: Lokalize 23.08.5\n"
+"X-Generator: Lokalize 25.12.3\n"
 
 #: ../ksanetwain/ktwain_widget.cpp:29
 #, kde-format
@@ -56,12 +56,12 @@ msgstr "آليّ"
 #: i18n-hplip.cpp:9
 #, kde-format
 msgid "Flatbed"
-msgstr "Flatbed"
+msgstr "مسطحة"
 
 #: i18n-hplip.cpp:10
 #, kde-format
 msgid "ADF"
-msgstr "ADF"
+msgstr "مغذي مستندات آلي"
 
 #: i18n-hplip.cpp:11
 #, kde-format
@@ -234,7 +234,7 @@ msgstr "ألغ عملية المسح الحالية"
 #: ksanewidget.cpp:123
 #, kde-format
 msgid "Scan Preview Image (%1)"
-msgstr "امحُ صورة للعرض (%1)"
+msgstr "امسح صورة للعرض (%1)"
 
 #: ksanewidget.cpp:124
 #, kde-format
@@ -245,13 +245,13 @@ msgstr "عاين"
 #: ksanewidget.cpp:129
 #, kde-format
 msgid "Scan Final Image (%1)"
-msgstr "امحُ الصورة النهائية (%1)"
+msgstr "امسح الصورة النهائية (%1)"
 
 #: ksanewidget.cpp:130
 #, kde-format
 msgctxt "Final scan button text"
 msgid "Scan"
-msgstr "امحُ"
+msgstr "امسح"
 
 #: ksanewidget.cpp:171
 #, kde-format
@@ -276,7 +276,7 @@ msgstr "الاستيثاق مطلوب للمورد: %1"
 #: ksanewidget_p.cpp:407
 #, kde-format
 msgid "Scan Area Size"
-msgstr "امحُ حجم المنطقة"
+msgstr "امسح حجم المنطقة"
 
 #: ksanewidget_p.cpp:412
 #, kde-format
